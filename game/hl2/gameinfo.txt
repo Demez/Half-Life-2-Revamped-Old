@@ -1,8 +1,8 @@
 "GameInfo"
 {
-	game 		"My First HL2 Mod"
+	game 		"Half-Life 2: Improvement"
 	title 		"HALF-LIFE'"
-	title2		""
+	//title2		"== IMPROVEMENT =="
 	supportsvr	1
 
 	type		singleplayer_only

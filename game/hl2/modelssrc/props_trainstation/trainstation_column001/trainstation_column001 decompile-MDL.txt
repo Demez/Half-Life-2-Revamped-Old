@@ -1,0 +1,39 @@
+// Created by Crowbar 0.49.0.0
+====== File Size ======
+	1,480
+====== File Seek Log ======
+--- Summary ---
+	0 - 1,479
+------------------------
+--- Each Section or Loop ---
+	0 - 79 MDL File Header 00; MDL File Header 00
+	80 - 407 MDL File Header 01; MDL File Header 01
+	408 - 623 theMdlFileData.theBones 1
+	624 - 635 theMdlFileData.theHitboxSets 1
+	636 - 703 aHitboxSet.theHitboxes 1
+	704 - 704 theMdlFileData.theBoneTableByName
+	705 - 707 theMdlFileData.theBoneTableByName alignment
+	708 - 807 theMdlFileData.theAnimationDescs 1
+	808 - 811 anAnimationDesc.anAnimation [@idle] (boneIndex = 255)
+	812 - 1,023 theMdlFileData.theSequenceDescs 1
+	1,024 - 1,027 aSeqDesc.theBoneWeights 1
+	1,028 - 1,029 aSeqDesc.theAnimDescIndexes 1
+	1,030 - 1,031 aSeqDesc.theAnimDescIndexes alignment
+	1,032 - 1,047 theMdlFileData.theBodyParts 1
+	1,048 - 1,195 aModel Name = trainstation_column001_reference.smd
+	1,196 - 1,311 aModel.theMeshes 1
+	1,312 - 1,375 theMdlFileData.theTextures 1
+	1,376 - 1,379 theMdlFileData.theTexturePaths 1
+	1,380 - 1,381 theMdlFileData.theSkinFamilies 1
+	1,382 - 1,383 theMdlFileData.theSkinFamilies alignment
+	1,384 - 1,384 aSeqDesc.theActivityName = 
+	1,385 - 1,390 theSurfacePropName = metal
+	1,391 - 1,402 aBone.theName = static_prop
+	1,403 - 1,410 aHitboxSet.theName = default
+	1,411 - 1,416 anAnimationDesc.theName = @idle
+	1,417 - 1,421 aSeqDesc.theName = idle
+	1,422 - 1,426 aBodyPart.theName = Body
+	1,427 - 1,449 aTexture.thePathFileName = Trainstation_Column001
+	1,450 - 1,476 aTexturePath = models\props_trainstation\
+	1,477 - 1,479 Final bytes alignment
+========================
