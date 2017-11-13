@@ -52,3 +52,34 @@ config.cfg
 # shader files
 *.tmp
 
+# save files
+game/hl2/save/*
+*.sav
+*.hl1
+*.hl2
+*.hl3
+*.hl4
+
+# gimp files
+*.xcf
+
+# files from maps
+game/hl2/mapsrc/*.bsp
+game/hl2/mapsrc/*.vmx
+game/hl2/mapsrc/*.prt
+game/hl2/maps/graphs/*
+
+# TEMP
+mp/*
+
+# other files
+*.cache
+*.sav
+*.sav
+*.hl1
+*.hl2
+*.hl3
+*.vmx
+*.prt
+*.prt
+*.ain

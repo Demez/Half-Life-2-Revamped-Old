@@ -180,3 +180,9 @@ forcetextureshadow props_wasteland/interior_fence003e.mdl
 forcetextureshadow props_wasteland/interior_fence003f.mdl
 forcetextureshadow props_wasteland/interior_fence004a.mdl
 forcetextureshadow props_wasteland/interior_fence004b.mdl
+
+//hl2: revamped
+//forcetextureshadow metal/metalfence001a.vmt
+//forcetextureshadow metal/metalgate001a.vmt
+forcetextureshadow props_c17/fence01b.mdl
+forcetextureshadow props_c17/fence01a.mdl

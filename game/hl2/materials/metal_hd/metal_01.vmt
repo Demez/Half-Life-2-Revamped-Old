@@ -1,0 +1,10 @@
+LightmappedGeneric
+{
+	$basetexture 	"metal_hd\metal_01"
+	$surfaceprop 	"metal"
+	//$detail			"detail\metal_detail_01"
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "7.345"
+	"$detailblendfactor" .8
+	"$detailblendmode" 0
+}
