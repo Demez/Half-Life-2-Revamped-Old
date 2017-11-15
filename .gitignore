@@ -81,5 +81,11 @@ mp/*
 *.hl3
 *.vmx
 *.prt
-*.prt
 *.ain
+*.jpg
+src/game/client/Release_episodic/*
+src/game/client/Release_hl2/*
+game/hl2/mapsrc/d1_trainstation_01_TEST.vmf
+*.vpc_crc
+*.lib
+*.pdb
