@@ -4959,6 +4959,7 @@ void CShadowDepthView::Draw()
 {
 	VPROF_BUDGET( "CShadowDepthView::Draw", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
 
+
 	// Start view
 	unsigned int visFlags;
 	m_pMainView->SetupVis( (*this), visFlags );  // @MULTICORE (toml 8/9/2006): Portal problem, not sending custom vis down
@@ -4982,6 +4983,10 @@ void CShadowDepthView::Draw()
 		//for the 360, the dummy render target has a separate depth buffer which we Resolve() from afterward
 		render->Push3DView( (*this), VIEW_CLEAR_DEPTH, m_pRenderTarget, GetFrustum() );
 	}
+
+	pRenderContext.GetFrom(materials);
+	pRenderContext->PushRenderTargetAndViewport(m_pRenderTarget, m_pDepthTexture, 0, 0, m_pDepthTexture->GetMappingWidth(), m_pDepthTexture->GetMappingWidth());
+	pRenderContext.SafeRelease();
 
 	SetupCurrentView( origin, angles, VIEW_SHADOW_DEPTH_TEXTURE );
 
@@ -5026,6 +5031,8 @@ void CShadowDepthView::Draw()
 		//Resolve() the depth texture here. Before the pop so the copy will recognize that the resolutions are the same
 		pRenderContext->CopyRenderTargetToTextureEx( m_pDepthTexture, -1, NULL, NULL );
 	}
+	
+	pRenderContext->PopRenderTargetAndViewport();
 
 	render->PopView( GetFrustum() );
 

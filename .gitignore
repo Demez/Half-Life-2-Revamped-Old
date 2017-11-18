@@ -89,3 +89,7 @@ game/hl2/mapsrc/d1_trainstation_01_TEST.vmf
 *.vpc_crc
 *.lib
 *.pdb
+*.prt
+*.prt
+*.prt
+game/hl2/mapsrc/d1_trainstation_01.prt

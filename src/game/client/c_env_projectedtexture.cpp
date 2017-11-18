@@ -17,8 +17,8 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-static ConVar mat_slopescaledepthbias_shadowmap( "mat_slopescaledepthbias_shadowmap", "16", FCVAR_CHEAT );
-static ConVar mat_depthbias_shadowmap(	"mat_depthbias_shadowmap", "0.0005", FCVAR_CHEAT  );
+static ConVar mat_slopescaledepthbias_shadowmap( "mat_slopescaledepthbias_shadowmap", "4", FCVAR_CHEAT );
+static ConVar mat_depthbias_shadowmap(	"mat_depthbias_shadowmap", "0.00001", FCVAR_CHEAT  );
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -241,7 +241,7 @@ void C_EnvProjectedTexture::UpdateLight( bool bForceUpdate )
 
 void C_EnvProjectedTexture::Simulate( void )
 {
-	UpdateLight( false );
+	UpdateLight( GetMoveParent() != NULL );
 
 	BaseClass::Simulate();
 }
