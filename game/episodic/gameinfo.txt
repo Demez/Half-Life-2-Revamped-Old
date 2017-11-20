@@ -1,8 +1,8 @@
 "GameInfo"
 {
-	game 		"My First Episodic Mod"
+	game 		"Half-Life 2: Episodic"
 	title 		"HALF-LIFE'"
-	title2		""
+	title2		"== episodic =="
 	supportsvr	1
 
 	type		singleplayer_only
