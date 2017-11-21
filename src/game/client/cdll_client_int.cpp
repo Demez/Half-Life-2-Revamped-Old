@@ -343,6 +343,33 @@ class IClientPurchaseInterfaceV2 *g_pClientPurchaseInterface = (class IClientPur
 
 static ConVar *g_pcv_ThreadMode = NULL;
 
+//sunlightshadowctrl
+static CUtlRBTree< const char *, int > g_Hacks(0, 0, DefLessFunc(char const *));
+
+CHackForGetLocalPlayerAccessAllowedGuard::CHackForGetLocalPlayerAccessAllowedGuard(char const *pszContext, bool bOldState)
+{
+	if (bOldState)
+	{
+		m_bChanged = false;
+		return;
+	}
+
+	m_bChanged = true;
+	m_pszContext = pszContext;
+	if (g_Hacks.Find(pszContext) == g_Hacks.InvalidIndex())
+	{
+		g_Hacks.Insert(pszContext);
+	}
+	m_bSaveGetLocalPlayerAllowed = true;
+}
+
+CHackForGetLocalPlayerAccessAllowedGuard::~CHackForGetLocalPlayerAccessAllowedGuard()
+{
+	if (!m_bChanged)
+		return;
+}
+//
+
 //-----------------------------------------------------------------------------
 // Purpose: interface for gameui to modify voice bans
 //-----------------------------------------------------------------------------

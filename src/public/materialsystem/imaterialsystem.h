@@ -422,8 +422,8 @@ struct FlashlightState_t
 	{
 		m_bEnableShadows = false;						// Provide reasonable defaults for shadow depth mapping parameters
 		m_bDrawShadowFrustum = false;
-		m_flShadowMapResolution = 1024.0f;
-		m_flShadowFilterSize = 1.0f;
+		m_flShadowMapResolution = 4096.0f;
+		m_flShadowFilterSize = 0.2f;
 		m_flShadowSlopeScaleDepthBias = 4.0f;
 		m_flShadowDepthBias = 0.000001f;
 		m_flShadowJitterSeed = 0.0f;
@@ -434,6 +434,17 @@ struct FlashlightState_t
 		m_nRight = -1;
 		m_nBottom = -1;
 		m_nShadowQuality = 0;
+		
+		//sunlightshadowctrl
+		m_bOrtho = false;
+		m_fOrthoLeft = -1.0f;
+		m_fOrthoRight = 1.0f;
+		m_fOrthoTop = -1.0f;
+		m_fOrthoBottom = 1.0f;
+
+		m_pProjectedMaterial = NULL;
+		m_bShadowHighRes = false;
+		//
 	}
 
 	Vector m_vecLightOrigin;
@@ -459,6 +470,18 @@ struct FlashlightState_t
 	float m_flShadowJitterSeed;
 	float m_flShadowAtten;
 	int   m_nShadowQuality;
+	
+	//sunlightshadowctrl
+	bool  m_bOrtho;
+	float m_fOrthoLeft;
+	float m_fOrthoRight;
+	float m_fOrthoTop;
+	float m_fOrthoBottom;
+
+	IMaterial *m_pProjectedMaterial;
+	float m_FarZAtten;
+	bool  m_bShadowHighRes;
+	//
 
 	// Getters for scissor members
 	bool DoScissor() { return m_bScissor; }

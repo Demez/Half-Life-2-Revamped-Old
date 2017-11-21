@@ -2164,6 +2164,9 @@
     <ClCompile Include="c_sun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="c_sunlightshadowcontrol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="c_team.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

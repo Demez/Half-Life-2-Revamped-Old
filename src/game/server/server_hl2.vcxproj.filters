@@ -2755,6 +2755,9 @@
     <ClCompile Include="sun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sunlightshadowcontrol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\shared\hl2\survival_gamerules.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

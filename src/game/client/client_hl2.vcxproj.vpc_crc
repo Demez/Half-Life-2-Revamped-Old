@@ -2,7 +2,7 @@
 8209bbc3 D:\sourceengine\personal-projects\Half-Life-2-Revamped\src\devtools\bin\vpc.exe
 _Nc_VS2013/vpcgame:hl2_
 4fc16f6f client_hl2.vpc
-c7ae28fd ..\..\game\client\client_base.vpc
+c75d4be3 ..\..\game\client\client_base.vpc
 4832e67a ..\..\vpc_scripts\source_dll_base.vpc
 d752cf80 ..\..\vpc_scripts\platform_dirs.vpc
 6c4a5ff1 ..\..\vpc_scripts\source_base.vpc
