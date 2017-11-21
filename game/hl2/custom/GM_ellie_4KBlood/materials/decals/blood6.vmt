@@ -1,0 +1,48 @@
+"DecalModulate"
+{
+	
+	"$basetexture" "Decals/Blood6"
+	"$decal" 1
+	"$decalscale" 0.023
+
+    	$color "[0.6 0.6 0.6]"
+		$vertexcolor 1
+	$vertexalpha 1
+
+$frame 500
+$rand 0
+$thousand 1000
+
+"Proxies"
+   {
+	// This function continuously emits random numbers and stores them
+
+	"UniformNoise"
+       	 {
+            	"minVal" "0"
+           	"maxVal" "1.99"
+           	"resultVar" "$rand"
+       	 }
+
+	"Frac"
+       	 {
+                "srcVar1" "$rand"
+           	"resultVar" "$rand"
+       	 }
+
+	// This function changes the frame of the Pill as soon as it's created by the $rand random number. To do so, it checks if the $frame value is 0 base value), and if yes, changes to random number
+	"LessOrEqual"
+        	{
+          	  "LessEqualVar" "$frame"
+          	  "greaterVar" "$rand"
+          	  "srcVar1" "$frame"
+           	  "srcVar2" "$thousand "            
+          	  "resultVar" "$frame"    
+       	 }
+
+	// NOTE : With this method, frame 0 is not in use and will never be display, but it will work 100% of the time. 
+
+   }
+
+}
+

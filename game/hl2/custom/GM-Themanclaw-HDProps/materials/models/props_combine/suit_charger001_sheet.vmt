@@ -1,0 +1,17 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_combine/suit_charger001_sheet"
+	"$bumpmap" "models/props_combine/suit_charger001_sheet_normal"
+	"$surfaceprop" "metal"
+	"$selfillum" "1"
+	"%keywords" "combine"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmaptint" "[ .56 .67 .75 ]"
+	"$phong" "1"
+	"$phongboost" "1"
+	"$phongexponent" "8"
+	"$phongfresnelranges"	"[.1 .8 1.2]"
+
+
+}

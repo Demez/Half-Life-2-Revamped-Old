@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$color"				"[1 1 1]"
+	"$baseTexture"			"models/props_canal/canal_bridge_railing_01c"
+	"$selfIllum"			0
+	"$translucent"			0
+	"$alpha"				1
+}

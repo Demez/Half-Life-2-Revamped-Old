@@ -1,0 +1,13 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_combine/combine_lock01"	
+	"$surfaceprop" "metal"
+	"%keywords" "combine"
+	"$envmaptint" "[ .2 .32 .44 ]"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "Models/props_combine/combine_lock01_mask"	
+	"$selfillum" "1"
+}
+
+

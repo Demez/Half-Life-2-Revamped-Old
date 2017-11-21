@@ -1,0 +1,9 @@
+
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_combine/combine_cell001"
+	"$surfaceprop" "metal"
+	"$translucent" 1
+	"$nocull" 1
+	
+}

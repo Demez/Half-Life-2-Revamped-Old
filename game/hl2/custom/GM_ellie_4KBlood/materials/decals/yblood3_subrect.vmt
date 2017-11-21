@@ -1,0 +1,16 @@
+"DecalModulate"
+{
+	"$translucent" 1
+	"$basetexture" "Decals/Blood3"
+	"$decal" 1
+	"$decalscale" 0.023
+	$color "[0.6 0.6 0.6]"
+		$vertexcolor 1
+	$vertexalpha 1
+
+
+}
+
+
+
+

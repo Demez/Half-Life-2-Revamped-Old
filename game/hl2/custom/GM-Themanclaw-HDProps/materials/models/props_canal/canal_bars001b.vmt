@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_canal/canal_bars001b"
+	"$surfaceprop" "metal"
+
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "24.283"
+	"$detailblendfactor" .85
+	"$detailblendmode" "0"
+}

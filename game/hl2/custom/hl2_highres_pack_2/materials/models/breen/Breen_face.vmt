@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/Breen/Breen_face"
+	"$bumpmap" "models/Breen/breen_head_normal"
+	"$phong" 1
+	"$phongboost" 0.3
+	"$phongexponent" 4.5
+	"$phongtint" "[1 .85 .85]"
+	"$phongfresnelranges" "[1 1 30]"
+$detail "models/humans/skindetail"
+$detailscale 16
+$detailblendfactor 1.7
+$detailblendmode 0
+}

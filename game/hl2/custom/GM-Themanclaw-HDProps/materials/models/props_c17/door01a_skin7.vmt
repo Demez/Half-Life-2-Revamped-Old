@@ -1,0 +1,7 @@
+"vertexlitGeneric"
+{
+	// Original shader: BaseTexture
+	"$basetexture" "models/props_c17/door01a_skin7"
+	"$surfaceprop" "wood"
+
+}

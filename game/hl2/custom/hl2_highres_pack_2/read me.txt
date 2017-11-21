@@ -1,0 +1,23 @@
+______________________
+Author: Porky-da-Corgi
+______________________
+
+These are high quality skins of the HL2 characters that I made for my mod, the
+Half-Life 2 Enhancement mod (name subject to change). Released upon request.
+The forum thread for the mod can be found here: http://facepunch.com/showthread.php?t=1236615
+
+You are free to use the textures in any of your work, but if you use it in another mod, please give credit to me. 
+Do NOT re-upload these to any pay-sites!
+Please do not skin my skins without my permission.
+Please do not claim my work as your own.
+
+Thank you.
+
+__________________________
+Installation instructions:
+__________________________
+
+Drop files in-
+For HL2: Steam/Steamapps/username/Half-Life 2/hl2/
+For SFM: Steam/Steamapps/common/SourceFilmmaker/game/hl2
+For G-mod: Steam/Steamapps/username/garrysmod/garrysmod

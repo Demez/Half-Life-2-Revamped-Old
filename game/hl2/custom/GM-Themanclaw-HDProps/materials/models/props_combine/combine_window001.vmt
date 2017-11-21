@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_combine/combine_window001"
+	"$surfaceprop" "metal"	
+	"$basealphaenvmapmask" "1"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .5 .7 1]"
+	"$nodecal" "1"
+}

@@ -1,0 +1,19 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	//"$basetexture" "Models/props_canal/generator02"
+	//"$surfaceprop" "metal"
+ 	//"$envmaptint" "[ .04 .04 .04 ]"
+	//"$envmap" "env_cubemap"
+	//"$basealphaenvmapmask" 1
+
+	
+	"$basetexture" "Models/props_canal/generator02"
+	"$surfaceprop" "metal"
+	"$bumpmap" "Models/props_canal/generator02_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .42 .42 .42 ]"
+}

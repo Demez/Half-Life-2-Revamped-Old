@@ -1,0 +1,16 @@
+
+VertexLitGeneric
+{
+
+	$basetexture				models/jessev92/enhanced/odessa/odessa_face_d
+	$bumpmap					models/jessev92/enhanced/odessa/odessa_face_b
+	
+	$halflambert				1
+	$ambientocclusion			1
+	
+	$detail						models/jessev92/detail/skin1
+	$detailscale				16
+	$detailblendfactor			0.35
+	$detailblendmode			0
+	
+}

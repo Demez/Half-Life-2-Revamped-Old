@@ -1,0 +1,12 @@
+
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "Models/props_junk/TrafficCone001a"
+	"$envmap" "env_cubemap"
+	"$basealphaenvmapmask" 1
+	"$surfaceprop" "wood"
+	"$envmaptint" .3 .3 .3
+	
+}
+

@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_canal/Pipe_Bracket001"
+	"$surfaceprop" "metal"
+}

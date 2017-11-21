@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+     "$basetexture" "models\props_interiors\furniture_cabinetdrawer02a"
+     "$surfaceprop" "dirt"
+     	"$envmap" "env_cubemap"
+     	"$basealphaenvmapmask" 1 
+//	"$envmapsaturation" .2
+	"$envmaptint" .6 .6 .6
+}

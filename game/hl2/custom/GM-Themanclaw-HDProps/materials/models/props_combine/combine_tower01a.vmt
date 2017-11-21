@@ -1,0 +1,16 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	"$baseTexture"	"models/props_combine/combine_tower01a"
+	"$surfaceprop" "metal"
+	//"$bumpmap" "models/props_combine/combine_tower01a_normal"
+	"$envmap" "env_cubemap"
+	//"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .3 .3 .4]"
+}
+
+
+
+

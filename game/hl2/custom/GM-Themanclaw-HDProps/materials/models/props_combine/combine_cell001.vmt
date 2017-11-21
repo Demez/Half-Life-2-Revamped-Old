@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_combine/combine_cell001"
+	"$surfaceprop" "metal"
+	//"$envmap" "Environment Maps/envmapcombine"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .2 .2 .2]"
+	"$basealphaenvmapmask" 1
+	"$envmapmask" "models/props_combine/combine_cell001_mask"
+}

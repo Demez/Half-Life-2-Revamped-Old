@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_citizen_tech/Wind_Mill_Blade004"
+	"$surfaceprop" "metal"
+	"$nocull" 1
+}

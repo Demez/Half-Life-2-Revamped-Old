@@ -1,0 +1,14 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_combine/combine_bunker01"
+	"$surfaceprop" "metal"
+	"%keywords" "combine"
+	"$envmaptint" "[ .56 .67 .75 ]"
+	"$basealphaenvmapmask" 1
+	"$envmap" "env_cubemap"
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+}
+
+

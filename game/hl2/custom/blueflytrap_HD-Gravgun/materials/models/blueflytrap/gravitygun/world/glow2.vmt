@@ -1,0 +1,24 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" 	"models\blueflytrap\gravitygun\world\texture\glow"
+	"$bumpmap" 	"models\blueflytrap\gravitygun\world\texture\flatnormal"
+
+	"$halflambert" "1"
+	"$phongfresnelranges"	"[0 0 0]"	// dummy
+
+	"$color2"		"[0 0 0]"
+
+	"$alphatest"		"1"
+	"$ambientocclusion"	"0"
+
+	"$phong"				"1"
+	"$phongboost"			"0"
+
+	$emissiveBlendEnabled 1
+	$emissiveBlendTexture	"models\blueflytrap\gravitygun\world\texture\tb_detail"
+	$emissiveBlendBaseTexture	"models\blueflytrap\gravitygun\world\texture\glow"
+	$emissiveBlendFlowTexture	"models\blueflytrap\gravitygun\world\texture\flow"
+	$emissiveBlendTint "[14.058 9.288 0.81]"
+	$emissiveBlendStrength 1
+	$emissiveBlendScrollVector "[-0.015 -0.016]"
+}

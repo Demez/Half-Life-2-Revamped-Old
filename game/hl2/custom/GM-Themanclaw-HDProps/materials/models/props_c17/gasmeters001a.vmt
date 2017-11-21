@@ -1,0 +1,12 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_c17/GasMeters001a"
+	"$bumpmap" "models/props_c17/gasmeters001a_normal"
+	"$phong" "1"
+	"$phongboost" "1"
+	"$phongexponent" "15"
+	"$phongfresnelranges"	"[.1 .8 1.2]"
+	
+}
+
+

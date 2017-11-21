@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_combine/combinebuttress_sheet"
+	"$surfaceprop" "metal"
+	"$envmapmask" "models/props_combine/combinebuttress_mask"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .5 .7 1]"
+	"$selfillum" "1"
+}

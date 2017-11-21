@@ -1,0 +1,21 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	//"$basetexture" "Models/props_canal/generator01"
+	//"$surfaceprop" "metal"
+ 	//"$envmaptint" "[ .06 .06 .06 ]"
+	//"$envmap" "env_cubemap"
+	//"$basealphaenvmapmask" 1
+
+	
+	"$basetexture" "Models/props_canal/generator01"
+	"$surfaceprop" "metal"
+	// Removed because bumpscale was set to 0.001 
+	// and the bump was expensive but not visible -MTW
+	//"$bumpmap" "Models/props_canal/generator01_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .42 .42 .42 ]"
+}

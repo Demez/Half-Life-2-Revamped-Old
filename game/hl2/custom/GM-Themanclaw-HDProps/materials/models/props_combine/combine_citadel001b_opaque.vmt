@@ -1,0 +1,17 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_combine/Combine_Citadel001b_opaque"
+	"$surfaceprop" "metal"
+	//"$envmap" "env_cubemap"
+	//"$basealphaenvmapmask" 1
+	"$alpha" 1
+	//"$envmaptint" "[ .75 .75 1 ]"
+	//"$translucent" 1
+	"$nofog" 1
+	//"$envmapmask"	"Models/props_combine/combine_citadel001b_spec"
+
+	
+	
+	
+	
+}

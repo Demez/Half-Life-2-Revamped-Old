@@ -1,0 +1,9 @@
+
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "Models/props_wasteland/laundry_carts001a"
+	"$surfaceprop" "wood"
+	//"$envmap" "env_cubemap"
+	//"$basealphaenvmapmask" 1
+}

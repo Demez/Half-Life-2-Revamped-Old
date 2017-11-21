@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_canal/canal_bars002"
+	"$surfaceprop" "metal"
+}

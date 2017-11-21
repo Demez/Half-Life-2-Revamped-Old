@@ -1,0 +1,9 @@
+
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "Models/props_wasteland/quarryobjects01"
+	"$model" 1
+	"$surfaceprop" "metal"
+	
+}

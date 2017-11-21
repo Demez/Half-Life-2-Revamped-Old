@@ -1,0 +1,18 @@
+// envmaptint_fix
+"vertexlitGeneric"
+{
+	// Original shader: BaseTexture
+	"$basetexture" "models/props_c17/door01a_skin14"
+	"$surfaceprop" "wood"
+	"$bumpmap" "models/props_c17/door01a_skin14_normal"
+	"%keywords" "c17downtown"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" .2
+	"$envmaptint" "[ .56 .56 .56 ]"
+
+
+}
+
+

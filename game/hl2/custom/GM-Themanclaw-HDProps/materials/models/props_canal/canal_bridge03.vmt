@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$alphatest" 			1
+	"$baseTexture"			"models/props_canal/canal_bridge03"
+	"$model" 1
+	//"$nocull" 1
+}

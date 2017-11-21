@@ -1,0 +1,8 @@
+
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "Models/props_wasteland/dockpole01"
+	"$surfaceprop" "wood"
+	
+}

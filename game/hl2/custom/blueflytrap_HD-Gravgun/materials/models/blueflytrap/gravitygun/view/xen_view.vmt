@@ -1,0 +1,21 @@
+"VertexlitGeneric"
+{
+//	"$basetexture" "dev\null"
+
+	"$additive"	"1"
+
+	"$color2"		"[0 0 0]"
+
+	"$phong" "1"
+	"$phongboost"	"0"
+
+	$emissiveBlendEnabled 1
+	$emissiveBlendTexture	"models\blueflytrap\gravitygun\view\texture\tb_detail_view"
+	$emissiveBlendBaseTexture	"models\blueflytrap\gravitygun\view\texture\view_xen"
+	$emissiveBlendFlowTexture	"models\blueflytrap\gravitygun\view\texture\view_flow"
+//	$emissiveBlendTint "[14.058 9.288 0.81]"
+//	$emissiveBlendTint "[10.544 6.966 0.608]"
+	$emissiveBlendTint "[7.029 4.644 0.405]"
+	$emissiveBlendStrength 1
+	$emissiveBlendScrollVector "[-0.015 -0.016]"
+}

@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_citizen_tech/Wind_Mill_Blade002"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .5 .5 .5]"
+	"$basealphaenvmapmask" 1
+}

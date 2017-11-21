@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/props_c17/display_cooler01a"
+	"$basealphaenvmapmask" 1
+//	"$envmapmask" "Models/props_c17/display_cooler01a_02"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .35 .35 .35]"
+
+}
+
+

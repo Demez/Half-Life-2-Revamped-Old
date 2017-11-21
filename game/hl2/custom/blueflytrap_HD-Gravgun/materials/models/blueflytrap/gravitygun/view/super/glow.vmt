@@ -1,0 +1,28 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"models\blueflytrap\gravitygun\world\texture\rays"
+	"$bumpmap" 	"models\blueflytrap\gravitygun\world\texture\flatnormal"
+
+	"$detail" "models\blueflytrap\gravitygun\world\texture\world_gg"
+
+	"$detailblendfactor" "1"
+ 	"$detailblendmode" "0"
+	"$detailscale" "1"
+
+	"$additive"	"1"
+
+	"$basetexturetransform"	"center 0 0 scale 2 5 rotate 0 translate 0 0"
+	"$bumptransform"		"center 0 0 scale 2 5 rotate 0 translate 0 0"
+
+	"$phong" "1"
+
+	"$phongboost" "0"
+	"$phongfresnelranges"	"[ 0 0 0]"	// dummy
+
+	"$selfillum"	"1"
+	"$selfIllumFresnel"	"1"
+
+	"$selfIllumFresnelMinMaxExp" "[0 4 1.9]"
+
+	"$color2"		"[0.0011 0.0147 0.0296]"
+}

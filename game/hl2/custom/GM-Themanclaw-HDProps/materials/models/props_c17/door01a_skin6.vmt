@@ -1,0 +1,11 @@
+"vertexlitGeneric"
+{
+	// Original shader: BaseTexture
+	"$basetexture" "models/props_c17/door01a_skin6"
+	"$surfaceprop" "wood"
+
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "3.545"
+	"$detailblendfactor" .4
+	"$detailblendmode" 0
+}

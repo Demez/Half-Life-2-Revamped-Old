@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	//"$color"				"[1 1 1]"
+	"$baseTexture"			"models/props_combine/combine_cell"
+	"$envmap" "env_cubemap"
+	"$basealphaenvmapmask" 1
+	"$envmaptint" "[ .125 .125 .125]"
+
+}

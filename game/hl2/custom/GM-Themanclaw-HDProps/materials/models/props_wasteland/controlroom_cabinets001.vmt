@@ -1,0 +1,15 @@
+
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "Models/props_wasteland/controlroom_cabinets001"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$basealphaenvmapmask" 1
+
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "6.545"
+	"$detailblendfactor" .5
+	"$detailblendmode" 0
+	
+}
