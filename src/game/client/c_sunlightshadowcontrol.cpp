@@ -1,23 +1,30 @@
-//========= Copyright � 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Sunlight shadow control entity.
 //
 // $NoKeywords: $
 //=============================================================================//
 #include "cbase.h"
-#include "vprof.h"
 
 #include "c_baseplayer.h"
-#ifdef INFESTED_DLL
-#include "c_asw_marine.h"
-#endif
+#include "vprof.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
 
 ConVar cl_sunlight_ortho_size("cl_sunlight_ortho_size", "0.0", FCVAR_CHEAT, "Set to values greater than 0 for ortho view render projections.");
-ConVar cl_sunlight_depthbias( "cl_sunlight_depthbias", "0.02" );
+ConVar cl_sunlight_depthbias("cl_sunlight_depthbias", "0.00"); //setting this to 0 causes slight issues on models, but the shadow bleeding would be way too obivous and just look very bad
+
+//ConVar cl_sunlight_enabled("cl_sunlight_enabled", "1", FCVAR_ARCHIVE);
+//ConVar cl_sunlight_freeze("cl_sunlight_freeze", "0");
+ConVar cl_sunlight_xoffset("cl_sunlight_xoffset", "0");
+ConVar cl_sunlight_yoffset("cl_sunlight_yoffset", "0");
+//ConVar cl_sunlight_drawfrustum("cl_sunlight_drawfrustum", "0");
+ConVar cl_sunlight_orthosize("cl_sunlight_orthosize", "1000");
+ConVar cl_sunlight_showpos("cl_sunlight_showpos", "0");
+ConVar cl_sunlight_xpos("cl_sunlight_xpos", "0");
+ConVar cl_sunlight_ypos("cl_sunlight_ypos", "0");
 
 //------------------------------------------------------------------------------
 // Purpose : Sunlights shadow control entity
@@ -25,13 +32,13 @@ ConVar cl_sunlight_depthbias( "cl_sunlight_depthbias", "0.02" );
 class C_SunlightShadowControl : public C_BaseEntity
 {
 public:
-	DECLARE_CLASS( C_SunlightShadowControl, C_BaseEntity );
+	DECLARE_CLASS(C_SunlightShadowControl, C_BaseEntity);
 
 	DECLARE_CLIENTCLASS();
 
 	virtual ~C_SunlightShadowControl();
 
-	void OnDataChanged( DataUpdateType_t updateType );
+	void OnDataChanged(DataUpdateType_t updateType);
 	void Spawn();
 	bool ShouldDraw();
 
@@ -40,7 +47,7 @@ public:
 private:
 	Vector m_shadowDirection;
 	bool m_bEnabled;
-	char m_TextureName[ MAX_PATH ];
+	char m_TextureName[MAX_PATH];
 	CTextureReference m_SpotlightTexture;
 	color32	m_LightColor;
 	Vector m_CurrentLinearFloatLightColor;
@@ -61,36 +68,36 @@ ClientShadowHandle_t C_SunlightShadowControl::m_LocalFlashlightHandle = CLIENTSH
 
 
 IMPLEMENT_CLIENTCLASS_DT(C_SunlightShadowControl, DT_SunlightShadowControl, CSunlightShadowControl)
-	RecvPropVector(RECVINFO(m_shadowDirection)),
-	RecvPropBool(RECVINFO(m_bEnabled)),
-	RecvPropString(RECVINFO(m_TextureName)),
-	RecvPropInt(RECVINFO(m_LightColor), 0, RecvProxy_Int32ToColor32),
-	RecvPropFloat(RECVINFO(m_flColorTransitionTime)),
-	RecvPropFloat(RECVINFO(m_flSunDistance)),
-	RecvPropFloat(RECVINFO(m_flFOV)),
-	RecvPropFloat(RECVINFO(m_flNearZ)),
-	RecvPropFloat(RECVINFO(m_flNorthOffset)),
-	RecvPropBool(RECVINFO(m_bEnableShadows)),
+RecvPropVector(RECVINFO(m_shadowDirection)),
+RecvPropBool(RECVINFO(m_bEnabled)),
+RecvPropString(RECVINFO(m_TextureName)),
+RecvPropInt(RECVINFO(m_LightColor), 0, RecvProxy_Int32ToColor32),
+RecvPropFloat(RECVINFO(m_flColorTransitionTime)),
+RecvPropFloat(RECVINFO(m_flSunDistance)),
+RecvPropFloat(RECVINFO(m_flFOV)),
+RecvPropFloat(RECVINFO(m_flNearZ)),
+RecvPropFloat(RECVINFO(m_flNorthOffset)),
+RecvPropBool(RECVINFO(m_bEnableShadows)),
 END_RECV_TABLE()
 
 
 C_SunlightShadowControl::~C_SunlightShadowControl()
 {
-	if ( m_LocalFlashlightHandle != CLIENTSHADOW_INVALID_HANDLE )
+	if (m_LocalFlashlightHandle != CLIENTSHADOW_INVALID_HANDLE)
 	{
-		g_pClientShadowMgr->DestroyFlashlight( m_LocalFlashlightHandle );
+		g_pClientShadowMgr->DestroyFlashlight(m_LocalFlashlightHandle);
 		m_LocalFlashlightHandle = CLIENTSHADOW_INVALID_HANDLE;
 	}
 }
 
-void C_SunlightShadowControl::OnDataChanged( DataUpdateType_t updateType )
+void C_SunlightShadowControl::OnDataChanged(DataUpdateType_t updateType)
 {
-	if ( updateType == DATA_UPDATE_CREATED )
+	if (updateType == DATA_UPDATE_CREATED)
 	{
-		m_SpotlightTexture.Init( m_TextureName, TEXTURE_GROUP_OTHER, true );
+		m_SpotlightTexture.Init(m_TextureName, TEXTURE_GROUP_OTHER, true);
 	}
 
-	BaseClass::OnDataChanged( updateType );
+	BaseClass::OnDataChanged(updateType);
 }
 
 void C_SunlightShadowControl::Spawn()
@@ -99,7 +106,7 @@ void C_SunlightShadowControl::Spawn()
 
 	m_bOldEnableShadows = m_bEnableShadows;
 
-	SetNextClientThink( CLIENT_THINK_ALWAYS );
+	SetNextClientThink(CLIENT_THINK_ALWAYS);
 }
 
 //------------------------------------------------------------------------------
@@ -113,74 +120,93 @@ bool C_SunlightShadowControl::ShouldDraw()
 void C_SunlightShadowControl::ClientThink()
 {
 	VPROF("C_SunlightShadowControl::ClientThink");
-	if ( m_bEnabled )
+	if (m_bEnabled)
 	{
-		Vector vLinearFloatLightColor( m_LightColor.r, m_LightColor.g, m_LightColor.b );
+		Vector vLinearFloatLightColor(m_LightColor.r, m_LightColor.g, m_LightColor.b);
 		float flLinearFloatLightAlpha = m_LightColor.a;
 
-		if ( m_CurrentLinearFloatLightColor != vLinearFloatLightColor || m_flCurrentLinearFloatLightAlpha != flLinearFloatLightAlpha )
+		if (m_CurrentLinearFloatLightColor != vLinearFloatLightColor || m_flCurrentLinearFloatLightAlpha != flLinearFloatLightAlpha)
 		{
 			float flColorTransitionSpeed = gpGlobals->frametime * m_flColorTransitionTime * 255.0f;
 
-			m_CurrentLinearFloatLightColor.x = Approach( vLinearFloatLightColor.x, m_CurrentLinearFloatLightColor.x, flColorTransitionSpeed );
-			m_CurrentLinearFloatLightColor.y = Approach( vLinearFloatLightColor.y, m_CurrentLinearFloatLightColor.y, flColorTransitionSpeed );
-			m_CurrentLinearFloatLightColor.z = Approach( vLinearFloatLightColor.z, m_CurrentLinearFloatLightColor.z, flColorTransitionSpeed );
-			m_flCurrentLinearFloatLightAlpha = Approach( flLinearFloatLightAlpha, m_flCurrentLinearFloatLightAlpha, flColorTransitionSpeed );
+			m_CurrentLinearFloatLightColor.x = Approach(vLinearFloatLightColor.x, m_CurrentLinearFloatLightColor.x, flColorTransitionSpeed);
+			m_CurrentLinearFloatLightColor.y = Approach(vLinearFloatLightColor.y, m_CurrentLinearFloatLightColor.y, flColorTransitionSpeed);
+			m_CurrentLinearFloatLightColor.z = Approach(vLinearFloatLightColor.z, m_CurrentLinearFloatLightColor.z, flColorTransitionSpeed);
+			m_flCurrentLinearFloatLightAlpha = Approach(flLinearFloatLightAlpha, m_flCurrentLinearFloatLightAlpha, flColorTransitionSpeed);
 		}
 
 		FlashlightState_t state;
 
 		Vector vDirection = m_shadowDirection;
-		VectorNormalize( vDirection );
+		VectorNormalize(vDirection);
 
 		QAngle angView;
-		engine->GetViewAngles( angView );
+		engine->GetViewAngles(angView);
 
 		//Vector vViewUp = Vector( 0.0f, 1.0f, 0.0f );
 		Vector vSunDirection2D = vDirection;
 		vSunDirection2D.z = 0.0f;
 
-		HACK_GETLOCALPLAYER_GUARD( "C_SunlightShadowControl::ClientThink" );
+		HACK_GETLOCALPLAYER_GUARD("C_SunlightShadowControl::ClientThink");
 
-#ifdef INFESTED_DLL		// shine sun on your current marine, rather than the player entity
-		C_ASW_Marine *pMarine = C_ASW_Marine::GetLocalMarine();
-		if ( !pMarine )
+		if (!C_BasePlayer::GetLocalPlayer())
 			return;
 
-		Vector vPos = ( pMarine->GetAbsOrigin() + vSunDirection2D * m_flNorthOffset ) - vDirection * m_flSunDistance;
-#else
-		if ( !C_BasePlayer::GetLocalPlayer() )
-			return;
+		//Vector vPos = (C_BasePlayer::GetLocalPlayer()->GetAbsOrigin() + vSunDirection2D * m_flNorthOffset) - vDirection * m_flSunDistance;
 
-		Vector vPos = ( C_BasePlayer::GetLocalPlayer()->GetAbsOrigin() + vSunDirection2D * m_flNorthOffset ) - vDirection * m_flSunDistance;
-#endif
+		Vector vPos;
+		QAngle EyeAngles;
+		float flZNear, flZFar, flFov;
+
+		C_BasePlayer::GetLocalPlayer()->CalcView(vPos, EyeAngles, flZNear, flZFar, flFov);
+		//		Vector vPos = C_BasePlayer::GetLocalPlayer()->GetAbsOrigin();
+
+		//		vPos = Vector( 0.0f, 0.0f, 500.0f );
+		vPos = (vPos + vSunDirection2D * m_flNorthOffset) - vDirection * m_flSunDistance;
+		vPos += Vector(cl_sunlight_xoffset.GetFloat(), cl_sunlight_yoffset.GetFloat(), 0.0f);
+
+		if (cl_sunlight_showpos.GetBool() == true){	//ËÀË ß ÒÓÒÀ ÍÅÌÍÎÃÎ ÍÀØÊÎÄÈË, ÍÅ ÐÓÃÀÉÒÈÑ ÏËÇ ËÀÍÑÏÑ
+			if (cl_sunlight_xpos.GetFloat() != 0 && cl_sunlight_ypos.GetFloat() != 0) {
+				DevMsg("X = %3.0f\n Y = %3.0f\n", cl_sunlight_xpos.GetFloat(), cl_sunlight_ypos.GetFloat());
+			}
+			else
+				DevMsg("X = %3.0f\n Y = %3.0f\n", vPos.x, vPos.y);
+		}
+		if (cl_sunlight_xpos.GetFloat() != 0 && cl_sunlight_ypos.GetFloat() != 0) {
+			vPos.x = cl_sunlight_xpos.GetFloat();
+			vPos.y = cl_sunlight_ypos.GetFloat();
+		}
 
 		QAngle angAngles;
-		VectorAngles( vDirection, angAngles );
+		VectorAngles(vDirection, angAngles);
 
 		Vector vForward, vRight, vUp;
-		AngleVectors( angAngles, &vForward, &vRight, &vUp );
+		AngleVectors(angAngles, &vForward, &vRight, &vUp);
 
 		state.m_fHorizontalFOVDegrees = m_flFOV;
 		state.m_fVerticalFOVDegrees = m_flFOV;
 
 		state.m_vecLightOrigin = vPos;
-		BasisToQuaternion( vForward, vRight, vUp, state.m_quatOrientation );
+		BasisToQuaternion(vForward, vRight, vUp, state.m_quatOrientation);
 
 		state.m_fQuadraticAtten = 0.0f;
-		state.m_fLinearAtten = m_flSunDistance / 2.0f;
+		//state.m_fLinearAtten = m_flSunDistance / 2.0f;
+		state.m_fLinearAtten = m_flSunDistance * 2.0f;
 		state.m_fConstantAtten = 0.0f;
-		state.m_FarZAtten = m_flSunDistance + 300.0f;
-		state.m_Color[0] = m_CurrentLinearFloatLightColor.x * ( 1.0f / 255.0f ) * m_flCurrentLinearFloatLightAlpha;
-		state.m_Color[1] = m_CurrentLinearFloatLightColor.y * ( 1.0f / 255.0f ) * m_flCurrentLinearFloatLightAlpha;
-		state.m_Color[2] = m_CurrentLinearFloatLightColor.z * ( 1.0f / 255.0f ) * m_flCurrentLinearFloatLightAlpha;
+		//state.m_FarZAtten = m_flSunDistance + 300.0f;
+		state.m_FarZAtten = m_flSunDistance * 2.0f;
+		state.m_Color[0] = m_CurrentLinearFloatLightColor.x * (1.0f / 255.0f) * m_flCurrentLinearFloatLightAlpha;
+		state.m_Color[1] = m_CurrentLinearFloatLightColor.y * (1.0f / 255.0f) * m_flCurrentLinearFloatLightAlpha;
+		state.m_Color[2] = m_CurrentLinearFloatLightColor.z * (1.0f / 255.0f) * m_flCurrentLinearFloatLightAlpha;
 		state.m_Color[3] = 0.0f; // fixme: need to make ambient work m_flAmbient;
-		state.m_NearZ = fpmax( 4.0f, m_flSunDistance - m_flNearZ );
-		state.m_FarZ = m_flSunDistance + 300.0f;
+		state.m_NearZ = fpmax(4.0f, m_flSunDistance - m_flNearZ);
+		state.m_FarZ = m_flSunDistance * 2.0f;
+		state.m_fBrightnessScale = 0.1f;
 
-		float flOrthoSize = cl_sunlight_ortho_size.GetFloat();
+		//float flOrthoSize = cl_sunlight_ortho_size.GetFloat();
+		float flOrthoSize = cl_sunlight_orthosize.GetFloat();
 
-		if ( flOrthoSize > 0 )
+		if (flOrthoSize > 0)
 		{
 			state.m_bOrtho = true;
 			state.m_fOrthoLeft = -flOrthoSize;
@@ -193,44 +219,45 @@ void C_SunlightShadowControl::ClientThink()
 			state.m_bOrtho = false;
 		}
 
-		state.m_flShadowSlopeScaleDepthBias = 2;
+		state.m_flShadowSlopeScaleDepthBias = 1;
 		state.m_flShadowDepthBias = cl_sunlight_depthbias.GetFloat();
 		state.m_bEnableShadows = m_bEnableShadows;
 		state.m_pSpotlightTexture = m_SpotlightTexture;
 		state.m_pProjectedMaterial = NULL;
 		state.m_nSpotlightTextureFrame = 0;
+		state.m_flShadowFilterSize = 0.2f;
 
 		state.m_nShadowQuality = 1; // Allow entity to affect shadow quality
 		state.m_bShadowHighRes = true;
 
-		if ( m_bOldEnableShadows != m_bEnableShadows )
+		if (m_bOldEnableShadows != m_bEnableShadows)
 		{
 			// If they change the shadow enable/disable, we need to make a new handle
-			if ( m_LocalFlashlightHandle != CLIENTSHADOW_INVALID_HANDLE )
+			if (m_LocalFlashlightHandle != CLIENTSHADOW_INVALID_HANDLE)
 			{
-				g_pClientShadowMgr->DestroyFlashlight( m_LocalFlashlightHandle );
+				g_pClientShadowMgr->DestroyFlashlight(m_LocalFlashlightHandle);
 				m_LocalFlashlightHandle = CLIENTSHADOW_INVALID_HANDLE;
 			}
 
 			m_bOldEnableShadows = m_bEnableShadows;
 		}
 
-		if( m_LocalFlashlightHandle == CLIENTSHADOW_INVALID_HANDLE )
+		if (m_LocalFlashlightHandle == CLIENTSHADOW_INVALID_HANDLE)
 		{
-			m_LocalFlashlightHandle = g_pClientShadowMgr->CreateFlashlight( state );
+			m_LocalFlashlightHandle = g_pClientShadowMgr->CreateFlashlight(state);
 		}
 		else
 		{
-			g_pClientShadowMgr->UpdateFlashlightState( m_LocalFlashlightHandle, state );
+			g_pClientShadowMgr->UpdateFlashlightState(m_LocalFlashlightHandle, state);
 #ifndef INFESTED_DLL
 #pragma message("TODO: rebuild sunlight projected texture after sunlight control changes.")
-			g_pClientShadowMgr->UpdateProjectedTexture( m_LocalFlashlightHandle, true );
+			g_pClientShadowMgr->UpdateProjectedTexture(m_LocalFlashlightHandle, true);
 #endif
 		}
 	}
-	else if ( m_LocalFlashlightHandle != CLIENTSHADOW_INVALID_HANDLE )
+	else if (m_LocalFlashlightHandle != CLIENTSHADOW_INVALID_HANDLE)
 	{
-		g_pClientShadowMgr->DestroyFlashlight( m_LocalFlashlightHandle );
+		g_pClientShadowMgr->DestroyFlashlight(m_LocalFlashlightHandle);
 		m_LocalFlashlightHandle = CLIENTSHADOW_INVALID_HANDLE;
 	}
 

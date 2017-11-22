@@ -616,7 +616,7 @@ void CDetailModel::GetRenderBoundsWorldspace( Vector& mins, Vector& maxs )
 
 bool CDetailModel::ShouldReceiveProjectedTextures( int flags )
 {
-	return false;
+	return true;
 }
 
 bool CDetailModel::UsesPowerOfTwoFrameBufferTexture()

@@ -426,6 +426,19 @@ public:
 private:
 	int				m_BuildWorldListsNumber;
 
+	//CSM
+	enum CascadedConfigMode
+	{
+		CASCADEDCONFIG_NONE = 0,
+		CASCADEDCONFIG_NORMAL,
+		CASCADEDCONFIG_SPACE
+		//CASCADEDCONFIG_FAR
+	};
+
+	// General draw methods
+	// baseDrawFlags is a combination of DF_ defines. DF_MONITOR is passed into here while drawing a monitor.
+	void			ViewDrawScene(CascadedConfigMode cascadedMode, bool bDrew3dSkybox, SkyboxVisibility_t nSkyboxVisible, const CViewSetup &view, int nClearFlags, view_id_t viewID, bool bDrawViewModel = false, int baseDrawFlags = 0, ViewCustomVisibility_t *pCustomVisibility = NULL);
+	//
 
 	// General draw methods
 	// baseDrawFlags is a combination of DF_ defines. DF_MONITOR is passed into here while drawing a monitor.
@@ -470,6 +483,9 @@ private:
 	void			SetupMain3DView( const CViewSetup &view, int &nClearFlags );
 	void			CleanupMain3DView( const CViewSetup &view );
 
+	//CSM
+	void			UpdateCascadedShadow(const CViewSetup &view, CascadedConfigMode mode);
+	//
 
 	// This stores the current view
  	CViewSetup		m_CurrentView;

@@ -96,7 +96,7 @@ ConVar r_flashlightdepthtexture( "r_flashlightdepthtexture", "1" );
 #if defined( _X360 )
 ConVar r_flashlightdepthres( "r_flashlightdepthres", "512" );
 #else
-ConVar r_flashlightdepthres( "r_flashlightdepthres", "4096" );
+ConVar r_flashlightdepthres( "r_flashlightdepthres", "8192" );
 #endif
 
 ConVar r_threaded_client_shadow_manager( "r_threaded_client_shadow_manager", "0" );
@@ -251,7 +251,7 @@ void CTextureAllocator::Init()
 	m_TexturePage.InitRenderTargetTexture( TEXTURE_PAGE_SIZE, TEXTURE_PAGE_SIZE, RT_SIZE_NO_CHANGE, IMAGE_FORMAT_ARGB8888, MATERIAL_RT_DEPTH_NONE, false, "_rt_Shadows" );
 
 	// edram footprint is only 256x256x4 = 256K
-	m_TexturePage.InitRenderTargetSurface( MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, IMAGE_FORMAT_ARGB8888, false );
+	m_TexturePage.InitRenderTargetSurface( MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, IMAGE_FORMAT_ARGB8888, false, RT_MULTISAMPLE_4_SAMPLES ); //if this gives you errors, remove RT_MULITSAMPLE_4_SAMPLES
 
 	// due to texture/surface size mismatch, ensure texture page is entirely cleared translucent
 	// otherwise border artifacts at edge of shadows due to pixel shader averaging of unwanted bits
@@ -789,6 +789,13 @@ public:
 	// Are we the child of a shadow with render-to-texture?
 	bool ShouldUseParentShadow( IClientRenderable *pRenderable );
 
+	//global_light
+	// Toggle shadow casting from world light sources
+	virtual void SetShadowFromWorldLightsEnabled( bool bEnable );
+	void SuppressShadowFromWorldLights(bool bSuppress);
+	bool IsShadowingFromWorldLights() const { return m_bShadowFromWorldLights && !m_bSuppressShadowFromWorldLights; }
+
+
 	void SetShadowsDisabled( bool bDisabled ) 
 	{ 
 		r_shadows_gamecontrol.SetValue( bDisabled != 1 );
@@ -824,6 +831,9 @@ private:
 	void UpdateStudioShadow( IClientRenderable *pRenderable, ClientShadowHandle_t handle );
 	void UpdateBrushShadow( IClientRenderable *pRenderable, ClientShadowHandle_t handle );
 	void UpdateShadow( ClientShadowHandle_t handle, bool force );
+
+	// Updates shadow cast direction when shadowing from world lights		
+	//void UpdateShadowDirectionFromLocalLightSource(ClientShadowHandle_t shadowHandle);
 
 	// Gets the entity whose shadow this shadow will render into
 	IClientRenderable *GetParentShadowEntity( ClientShadowHandle_t handle );
@@ -971,6 +981,11 @@ private:
 	CUtlVector< CTextureReference > m_DepthTextureCache;
 	CUtlVector< bool > m_DepthTextureCacheLocks;
 	int	m_nMaxDepthTextureShadows;
+
+	//global_light
+	bool m_bShadowFromWorldLights;
+	bool m_bSuppressShadowFromWorldLights;
+
 
 	friend class CVisibleShadowList;
 	friend class CVisibleShadowFrustumList;
@@ -1168,7 +1183,9 @@ int CVisibleShadowList::FindShadows( const CViewSetup *pView, int nLeafCount, Le
 CClientShadowMgr::CClientShadowMgr() :
 	m_DirtyShadows( 0, 0, ShadowHandleCompareFunc ),
 	m_RenderToTextureActive( false ),
-	m_bDepthTextureActive( false )
+	m_bDepthTextureActive( false ),
+
+	m_bShadowFromWorldLights(false)
 {
 	m_nDepthTextureResolution = r_flashlightdepthres.GetInt();
 	m_bThreaded = false;
@@ -1293,7 +1310,7 @@ bool CClientShadowMgr::Init()
 	//bool bTools = CommandLine()->CheckParm( "-tools" ) != NULL;
 	//m_nMaxDepthTextureShadows = bTools ? 4 : 1;	// Just one shadow depth texture in games, more in tools
 	
-	m_nMaxDepthTextureShadows = 4; //with your number
+	m_nMaxDepthTextureShadows = 3; //with your number
 
 	bool bLowEnd = ( g_pMaterialSystemHardwareConfig->GetDXSupportLevel() < 80 );
 
@@ -1530,6 +1547,11 @@ void CClientShadowMgr::GetShadowColor( unsigned char *r, unsigned char *g, unsig
 void CClientShadowMgr::LevelInitPreEntity()
 {
 	m_bUpdatingDirtyShadows = false;
+
+	//global_light
+	// Default setting for this, can be overridden by shadow control entities
+	SetShadowFromWorldLightsEnabled(true);
+
 
 	Vector ambientColor;
 	engine->GetAmbientLightColor( ambientColor );
@@ -4204,6 +4226,18 @@ bool CClientShadowMgr::IsFlashlightTarget( ClientShadowHandle_t shadowHandle, IC
 							
 	return false;
 }
+
+//global_light
+void CClientShadowMgr::SetShadowFromWorldLightsEnabled(bool bEnable)
+{
+	bool bIsShadowingFromWorldLights = IsShadowingFromWorldLights();
+	m_bShadowFromWorldLights = bEnable;
+	if (bIsShadowingFromWorldLights != IsShadowingFromWorldLights())
+	{
+		UpdateAllShadows();
+	}
+}
+
 
 //-----------------------------------------------------------------------------
 // A material proxy that resets the base texture to use the rendered shadow

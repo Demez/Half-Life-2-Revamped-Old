@@ -504,7 +504,7 @@ $Project
 		
 		//new stuff
 		$File	"c_sunlightshadowcontrol.cpp"
-		//$File	"c_env_global_light.cpp"
+		$File	"c_env_global_light.cpp"
 		
 		//Haptics
 		$File	"$SRCDIR\public\haptics\haptic_msgs.cpp"	[!$X360]

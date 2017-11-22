@@ -60,6 +60,13 @@
 // SKIP: ($DISTANCEALPHA) && ($SEAMLESS_BASE || $SEAMLESS_DETAIL || $CUBEMAP || $LIGHTING_PREVIEW )
 // SKIP: ($DISTANCEALPHA) && ($WRITEWATERFOGTODESTALPHA || $PIXELFOGTYPE || $FLASHLIGHT || $FLASHLIGHTSHADOWS || $SRGB_INPUT_ADAPTER )
 
+// CSM
+// DYNAMIC: "CASCADED_SHADOW"			"0..1"  [vs30]
+// SKIP: ($CASCADED_SHADOW) && ($FLASHLIGHT)
+// SKIP: ($CASCADED_SHADOW) && ($SEAMLESS_BASE)
+// SKIP: ($CASCADED_SHADOW) && ($SEAMLESS_DETAIL)
+//
+
 // SKIP: $SEAMLESS_BASE && $SRGB_INPUT_ADAPTER
 // SKIP: $SEAMLESS_BASE && ($BLENDTINTBYBASEALPHA )
 
@@ -95,6 +102,10 @@ const float4 g_FlashlightAttenuationFactors	    : register( c22 );
 const HALF3 g_FlashlightPos						: register( c23 );
 const float4x4 g_FlashlightWorldToTexture		: register( c24 ); // through c27
 
+//CSM
+//#define g_CascadedForward				g_FlashlightPos
+//
+
 
 sampler BaseTextureSampler		: register( s0 );
 sampler EnvmapSampler			: register( s1 );
@@ -116,9 +127,19 @@ struct PS_INPUT
 #if SEAMLESS_DETAIL
 	HALF3 detailTexCoord			: TEXCOORD1;	// Seamless texture coordinate
 #else
-	HALF2 detailTexCoord			: TEXCOORD1;	// Detail texture coordinate
+//CSM
+	//#if CASCADED_SHADOW
+	//	float4 detailTexCoord		: TEXCOORD1;
+	//#else
+//
+		HALF2 detailTexCoord		: TEXCOORD1;	// Detail texture coordinate
 #endif
 	float4 color					: TEXCOORD2;	// Vertex color (from lighting or unlit)
+//CSM
+	//#if CASCADED_SHADOW
+	//	float4 worldVertToEyeVector		: TEXCOORD3;
+	//#else
+//
 	float3 worldVertToEyeVector		: TEXCOORD3;	// Necessary for reflection
 	float3 worldSpaceNormal			: TEXCOORD4;	// Necessary for cubemaps and flashlight
 

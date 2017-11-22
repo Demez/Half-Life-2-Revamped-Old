@@ -2035,6 +2035,9 @@
     <ClCompile Include="c_env_fog_controller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="c_env_global_light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="c_env_particlescript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
