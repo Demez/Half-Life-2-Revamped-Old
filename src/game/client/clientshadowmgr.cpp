@@ -863,8 +863,15 @@ private:
 	void RemoveShadowFromDirtyList( ClientShadowHandle_t handle );
 
 	// NOTE: this will ONLY return SHADOWS_NONE, SHADOWS_SIMPLE, or SHADOW_RENDER_TO_TEXTURE.
+	//3D-Grass
 	ShadowType_t GetActualShadowCastType( ClientShadowHandle_t handle ) const;
+	//ShadowHandle_t GetShadowHandle(ClientShadowHandle_t clienthandle){ return m_Shadows[clienthandle].m_ShadowHandle; };
+	// GetNumShadowDepthtextures(){ return m_DepthTextureCache.Count(); };
+	//CTextureReference GetShadowDepthTex(int num){ return m_DepthTextureCache[num]; };
+	
 	ShadowType_t GetActualShadowCastType( IClientRenderable *pRenderable ) const;
+	//ShadowType_t GetActualShadowCastType(ClientShadowHandle_t handle) const;
+	//
 
 	// Builds a simple blobby shadow
 	void BuildOrthoShadow( IClientRenderable* pRenderable, ClientShadowHandle_t handle, const Vector& mins, const Vector& maxs);

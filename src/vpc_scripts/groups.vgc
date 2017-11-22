@@ -8,6 +8,13 @@
 // Group definitions //
 ///////////////////////
 
+$Group "shadereditor"
+{
+	"vgui_controls_editor"
+	"editor_shader"
+	"shadereditor_dll"
+}
+
 $Group "gamedlls"
 {
 	"client"

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -12,7 +12,7 @@
 #pragma once
 #endif
 
-#if defined( DX10 ) && !defined( DX_TO_GL_ABSTRACTION )
+#ifdef DX10
 
 #include <d3d10.h>
 #include <d3dx10.h>
@@ -46,13 +46,16 @@ public:
 	typedef ID3D10Buffer					*LPDIRECT3DVERTEXBUFFER;
 };
 
-#endif // defined( DX10 ) && !defined( DX_TO_GL_ABSTRACTION )
+#endif // DX10
 
 
-#if !defined( _X360 ) && !defined( DX_TO_GL_ABSTRACTION )
+#if !defined( _X360 )
 #ifdef _DEBUG
 #define D3D_DEBUG_INFO 1
 #endif
+#include <d3d9.h>
+#include <d3dx9.h>
+#include <d3dx9core.h>
 #endif
 
 struct IDirect3DTexture9;
@@ -125,8 +128,6 @@ typedef int PixelShader_t;
 #define D3DSAMP_NOTSUPPORTED					D3DSAMP_FORCE_DWORD
 #define D3DRS_NOTSUPPORTED						D3DRS_FORCE_DWORD
 
-#include "togl/rendermechanism.h"
-
 #if defined( _X360 )
 
 // not supported, keeping for port ease
@@ -186,6 +187,6 @@ typedef enum D3DSHADEMODE
 	D3DSHADE_GOURAUD = 0,
 };
 
-#endif // _X360
+#endif
 
 #endif // LOCALD3DTYPES_H

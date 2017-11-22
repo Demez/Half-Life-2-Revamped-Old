@@ -1,1 +1,1 @@
-devtools\bin\vpc.exe /episodic +game /mksln episodic.sln
+devtools\bin\vpc.exe /episodic +shaders +game /mksln episodic.sln
