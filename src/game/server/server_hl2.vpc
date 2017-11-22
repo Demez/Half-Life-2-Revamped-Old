@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------------
 
 $Macro SRCDIR		"..\.."
-$Macro GAMENAME 	"hl2" [!$SOURCESDK]
-$Macro GAMENAME 	"hl2" [$SOURCESDK]
+$Macro GAMENAME 	"hl2-revamped" [!$SOURCESDK]
+$Macro GAMENAME 	"hl2-revamped" [$SOURCESDK]
 
 $Include "$SRCDIR\game\server\server_base.vpc"
 
@@ -19,7 +19,7 @@ $Configuration
 	}
 }
 
-$Project "Server (HL2)"
+$Project "Server (HL2-revamped)"
 {
 	$Folder	"Source Files"
 	{

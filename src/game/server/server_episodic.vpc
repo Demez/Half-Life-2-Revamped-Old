@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------------
 
 $Macro SRCDIR		"..\.."
-$Macro GAMENAME 	"episodic" [!$SOURCESDK]
-$Macro GAMENAME 	"episodic" [$SOURCESDK]
+$Macro GAMENAME 	"episodic-revamped" [!$SOURCESDK]
+$Macro GAMENAME 	"episodic-revamped" [$SOURCESDK]
 
 $Include "$SRCDIR\game\server\server_base.vpc"
 
@@ -19,7 +19,7 @@ $Configuration
 	}
 }
 
-$Project "Server (Episodic)"
+$Project "Server (Episodic-revamped)"
 {
 	$Folder	"Source Files"
 	{
