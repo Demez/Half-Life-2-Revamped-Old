@@ -1,0 +1,12 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "overlays/crosswalk_01"
+	"$translucent" 1
+	"$decal" 1
+	"$surfaceprop" "concrete"
+	$vertexalpha 1
+	//"$envmapsaturation" 1
+	//"$envmapcontrast" 1
+	//"$envmaptint" "[ .56 .56 .56 ]"
+}

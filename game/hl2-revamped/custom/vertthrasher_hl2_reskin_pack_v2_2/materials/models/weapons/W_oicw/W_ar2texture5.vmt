@@ -1,6 +1,0 @@
-"VertexLitGeneric"
-{
-	// Original shader: VertexLitTexture
-	"$basetexture" "models/Weapons/W_oicw/w_ar2texture5"
-	"$selfillum" "1"
-}

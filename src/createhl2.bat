@@ -1,2 +1,2 @@
-devtools\bin\vpc.exe /hl2 +shaders +game /mksln hl2.sln
+devtools\bin\vpc.exe /hl2 +game /mksln hl2.sln
 pause

@@ -477,6 +477,8 @@ struct FlashlightState_t
 	float m_fOrthoRight;
 	float m_fOrthoTop;
 	float m_fOrthoBottom;
+	//my edits
+	bool m_bSunlight;
 
 	//global light
 	float m_fBrightnessScale;

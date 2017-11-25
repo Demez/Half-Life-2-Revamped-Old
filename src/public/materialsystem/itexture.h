@@ -20,6 +20,20 @@ class IVTFTexture;
 class ITexture;
 struct Rect_t;
 
+//asw shit idk
+//#ifdef _X360
+enum RTMultiSampleCount360_t
+{
+	RT_MULTISAMPLE_NONE = 0,
+	RT_MULTISAMPLE_2_SAMPLES = 2,
+	RT_MULTISAMPLE_4_SAMPLES = 4,
+	RT_MULTISAMPLE_8_SAMPLES = 8,
+	//ok why
+	RT_MULTISAMPLE_16_SAMPLES = 16,
+	RT_MULTISAMPLE_MATCH_BACKBUFFER
+};
+//#endif
+
 //-----------------------------------------------------------------------------
 // This will get called on procedural textures to re-fill the textures
 // with the appropriate bit pattern. Calling Download() will also

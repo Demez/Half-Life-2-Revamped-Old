@@ -213,7 +213,7 @@ void C_GlobalLight::ClientThink()
 		//state.m_NearZ = 4.0f;
 		state.m_NearZ = fpmax(4.0f, m_flSunDistance - m_flNearZ);
 		state.m_FarZ = m_flSunDistance * 2.0f;
-		state.m_fBrightnessScale = 1.0f;
+		//state.m_fBrightnessScale = 1.0f;
 		state.m_bGlobalLight = true;
 
 		float flOrthoSize = cl_globallight_orthosize.GetFloat();

@@ -16,15 +16,19 @@
 ConVar cl_sunlight_ortho_size("cl_sunlight_ortho_size", "0.0", FCVAR_CHEAT, "Set to values greater than 0 for ortho view render projections.");
 ConVar cl_sunlight_depthbias("cl_sunlight_depthbias", "0.00"); //setting this to 0 causes slight issues on models, but the shadow bleeding would be way too obivous and just look very bad
 
-//ConVar cl_sunlight_enabled("cl_sunlight_enabled", "1", FCVAR_ARCHIVE);
-//ConVar cl_sunlight_freeze("cl_sunlight_freeze", "0");
+ConVar cl_sunlight_enabled("cl_sunlight_enabled", "1", FCVAR_ARCHIVE);
+ConVar cl_sunlight_freeze("cl_sunlight_freeze", "0");
 ConVar cl_sunlight_xoffset("cl_sunlight_xoffset", "0");
 ConVar cl_sunlight_yoffset("cl_sunlight_yoffset", "0");
-//ConVar cl_sunlight_drawfrustum("cl_sunlight_drawfrustum", "0");
+ConVar cl_sunlight_drawfrustum("cl_sunlight_drawfrustum", "0");
 ConVar cl_sunlight_orthosize("cl_sunlight_orthosize", "1000");
 ConVar cl_sunlight_showpos("cl_sunlight_showpos", "0");
 ConVar cl_sunlight_xpos("cl_sunlight_xpos", "0");
 ConVar cl_sunlight_ypos("cl_sunlight_ypos", "0");
+
+//ADD THIS IN
+// We still rely on r_flashlightbrightness, but here we can adjust the multiplier of the global light.
+//ConVar cl_sunlight_brightness("cl_sunlight_brightness_multiplier", "1.0");
 
 //------------------------------------------------------------------------------
 // Purpose : Sunlights shadow control entity
@@ -120,6 +124,16 @@ bool C_SunlightShadowControl::ShouldDraw()
 void C_SunlightShadowControl::ClientThink()
 {
 	VPROF("C_SunlightShadowControl::ClientThink");
+
+	bool bSupressWorldLights = false;
+
+	if (cl_sunlight_freeze.GetBool() == true)
+	{
+		return;
+	}
+	//let us turn this shit on and off ingame
+	m_bEnabled = cl_sunlight_enabled.GetBool();
+
 	if (m_bEnabled)
 	{
 		Vector vLinearFloatLightColor(m_LightColor.r, m_LightColor.g, m_LightColor.b);
@@ -193,18 +207,21 @@ void C_SunlightShadowControl::ClientThink()
 		//state.m_fLinearAtten = m_flSunDistance / 2.0f;
 		state.m_fLinearAtten = m_flSunDistance * 2.0f;
 		state.m_fConstantAtten = 0.0f;
-		//state.m_FarZAtten = m_flSunDistance + 300.0f;
-		state.m_FarZAtten = m_flSunDistance * 2.0f;
+		state.m_FarZAtten = m_flSunDistance + 30.0f; //300.0f
+		//state.m_FarZAtten = m_flSunDistance * 2.0f;
 		state.m_Color[0] = m_CurrentLinearFloatLightColor.x * (1.0f / 255.0f) * m_flCurrentLinearFloatLightAlpha;
 		state.m_Color[1] = m_CurrentLinearFloatLightColor.y * (1.0f / 255.0f) * m_flCurrentLinearFloatLightAlpha;
 		state.m_Color[2] = m_CurrentLinearFloatLightColor.z * (1.0f / 255.0f) * m_flCurrentLinearFloatLightAlpha;
 		state.m_Color[3] = 0.0f; // fixme: need to make ambient work m_flAmbient;
 		state.m_NearZ = fpmax(4.0f, m_flSunDistance - m_flNearZ);
 		state.m_FarZ = m_flSunDistance * 2.0f;
-		state.m_fBrightnessScale = 0.1f;
+		state.m_fBrightnessScale = 1.0f;
+		//state.m_fBrightnessScale = cl_sunlight_brightness.GetFloat();
 
 		//float flOrthoSize = cl_sunlight_ortho_size.GetFloat();
 		float flOrthoSize = cl_sunlight_orthosize.GetFloat();
+
+		state.m_bSunlight = true;
 
 		if (flOrthoSize > 0)
 		{
@@ -217,6 +234,12 @@ void C_SunlightShadowControl::ClientThink()
 		else
 		{
 			state.m_bOrtho = false;
+		}
+
+		if (cl_sunlight_drawfrustum.GetBool())
+		{
+			// Draw where we are projecting.
+			state.m_bDrawShadowFrustum = true;
 		}
 
 		state.m_flShadowSlopeScaleDepthBias = 1;
@@ -249,17 +272,20 @@ void C_SunlightShadowControl::ClientThink()
 		else
 		{
 			g_pClientShadowMgr->UpdateFlashlightState(m_LocalFlashlightHandle, state);
-#ifndef INFESTED_DLL
-#pragma message("TODO: rebuild sunlight projected texture after sunlight control changes.")
+//#ifndef INFESTED_DLL
+//#pragma message("TODO: rebuild sunlight projected texture after sunlight control changes.")
 			g_pClientShadowMgr->UpdateProjectedTexture(m_LocalFlashlightHandle, true);
-#endif
+//#endif
 		}
+
+		bSupressWorldLights = m_bEnableShadows;
 	}
 	else if (m_LocalFlashlightHandle != CLIENTSHADOW_INVALID_HANDLE)
 	{
 		g_pClientShadowMgr->DestroyFlashlight(m_LocalFlashlightHandle);
 		m_LocalFlashlightHandle = CLIENTSHADOW_INVALID_HANDLE;
 	}
+	g_pClientShadowMgr->SetShadowFromWorldLightsEnabled( !bSupressWorldLights );
 
 	BaseClass::ClientThink();
 }
