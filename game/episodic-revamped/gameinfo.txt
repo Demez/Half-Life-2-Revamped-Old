@@ -52,8 +52,8 @@
 			// in folders where they don't exist.  (Searching a VPK is much faster than making an operating
 			// system call.)
 			game_lv				hl2/hl2_lv.vpk
-			game+mod			ep2/ep2_english.vpk
-			game+mod			ep2/ep2_pak.vpk
+			//game+mod			ep2/ep2_english.vpk
+			//game+mod			ep2/ep2_pak.vpk
 			game				|all_source_engine_paths|episodic/ep1_english.vpk
 			game				|all_source_engine_paths|episodic/ep1_pak.vpk
 			game				|all_source_engine_paths|hl2/hl2_english.vpk
@@ -66,7 +66,7 @@
 
 			// Add the HL2 directory as a game search path.  This is also where where writes
 			// to the "game" path go.
-			game+game_write		ep2
+			game+game_write		episodic
 
 			// Where the game's binaries are
 			gamebin				episodic/bin

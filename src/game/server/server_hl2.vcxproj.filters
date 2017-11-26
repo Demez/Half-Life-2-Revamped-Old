@@ -2167,9 +2167,6 @@
     <ClCompile Include="env_entity_maker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="env_global_light.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="env_particlescript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

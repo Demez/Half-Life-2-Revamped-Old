@@ -1,0 +1,18 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Stone/stonewall022a"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "stone/stonewall022a_normal"
+	"%keywords" "c17downtown"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .5 .5 .5 ]"
+
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "7.345"
+	"$detailblendfactor" .8
+	"$detailblendmode" 0
+}

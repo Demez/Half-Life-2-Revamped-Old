@@ -109,7 +109,7 @@ ConVar r_flashlightdepthtexture( "r_flashlightdepthtexture", "1" );
 #if defined( _X360 )
 ConVar r_flashlightdepthres( "r_flashlightdepthres", "512" );
 #else
-ConVar r_flashlightdepthres( "r_flashlightdepthres", "8192" );
+ConVar r_flashlightdepthres( "r_flashlightdepthres", "4096" );
 #endif
 
 ConVar r_threaded_client_shadow_manager( "r_threaded_client_shadow_manager", "0" );
@@ -261,7 +261,7 @@ void CTextureAllocator::Init()
 
 	// edram footprint is only 256x256x4 = 256K
 	//m_TexturePage.InitRenderTargetSurface( MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, IMAGE_FORMAT_ARGB8888, false );
-	m_TexturePage.InitRenderTargetSurface( MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, IMAGE_FORMAT_ARGB8888, false, RT_MULTISAMPLE_16_SAMPLES, );
+	m_TexturePage.InitRenderTargetSurface( MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, IMAGE_FORMAT_ARGB8888, false, RT_MULTISAMPLE_4_SAMPLES, );
 	//RT_MULITSAMPLE_X_SAMPLES is from ASW, but apparently works in source 2013. all it does is just improve the shadow filtering, so less pixelation (and its not grainy)
 
 	// due to texture/surface size mismatch, ensure texture page is entirely cleared translucent
@@ -802,22 +802,19 @@ public:
 	// Are we the child of a shadow with render-to-texture?
 	bool ShouldUseParentShadow( IClientRenderable *pRenderable );
 
-	//global_light //RTT shadows
+	//RTT shadows
 	// Toggle shadow casting from world light sources
-	virtual void SetShadowFromWorldLightsEnabled( bool bEnable );
+	//virtual void SetShadowFromWorldLightsEnabled( bool bEnable );
+	//void SuppressShadowFromWorldLights(bool bSuppress);
+	//bool IsShadowingFromWorldLights() const { return m_bShadowFromWorldLights && !m_bSuppressShadowFromWorldLights; }
 	void SuppressShadowFromWorldLights(bool bSuppress);
-	bool IsShadowingFromWorldLights() const { return m_bShadowFromWorldLights && !m_bSuppressShadowFromWorldLights; }
-
+	void SetShadowFromWorldLightsEnabled(bool bEnabled);
+	bool IsShadowingFromWorldLights() const { return m_bShadowFromWorldLights; }
 
 	void SetShadowsDisabled( bool bDisabled ) 
 	{ 
 		r_shadows_gamecontrol.SetValue( bDisabled != 1 );
 	}
-
-	//RTT shadows
-	//void SuppressShadowFromWorldLights(bool bSuppress);
-	//void SetShadowFromWorldLightsEnabled(bool bEnabled);
-	//bool IsShadowingFromWorldLights() const { return m_bShadowFromWorldLights; }
 
 private:
 	enum
@@ -889,15 +886,8 @@ private:
 	void RemoveShadowFromDirtyList( ClientShadowHandle_t handle );
 
 	// NOTE: this will ONLY return SHADOWS_NONE, SHADOWS_SIMPLE, or SHADOW_RENDER_TO_TEXTURE.
-	//3D-Grass
 	ShadowType_t GetActualShadowCastType( ClientShadowHandle_t handle ) const;
-	//ShadowHandle_t GetShadowHandle(ClientShadowHandle_t clienthandle){ return m_Shadows[clienthandle].m_ShadowHandle; };
-	// GetNumShadowDepthtextures(){ return m_DepthTextureCache.Count(); };
-	//CTextureReference GetShadowDepthTex(int num){ return m_DepthTextureCache[num]; };
-	
 	ShadowType_t GetActualShadowCastType( IClientRenderable *pRenderable ) const;
-	//ShadowType_t GetActualShadowCastType(ClientShadowHandle_t handle) const;
-	//
 
 	// Builds a simple blobby shadow
 	void BuildOrthoShadow( IClientRenderable* pRenderable, ClientShadowHandle_t handle, const Vector& mins, const Vector& maxs);
@@ -1025,10 +1015,7 @@ private:
 
 	//RTT shadows
 	bool m_bShadowFromWorldLights;
-
-	//global_light
 	bool m_bSuppressShadowFromWorldLights;
-
 
 	friend class CVisibleShadowList;
 	friend class CVisibleShadowFrustumList;
@@ -1397,7 +1384,6 @@ void CClientShadowMgr::Shutdown()
 	materials->RemoveRestoreFunc( ShadowRestoreFunc );
 }
 
-
 //-----------------------------------------------------------------------------
 // Initialize, shutdown depth-texture shadows
 //-----------------------------------------------------------------------------
@@ -1430,13 +1416,13 @@ void CClientShadowMgr::InitDepthTextureShadows()
 #else
 		// SAUL: we want to create a render target of specific size, so use RT_SIZE_NO_CHANGE
 		m_DummyColorTexture.InitRenderTarget( m_nDepthTextureResolution, m_nDepthTextureResolution, RT_SIZE_NO_CHANGE, nullFormat, MATERIAL_RT_DEPTH_NONE, false, "_rt_ShadowDummy" );
-#endif
+#endif	
 
 		// Create some number of depth-stencil textures
 		m_DepthTextureCache.Purge();
 		m_DepthTextureCacheLocks.Purge();
 		for( int i=0; i < m_nMaxDepthTextureShadows; i++ )
-		{
+		{	
 			CTextureReference depthTex;	// Depth-stencil surface
 			bool bFalse = false;
 
@@ -1466,12 +1452,11 @@ void CClientShadowMgr::InitDepthTextureShadows()
 			m_DepthTextureCache.AddToTail( depthTex );
 			m_DepthTextureCacheLocks.AddToTail( bFalse );
 		}
-
-		materials->EndRenderTargetAllocation();
+		materials->EndRenderTargetAllocation();	
 	}
-	
 	timer.End();
 	DevMsg("InitDepthTextureShadows took %.2f msec\n", timer.GetDuration().GetMillisecondsF());
+	
 }
 
 void CClientShadowMgr::ShutdownDepthTextureShadows() 
@@ -4049,7 +4034,7 @@ void CClientShadowMgr::ComputeShadowDepthTextures( const CViewSetup &viewSetup )
 		ClientShadow_t& shadow = m_Shadows[ pActiveDepthShadows[j] ];
 
 		CTextureReference shadowDepthTexture;
-		bool bGotShadowDepthTexture = LockShadowDepthTexture( &shadowDepthTexture );
+		bool bGotShadowDepthTexture = LockShadowDepthTexture(&shadowDepthTexture);
 		if ( !bGotShadowDepthTexture )
 		{
 			// If we don't get one, that means we have too many this frame so bind no depth texture
@@ -4225,8 +4210,9 @@ void CClientShadowMgr::ComputeShadowTextures( const CViewSetup &view, int leafCo
 //-------------------------------------------------------------------------------------------------------
 // Lock down the usage of a shadow depth texture...must be unlocked for use on subsequent views / frames
 //-------------------------------------------------------------------------------------------------------
-bool CClientShadowMgr::LockShadowDepthTexture( CTextureReference *shadowDepthTexture )
-{
+bool CClientShadowMgr::LockShadowDepthTexture(CTextureReference *shadowDepthTexture)
+{	
+
 	for ( int i=0; i < m_DepthTextureCache.Count(); i++ )		// Search for cached shadow depth texture
 	{
 		if ( m_DepthTextureCacheLocks[i] == false )				// If a free one is found

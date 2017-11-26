@@ -13,20 +13,20 @@
 #include "tier0/memdbgon.h"
 
 
-ConVar cl_sunlight_ortho_size("cl_sunlight_ortho_size", "0.0", FCVAR_CHEAT, "Set to values greater than 0 for ortho view render projections.");
 ConVar cl_sunlight_depthbias("cl_sunlight_depthbias", "0.00"); //setting this to 0 causes slight issues on models, but the shadow bleeding would be way too obivous and just look very bad
-
 ConVar cl_sunlight_enabled("cl_sunlight_enabled", "1", FCVAR_ARCHIVE);
 ConVar cl_sunlight_freeze("cl_sunlight_freeze", "0");
 ConVar cl_sunlight_xoffset("cl_sunlight_xoffset", "0");
 ConVar cl_sunlight_yoffset("cl_sunlight_yoffset", "0");
-ConVar cl_sunlight_drawfrustum("cl_sunlight_drawfrustum", "0");
-ConVar cl_sunlight_orthosize("cl_sunlight_orthosize", "1000");
-ConVar cl_sunlight_showpos("cl_sunlight_showpos", "0");
-ConVar cl_sunlight_xpos("cl_sunlight_xpos", "0");
-ConVar cl_sunlight_ypos("cl_sunlight_ypos", "0");
+ConVar cl_sunlight_debug("cl_sunlight_debug", "0");
+ConVar cl_sunlight_orthosize("cl_sunlight_orthosize", "1000", FCVAR_CHEAT, "Set to values greater than 0 for ortho view render projections.");
 
-//ADD THIS IN
+//i dont even know
+//ConVar cl_sunlight_showpos("cl_sunlight_showpos", "0");
+//ConVar cl_sunlight_xpos("cl_sunlight_xpos", "0");
+//ConVar cl_sunlight_ypos("cl_sunlight_ypos", "0");
+
+//is it even possible to have this in source 2013?
 // We still rely on r_flashlightbrightness, but here we can adjust the multiplier of the global light.
 //ConVar cl_sunlight_brightness("cl_sunlight_brightness_multiplier", "1.0");
 
@@ -179,6 +179,7 @@ void C_SunlightShadowControl::ClientThink()
 		vPos = (vPos + vSunDirection2D * m_flNorthOffset) - vDirection * m_flSunDistance;
 		vPos += Vector(cl_sunlight_xoffset.GetFloat(), cl_sunlight_yoffset.GetFloat(), 0.0f);
 
+		/*
 		if (cl_sunlight_showpos.GetBool() == true){	//ËÀË ß ÒÓÒÀ ÍÅÌÍÎÃÎ ÍÀØÊÎÄÈË, ÍÅ ÐÓÃÀÉÒÈÑ ÏËÇ ËÀÍÑÏÑ
 			if (cl_sunlight_xpos.GetFloat() != 0 && cl_sunlight_ypos.GetFloat() != 0) {
 				DevMsg("X = %3.0f\n Y = %3.0f\n", cl_sunlight_xpos.GetFloat(), cl_sunlight_ypos.GetFloat());
@@ -190,6 +191,7 @@ void C_SunlightShadowControl::ClientThink()
 			vPos.x = cl_sunlight_xpos.GetFloat();
 			vPos.y = cl_sunlight_ypos.GetFloat();
 		}
+		*/
 
 		QAngle angAngles;
 		VectorAngles(vDirection, angAngles);
@@ -204,51 +206,43 @@ void C_SunlightShadowControl::ClientThink()
 		BasisToQuaternion(vForward, vRight, vUp, state.m_quatOrientation);
 
 		state.m_fQuadraticAtten = 0.0f;
-		//state.m_fLinearAtten = m_flSunDistance / 2.0f;
 		state.m_fLinearAtten = m_flSunDistance * 2.0f;
 		state.m_fConstantAtten = 0.0f;
-		state.m_FarZAtten = m_flSunDistance + 30.0f; //300.0f
-		//state.m_FarZAtten = m_flSunDistance * 2.0f;
+		state.m_FarZAtten = m_flSunDistance * 2.0f;
+		//state.m_FarZAtten = m_flSunDistance + 300.0f;
 		state.m_Color[0] = m_CurrentLinearFloatLightColor.x * (1.0f / 255.0f) * m_flCurrentLinearFloatLightAlpha;
 		state.m_Color[1] = m_CurrentLinearFloatLightColor.y * (1.0f / 255.0f) * m_flCurrentLinearFloatLightAlpha;
 		state.m_Color[2] = m_CurrentLinearFloatLightColor.z * (1.0f / 255.0f) * m_flCurrentLinearFloatLightAlpha;
 		state.m_Color[3] = 0.0f; // fixme: need to make ambient work m_flAmbient;
-		state.m_NearZ = fpmax(4.0f, m_flSunDistance - m_flNearZ);
-		state.m_FarZ = m_flSunDistance * 2.0f;
-		state.m_fBrightnessScale = 1.0f;
+		state.m_NearZ = fpmax(4.0f, m_flSunDistance - m_flNearZ); //fpmax is here so shadowbleeding isnt fucked
+		state.m_FarZ = m_flSunDistance * 2.0f; //so that models can get lit and so shadows work properly
+		//state.m_fBrightnessScale = 1.0f; //changing this does nothing apparently, so that sucks
 		//state.m_fBrightnessScale = cl_sunlight_brightness.GetFloat();
-
-		//float flOrthoSize = cl_sunlight_ortho_size.GetFloat();
 		float flOrthoSize = cl_sunlight_orthosize.GetFloat();
 
+		//any point to this?
 		state.m_bSunlight = true;
 
-		if (flOrthoSize > 0)
-		{
-			state.m_bOrtho = true;
-			state.m_fOrthoLeft = -flOrthoSize;
-			state.m_fOrthoTop = -flOrthoSize;
-			state.m_fOrthoRight = flOrthoSize;
-			state.m_fOrthoBottom = flOrthoSize;
-		}
-		else
-		{
-			state.m_bOrtho = false;
-		}
+		state.m_bOrtho = true;
+		state.m_fOrthoLeft = -flOrthoSize;
+		state.m_fOrthoTop = -flOrthoSize;
+		state.m_fOrthoRight = flOrthoSize;
+		state.m_fOrthoBottom = flOrthoSize;
 
-		if (cl_sunlight_drawfrustum.GetBool())
+		if (cl_sunlight_debug.GetBool())
 		{
 			// Draw where we are projecting.
 			state.m_bDrawShadowFrustum = true;
 		}
 
-		state.m_flShadowSlopeScaleDepthBias = 1;
-		state.m_flShadowDepthBias = cl_sunlight_depthbias.GetFloat();
+		state.m_flShadowSlopeScaleDepthBias = 1.0f;
+		state.m_flShadowDepthBias = cl_sunlight_depthbias.GetFloat(); //This is better then the one below
+		//state.m_flShadowDepthBias = g_pMaterialSystemHardwareConfig->GetShadowDepthBias();
 		state.m_bEnableShadows = m_bEnableShadows;
 		state.m_pSpotlightTexture = m_SpotlightTexture;
 		state.m_pProjectedMaterial = NULL;
 		state.m_nSpotlightTextureFrame = 0;
-		state.m_flShadowFilterSize = 0.2f;
+		//state.m_flShadowFilterSize = 0.2f;
 
 		state.m_nShadowQuality = 1; // Allow entity to affect shadow quality
 		state.m_bShadowHighRes = true;
@@ -272,10 +266,7 @@ void C_SunlightShadowControl::ClientThink()
 		else
 		{
 			g_pClientShadowMgr->UpdateFlashlightState(m_LocalFlashlightHandle, state);
-//#ifndef INFESTED_DLL
-//#pragma message("TODO: rebuild sunlight projected texture after sunlight control changes.")
 			g_pClientShadowMgr->UpdateProjectedTexture(m_LocalFlashlightHandle, true);
-//#endif
 		}
 
 		bSupressWorldLights = m_bEnableShadows;

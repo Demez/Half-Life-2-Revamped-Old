@@ -1769,6 +1769,9 @@
     <ClInclude Include="..\..\game\shared\baseprojectile.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="c_env_projectedtexture.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="c_props.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -2036,9 +2039,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="c_env_fog_controller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="c_env_global_light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="c_env_particlescript.cpp">

@@ -44,6 +44,9 @@ private:
 	EHANDLE	m_hTargetEntity;
 
 	bool	m_bState;
+	//projtex caching
+	bool	m_bAlwaysUpdate;
+	//
 	float	m_flLightFOV;
 	bool	m_bEnableShadows;
 	bool	m_bLightOnlyTarget;

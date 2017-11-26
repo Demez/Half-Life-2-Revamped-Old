@@ -94,7 +94,7 @@ public:
 	// Set and clear flashlight target renderable
 	virtual void SetFlashlightTarget( ClientShadowHandle_t shadowHandle, EHANDLE targetEntity ) = 0;
 
-	//global light
+	//sunlightshadowctrl
 	// Toggle shadow casting from world light sources
 	virtual void SetShadowFromWorldLightsEnabled(bool bEnable) = 0;
 

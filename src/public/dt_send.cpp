@@ -273,6 +273,7 @@ void SendProxy_UInt64ToInt64( const SendProp *pProp, const void *pStruct, const 
 	*((int64*)&pOut->m_Int64) = *((uint64*)pData);
 }
 #endif
+
 //sunlightshadowctrl
 void SendProxy_Color32ToInt32(const SendProp *pProp, const void *pStruct, const void *pData, DVariant *pOut, int iElement, int objectID)
 {

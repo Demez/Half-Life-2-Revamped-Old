@@ -1,0 +1,18 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "stone/stonestair001a"
+	"$surfaceprop" "concrete"
+	"%keywords" "c17skyscraper"
+	"$bumpmap" "stone/stonestair001a_normal"
+	"$envmap" "env_cubemap"
+	"$envmapsaturation" 1
+	"$envmapcontrast" 1
+	"$envmaptint" "[ .12 .12 .12 ]"
+	"$normalmapalphaenvmapmask" 1
+
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "7.345"
+	"$detailblendfactor" .8
+	"$detailblendmode" 0
+}

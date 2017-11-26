@@ -1,0 +1,38 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Stone/stonewall051b"
+	"$surfaceprop" "concrete"
+	"%keywords" "c17downtown"
+	"$bumpmap" "stone/stonewall051a_normal"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .56 .56 .56 ]"
+	"$envmap" "env_cubemap"
+
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "7.345"
+	"$detailblendfactor" .8
+	"$detailblendmode" 0
+
+	"LightmappedGeneric_DX9"
+	{
+		"$normalmapalphaenvmapmask" 1
+		"$envmaptint" "[ .1 .1 .1]"
+	}
+
+	"LightmappedGeneric_DX8"
+	{
+		"$nodiffusebumplighting" 1
+		"$normalmapalphaenvmapmask" 1
+	}
+	
+	"LightmappedGeneric_hdr_dx9"
+	{
+		// put HDR override stuff here
+		"$envmaptint" "[ .1 .1 .1]"
+	}
+	
+	
+}

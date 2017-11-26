@@ -1,0 +1,17 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Stone/stonewall051a"
+	"$surfaceprop" "concrete"
+	"%keywords" "c17downtown"
+	"$bumpmap" "stone/stonewall051a_normal"
+	//"$normalmapalphaenvmapmask" 1
+	//"$envmapcontrast" 1
+	//"$envmapsaturation" 1
+	//"$envmaptint" "[ .75 .75 .75]"
+	//"$envmap" "env_cubemap"
+
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "7.345"
+	"$detailblendfactor" .8
+	"$detailblendmode" 0
+}
