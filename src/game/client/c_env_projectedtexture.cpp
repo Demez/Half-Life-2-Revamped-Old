@@ -18,8 +18,8 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-static ConVar mat_slopescaledepthbias_shadowmap( "mat_slopescaledepthbias_shadowmap", "4", FCVAR_CHEAT );
-static ConVar mat_depthbias_shadowmap(	"mat_depthbias_shadowmap", "0.00001", FCVAR_CHEAT  );
+extern ConVar mat_slopescaledepthbias_shadowmap;
+extern ConVar mat_depthbias_shadowmap;
 
 IMPLEMENT_CLIENTCLASS_DT( C_EnvProjectedTexture, DT_EnvProjectedTexture, CEnvProjectedTexture )
 	RecvPropEHandle( RECVINFO( m_hTargetEntity )	),
@@ -32,9 +32,6 @@ IMPLEMENT_CLIENTCLASS_DT( C_EnvProjectedTexture, DT_EnvProjectedTexture, CEnvPro
 	RecvPropBool(	 RECVINFO( m_bLightOnlyTarget ) ),
 	RecvPropBool(	 RECVINFO( m_bLightWorld )		),
 	RecvPropBool(	 RECVINFO( m_bCameraSpace )		),
-	//projtex brightness
-	//RecvPropFloat( RECVINFO( m_flBrightnessScale )),
-	//
 	RecvPropVector(	 RECVINFO( m_LinearFloatLightColor )		),
 	//RecvPropInt(RECVINFO(m_LightColor), 0, RecvProxy_Int32ToColor32),
 	RecvPropFloat(	 RECVINFO( m_flAmbient )		),
@@ -45,33 +42,33 @@ IMPLEMENT_CLIENTCLASS_DT( C_EnvProjectedTexture, DT_EnvProjectedTexture, CEnvPro
 	RecvPropInt(	 RECVINFO( m_nShadowQuality )	),
 END_RECV_TABLE()
 
-/*C_EnvProjectedTexture *C_EnvProjectedTexture::Create( )
+C_EnvProjectedTexture *C_EnvProjectedTexture::Create()
 {
 	C_EnvProjectedTexture *pEnt = new C_EnvProjectedTexture();
 
 	pEnt->m_flNearZ = 4.0f;
 	pEnt->m_flFarZ = 2000.0f;
-//	strcpy( pEnt->m_SpotlightTextureName, "particle/rj" );
+	//	strcpy( pEnt->m_SpotlightTextureName, "particle/rj" );
 	pEnt->m_bLightWorld = true;
 	pEnt->m_bLightOnlyTarget = false;
-	pEnt->m_bSimpleProjection = false;
+	//pEnt->m_bSimpleProjection = false;
 	pEnt->m_nShadowQuality = 1;
 	pEnt->m_flLightFOV = 10.0f;
-	pEnt->m_LightColor.r = 255;
-	pEnt->m_LightColor.g = 255;
-	pEnt->m_LightColor.b = 255;
-	pEnt->m_LightColor.a = 255;
-	pEnt->m_bEnableShadows = false;
-	pEnt->m_flColorTransitionTime = 1.0f;
+	//pEnt->m_LightColor.r = 255;
+	//pEnt->m_LightColor.g = 255;
+	//pEnt->m_LightColor.b = 255;
+	//pEnt->m_LightColor.a = 255;
+	pEnt->m_bEnableShadows = true;
+	//pEnt->m_flColorTransitionTime = 1.0f;
 	pEnt->m_bCameraSpace = false;
-	pEnt->SetAbsAngles( QAngle( 90, 0, 0 ) );
+	pEnt->SetAbsAngles(QAngle(90, 0, 0));
 	pEnt->m_bAlwaysUpdate = true;
 	pEnt->m_bState = true;
-	pEnt->m_flProjectionSize = 500.0f;
-	pEnt->m_flRotation = 0.0f;
+	//pEnt->m_flProjectionSize = 500.0f;
+	//pEnt->m_flRotation = 0.0f;
 
 	return pEnt;
-}*/
+}
 
 C_EnvProjectedTexture::C_EnvProjectedTexture( void )
 {
@@ -106,20 +103,15 @@ void C_EnvProjectedTexture::OnDataChanged( DataUpdateType_t updateType )
 	{
 		m_SpotlightTexture.Init(m_SpotlightTextureName, TEXTURE_GROUP_OTHER, true);
 	}*/
-
-	m_bForceUpdate = true;
-	UpdateLight();
 	BaseClass::OnDataChanged(updateType);
+	UpdateLight();
+	m_bForceUpdate = true;
 	//
 }
 
 void C_EnvProjectedTexture::UpdateLight( void )
 {	
-	if (m_bAlwaysUpdate)
-	{
-		m_bForceUpdate = true;
-	}
-
+	//projtex caching
 	if ( m_bState == false )
 	{
 		if ( m_LightHandle != CLIENTSHADOW_INVALID_HANDLE )
@@ -129,6 +121,12 @@ void C_EnvProjectedTexture::UpdateLight( void )
 
 		return;
 	}
+	
+	if (m_bAlwaysUpdate)
+	{
+		m_bForceUpdate = true;
+	}
+	//
 
 	Vector vForward, vRight, vUp, vPos = GetAbsOrigin();
 	FlashlightState_t state;
@@ -227,7 +225,7 @@ void C_EnvProjectedTexture::UpdateLight( void )
 	}
 	else
 	{
-		if ( m_hTargetEntity != NULL || m_bForceUpdate == true )
+		if (m_hTargetEntity != NULL || m_bForceUpdate == true)
 		{
 			g_pClientShadowMgr->UpdateFlashlightState( m_LightHandle, state );
 		}
@@ -244,16 +242,16 @@ void C_EnvProjectedTexture::UpdateLight( void )
 
 	g_pClientShadowMgr->SetFlashlightLightWorld( m_LightHandle, m_bLightWorld );
 
-	if ( m_bForceUpdate == false )
+	//if ( m_bForceUpdate == false )
+	if (m_bAlwaysUpdate == true) //DONT FUCKING TOUCH THIS OR I WILL KILL YOU
 	{
 		g_pClientShadowMgr->UpdateProjectedTexture( m_LightHandle, true );
 	}
 }
 
 void C_EnvProjectedTexture::Simulate( void )
-{
+{	
 	UpdateLight();
-
 	BaseClass::Simulate();
 }
 

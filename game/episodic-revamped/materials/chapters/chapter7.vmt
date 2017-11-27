@@ -1,7 +1,0 @@
-"UnlitGeneric"
-{
-	"$baseTexture" "vgui/chapters/chapter7"
-	"$vertexalpha" 1
-	"$gammaColorRead" "1"
-	"$linearWrite" "1"
-}
