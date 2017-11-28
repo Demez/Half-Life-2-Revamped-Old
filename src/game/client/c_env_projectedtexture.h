@@ -33,9 +33,12 @@ public:
 	C_EnvProjectedTexture();
 	~C_EnvProjectedTexture();
 
+	static C_EnvProjectedTexture *Create();
+
 private:
 
 	ClientShadowHandle_t m_LightHandle;
+
 	//projtex caching
 	bool m_bForceUpdate;
 	//

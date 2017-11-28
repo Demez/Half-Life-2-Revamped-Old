@@ -1061,6 +1061,9 @@
     <ClInclude Include="env_player_surface_trigger.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="env_projectedtexture.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\env_wind_shared.h">
       <Filter>Source Files</Filter>
     </ClInclude>

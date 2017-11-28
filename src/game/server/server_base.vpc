@@ -664,6 +664,7 @@ $Project
 		
 		//new stuff
 		$File	"sunlightshadowcontrol.cpp"
+		$File	"env_projectedtexture.h"
 		
 		//Haptics
 		$File	"$SRCDIR\public\haptics\haptic_msgs.cpp"

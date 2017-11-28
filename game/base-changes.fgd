@@ -11,14 +11,17 @@
 	spawnflags(flags) =
 	[
 		1  : "Enabled"				: 1
+		2  : "Always Update (moving light)"	: 0
 	]
 
 	target(target_destination)	: "target" : : "target"	
 	lightcolor(color255)		: "Light Color" : "255 255 255 200" : "Light Color RGB-Intensity"
+	//brightnessscale(float)		: "Brightness Scale" : "1.0" : "Scale the light color by this brightness"
+	//colortransitiontime(float)	: "Color Transition Time" : "0.5" : "Amount of time it takes for a color change to occur."
 	lightfov(float)				: "FOV" : "90.0" : "FOV"
 	nearz(float)				: "NearZ" : "4.0" : "Near Z for projected texture"
 	farz(float)					: "FarZ" : "750.0" : "Far Z for projected texture"
-	texturename(material)		: "Texture" : : "path/texture to be projected. Relative to main/materials/"
+	//texture(material)		: "Texture" : "effects/flashlight001" : "path/texture to be projected. Relative to main/materials/"
 	
 	enableshadows(Choices) : "Enable Shadows" : 1 : "Enables/disables shadows from this projected texture." =
 	[
@@ -43,9 +46,23 @@
 	cameraspace(integer)		: "Camera Space" : 0 : "Angles are interpreted as being relative to camera."
 
 	// Inputs
-	input TurnOn(void)		: "Turn on the texture"
-	input TurnOff(void)		: "Turn off the texture"
-	input SetFOV(float)		: "Set FOV"
+	input TurnOn(void)				: "Turn on the texture"
+	input TurnOff(void)				: "Turn off the texture"
+	input SetFOV(float)				: "Set FOV"
+	input EnableShadows(bool)		: "Set the if shadows are enabled"
+	input LightColor(color255)		: "Change the light color/brightness"
+	input SetNearZ(float)			: "Sets the near Z distance."
+	input SetFarZ(float) 			: "Sets the far Z distance."
+	input AlwaysUpdateOn(void)	: "Turn on per frame updating (for moving lights)"
+	input AlwaysUpdateOff(void)	: "Turn off per frame updating (for moving lights)"
+	input SpotlightTexture(string)	: "Set the spotlight texture"
+	//input SetBrightnessScale(float)	: "Sets brightness scale."
+	//Stuff that wasnt in this or ASW, but exists in the code (i dont know what to put in ()
+	//input SetAmbient(float)				: ""
+	//input SetTarget(entity)				: ""
+	//input SetCameraSpace(bool)			: ""
+	//input SetLightOnlyTarget(bool)		: ""
+	//input SetLightWorld(bool)			: ""
 ]
 
 //-------------------------------------------------------------------------
@@ -55,41 +72,6 @@
 	"An entity to control the sunlight that casts shadows in the map."
 [
 	angles(string) : "Pitch Yaw Roll (Y Z X)" : "0 0 0" : "This is the light cast direction. Pitch is rotation around the Y axis, yaw is the rotation around the Z axis, and roll is the rotation around the X axis."
-
-	color(color255) : "Light Color" : "255 255 255 1" : "This is the color of the sunlight."
-	colortransitiontime(float) : "Color Transition Time" : "0.5" : "This is the number of seconds it takes to get from 0 to 255."
-	distance(float) : "Distance" : 10000 : "This is the distance of the sun, greater distances produce more orthogonal shadows."
-	fov(float) : "FOV" : 5 : "This is the field of view that the sunlight casts in. Use lower values for more distant sun and sharper shadows."
-	nearz(float) : "NearZ Distance" : 512 : "This controls the near clipping plane's distance from the player."
-	northoffset(float) : "North Offset" : 200 : "This offsets the from the player position where the sun is attached."
-	texturename(material) : "Texture Name" : "effects/flashlight001"
-	
-	enableshadows(Choices) : "Enable Shadows" : 1 : "Enables/disables shadows from this projected texture." =
-	[
-		0 : "No"
-		1 : "Yes"
-	]
-
-	// Inputs
-	input LightColor(color255) : "Set the light color."
-	input SetAngles(string) : "Set the sun direction."
-	input SetDistance(float) : "Set the distance of the sun."
-	input SetFOV(float) : "Set the field of view the sun casts."
-	input SetNearZDistance(float) : "Set the near z distance."
-	input SetNorthOffset(float) : "Sets the north offset."
-	input SetTexture(string) : "Set the texture cookie of the sunlight."
-	input EnableShadows(bool)		: "Set the if shadows are enabled"
-]
-
-//-------------------------------------------------------------------------
-// Global Light
-//-------------------------------------------------------------------------
-
-
-@PointClass base(Targetname, EnableDisable) studio("models/editor/cone_helper.mdl") = env_global_light : 
-	"An entity to control the sunlight that casts shadows in the map."
-[
-	angles(string) : "Pitch Yaw Roll (Y Z X)" : "50 40 0" : "This is the light cast direction. Pitch is rotation around the Y axis, yaw is the rotation around the Z axis, and roll is the rotation around the X axis."
 
 	color(color255) : "Light Color" : "255 255 255 1" : "This is the color of the sunlight."
 	colortransitiontime(float) : "Color Transition Time" : "0.5" : "This is the number of seconds it takes to get from 0 to 255."
