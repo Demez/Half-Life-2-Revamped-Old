@@ -8,12 +8,12 @@
 // Group definitions //
 ///////////////////////
 
-$Group "shadereditor"
+/*$Group "shadereditor"
 {
 	"vgui_controls_editor"
 	"editor_shader"
 	"shadereditor_dll"
-}
+}*/
 
 $Group "gamedlls"
 {
@@ -60,6 +60,40 @@ $Group "everything"
 	"vrad_launcher"
 	"vtf2tga"
 	"vtfdiff"
+	"vvis_dll"
+	"vvis_launcher"
+}
+
+$Group "tools"
+{
+	"captioncompiler"
+	"fgdlib"
+	"glview"
+	"height2normal"
+	"mathlib"
+	"motionmapper"
+	"phonemeextractor"
+	"qc_eyes"
+	"raytrace"
+	"serverplugin_empty"
+	"tgadiff"
+	"tier1"
+	"vbsp"
+	"vgui_controls"
+	"vice"
+	"vrad_dll"
+	"vrad_launcher"
+	"vtf2tga"
+	"vtfdiff"
+	"vvis_dll"
+	"vvis_launcher"
+}
+
+$Group "hammertools"
+{
+	"vbsp"
+	"vrad_dll"
+	"vrad_launcher"
 	"vvis_dll"
 	"vvis_launcher"
 }

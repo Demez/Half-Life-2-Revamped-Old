@@ -251,9 +251,9 @@ void CCrossbowBolt::BoltTouch( CBaseEntity *pOther )
 
 		ApplyMultiDamage();
 
-		//Adrian: keep going through the glass.
+		//Adrian: keep going through the glass. //Demez: no that would break immersion
 		if ( pOther->GetCollisionGroup() == COLLISION_GROUP_BREAKABLE_GLASS )
-			 return;
+			return;
 
 		if ( !pOther->IsAlive() )
 		{

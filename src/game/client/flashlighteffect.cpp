@@ -19,6 +19,8 @@
 #include "c_basehlplayer.h"
 #endif // HL2_CLIENT_DLL
 
+//#include "flashlight_shared.h" //This will be used for all of the shared flashlight ConVar's and shit
+
 #if defined( _X360 )
 extern ConVar r_flashlightdepthres;
 #else
@@ -50,6 +52,7 @@ static ConVar r_flashlightshadowatten( "r_flashlightshadowatten", "0.35", FCVAR_
 static ConVar r_flashlightladderdist( "r_flashlightladderdist", "40.0", FCVAR_CHEAT );
 static ConVar mat_slopescaledepthbias_shadowmap( "mat_slopescaledepthbias_shadowmap", "4", FCVAR_CHEAT );
 static ConVar mat_depthbias_shadowmap(	"mat_depthbias_shadowmap", "0.00001", FCVAR_CHEAT  );
+static ConVar mat_shadow_filter("mat_shadow_filter", "1", FCVAR_CHEAT);
 
 
 void r_newflashlightCallback_f( IConVar *pConVar, const char *pOldString, float flOldValue )
@@ -336,6 +339,8 @@ void CFlashlightEffect::UpdateLightNew(const Vector &vecPos, const Vector &vecFo
 	state.m_flShadowAtten = r_flashlightshadowatten.GetFloat();
 	state.m_flShadowSlopeScaleDepthBias = mat_slopescaledepthbias_shadowmap.GetFloat();
 	state.m_flShadowDepthBias = mat_depthbias_shadowmap.GetFloat();
+	//shadowfiltering
+	state.m_flShadowFilterSize = mat_shadow_filter.GetFloat();
 
 	if( m_FlashlightHandle == CLIENTSHADOW_INVALID_HANDLE )
 	{
@@ -525,6 +530,8 @@ void CHeadlightEffect::UpdateLight( const Vector &vecPos, const Vector &vecDir, 
 	state.m_bEnableShadows = true;
 	state.m_pSpotlightTexture = m_FlashlightTexture;
 	state.m_nSpotlightTextureFrame = 0;
+	//shadowfiltering
+	state.m_flShadowFilterSize = mat_shadow_filter.GetFloat();
 	
 	if( GetFlashlightHandle() == CLIENTSHADOW_INVALID_HANDLE )
 	{

@@ -50,6 +50,11 @@ ConVar xc_uncrouch_on_jump( "xc_uncrouch_on_jump", "1", FCVAR_ARCHIVE, "Uncrouch
 ConVar player_limit_jump_speed( "player_limit_jump_speed", "1", FCVAR_REPLICATED );
 #endif
 
+// shitty camera nob
+ConVar cl_viewbob_enabled("cl_viewbob_enabled", "0", 0, "Oscillation Toggle", true, 0, true, 1);
+ConVar cl_viewbob_timer("cl_viewbob_timer", "10", 0, "Speed of Oscillation");
+ConVar cl_viewbob_scale("cl_viewbob_scale", "0.05", 0, "Magnitude of Oscillation");
+
 // option_duck_method is a carrier convar. Its sole purpose is to serve an easy-to-flip
 // convar which is ONLY set by the X360 controller menu to tell us which way to bind the
 // duck controls. Its value is meaningless anytime we don't have the options window open.
@@ -3072,7 +3077,7 @@ void CGameMovement::CheckVelocity( void )
 			mv->SetAbsOrigin( org );
 		}
 
-		// Bound it.
+// Bound it.
 		if (mv->m_vecVelocity[i] > sv_maxvelocity.GetFloat()) 
 		{
 			DevMsg( 1, "PM  Got a velocity too high on %s\n", DescribeAxis( i ) );

@@ -27,6 +27,9 @@ DEFINE_KEYFIELD(m_nSpotlightTextureFrame, FIELD_INTEGER, "textureframe"),
 DEFINE_KEYFIELD(m_flNearZ, FIELD_FLOAT, "nearz"),
 DEFINE_KEYFIELD(m_flFarZ, FIELD_FLOAT, "farz"),
 DEFINE_KEYFIELD(m_nShadowQuality, FIELD_INTEGER, "shadowquality"),
+//projex brightness
+//DEFINE_KEYFIELD(m_flBrightnessScale, FIELD_FLOAT, "brightnessscale"),
+//
 DEFINE_FIELD(m_LinearFloatLightColor, FIELD_VECTOR),
 
 DEFINE_INPUTFUNC(FIELD_VOID, "TurnOn", InputTurnOn),
@@ -57,6 +60,9 @@ SendPropBool(SENDINFO(m_bEnableShadows)),
 SendPropBool(SENDINFO(m_bLightOnlyTarget)),
 SendPropBool(SENDINFO(m_bLightWorld)),
 SendPropBool(SENDINFO(m_bCameraSpace)),
+//projtex brightness
+//SendPropFloat(SENDINFO(m_flBrightnessScale)),
+//
 SendPropVector(SENDINFO(m_LinearFloatLightColor)),
 SendPropFloat(SENDINFO(m_flAmbient)),
 SendPropString(SENDINFO(m_SpotlightTextureName)),
@@ -86,6 +92,9 @@ CEnvProjectedTexture::CEnvProjectedTexture( void )
 #endif
 
 	m_nSpotlightTextureFrame = 0;
+	//projtex brightness
+	//m_flBrightnessScale = 1.0f;
+	//
 	m_LinearFloatLightColor.Init( 1.0f, 1.0f, 1.0f );
 	m_flAmbient = 0.0f;
 	m_flNearZ = 4.0f;
@@ -175,10 +184,10 @@ void CEnvProjectedTexture::InputSetEnableShadows( inputdata_t &inputdata )
 	m_bEnableShadows = inputdata.value.Bool();
 }
 
-//void CEnvProjectedTexture::InputSetLightColor( inputdata_t &inputdata )
-//{
-//	m_cLightColor = inputdata.value.Color32();
-//}
+void CEnvProjectedTexture::InputSetLightColor( inputdata_t &inputdata )
+{
+	m_LightColor = inputdata.value.Color32();
+}
 
 void CEnvProjectedTexture::InputSetAmbient( inputdata_t &inputdata )
 {
@@ -249,6 +258,10 @@ void CC_CreateFlashlight( const CCommand &args )
 	}
 
 	pFlashlight->Teleport( &origin, &angles, NULL );
+	//idk
+	pFlashlight->m_bEnableShadows = true;
+	pFlashlight->m_bAlwaysUpdate = true;
+	//
 
 }
 static ConCommand create_flashlight("create_flashlight", CC_CreateFlashlight, 0, FCVAR_CHEAT);

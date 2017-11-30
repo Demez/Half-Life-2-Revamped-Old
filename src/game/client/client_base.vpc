@@ -512,6 +512,8 @@ $Project
 		$File	"worldlight.cpp" //Dynamic RTT shadows
 		$File	"worldlight.h" //Dynamic RTT shadows
 		$File 	"c_env_projectedtexture.h"
+		$File	"flashlight_shared.cpp"
+		$File	"flashlight_shared.h"
 		
 
 		$Folder	"Sixense"

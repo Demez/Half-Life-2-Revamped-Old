@@ -8,7 +8,7 @@
 // Project definitions //
 /////////////////////////
 
-$Project "shadereditor_dll"
+/*$Project "shadereditor_dll"
 {
 	"shadereditor\shadereditor.vpc" [$WIN32]
 }
@@ -21,7 +21,7 @@ $Project "editor_shader"
 $Project "vgui_controls_editor"
 {
 	"vgui_editor\vgui_controls_editor.vpc" [$WIN32]
-}
+}*/
 
 $Project "captioncompiler"
 {

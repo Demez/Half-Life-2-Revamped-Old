@@ -328,6 +328,14 @@ float CBaseHLCombatWeapon::CalcViewmodelBob( void )
 //			&angles - 
 //			viewmodelindex - 
 //-----------------------------------------------------------------------------
+
+/*static ConVar viewmodelbob_vertical_roll("viewmodelbob_vertical_roll", "0.5");
+static ConVar viewmodelbob_vertical_pitch("viewmodelbob_vertical_pitch", "0.4");
+static ConVar viewmodelbob_zaxis("viewmodelbob_zaxis", "0.1");
+static ConVar viewmodelbob_lateral_yaw("viewmodelbob_lateral_yaw", "0.3");
+static ConVar viewmodelbob_lateral("viewmodelbob_lateral", "0.8");
+static ConVar viewmodelbob_scale("viewmodelbob_scale", "0.1");*/
+
 void CBaseHLCombatWeapon::AddViewmodelBob( CBaseViewModel *viewmodel, Vector &origin, QAngle &angles )
 {
 	Vector	forward, right;
@@ -336,18 +344,24 @@ void CBaseHLCombatWeapon::AddViewmodelBob( CBaseViewModel *viewmodel, Vector &or
 	CalcViewmodelBob();
 
 	// Apply bob, but scaled down to 40%
-	VectorMA( origin, g_verticalBob * 0.1f, forward, origin );
+	VectorMA(origin, g_verticalBob * 0.1f, forward, origin); //0.1f
+	//VectorMA(origin, g_verticalBob * viewmodelbob_scale.GetFloat(), forward, origin);
 	
 	// Z bob a bit more
 	origin[2] += g_verticalBob * 0.1f;
+	//origin[2] += g_verticalBob * viewmodelbob_zaxis.GetFloat();
 	
 	// bob the angles
-	angles[ ROLL ]	+= g_verticalBob * 0.5f;
-	angles[ PITCH ]	-= g_verticalBob * 0.4f;
+	angles[ ROLL ]	+= g_verticalBob * 0.5f; //0.5f
+	//angles[ROLL] += g_verticalBob * viewmodelbob_vertical_roll.GetFloat();
+	angles[ PITCH ]	-= g_verticalBob * 0.4f; //0.4f
+	//angles[PITCH] -= g_verticalBob * viewmodelbob_vertical_pitch.GetFloat();
 
-	angles[ YAW ]	-= g_lateralBob  * 0.3f;
+	angles[ YAW ]	-= g_lateralBob  * 0.3f; //0.3f
+	//angles[YAW] -= g_lateralBob  * viewmodelbob_lateral_yaw.GetFloat();
 
-	VectorMA( origin, g_lateralBob * 0.8f, right, origin );
+	VectorMA( origin, g_lateralBob * 0.8f, right, origin ); //0.8f
+	//VectorMA(origin, g_lateralBob * viewmodelbob_scale.GetFloat(), right, origin); //0.8f
 }
 
 //-----------------------------------------------------------------------------

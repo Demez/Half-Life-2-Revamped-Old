@@ -39,15 +39,12 @@ public:
 	void InputSetLightColor( inputdata_t &inputdata );
 	void InputSetSpotlightTexture( inputdata_t &inputdata );
 	void InputSetAmbient( inputdata_t &inputdata );
-	//asw projtex stuff
-	//void InputSetNearZ(inputdata_t &inputdata);
-	//void InputSetFarZ(inputdata_t &inputdata);
 
 	void InitialThink( void );
 
 	CNetworkHandle( CBaseEntity, m_hTargetEntity );
 
-private:
+//private:
 
 	CNetworkVar( bool, m_bState );
 	//projtex caching
@@ -61,8 +58,11 @@ private:
 	CNetworkVar( bool, m_bLightOnlyTarget );
 	CNetworkVar( bool, m_bLightWorld );
 	CNetworkVar( bool, m_bCameraSpace );
+	//projtex brightness
+	//CNetworkVar(float, m_flBrightnessScale);
+	//
 	//projtex Light Color
-	//CNetworkColor32(m_LightColor);
+	CNetworkColor32(m_LightColor);
 	//
 	CNetworkVector( m_LinearFloatLightColor );
 	CNetworkVar( float, m_flAmbient );

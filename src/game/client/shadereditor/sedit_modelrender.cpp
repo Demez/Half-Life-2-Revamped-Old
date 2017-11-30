@@ -7,53 +7,23 @@
 // ******************************************************
 
 #include "cbase.h"
-
-#include "vgui/IInput.h"
-#include "vgui_controls/Controls.h"
-
-#include "shadereditor/sedit_modelrender.h"
+#include "ShaderEditor/SEdit_ModelRender.h"
 #include "model_types.h"
 
-#ifndef SOURCE_2006
+#include "view_shared.h"
+#include "iviewrender.h"
 #include "viewpostprocess.h"
-#endif
-
 #include "view.h"
 #include "input.h"
 
 #include "beamdraw.h"
+#include "vgui_controls/controls.h"
+#include "vgui/iinput.h"
 
-#ifdef SOURCE_2006
-void ScreenToWorld( int mousex, int mousey, float fov,
-					const Vector& vecRenderOrigin,
-					const QAngle& vecRenderAngles,
-					Vector& vecPickingRay )
-{
-	float dx, dy;
-	float c_x, c_y;
-	float dist;
-	Vector vpn, vup, vright;
-
-	float scaled_fov = ScaleFOVByWidthRatio( fov, engine->GetScreenAspectRatio() * 0.75f );
-
-	c_x = ScreenWidth() / 2;
-	c_y = ScreenHeight() / 2;
-
-	dx = (float)mousex - c_x;
-	dy = c_y - (float)mousey;
-
-	float dist_denom = tan(M_PI * scaled_fov / 360.0f); 
-	dist = c_x / dist_denom;
-	AngleVectors( vecRenderAngles, &vpn, &vright, &vup );
-	vecPickingRay = vpn * dist + vright * ( dx ) + vup * ( dy );
-	VectorNormalize( vecPickingRay );
-}
-#else
 extern void ScreenToWorld( int mousex, int mousey, float fov,
 					const Vector& vecRenderOrigin,
 					const QAngle& vecRenderAngles,
 					Vector& vecPickingRay );
-#endif
 
 SEditModelRender __g_ShaderEditorMReder( "ShEditMRender" );
 SEditModelRender *sEditMRender = &__g_ShaderEditorMReder;
@@ -83,7 +53,7 @@ void SEditModelRender::Update( float frametime )
 
 	pModelInstance->StudioFrameAdvance();
 	if ( pModelInstance->GetCycle() >= 1.0f )
-		pModelInstance->SetCycle( pModelInstance->GetCycle() - 1.0f );
+		pModelInstance->SetCycle( 0 );
 }
 void SEditModelRender::LevelInitPostEntity()
 {
@@ -284,19 +254,13 @@ void SEditModelRender::ExecRender()
 }
 void SEditModelRender::DoPostProc( int x, int y, int w, int h )
 {
-#ifndef SOURCE_2006
 	if ( view && view->GetPlayerViewSetup()->m_bDoBloomAndToneMapping )
 		DoEnginePostProcessing( x, y, w, h, false, false );
-#endif
 }
 int SEditModelRender::MaterialPicker( char ***szMat )
 {
 	int mx, my;
-#ifdef SOURCE_2006
-	vgui::input()->GetCursorPos( mx, my );
-#else
 	vgui::input()->GetCursorPosition( mx, my );
-#endif
 
 	Vector ray;
 	const CViewSetup *pViewSetup = view->GetPlayerViewSetup();

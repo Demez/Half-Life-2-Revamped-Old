@@ -101,16 +101,12 @@ public:
 	// Set flashlight light world flag
 	virtual void SetFlashlightLightWorld( ClientShadowHandle_t shadowHandle, bool bLightWorld ) = 0;
 
+	//city17ep1 projtex
+	//virtual void GetFrustumExtents(ClientShadowHandle_t handle, Vector &vecMin, Vector &vecMax) = 0;
+
 	virtual void SetShadowsDisabled( bool bDisabled ) = 0;
 
 	virtual void ComputeShadowDepthTextures( const CViewSetup &pView ) = 0;
-
-	//3D-Grass
-	//virtual ShadowHandle_t GetShadowHandle(ClientShadowHandle_t clienthandle) = 0;
-	//virtual ShadowType_t GetActualShadowCastType(ClientShadowHandle_t handle) const = 0;
-	//virtual int GetNumShadowDepthtextures() = 0;
-	//virtual CTextureReference GetShadowDepthTex(int num) = 0;
-	//
 };
 
 

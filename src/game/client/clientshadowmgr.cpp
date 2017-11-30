@@ -82,6 +82,8 @@
 #include "bonetoworldarray.h"
 #include "cmodel.h"
 
+//#include "flashlight_shared.h" //This will be used for all of the shared flashlight ConVar's and shit
+
 //RTT shadows
 #include "debugoverlay_shared.h"
 #include "worldlight.h"
@@ -104,15 +106,22 @@ static ConVar r_worldlight_shortenfactor("r_worldlight_shortenfactor", "1", FCVA
 static ConVar r_worldlight_mincastintensity("r_worldlight_mincastintensity", "0.3", FCVAR_CHEAT, "Minimum brightness of a light to be classed as shadow casting", true, 0, false, 0);
 //
 
-ConVar r_flashlightdepthtexture( "r_flashlightdepthtexture", "1" );
+static ConVar r_flashlightdepthtexture( "r_flashlightdepthtexture", "1" );
+
+//high projtex
+#if defined( _X360 )
+ConVar r_flashlightdepthreshigh( "r_flashlightdepthreshigh", "1024" );
+#else
+ConVar r_flashlightdepthreshigh("r_flashlightdepthreshigh", "4096");
+#endif
 
 #if defined( _X360 )
 ConVar r_flashlightdepthres( "r_flashlightdepthres", "512" );
 #else
-ConVar r_flashlightdepthres( "r_flashlightdepthres", "4096" );
+ConVar r_flashlightdepthres("r_flashlightdepthres", "1024");
 #endif
 
-ConVar r_threaded_client_shadow_manager( "r_threaded_client_shadow_manager", "0" );
+ConVar r_threaded_client_shadow_manager( "r_threaded_client_shadow_manager", "0" ); //This doesnt seem to do anything at all.
 
 #ifdef _WIN32
 #pragma warning( disable: 4701 )
@@ -174,7 +183,7 @@ private:
 	enum
 	{
 		INVALID_FRAGMENT_HANDLE = (FragmentHandle_t)~0,
-		TEXTURE_PAGE_SIZE	    = 16384, //highres shadow (1024)
+		TEXTURE_PAGE_SIZE	    = 16384, //very highres shadow, looks much better, with pretty much 0 drop in fps (1024)
 		MAX_TEXTURE_POWER    	= 10, //highres shadow (8)
 		MIN_TEXTURE_POWER	    = 10, //highres shadow (5),	// per resolve requirements to ensure 32x32 aligned offsets
 		MAX_TEXTURE_SIZE	    = (1 << MAX_TEXTURE_POWER),
@@ -687,10 +696,10 @@ void CTextureAllocator::GetTextureRect(TextureHandle_t handle, int& x, int& y, i
 //-----------------------------------------------------------------------------
 // Defines how big of a shadow texture we should be making per caster...
 //-----------------------------------------------------------------------------
-#define TEXEL_SIZE_PER_CASTER_SIZE	2.0f 
-#define MAX_FALLOFF_AMOUNT 240
-#define MAX_CLIP_PLANE_COUNT 4
-#define SHADOW_CULL_TOLERANCE 0.5f
+#define TEXEL_SIZE_PER_CASTER_SIZE	4.0f //2.0f
+#define MAX_FALLOFF_AMOUNT 20 //240
+#define MAX_CLIP_PLANE_COUNT 4 //4
+#define SHADOW_CULL_TOLERANCE 0.5f //0.5f
 
 static ConVar r_shadows( "r_shadows", "1" ); // hook into engine's cvars..
 static ConVar r_shadowmaxrendered("r_shadowmaxrendered", "32");
@@ -874,6 +883,9 @@ private:
 	void BuildWorldToShadowMatrix( VMatrix& matWorldToShadow, const Vector& origin, const Quaternion& quatOrientation );
 
 	void BuildPerspectiveWorldToFlashlightMatrix( VMatrix& matWorldToShadow, const FlashlightState_t &flashlightState );
+
+	//projtex orthosize
+	//void BuildOrthoWorldToFlashlightMatrix(VMatrix& matWorldToShadow, const FlashlightState_t &flashlightState);
 
 	// Update a shadow
 	void UpdateProjectedTextureInternal( ClientShadowHandle_t handle, bool force );
@@ -1221,6 +1233,9 @@ CClientShadowMgr::CClientShadowMgr() :
 	m_bShadowFromWorldLights(false)
 {
 	m_nDepthTextureResolution = r_flashlightdepthres.GetInt();
+	//high projtex
+	m_nDepthTextureResolutionHigh = r_flashlightdepthreshigh.GetInt();
+	//
 	m_bThreaded = false;
 
 	//RTT shadows
@@ -1346,6 +1361,12 @@ bool CClientShadowMgr::Init()
 
 	//bool bTools = CommandLine()->CheckParm( "-tools" ) != NULL;
 	//m_nMaxDepthTextureShadows = bTools ? 4 : 1;	// Just one shadow depth texture in games, more in tools
+
+	//asw projtex stuff
+	/*if (r_shadowrendertotexture.GetBool())
+	{
+		InitRenderToTextureShadows();
+	}*/
 	
 	m_nMaxDepthTextureShadows = 3; //with your number
 
@@ -1397,6 +1418,9 @@ void CClientShadowMgr::InitDepthTextureShadows()
  
 	// SAUL: set m_nDepthTextureResolution to the depth resolution we want
 	m_nDepthTextureResolution = r_flashlightdepthres.GetInt();
+	//high projtex
+	r_flashlightdepthreshigh.SetValue(m_nDepthTextureResolutionHigh);
+	//
 
 	if( !m_bDepthTextureActive )
 	{
@@ -1444,6 +1468,11 @@ void CClientShadowMgr::InitDepthTextureShadows()
 				// Shadow may be resized during allocation (due to resolution constraints etc)
 				m_nDepthTextureResolution = depthTex->GetActualWidth();
 				r_flashlightdepthres.SetValue( m_nDepthTextureResolution );
+
+				//high projtex
+				m_nDepthTextureResolutionHigh = m_DepthTextureCache[0]->GetActualWidth();
+				r_flashlightdepthreshigh.SetValue(m_nDepthTextureResolutionHigh);
+				//
 			}
 			
 			// SAUL: ensure the depth texture size wasn't changed
@@ -1982,7 +2011,25 @@ void CClientShadowMgr::UpdateFlashlightState( ClientShadowHandle_t shadowHandle,
 {
 	VPROF_BUDGET( "CClientShadowMgr::UpdateFlashlightState", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
 
+	//projtex orthosize
 	BuildPerspectiveWorldToFlashlightMatrix( m_Shadows[shadowHandle].m_WorldToShadow, flashlightState );
+	/*if (flashlightState.m_bEnableShadows && r_flashlightdepthtexture.GetBool())
+	{
+		m_Shadows[shadowHandle].m_Flags |= SHADOW_FLAGS_USE_DEPTH_TEXTURE;
+	}
+	else
+	{
+		m_Shadows[shadowHandle].m_Flags &= ~SHADOW_FLAGS_USE_DEPTH_TEXTURE;
+	}
+
+	if (flashlightState.m_bOrtho)
+	{
+		BuildOrthoWorldToFlashlightMatrix(m_Shadows[shadowHandle].m_WorldToShadow, flashlightState);
+	}
+	else
+	{
+		BuildPerspectiveWorldToFlashlightMatrix(m_Shadows[shadowHandle].m_WorldToShadow, flashlightState);
+	}*/
 											
 	shadowmgr->UpdateFlashlightState( m_Shadows[shadowHandle].m_ShadowHandle, flashlightState );
 }
@@ -2092,6 +2139,39 @@ void CClientShadowMgr::BuildPerspectiveWorldToFlashlightMatrix( VMatrix& matWorl
 
 	MatrixMultiply( matPerspective, matWorldToShadowView, matWorldToShadow );
 }
+
+//projtex orthosize
+/*void CClientShadowMgr::BuildOrthoWorldToFlashlightMatrix(VMatrix& matWorldToShadow, const FlashlightState_t &flashlightState)
+{
+	VPROF_BUDGET("CClientShadowMgr::BuildPerspectiveWorldToFlashlightMatrix", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING);
+
+	// Buildworld to shadow matrix, then perspective projection and concatenate
+	VMatrix matWorldToShadowView, matPerspective;
+	BuildWorldToShadowMatrix(matWorldToShadowView, flashlightState.m_vecLightOrigin,
+		flashlightState.m_quatOrientation);
+
+	MatrixBuildOrtho(matPerspective,
+		flashlightState.m_fOrthoLeft, flashlightState.m_fOrthoTop, flashlightState.m_fOrthoRight, flashlightState.m_fOrthoBottom,
+		flashlightState.m_NearZ, flashlightState.m_FarZ);
+
+	// Shift it z/y to 0 to -2 space
+	VMatrix addW;
+	addW.Identity();
+	addW[0][3] = -1.0f;
+	addW[1][3] = -1.0f;
+	addW[2][3] = 0.0f;
+	MatrixMultiply(addW, matPerspective, matPerspective);
+
+	// Flip x/y to positive 0 to 1... flip z to negative
+	VMatrix scaleHalf;
+	scaleHalf.Identity();
+	scaleHalf[0][0] = -0.5f;
+	scaleHalf[1][1] = -0.5f;
+	scaleHalf[2][2] = -1.0f;
+	MatrixMultiply(scaleHalf, matPerspective, matPerspective);
+
+	MatrixMultiply(matPerspective, matWorldToShadowView, matWorldToShadow);
+}*/
 
 //-----------------------------------------------------------------------------
 // Compute the shadow origin and attenuation start distance

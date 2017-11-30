@@ -12,7 +12,7 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-
+ConVar cl_sunlight_slopedepthbias("cl_sunlight_slopedepthbias", "1.0");
 ConVar cl_sunlight_depthbias("cl_sunlight_depthbias", "0.00"); //setting this to 0 causes slight issues on models, but the shadow bleeding would be way too obivous and just look very bad
 ConVar cl_sunlight_enabled("cl_sunlight_enabled", "1", FCVAR_ARCHIVE);
 ConVar cl_sunlight_freeze("cl_sunlight_freeze", "0");
@@ -20,11 +20,6 @@ ConVar cl_sunlight_xoffset("cl_sunlight_xoffset", "0");
 ConVar cl_sunlight_yoffset("cl_sunlight_yoffset", "0");
 ConVar cl_sunlight_debug("cl_sunlight_debug", "0");
 ConVar cl_sunlight_orthosize("cl_sunlight_orthosize", "1000", FCVAR_CHEAT, "Set to values greater than 0 for ortho view render projections.");
-
-//i dont even know
-//ConVar cl_sunlight_showpos("cl_sunlight_showpos", "0");
-//ConVar cl_sunlight_xpos("cl_sunlight_xpos", "0");
-//ConVar cl_sunlight_ypos("cl_sunlight_ypos", "0");
 
 //is it even possible to have this in source 2013?
 // We still rely on r_flashlightbrightness, but here we can adjust the multiplier of the global light.
@@ -218,10 +213,10 @@ void C_SunlightShadowControl::ClientThink()
 		state.m_FarZ = m_flSunDistance * 2.0f; //so that models can get lit and so shadows work properly
 		//state.m_fBrightnessScale = 1.0f; //changing this does nothing apparently, so that sucks
 		//state.m_fBrightnessScale = cl_sunlight_brightness.GetFloat();
-		float flOrthoSize = cl_sunlight_orthosize.GetFloat();
-
 		//any point to this?
 		state.m_bSunlight = true;
+
+		float flOrthoSize = cl_sunlight_orthosize.GetFloat();
 
 		state.m_bOrtho = true;
 		state.m_fOrthoLeft = -flOrthoSize;
@@ -235,16 +230,14 @@ void C_SunlightShadowControl::ClientThink()
 			state.m_bDrawShadowFrustum = true;
 		}
 
-		state.m_flShadowSlopeScaleDepthBias = 1.0f;
-		state.m_flShadowDepthBias = cl_sunlight_depthbias.GetFloat(); //This is better then the one below
-		//state.m_flShadowDepthBias = g_pMaterialSystemHardwareConfig->GetShadowDepthBias();
+		state.m_flShadowSlopeScaleDepthBias = cl_sunlight_slopedepthbias.GetFloat(); //1.0f
+		state.m_flShadowDepthBias = cl_sunlight_depthbias.GetFloat();
 		state.m_bEnableShadows = m_bEnableShadows;
 		state.m_pSpotlightTexture = m_SpotlightTexture;
 		state.m_pProjectedMaterial = NULL;
 		state.m_nSpotlightTextureFrame = 0;
 		//state.m_flShadowFilterSize = 0.2f;
-
-		state.m_nShadowQuality = 1; // Allow entity to affect shadow quality
+		//state.m_nShadowQuality = 1; // Allow entity to affect shadow quality
 		state.m_bShadowHighRes = true;
 
 		if (m_bOldEnableShadows != m_bEnableShadows)
@@ -276,7 +269,6 @@ void C_SunlightShadowControl::ClientThink()
 		g_pClientShadowMgr->DestroyFlashlight(m_LocalFlashlightHandle);
 		m_LocalFlashlightHandle = CLIENTSHADOW_INVALID_HANDLE;
 	}
-	g_pClientShadowMgr->SetShadowFromWorldLightsEnabled( !bSupressWorldLights );
 
 	BaseClass::ClientThink();
 }

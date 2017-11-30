@@ -1799,6 +1799,9 @@
     <ClInclude Include="commentary_modelviewer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="flashlight_shared.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\particle_parse.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -2336,6 +2339,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\public\filesystem_helpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="flashlight_shared.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="flashlighteffect.cpp">

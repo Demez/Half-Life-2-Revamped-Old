@@ -1,0 +1,1 @@
+@"D:\SteamLibrary\steamapps\common\Source SDK Base 2013 Singleplayer/hl2.exe" -noborder -windowed -dev -allowdebug -game D:\sourceengine\personal-projects\Half-Life-2-Revamped\game\hl2-revamped +god +map d2_coast_01
