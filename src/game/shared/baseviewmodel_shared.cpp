@@ -385,10 +385,23 @@ void CBaseViewModel::SendViewModelMatchingSequence( int sequence )
 void CBaseViewModel::CalcViewModelView( CBasePlayer *owner, const Vector& eyePosition, const QAngle& eyeAngles )
 {
 	// UNDONE: Calc this on the server?  Disabled for now as it seems unnecessary to have this info on the server
-#if defined( CLIENT_DLL )
+//#if defined(CLIENT_DLL) || defined (HL2_DLL)
+#if defined(CLIENT_DLL)
 	QAngle vmangoriginal = eyeAngles;
 	QAngle vmangles = eyeAngles;
 	Vector vmorigin = eyePosition;
+
+	static ConVar viewmodel_offset_x("viewmodel_offset_x", "-3.0", FCVAR_REPLICATED | FCVAR_ARCHIVE);	 // the viewmodel offset from default in X
+	static ConVar viewmodel_offset_y("viewmodel_offset_y", "-1.0", FCVAR_REPLICATED | FCVAR_ARCHIVE);	 // the viewmodel offset from default in Y
+	static ConVar viewmodel_offset_z("viewmodel_offset_z", "1.0", FCVAR_REPLICATED | FCVAR_ARCHIVE);	 // the viewmodel offset from default in Z
+
+	//viewmodel_offset
+	Vector vecRight;
+	Vector vecUp;
+	Vector vecForward;
+	AngleVectors(vmangoriginal, &vecForward, &vecRight, &vecUp);
+	//Vector vecOffset = Vector( viewmodel_offset_x.GetFloat(), viewmodel_offset_y.GetFloat(), viewmodel_offset_z.GetFloat() ); 
+	vmorigin += (vecForward * viewmodel_offset_y.GetFloat()) + (vecUp * viewmodel_offset_z.GetFloat()) + (vecRight * viewmodel_offset_x.GetFloat());
 
 	CBaseCombatWeapon *pWeapon = m_hWeapon.Get();
 	//Allow weapon lagging
@@ -478,13 +491,15 @@ void CBaseViewModel::CalcViewModelLag( Vector& origin, QAngle& angles, QAngle& o
 		Vector vDifference;
 		VectorSubtract( forward, m_vecLastFacing, vDifference );
 
-		float flSpeed = 5.0f;
+		static ConVar viewmodel_sway_speed("viewmodel_sway_speed", "5.0");
+		//float flSpeed = 5.0f;
+		float flSpeed = viewmodel_sway_speed.GetFloat();
 
 		// If we start to lag too far behind, we'll increase the "catch up" speed.  Solves the problem with fast cl_yawspeed, m_yaw or joysticks
 		//  rotating quickly.  The old code would slam lastfacing with origin causing the viewmodel to pop to a new position
 		float flDiff = vDifference.Length();
 		if ( (flDiff > g_fMaxViewModelLag) && (g_fMaxViewModelLag > 0.0f) )
-		{
+		{	
 			float flScale = flDiff / g_fMaxViewModelLag;
 			flSpeed *= flScale;
 		}
@@ -493,7 +508,9 @@ void CBaseViewModel::CalcViewModelLag( Vector& origin, QAngle& angles, QAngle& o
 		VectorMA( m_vecLastFacing, flSpeed * gpGlobals->frametime, vDifference, m_vecLastFacing );
 		// Make sure it doesn't grow out of control!!!
 		VectorNormalize( m_vecLastFacing );
-		VectorMA( origin, 5.0f, vDifference * -1.0f, origin );
+		static ConVar viewmodel_sway_scale("viewmodel_sway_scale", "1.0");
+		static ConVar viewmodel_sway_scale2("viewmodel_sway_scale2", "-1.0");
+		VectorMA(origin, viewmodel_sway_scale.GetFloat(), vDifference * viewmodel_sway_scale2.GetFloat(), origin); //5.0f and -1.0f
 
 		Assert( m_vecLastFacing.IsValid() );
 	}
