@@ -1058,6 +1058,9 @@
     <ClInclude Include="env_player_surface_trigger.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="env_projectedtexture.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\game\shared\env_wind_shared.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -2768,6 +2771,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sun.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sunlightshadowcontrol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\game\shared\hl2\survival_gamerules.cpp">
