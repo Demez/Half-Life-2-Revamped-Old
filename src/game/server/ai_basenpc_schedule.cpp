@@ -4439,7 +4439,11 @@ int CAI_BaseNPC::SelectAlertSchedule()
 			  HasCondition ( COND_HEAR_BULLET_IMPACT ) ||
 			  HasCondition ( COND_HEAR_COMBAT ) )
 	{
+#ifndef C17
 		return SCHED_ALERT_FACE_BESTSOUND;
+#else
+		return SCHED_INVESTIGATE_SOUND;
+#endif
 	}
 
 	if ( gpGlobals->curtime - GetEnemies()->LastTimeSeen( AI_UNKNOWN_ENEMY ) < TIME_CARE_ABOUT_DAMAGE )

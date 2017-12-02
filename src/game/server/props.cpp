@@ -41,6 +41,10 @@
 #include "physics_collisionevent.h"
 #include "gamestats.h"
 #include "vehicle_base.h"
+#ifdef C17
+#include "particle_parse.h"
+#include "fire.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -687,7 +691,11 @@ void CBreakableProp::HandleInteractionStick( int index, gamevcollisionevent_t *p
 			// Finally, inhibit sticking in metal, grates, sky, or anything else that doesn't make a sound.
 			const surfacedata_t *psurf = physprops->GetSurfaceData( pEvent->surfaceProps[!index] );
 
+#ifdef C17
+			if (psurf->game.material != CHAR_TEX_METAL && psurf->game.material != CHAR_TEX_GRATE && psurf->game.material != CHAR_TEX_EXPLOSIVE && psurf->game.material != 'X')
+#else
 			if (psurf->game.material != CHAR_TEX_METAL && psurf->game.material != CHAR_TEX_GRATE && psurf->game.material != 'X' )
+#endif
 			{
 				Vector savePosition = position;
 
@@ -1694,16 +1702,59 @@ void CBreakableProp::Break( CBaseEntity *pBreaker, const CTakeDamageInfo &info )
 		if( HasInteraction( PROPINTER_PHYSGUN_BREAK_EXPLODE ) )
 		{
 			ExplosionCreate( WorldSpaceCenter(), angles, pAttacker, m_explodeDamage, m_explodeRadius, 
+#ifdef C17
+				SF_ENVEXPLOSION_NOSPARKS | SF_ENVEXPLOSION_NODLIGHTS | SF_ENVEXPLOSION_NOSMOKE | SF_ENVEXPLOSION_SURFACEONLY | SF_ENVEXPLOSION_NOSOUND | SF_ENVEXPLOSION_NOFIREBALL,
+#else
 				SF_ENVEXPLOSION_NOSPARKS | SF_ENVEXPLOSION_NODLIGHTS | SF_ENVEXPLOSION_NOSMOKE | SF_ENVEXPLOSION_SURFACEONLY | SF_ENVEXPLOSION_NOSOUND,
+#endif
 				0.0f, this );
 			EmitSound("PropaneTank.Burst");
+
+#ifdef C17
+			// Only do these effects if we're not submerged
+			if (!(UTIL_PointContents(GetAbsOrigin()) & CONTENTS_WATER))
+			{
+				DispatchParticleEffect("gascan_explode_main", WorldSpaceCenter(), vec3_angle);
+				DispatchParticleEffect("weapon_grenade_attachments", WorldSpaceCenter(), vec3_angle);
+
+				trace_t ftr;
+				Vector vecTrace(0, 0, -512);
+				UTIL_TraceLine(WorldSpaceCenter(), WorldSpaceCenter() + vecTrace, MASK_SOLID, NULL, COLLISION_GROUP_NONE, &ftr);
+
+				bool bHitWater = ((ftr.contents & CONTENTS_WATER) != 0);
+
+				if (!ftr.startsolid && ftr.fraction != 1.0 && !bHitWater)
+				{
+					DispatchParticleEffect("gascan_fire_main", ftr.endpos, vec3_angle);
+					FireSystem_StartFire(ftr.endpos, 256, 0.0f, 8.0f, (SF_FIRE_START_ON | SF_FIRE_START_FULL | SF_FIRE_SMOKELESS | SF_FIRE_NO_GLOW | SF_FIRE_DONT_DROP), (CBaseEntity*)this, FIRE_NATURAL, 1);
+				}
+			}
+#endif
 		}
 		else
 		{
 			float flScale = GetModelScale();
 			ExplosionCreate( WorldSpaceCenter(), angles, pAttacker, m_explodeDamage * flScale, m_explodeRadius * flScale,
+#ifdef C17
+				SF_ENVEXPLOSION_NOSPARKS | SF_ENVEXPLOSION_NOFIREBALL | SF_ENVEXPLOSION_NOPARTICLES | SF_ENVEXPLOSION_NODLIGHTS | SF_ENVEXPLOSION_NOSMOKE | SF_ENVEXPLOSION_SURFACEONLY,
+#else
 				SF_ENVEXPLOSION_NOSPARKS | SF_ENVEXPLOSION_NODLIGHTS | SF_ENVEXPLOSION_NOSMOKE | SF_ENVEXPLOSION_SURFACEONLY,
+#endif
 				0.0f, this );
+
+#ifdef C17
+			// Only do these effects if we're not submerged
+			if (!(UTIL_PointContents(GetAbsOrigin()) & CONTENTS_WATER))
+			{
+				DispatchParticleEffect("oildrum_explosion_main", WorldSpaceCenter(), vec3_angle);
+				//DispatchParticleEffect( "grenade_explosion_main", WorldSpaceCenter(), vec3_angle );
+				//DispatchParticleEffect( "weapon_grenade_attachments", WorldSpaceCenter(), vec3_angle );
+			}
+			else
+			{
+				DispatchParticleEffect("c17_waterfx_barrel-explosion", WorldSpaceCenter(), vec3_angle);
+			}
+#endif
 		}
 
 		bExploded = true;
@@ -3240,6 +3291,80 @@ int CPhysicsProp::DrawDebugTextOverlays(void)
 	return text_offset;
 }
 
+#ifdef C17
+LINK_ENTITY_TO_CLASS(prop_plug, CPlugProp);
+
+BEGIN_DATADESC(CPlugProp)
+
+DEFINE_OUTPUT(m_OnGrabbed, "OnGrabbed"),
+DEFINE_OUTPUT(m_OnStatePlugged, "OnStatePlugged"),
+DEFINE_OUTPUT(m_OnStateUnPlugged, "OnStateUnPlugged"),
+
+// Inputs
+DEFINE_INPUTFUNC(FIELD_VOID, "SetPlugStateOn", InputSetPlugStateOn),
+DEFINE_INPUTFUNC(FIELD_VOID, "SetPlugStateOff", InputSetPlugStateOff),
+
+DEFINE_FIELD(m_bIsPlugged, FIELD_BOOLEAN),
+
+END_DATADESC()
+
+IMPLEMENT_SERVERCLASS_ST(CPlugProp, DT_PlugProp)
+//SendPropBool( SENDINFO( m_bAwake ) ),
+END_SEND_TABLE()
+
+CPlugProp::~CPlugProp()
+{
+	if (HasSpawnFlags(SF_PHYSPROP_IS_GIB))
+	{
+		g_ActiveGibCount--;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *pActivator - 
+//			*pCaller - 
+//			useType - 
+//			value - 
+//-----------------------------------------------------------------------------
+void CPlugProp::Use(CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value)
+{
+	if (m_bIsPlugged)
+		m_OnGrabbed.FireOutput(this, this);
+
+	BaseClass::Use(pActivator, pCaller, useType, value);
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CPlugProp::OnPhysGunPickup(CBasePlayer *pPhysGunUser, PhysGunPickup_t reason)
+{
+	if (m_bIsPlugged)
+		m_OnGrabbed.FireOutput(this, this);
+
+	BaseClass::OnPhysGunPickup(pPhysGunUser, reason);
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Sets the plug boolean depending on the input value.
+//-----------------------------------------------------------------------------
+void CPlugProp::InputSetPlugStateOn(inputdata_t &inputdata)
+{
+	m_bIsPlugged = true;
+	m_OnStatePlugged.FireOutput(this, this);
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Sets the plug boolean depending on the input value.
+//-----------------------------------------------------------------------------
+void CPlugProp::InputSetPlugStateOff(inputdata_t &inputdata)
+{
+	m_bIsPlugged = false;
+	m_OnStateUnPlugged.FireOutput(this, this);
+}
+#endif
+
 
 static CBreakableProp *BreakModelCreate_Prop( CBaseEntity *pOwner, breakmodel_t *pModel, const Vector &position, const QAngle &angles, const breakablepropparams_t &params )
 {
@@ -3841,7 +3966,11 @@ void CBasePropDoor::UpdateAreaPortals(bool isOpen)
 		return;
 	
 	CBaseEntity *pPortal = NULL;
+#ifdef C17
+	while ((pPortal = gEntList.FindEntityByClassname(pPortal, "func_areaportal*")) != NULL)
+#else
 	while ((pPortal = gEntList.FindEntityByClassname(pPortal, "func_areaportal")) != NULL)
+#endif
 	{
 		if (pPortal->HasTarget(name))
 		{
@@ -5431,15 +5560,32 @@ void CPropDoorRotating::InputSetRotationDistance( inputdata_t &inputdata )
 class CPhysSphere : public CPhysicsProp
 {
 	DECLARE_CLASS( CPhysSphere, CPhysicsProp );
+#ifdef C17
+	DECLARE_DATADESC();
+#endif
 public:
+
+#ifdef C17
+	float m_fRadius;
+#endif
+
 	virtual bool OverridePropdata() { return true; }
 	bool CreateVPhysics()
 	{
 		SetSolid( SOLID_BBOX );
+#ifdef C17
+		SetCollisionBounds(-Vector(m_fRadius), Vector(m_fRadius));
+#else
 		SetCollisionBounds( -Vector(12,12,12), Vector(12,12,12) );
+#endif
 		objectparams_t params = g_PhysDefaultObjectParams;
 		params.pGameData = static_cast<void *>(this);
+#ifdef C17
+		IPhysicsObject *pPhysicsObject = physenv->CreateSphereObject(m_fRadius, GetModelPtr()->GetRenderHdr()->textureindex, GetAbsOrigin(), GetAbsAngles(), &params, false);
+#else
 		IPhysicsObject *pPhysicsObject = physenv->CreateSphereObject( 12, 0, GetAbsOrigin(), GetAbsAngles(), &params, false );
+#endif
+
 		if ( pPhysicsObject )
 		{
 			VPhysicsSetObject( pPhysicsObject );
@@ -5451,6 +5597,14 @@ public:
 	}
 };
 
+#ifdef C17
+LINK_ENTITY_TO_CLASS(prop_sphere, CPhysSphere);
+
+BEGIN_DATADESC(CPhysSphere)
+DEFINE_KEYFIELD(m_fRadius, FIELD_FLOAT, "radius"),
+END_DATADESC()
+#endif
+
 void CPropDoorRotating::InputSetSpeed(inputdata_t &inputdata)
 {
 	AssertMsg1(inputdata.value.Float() > 0.0f, "InputSetSpeed on %s called with negative parameter!", GetDebugName() );
@@ -5458,7 +5612,9 @@ void CPropDoorRotating::InputSetSpeed(inputdata_t &inputdata)
 	DoorResume();
 }
 
+#ifndef C17
 LINK_ENTITY_TO_CLASS( prop_sphere, CPhysSphere );
+#endif
 
 
 // ------------------------------------------------------------------------------------------ //

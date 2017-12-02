@@ -1130,6 +1130,10 @@ void CNPC_FloorTurret::AutoSearchThink( void )
 //-----------------------------------------------------------------------------
 // Purpose: Fire!
 //-----------------------------------------------------------------------------
+#ifdef C17_HAPTICS
+// Haptics Recoil scaler on held turrets.
+ConVar hap_hl2_held_turret_scale("hap_hl2_held_turret_scale", "0.25", FCVAR_ARCHIVE);
+#endif
 void CNPC_FloorTurret::Shoot( const Vector &vecSrc, const Vector &vecDirToEnemy, bool bStrict )
 {
 	FireBulletsInfo_t info;
@@ -1161,6 +1165,18 @@ void CNPC_FloorTurret::Shoot( const Vector &vecSrc, const Vector &vecDirToEnemy,
 
 	FireBullets( info );
 	EmitSound( "NPC_FloorTurret.ShotSounds", m_ShotSounds );
+#ifdef C17_HAPTICS
+	//Haptics, If being held send recoil!
+	if (this->IsBeingCarriedByPlayer() && m_hPhysicsAttacker.Get())
+	{
+		VMatrix matView = m_hPhysicsAttacker.Get()->EntityToWorldTransform();
+		Vector playerspace = matView.ApplyRotation(info.m_vecDirShooting);
+		VectorNormalize(playerspace);
+		QAngle rel;
+		VectorAngles(playerspace, rel);
+		m_hPhysicsAttacker.Get()->HapticsPunch(rel, hap_hl2_held_turret_scale.GetFloat());
+	}
+#endif
 	DoMuzzleFlash();
 }
 

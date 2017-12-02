@@ -20,7 +20,9 @@
 
 extern CBaseEntity *CreateRagGib( const char *szModel, const Vector &vecOrigin, const QAngle &vecAngles, const Vector &vecForce, float flFadeTime = 0.0, bool bShouldIgnite = false );
 
+#ifndef C17 //City17: Germany Violence Fix.
 #define GERMAN_GIB_COUNT		4
+#endif
 #define	HUMAN_GIB_COUNT			6
 #define ALIEN_GIB_COUNT			4
 

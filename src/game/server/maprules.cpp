@@ -369,6 +369,39 @@ void CGameText::Display( CBaseEntity *pActivator )
 	}
 }
 
+#ifdef C17
+//
+// CGSGameText / game_text_custom	-- NON-Localized HUD Message (use env_message to display a titles.txt message)
+//	Flag: All players					SF_ENVTEXT_ALLPLAYERS
+//
+class CGSGameText : public CGameText
+{
+public:
+	// that's right, we're inheriting from CGameText
+	DECLARE_CLASS(CGSGameText, CGameText);
+	DECLARE_DATADESC();
+
+	// this function handles the triggered input
+	void InputDisplayText(inputdata_t &inputdata);
+};
+
+// the entity is called "mm_game_text"
+LINK_ENTITY_TO_CLASS(game_text_custom, CGSGameText);
+
+BEGIN_DATADESC(CGSGameText)
+// the parameter of the input-function is a string
+DEFINE_INPUTFUNC(FIELD_STRING, "DisplayText", InputDisplayText),
+END_DATADESC()
+
+void CGSGameText::InputDisplayText(inputdata_t &inputdata)
+{
+	// the baseclass already defines a memberfunction to set the 
+	// message-text (CGameText::MessageSet), we just call it
+	MessageSet(STRING(inputdata.value.StringID()));
+	// and show the message
+	Display(inputdata.pActivator);
+}
+#endif
 
 /* TODO: Replace with an entity I/O version
 //

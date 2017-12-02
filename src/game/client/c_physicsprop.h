@@ -31,4 +31,16 @@ protected:
 	bool m_bAwakeLastTime;
 };
 
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+class C_PlugProp : public C_PhysicsProp
+{
+	typedef C_PhysicsProp BaseClass;
+public:
+	DECLARE_CLIENTCLASS();
+};
+#endif
+
 #endif // C_PHYSICSPROP_H 

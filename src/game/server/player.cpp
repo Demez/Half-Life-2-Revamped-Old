@@ -66,6 +66,15 @@
 #include "fogcontroller.h"
 #include "gameinterface.h"
 #include "hl2orange.spa.h"
+#ifdef C17
+#include "hl2_gamerules.h"
+#endif
+
+#if FMOD
+// FMOD
+#include "fmod/fmod_manager.h"
+#endif
+
 #include "dt_utlvector_send.h"
 #include "vote_controller.h"
 #include "ai_speech.h"
@@ -80,6 +89,13 @@
 #ifdef HL2_DLL
 #include "combine_mine.h"
 #include "weapon_physcannon.h"
+#endif
+
+#ifdef C17_HAPTICS
+// Haptics addition
+#ifndef TABLE_ONLY
+static ConVar hap_testint("hap_testint", "0", FCVAR_REPLICATED);
+#endif
 #endif
 
 ConVar autoaim_max_dist( "autoaim_max_dist", "2160" ); // 2160 = 180 feet
@@ -115,6 +131,11 @@ ConVar cl_backspeed( "cl_backspeed", "450", FCVAR_REPLICATED | FCVAR_CHEAT );
 
 // This is declared in the engine, too
 ConVar	sv_noclipduringpause( "sv_noclipduringpause", "0", FCVAR_REPLICATED | FCVAR_CHEAT, "If cheats are enabled, then you can noclip with the game paused (for doing screenshots, etc.)." );
+
+#ifdef C17
+ConVar sv_regeneration("sv_regeneration", "1", FCVAR_REPLICATED | FCVAR_CHEAT);
+ConVar sv_regeneration_wait_time("sv_regeneration_wait_time", "3.0", FCVAR_REPLICATED | FCVAR_CHEAT);
+#endif
 
 extern ConVar sv_maxunlag;
 extern ConVar sv_turbophysics;
@@ -156,6 +177,9 @@ extern CServerGameDLL g_ServerGameDLL;
 
 extern bool		g_fDrawLines;
 int				gEvilImpulse101;
+#ifdef C17
+float			m_fRegenRemander;
+#endif
 
 bool gInitHUD = true;
 
@@ -327,6 +351,9 @@ BEGIN_DATADESC( CBasePlayer )
 	DEFINE_FIELD( m_iBonusChallenge, FIELD_INTEGER ),
 	DEFINE_FIELD( m_lastDamageAmount, FIELD_INTEGER ),
 	DEFINE_FIELD( m_tbdPrev, FIELD_TIME ),
+#ifdef C17
+	DEFINE_FIELD(m_fTimeLastHurt, FIELD_TIME),
+#endif
 	DEFINE_FIELD( m_flStepSoundTime, FIELD_FLOAT ),
 	DEFINE_ARRAY( m_szNetname, FIELD_CHARACTER, MAX_PLAYER_NAME_LENGTH ),
 
@@ -727,8 +754,8 @@ int CBasePlayer::ShouldTransmit( const CCheckTransmitInfo *pInfo )
 
 bool CBasePlayer::WantsLagCompensationOnEntity( const CBasePlayer *pPlayer, const CUserCmd *pCmd, const CBitVec<MAX_EDICTS> *pEntityTransmitBits ) const
 {
-	// Team members shouldn't be adjusted unless friendly fire is on.
-	if ( !friendlyfire.GetInt() && pPlayer->GetTeamNumber() == GetTeamNumber() )
+		// Team members shouldn't be adjusted unless friendly fire is on.
+	if (!friendlyfire.GetInt() && pPlayer->GetTeamNumber() == GetTeamNumber())
 		return false;
 
 	// If this entity hasn't been transmitted to us and acked, then don't bother lag compensating it.
@@ -841,9 +868,23 @@ void CBasePlayer::DeathSound( const CTakeDamageInfo &info )
 
 // override takehealth
 // bitsDamageType indicates type of damage healed. 
-
+#if C17
+int CBasePlayer::TakeHealth(float flHealth, int bitsDamageType, bool bIsRegen)
+#else
 int CBasePlayer::TakeHealth( float flHealth, int bitsDamageType )
+#endif
 {
+#ifdef C17
+	float flHealthOut = flHealth;
+	if (!bIsRegen)
+	{
+		if (GetHealth() < HL2GameRules()->GetRegeneratingHealthMax(GetHealth()))
+		{
+			flHealthOut = flHealth + (HL2GameRules()->GetRegeneratingHealthMax(GetHealth()) - GetHealth());
+		}
+	}
+#endif
+
 	// clear out any damage types we healed.
 	// UNDONE: generic health should not heal any
 	// UNDONE: time-based damage
@@ -856,9 +897,17 @@ int CBasePlayer::TakeHealth( float flHealth, int bitsDamageType )
 	// I disabled reporting history into the dbghist because it was super spammy.
 	// But, if you need to reenable it, the code is below in the "else" clause.
 #if 1 // #ifdef DISABLE_DEBUG_HISTORY
+#ifdef C17
+	return BaseClass::TakeHealth(flHealthOut, bitsDamageType);
+#else
 	return BaseClass::TakeHealth (flHealth, bitsDamageType);
+#endif
+#else
+#ifdef C17
+	const int healingTaken = BaseClass::TakeHealth(flHealthOut, bitsDamageType);
 #else
 	const int healingTaken = BaseClass::TakeHealth(flHealth,bitsDamageType);
+#endif
 	char buf[256];
 	Q_snprintf(buf, 256, "[%f] Player %s healed for %d with damagetype %X\n", gpGlobals->curtime, GetDebugName(), healingTaken, bitsDamageType);
 	ADD_DEBUG_HISTORY( HISTORY_PLAYER_DAMAGE, buf );
@@ -1155,6 +1204,7 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	m_lastDamageAmount = info.GetDamage();
 
 	// Armor. 
+#ifndef C17
 	if (m_ArmorValue && !(info.GetDamageType() & (DMG_FALL | DMG_DROWN | DMG_POISON | DMG_RADIATION)) )// armor doesn't protect against fall or drown damage!
 	{
 		float flNew = info.GetDamage() * flRatio;
@@ -1188,7 +1238,14 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 		
 		info.SetDamage( flNew );
 	}
+#endif
 
+#ifdef C17_HAPTICS
+	// Haptics addition
+	//float fHealthShieldDamage = (info.GetDamage() * 0.75) - clamp(((m_lastDamageAmount - info.GetDamage()) * 0.25), 0.0, 100.0);
+	float fHealthShieldDamage = info.GetDamage(); // armor absorbs 80%, so this will be 20% damage
+	HapticsDamage(info.GetInflictor(), fHealthShieldDamage, bitsDamage);
+#endif
 
 #if defined( WIN32 ) && !defined( _X360 )
 	// NVNT if player's client has a haptic device send them a user message with the damage.
@@ -1400,6 +1457,13 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 		OnDamagedByExplosion( info );
 	}
 
+#ifdef C17
+	if (GetHealth() < 100)
+	{
+		m_fTimeLastHurt = gpGlobals->curtime;
+	}
+#endif
+
 	return fTookDamage;
 }
 
@@ -1560,9 +1624,14 @@ void CBasePlayer::RemoveAllItems( bool removeSuit )
 	UpdateClientData();
 }
 
+//Tony; correct this for base code so that IsDead will be correct accross all games.
 bool CBasePlayer::IsDead() const
 {
+#ifdef C17
+	return m_lifeState != LIFE_ALIVE;
+#else
 	return m_lifeState == LIFE_DEAD;
+#endif
 }
 
 static float DamageForce( const Vector &size, float damage )
@@ -2419,7 +2488,11 @@ void CBasePlayer::CheckObserverSettings()
 
 	// check if our spectating target is still a valid one
 	
+#ifdef C17
+	if (m_iObserverMode == OBS_MODE_IN_EYE || m_iObserverMode == OBS_MODE_CHASE || m_iObserverMode == OBS_MODE_FIXED)
+#else
 	if (  m_iObserverMode == OBS_MODE_IN_EYE || m_iObserverMode == OBS_MODE_CHASE || m_iObserverMode == OBS_MODE_FIXED )
+#endif
 	{
 		ValidateCurrentObserverTarget();
 				
@@ -2862,6 +2935,13 @@ float CBasePlayer::GetHeldObjectMass( IPhysicsObject *pHeldObject )
 {
 	return 0;
 }
+
+#ifdef C17
+CBaseEntity	*CBasePlayer::GetHeldObject(void)
+{
+	return NULL;
+}
+#endif
 
 
 //-----------------------------------------------------------------------------
@@ -3421,6 +3501,14 @@ void CBasePlayer::ProcessUsercmds( CUserCmd *cmds, int numcmds, int totalcmds,
 {
 	CCommandContext *ctx = AllocCommandContext();
 	Assert( ctx );
+
+#ifdef C17_HAPTICS
+	// Haptics. Just pulls the most recent value of weather the player's client has haptics enabled
+	if (totalcmds > 0)
+	{
+		m_bHaptics = cmds[totalcmds - 1].haptics;
+	}
+#endif
 
 	int i;
 	for ( i = totalcmds - 1; i >= 0; i-- )
@@ -4604,6 +4692,31 @@ void CBasePlayer::PostThink()
 		VPROF_SCOPE_END();
 	}
 
+#ifdef C17
+	// Regenerate heath
+	if (IsAlive() && HL2GameRules() && GetHealth() < HL2GameRules()->GetRegeneratingHealthMax(GetHealth()) && sv_regeneration.GetBool() && m_nPoisonDmg == 0 && m_idrowndmg == 0)
+	{
+		// Color to overlay on the screen while the player is taking damage
+		color32 hurtScreenOverlay = { 80,0,0,30 };
+
+		if (gpGlobals->curtime > m_fTimeLastHurt + sv_regeneration_wait_time.GetFloat())
+		{
+			//Regenerate based on rate, and scale it by the frametime
+			m_fRegenRemander += HL2GameRules()->GetRegeneratingHealthRate() * gpGlobals->frametime;
+
+			if (m_fRegenRemander >= 1)
+			{
+				TakeHealth(m_fRegenRemander, DMG_GENERIC, true);
+				m_fRegenRemander = 0;
+			}
+		}
+		else
+		{
+			UTIL_ScreenFade(this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN | FFADE_PURGE);
+		}
+	}
+#endif
+
 #if !defined( NO_ENTITY_PREDICTION )
 	// Even if dead simulate entities
 	SimulatePlayerSimulatedEntities();
@@ -4875,6 +4988,57 @@ void CBasePlayer::InitialSpawn( void )
 	gamestats->Event_PlayerConnected( this );
 }
 
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: clear our m_Local.m_TonemapParams to -1.
+//-----------------------------------------------------------------------------
+void CBasePlayer::ClearTonemapParams(void)
+{
+	//Tony; clear all the variables to -1.0
+	m_Local.m_TonemapParams.m_flAutoExposureMin = -1.0f;
+	m_Local.m_TonemapParams.m_flAutoExposureMax = -1.0f;
+	m_Local.m_TonemapParams.m_flTonemapScale = -1.0f;
+	m_Local.m_TonemapParams.m_flBloomScale = -1.0f;
+	m_Local.m_TonemapParams.m_flTonemapRate = -1.0f;
+}
+void CBasePlayer::InputSetTonemapScale(inputdata_t &inputdata)
+{
+	m_Local.m_TonemapParams.m_flTonemapScale = inputdata.value.Float();
+}
+
+void CBasePlayer::InputSetTonemapRate(inputdata_t &inputdata)
+{
+	m_Local.m_TonemapParams.m_flTonemapRate = inputdata.value.Float();
+}
+void CBasePlayer::InputSetAutoExposureMin(inputdata_t &inputdata)
+{
+	m_Local.m_TonemapParams.m_flAutoExposureMin = inputdata.value.Float();
+}
+
+void CBasePlayer::InputSetAutoExposureMax(inputdata_t &inputdata)
+{
+	m_Local.m_TonemapParams.m_flAutoExposureMax = inputdata.value.Float();
+}
+
+void CBasePlayer::InputSetBloomScale(inputdata_t &inputdata)
+{
+	m_Local.m_TonemapParams.m_flBloomScale = inputdata.value.Float();
+}
+
+//Tony; restore defaults (set min/max to -1.0 so nothing gets overridden)
+void CBasePlayer::InputUseDefaultAutoExposure(inputdata_t &inputdata)
+{
+	m_Local.m_TonemapParams.m_flAutoExposureMin = -1.0f;
+	m_Local.m_TonemapParams.m_flAutoExposureMax = -1.0f;
+	m_Local.m_TonemapParams.m_flTonemapRate = -1.0f;
+}
+void CBasePlayer::InputUseDefaultBloomScale(inputdata_t &inputdata)
+{
+	m_Local.m_TonemapParams.m_flBloomScale = -1.0f;
+}
+//	void	InputSetBloomScaleRange( inputdata_t &inputdata );
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: Called everytime the player respawns
 //-----------------------------------------------------------------------------
@@ -4885,6 +5049,11 @@ void CBasePlayer::Spawn( void )
 	{
 		Hints()->ResetHints();
 	}
+
+#ifdef C17
+	//Tony; make sure tonemap params is cleared.
+	ClearTonemapParams();
+#endif
 
 	SetClassname( "player" );
 
@@ -5028,6 +5197,10 @@ void CBasePlayer::Spawn( void )
 
 	// Calculate this immediately
 	m_nVehicleViewSavedFrame = 0;
+
+#ifdef C17
+	SetVGUImode(false);
+#endif
 
 	// track where we are in the nav mesh
 	UpdateLastKnownArea();
@@ -5633,7 +5806,9 @@ void CBloodSplat::Think( void )
 {
 	trace_t	tr;	
 	
+#ifndef C17
 	if ( g_Language.GetInt() != LANGUAGE_GERMAN )
+#endif
 	{
 		CBasePlayer *pPlayer;
 		pPlayer = ToBasePlayer( GetOwnerEntity() );
@@ -5989,7 +6164,11 @@ static void CreateJalopy( CBasePlayer *pPlayer )
 		pJeep->SetAbsAngles( vecAngles );
 		pJeep->KeyValue( "model", "models/vehicle.mdl" );
 		pJeep->KeyValue( "solid", "6" );
+#ifdef C17
+		pJeep->KeyValue("targetname", "hl2buggy");
+#else
 		pJeep->KeyValue( "targetname", "jeep" );
+#endif
 		pJeep->KeyValue( "vehiclescript", "scripts/vehicles/jalopy.txt" );
 		DispatchSpawn( pJeep );
 		pJeep->Activate();
@@ -6102,6 +6281,22 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 
 	switch ( iImpulse )
 	{
+#ifdef C17
+	case 1:
+		EquipSuit();
+
+		if (!GlobalEntity_IsInTable("super_phys_gun"))
+		{
+			GlobalEntity_Add(MAKE_STRING("super_phys_gun"), gpGlobals->mapname, GLOBAL_ON);
+		}
+		else
+		{
+			GlobalEntity_SetState(MAKE_STRING("super_phys_gun"), GLOBAL_ON);
+		}
+
+		GiveNamedItem("weapon_physcannon");
+		break;
+#else
 	case 76:
 		{
 			if (!giPrecacheGrunt)
@@ -6116,6 +6311,7 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 			}
 			break;
 		}
+#endif
 
 	case 81:
 
@@ -6141,6 +6337,9 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 		GiveAmmo( 255,	"Pistol");
 		GiveAmmo( 255,	"AR2");
 		GiveAmmo( 5,	"AR2AltFire");
+#ifdef C17
+		GiveAmmo(255, "AR3");
+#endif
 		GiveAmmo( 255,	"SMG1");
 		GiveAmmo( 255,	"Buckshot");
 		GiveAmmo( 3,	"smg1_grenade");
@@ -6151,17 +6350,27 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 #ifdef HL2_EPISODIC
 		GiveAmmo( 5,	"Hopwire" );
 #endif		
+#ifdef C17
+		GiveNamedItem("weapon_ar3");
+#endif
 		GiveNamedItem( "weapon_smg1" );
 		GiveNamedItem( "weapon_frag" );
+#ifndef C17
 		GiveNamedItem( "weapon_crowbar" );
+#endif
 		GiveNamedItem( "weapon_pistol" );
 		GiveNamedItem( "weapon_ar2" );
 		GiveNamedItem( "weapon_shotgun" );
+#ifndef C17
 		GiveNamedItem( "weapon_physcannon" );
 		GiveNamedItem( "weapon_bugbait" );
+#endif
 		GiveNamedItem( "weapon_rpg" );
 		GiveNamedItem( "weapon_357" );
 		GiveNamedItem( "weapon_crossbow" );
+#ifdef C17
+		GiveNamedItem("weapon_stunbaton");
+#endif
 #ifdef HL2_EPISODIC
 		// GiveNamedItem( "weapon_magnade" );
 #endif
@@ -6174,10 +6383,12 @@ void CBasePlayer::CheatImpulseCommands( int iImpulse )
 
 		break;
 
+#ifndef C17
 	case 102:
 		// Gibbage!!!
 		CGib::SpawnRandomGibs( this, 1, GIB_HUMAN );
 		break;
+#endif
 
 	case 103:
 		// What the hell are you doing?
@@ -6544,6 +6755,18 @@ bool CBasePlayer::ClientCommand( const CCommand &args )
 		}
 		return true;
 	}
+#ifdef C17
+	else if (stricmp(cmd, "vguimode_true") == 0)
+	{
+		SetVGUImode(true);
+		return true;
+	}
+	else if (stricmp(cmd, "vguimode_false") == 0)
+	{
+		SetVGUImode(false);
+		return true;
+	}
+#endif
 
 	return false;
 }
@@ -7957,6 +8180,12 @@ void SendProxy_CropFlagsToPlayerFlagBitsLength( const SendProp *pProp, const voi
 		SendPropInt			( SENDINFO( m_nWaterLevel ), 2, SPROP_UNSIGNED ),
 		SendPropFloat		( SENDINFO( m_flLaggedMovementValue ), 0, SPROP_NOSCALE ),
 
+#ifdef C17
+#if 0
+		SendPropEHandle(SENDINFO(m_hViewEntity)),
+#endif
+#endif
+
 	END_SEND_TABLE()
 
 
@@ -8056,6 +8285,9 @@ void CBasePlayer::SetupVPhysicsShadow( const Vector &vecAbsOrigin, const Vector 
 void CBasePlayer::VPhysicsCollision( int index, gamevcollisionevent_t *pEvent )
 {
 }
+#ifdef C17_HAPTICS
+ConVar hap_temp_feedback3("hap_temp_feedback3", "0");
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose:
@@ -8836,6 +9068,16 @@ bool CBasePlayer::HandleVoteCommands( const CCommand &args )
 //-----------------------------------------------------------------------------
 const char *CBasePlayer::GetNetworkIDString()
 {
+#ifdef C17
+	//Tony; bots don't have network id's, and this can potentially crash, especially with plugins creating them.
+	if (IsBot())
+		return "__BOT__";
+
+	//Tony; if networkidstring is null for any reason, the strncpy will crash!
+	if (!m_szNetworkIDString)
+		return "NULLID";
+#endif
+
 	const char *pStr = engine->GetPlayerNetworkIDString( edict() );
 	Q_strncpy( m_szNetworkIDString, pStr ? pStr : "", sizeof(m_szNetworkIDString) );
 	return m_szNetworkIDString; 

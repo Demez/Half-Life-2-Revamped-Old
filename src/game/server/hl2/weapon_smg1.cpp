@@ -17,6 +17,9 @@
 #include "soundent.h"
 #include "rumble_shared.h"
 #include "gamestats.h"
+#ifdef C17
+#include "particle_parse.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -40,19 +43,110 @@ public:
 	int		GetMinBurst() { return 2; }
 	int		GetMaxBurst() { return 5; }
 
+#ifdef C17
+	const char *GetTracerType(void) { return "gunfire_smg_beams"; }
+#endif
+
 	virtual void Equip( CBaseCombatCharacter *pOwner );
 	bool	Reload( void );
 
 	float	GetFireRate( void ) { return 0.075f; }	// 13.3hz
 	int		CapabilitiesGet( void ) { return bits_CAP_WEAPON_RANGE_ATTACK1; }
 	int		WeaponRangeAttack2Condition( float flDot, float flDist );
+#ifdef C17
+	virtual void	PrimaryAttack(void);
+#endif
 	Activity	GetPrimaryAttackActivity( void );
 
+#ifndef C17
 	virtual const Vector& GetBulletSpread( void )
 	{
 		static const Vector cone = VECTOR_CONE_5DEGREES;
 		return cone;
 	}
+#else
+	//City17: Normal bullet vectors.
+	virtual const Vector& GetBulletSpread_Normal(void)
+	{
+		if (m_bIsIronsighted)
+		{
+			static const Vector cone = VECTOR_CONE_3DEGREES;
+			return cone;
+		}
+		else
+		{
+			static const Vector cone = VECTOR_CONE_5DEGREES;
+			return cone;
+		}
+	}
+
+	//City17: Bullet vectors while ducking.
+	virtual const Vector& GetBulletSpread_Ducked(void)
+	{
+		if (m_bIsIronsighted)
+		{
+			static const Vector cone = VECTOR_CONE_1DEGREES;
+			return cone;
+		}
+		else
+		{
+			static const Vector cone = VECTOR_CONE_3DEGREES;
+			return cone;
+		}
+	}
+
+	//City17: Bullet vectors while in the air.
+	virtual const Vector& GetBulletSpread_InAir(void)
+	{
+		static const Vector cone = VECTOR_CONE_7DEGREES;
+		return cone;
+	}
+
+	//City17: Bullet vectors while running.
+	virtual const Vector& GetBulletSpread_Running(void)
+	{
+		static const Vector cone = VECTOR_CONE_6DEGREES;
+		return cone;
+	}
+
+	//City17: Determine bullet vectors.
+	virtual const Vector& GetBulletSpread(void)
+	{
+		if (!GetOwner())
+		{
+			static const Vector cone = VECTOR_CONE_5DEGREES;
+			return cone;
+		}
+
+		CBasePlayer *pPlayer = ToBasePlayer(GetOwner());
+
+		//If we don't have a player, just return the old default vector.
+		//Interestingly (Though not really) NPC's will resolve to this.
+		if (!pPlayer)
+		{
+			static const Vector cone = VECTOR_CONE_5DEGREES;
+			return cone;
+		}
+
+		//If our player is in the air, lower his accuacy severely.
+		if (!(pPlayer->GetFlags() & FL_ONGROUND))
+			return GetBulletSpread_InAir();
+
+		//If our player is ducking, give him a large accuracy boost.
+		if (pPlayer->GetFlags() & FL_DUCKING)
+			return GetBulletSpread_Ducked();
+
+		//If our player is running, slightly lower his accuracy as a penalty.
+		float speed;
+		speed = pPlayer->GetAbsVelocity().Length2D();
+
+		if (speed >= 320 && pPlayer->GetFlags() & FL_ONGROUND)
+			return GetBulletSpread_Running();
+
+		//If none of the above conditions are true, return normal accuracy.
+		return GetBulletSpread_Normal();
+	}
+#endif
 
 	const WeaponProficiencyInfo_t *GetProficiencyValues();
 
@@ -171,6 +265,82 @@ void CWeaponSMG1::Equip( CBaseCombatCharacter *pOwner )
 	BaseClass::Equip( pOwner );
 }
 
+#if C17
+//-----------------------------------------------------------------------------
+// Purpose: 
+//
+//
+//-----------------------------------------------------------------------------
+void CWeaponSMG1::PrimaryAttack(void)
+{
+	// Only the player fires this way so we can cast
+	CBasePlayer *pPlayer = ToBasePlayer(GetOwner());
+	if (!pPlayer)
+		return;
+
+	// Abort here to handle burst and auto fire modes
+	if ((UsesClipsForAmmo1() && m_iClip1 == 0) || (!UsesClipsForAmmo1() && !pPlayer->GetAmmoCount(m_iPrimaryAmmoType)))
+		return;
+
+	m_nShotsFired++;
+
+	pPlayer->DoMuzzleFlash();
+
+	// To make the firing framerate independent, we may have to fire more than one bullet here on low-framerate systems, 
+	// especially if the weapon we're firing has a really fast rate of fire.
+	int iBulletsToFire = 0;
+	float fireRate = GetFireRate();
+
+	// MUST call sound before removing a round from the clip of a CHLMachineGun
+	while (m_flNextPrimaryAttack <= gpGlobals->curtime)
+	{
+		WeaponSound(SINGLE, m_flNextPrimaryAttack);
+		m_flNextPrimaryAttack = m_flNextPrimaryAttack + fireRate;
+		iBulletsToFire++;
+	}
+
+	// Make sure we don't fire more than the amount in the clip, if this weapon uses clips
+	if (UsesClipsForAmmo1())
+	{
+		if (iBulletsToFire > m_iClip1)
+			iBulletsToFire = m_iClip1;
+		m_iClip1 -= iBulletsToFire;
+	}
+
+	m_iPrimaryAttacks++;
+	gamestats->Event_WeaponFired(pPlayer, true, GetClassname());
+
+	// Fire the bullets
+	FireBulletsInfo_t info;
+	info.m_iShots = iBulletsToFire;
+	info.m_vecSrc = pPlayer->Weapon_ShootPosition();
+	info.m_vecDirShooting = pPlayer->GetAutoaimVector(AUTOAIM_SCALE_DEFAULT);
+	info.m_vecSpread = pPlayer->GetAttackSpread(this);
+	info.m_flDistance = MAX_TRACE_LENGTH;
+	info.m_iAmmoType = m_iPrimaryAmmoType;
+	info.m_iTracerFreq = 2;
+	FireBullets(info);
+
+	//Factor in the view kick
+	if (IsIronsighted())
+	{
+		DoMachineGunKick(pPlayer, 0.5, 5.0, 0.5, 3.0);
+	}
+	else
+	{
+		DoMachineGunKick(pPlayer, 0.5, 10.0, 0.5, 3.0);
+	}
+
+	CSoundEnt::InsertSound(SOUND_COMBAT, GetAbsOrigin(), SOUNDENT_VOLUME_MACHINEGUN, 0.2, pPlayer);
+
+	SendWeaponAnim(GetPrimaryAttackActivity());
+	pPlayer->SetAnimation(PLAYER_ATTACK1);
+
+	// Register a muzzleflash for the AI
+	pPlayer->SetMuzzleFlashTime(gpGlobals->curtime + 0.5);
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -267,6 +437,19 @@ void CWeaponSMG1::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatChar
 //-----------------------------------------------------------------------------
 Activity CWeaponSMG1::GetPrimaryAttackActivity( void )
 {
+#ifdef C17
+	//City17: Adjusted to make 3 round burst optimal in ironsights, or in general.
+	if (m_nShotsFired > 4 && !m_bIsIronsighted)
+		return ACT_VM_RECOIL3;
+
+	if (m_nShotsFired > 3)
+		return ACT_VM_RECOIL2;
+
+	if (m_nShotsFired > 2)
+		return ACT_VM_RECOIL1;
+
+	return ACT_VM_PRIMARYATTACK;
+#else
 	if ( m_nShotsFired < 2 )
 		return ACT_VM_PRIMARYATTACK;
 
@@ -277,6 +460,7 @@ Activity CWeaponSMG1::GetPrimaryAttackActivity( void )
 		return ACT_VM_RECOIL2;
 
 	return ACT_VM_RECOIL3;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -343,6 +527,10 @@ void CWeaponSMG1::SecondaryAttack( void )
 
 	// MUST call sound before removing a round from the clip of a CMachineGun
 	BaseClass::WeaponSound( WPN_DOUBLE );
+
+#ifdef C17
+	DisableIronsights();
+#endif
 
 	pPlayer->RumbleEffect( RUMBLE_357, 0, RUMBLE_FLAGS_NONE );
 

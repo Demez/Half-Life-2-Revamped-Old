@@ -13,6 +13,9 @@
 
 #define CPhysBox C_PhysBox
 #define CPhysicsProp C_PhysicsProp
+#ifdef C17
+#define CPlugProp C_PlugProp
+#endif
 
 
 // memdbgon must be the last include file in a .cpp file!!!

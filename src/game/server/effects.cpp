@@ -399,11 +399,13 @@ LINK_ENTITY_TO_CLASS( gibshooter, CGibShooter );
 
 void CGibShooter::Precache ( void )
 {
+#ifndef C17
 	if ( g_Language.GetInt() == LANGUAGE_GERMAN )
 	{
 		m_iGibModelIndex = PrecacheModel ("models/germanygibs.mdl");
 	}
 	else
+#endif
 	{
 		m_iGibModelIndex = PrecacheModel ("models/gibs/hgibs.mdl");
 	}
@@ -1482,17 +1484,37 @@ public:
 	CPrecipitation();
 	void	Spawn( void );
 
+#ifdef C17
+	void	InputTurnOn(inputdata_t &inputdata) { m_bOn = true; }
+	void	InputTurnOff(inputdata_t &inputdata) { m_bOn = false; }
+	void	InputToggle(inputdata_t &inputdata) { m_bOn = !m_bOn; }
+#endif
+
 	CNetworkVar( PrecipitationType_t, m_nPrecipType );
+#ifdef C17
+	CNetworkVar(bool, m_bOn);
+
+	bool	m_bStartDisabled;
+#endif
 };
 
 LINK_ENTITY_TO_CLASS( func_precipitation, CPrecipitation );
 
 BEGIN_DATADESC( CPrecipitation )
 	DEFINE_KEYFIELD( m_nPrecipType, FIELD_INTEGER, "preciptype" ),
+#ifdef C17
+	DEFINE_KEYFIELD(m_bStartDisabled, FIELD_BOOLEAN, "StartDisabled"),
+	DEFINE_INPUTFUNC(FIELD_VOID, "TurnOn", InputTurnOn),
+	DEFINE_INPUTFUNC(FIELD_VOID, "TurnOff", InputTurnOff),
+	DEFINE_INPUTFUNC(FIELD_VOID, "Toggle", InputToggle),
+#endif
 END_DATADESC()
 
 // Just send the normal entity crap
 IMPLEMENT_SERVERCLASS_ST( CPrecipitation, DT_Precipitation)
+#ifdef C17
+	SendPropBool(SENDINFO(m_bOn)),
+#endif
 	SendPropInt( SENDINFO( m_nPrecipType ), Q_log2( NUM_PRECIPITATION_TYPES ) + 1, SPROP_UNSIGNED )
 END_SEND_TABLE()
 
@@ -1519,6 +1541,17 @@ void CPrecipitation::Spawn( void )
 		m_nPrecipType = PRECIPITATION_TYPE_RAIN;
 
 	m_nRenderMode = kRenderEnvironmental;
+
+#ifdef C17
+	if (m_bStartDisabled)
+	{
+		m_bOn = false;
+	}
+	else
+	{
+		m_bOn = true;
+	}
+#endif
 }
 #endif
 

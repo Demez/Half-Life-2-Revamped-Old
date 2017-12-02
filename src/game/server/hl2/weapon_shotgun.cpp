@@ -18,12 +18,18 @@
 #include "soundent.h"
 #include "vstdlib/random.h"
 #include "gamestats.h"
+#ifdef C17
+#include "particle_parse.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
 extern ConVar sk_auto_reload_time;
 extern ConVar sk_plr_num_shotgun_pellets;
+#ifdef C17
+extern ConVar ironsight_mode;
+#endif
 
 class CWeaponShotgun : public CBaseHLCombatWeapon
 {
@@ -39,9 +45,10 @@ private:
 	bool	m_bDelayedFire2;	// Fire secondary when finished reloading
 
 public:
-	void	Precache( void );
+	int CapabilitiesGet(void) { return bits_CAP_WEAPON_RANGE_ATTACK1; }
 
-	int CapabilitiesGet( void ) { return bits_CAP_WEAPON_RANGE_ATTACK1; }
+#ifndef C17
+	void	Precache( void );
 
 	virtual const Vector& GetBulletSpread( void )
 	{
@@ -60,6 +67,104 @@ public:
 
 	virtual int				GetMinBurst() { return 1; }
 	virtual int				GetMaxBurst() { return 3; }
+#else
+	//City17: Normal bullet vectors.
+	virtual const Vector& GetBulletSpread_Normal(void)
+	{
+		if (m_bIsIronsighted)
+		{
+			static const Vector cone = VECTOR_CONE_8DEGREES;
+			return cone;
+		}
+		else
+		{
+			static const Vector cone = VECTOR_CONE_10DEGREES;
+			return cone;
+		}
+	}
+
+	//City17: Bullet vectors while ducking.
+	virtual const Vector& GetBulletSpread_Ducked(void)
+	{
+		if (m_bIsIronsighted)
+		{
+			static const Vector cone = VECTOR_CONE_6DEGREES;
+			return cone;
+		}
+		else
+		{
+			static const Vector cone = VECTOR_CONE_8DEGREES;
+			return cone;
+		}
+	}
+
+	//City17: Bullet vectors while in the air.
+	virtual const Vector& GetBulletSpread_InAir(void)
+	{
+		//Players can't be ironsighted while in the air, so there's no need to check for that here.
+		static const Vector cone = VECTOR_CONE_15DEGREES;
+		return cone;
+	}
+
+	//City17: Bullet vectors while running.
+	virtual const Vector& GetBulletSpread_Running(void)
+	{
+		//Players can't be ironsighted while running, so there's no need to check for that here.
+		static const Vector cone = VECTOR_CONE_15DEGREES;
+		return cone;
+	}
+
+	//City17: Determine bullet vectors.
+	virtual const Vector& GetBulletSpread(void)
+	{
+		if (!GetOwner())
+		{
+			static const Vector cone = VECTOR_CONE_10DEGREES;
+			return cone;
+		}
+
+		if (GetOwner()->Classify() == CLASS_PLAYER_ALLY_VITAL)
+		{
+			// Give Alyx's shotgun blasts more a more directed punch. She needs
+			// to be at least as deadly as she would be with her pistol to stay interesting (sjb)
+			static const Vector vitalAllyCone = VECTOR_CONE_3DEGREES;
+			return vitalAllyCone;
+		}
+
+		CBasePlayer *pPlayer = ToBasePlayer(GetOwner());
+
+		//If we don't have a player, just return the old default vector.
+		//Interestingly (Though not really) NPC's will resolve to this.
+		if (!pPlayer)
+		{
+			static const Vector cone = VECTOR_CONE_10DEGREES;
+			return cone;
+		}
+
+		//If our player is ducking, give him a large accuracy boost.
+		if (pPlayer->GetFlags() & FL_DUCKING)
+			return GetBulletSpread_Ducked();
+
+		//If our player is in the air, lower his accuacy severely.
+		if (!(pPlayer->GetFlags() & FL_ONGROUND))
+			return GetBulletSpread_InAir();
+
+		//If our player is running, slightly lower his accuracy as a penalty.
+		float speed;
+		speed = pPlayer->GetAbsVelocity().Length2D();
+
+		if (speed >= 320 && pPlayer->GetFlags() & FL_ONGROUND)
+			return GetBulletSpread_Running();
+
+		//If none of the above conditions are true, return normal accuracy.
+		return GetBulletSpread_Normal();
+	}
+
+	virtual int				GetMinBurst() { return 1; }
+	virtual int				GetMaxBurst() { return 3; }
+
+	const char *GetTracerType(void) { return "gunfire_shotgun_beams"; }
+#endif
 
 	virtual float			GetMinRestTime();
 	virtual float			GetMaxRestTime();
@@ -72,7 +177,6 @@ public:
 	void FinishReload( void );
 	void CheckHolsterReload( void );
 	void Pump( void );
-//	void WeaponIdle( void );
 	void ItemHolsterFrame( void );
 	void ItemPostFrame( void );
 	void PrimaryAttack( void );
@@ -153,10 +257,12 @@ acttable_t	CWeaponShotgun::m_acttable[] =
 
 IMPLEMENT_ACTTABLE(CWeaponShotgun);
 
+#ifndef C17
 void CWeaponShotgun::Precache( void )
 {
 	CBaseCombatWeapon::Precache();
 }
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -164,11 +270,23 @@ void CWeaponShotgun::Precache( void )
 //-----------------------------------------------------------------------------
 void CWeaponShotgun::FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, bool bUseWeaponAngles )
 {
+#ifdef C17
+	Vector vecShootOrigin2; //The origin of the shot 
+	QAngle	angShootDir2;    //The angle of the shot
+
+							 //We need to figure out where to place the particle effect, so lookup where the muzzle is
+	GetAttachment(LookupAttachment("muzzle"), vecShootOrigin2, angShootDir2);
+#endif
+
 	Vector vecShootOrigin, vecShootDir;
 	CAI_BaseNPC *npc = pOperator->MyNPCPointer();
 	ASSERT( npc != NULL );
 	WeaponSound( SINGLE_NPC );
+#ifdef C17
+	DispatchParticleEffect("muzzle_shotgun", vecShootOrigin2, angShootDir2);
+#else
 	pOperator->DoMuzzleFlash();
+#endif
 	m_iClip1 = m_iClip1 - 1;
 
 	if ( bUseWeaponAngles )
@@ -302,11 +420,19 @@ bool CWeaponShotgun::StartReload( void )
 
 	SendWeaponAnim( ACT_SHOTGUN_RELOAD_START );
 
+#ifdef C17
+	DisableIronsights();
+#endif
+
 	// Make shotgun shell visible
 	SetBodygroup(1,0);
 
 	pOwner->m_flNextAttack = gpGlobals->curtime;
+#ifdef C17
+	m_flNextPrimaryAttack = m_flReloadTime = gpGlobals->curtime + SequenceDuration();
+#else
 	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+#endif
 
 	m_bInReload = true;
 	return true;
@@ -347,7 +473,11 @@ bool CWeaponShotgun::Reload( void )
 	SendWeaponAnim( ACT_VM_RELOAD );
 
 	pOwner->m_flNextAttack = gpGlobals->curtime;
+#ifdef C17
+	m_flNextPrimaryAttack = m_flReloadTime = gpGlobals->curtime + SequenceDuration();
+#else
 	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+#endif
 
 	return true;
 }
@@ -373,7 +503,11 @@ void CWeaponShotgun::FinishReload( void )
 	SendWeaponAnim( ACT_SHOTGUN_RELOAD_FINISH );
 
 	pOwner->m_flNextAttack = gpGlobals->curtime;
+#ifdef C17
+	m_flNextPrimaryAttack = m_flReloadTime = gpGlobals->curtime + SequenceDuration();
+#else
 	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -472,15 +606,30 @@ void CWeaponShotgun::PrimaryAttack( void )
 	// Fire the bullets, and force the first shot to be perfectly accuracy
 	pPlayer->FireBullets( sk_plr_num_shotgun_pellets.GetInt(), vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, true, true );
 	
+#ifdef C17
+	//City17: More recoil.
+	if (IsIronsighted())
+	{
+		//This is the original viewpunch
+		pPlayer->ViewPunch(QAngle(random->RandomFloat(-2, -1), random->RandomFloat(-2, -1), 0));
+	}
+	else
+	{
+		pPlayer->ViewPunch(QAngle(random->RandomFloat(-2, -5), random->RandomFloat(-1, -2), 0));
+	}
+#else
 	pPlayer->ViewPunch( QAngle( random->RandomFloat( -2, -1 ), random->RandomFloat( -2, 2 ), 0 ) );
+#endif
 
 	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), SOUNDENT_VOLUME_SHOTGUN, 0.2, GetOwner() );
 
+#ifndef C17
 	if (!m_iClip1 && pPlayer->GetAmmoCount(m_iPrimaryAmmoType) <= 0)
 	{
 		// HEV suit - indicate out of ammo condition
 		pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0); 
 	}
+#endif
 
 	if( m_iClip1 )
 	{
@@ -527,17 +676,33 @@ void CWeaponShotgun::SecondaryAttack( void )
 
 	// Fire the bullets
 	pPlayer->FireBullets( 12, vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, false, false );
+
+#ifdef C17
+	//City17: More recoil.
+	if (IsIronsighted())
+	{
+		//This is the original viewpunch.
+		pPlayer->ViewPunch(QAngle(random->RandomFloat(-2, -5), random->RandomFloat(-2, -3), 0));
+	}
+	else
+	{
+		pPlayer->ViewPunch(QAngle(random->RandomFloat(-4, -8), random->RandomFloat(-2, -5), 0));
+	}
+#else
 	pPlayer->ViewPunch( QAngle(random->RandomFloat( -5, 5 ),0,0) );
+#endif
 
 	pPlayer->SetMuzzleFlashTime( gpGlobals->curtime + 1.0 );
 
 	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), SOUNDENT_VOLUME_SHOTGUN, 0.2 );
 
+#ifndef C17
 	if (!m_iClip1 && pPlayer->GetAmmoCount(m_iPrimaryAmmoType) <= 0)
 	{
 		// HEV suit - indicate out of ammo condition
 		pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0); 
 	}
+#endif
 
 	if( m_iClip1 )
 	{
@@ -604,11 +769,56 @@ void CWeaponShotgun::ItemPostFrame( void )
 		SetBodygroup(1,1);
 	}
 
+#ifdef C17
+	if (m_flReloadTime > gpGlobals->curtime)
+	{
+		m_bReloadBlur = true;
+	}
+	else
+	{
+		m_bReloadBlur = false;
+	}
+#endif
+
 	if ((m_bNeedPump) && (m_flNextPrimaryAttack <= gpGlobals->curtime))
 	{
 		Pump();
 		return;
 	}
+
+#ifdef C17
+	if (ironsight_mode.GetBool())
+	{
+		if (pOwner->m_nButtons & IN_IRONSIGHT && !m_bIronsightToggle && m_flReIronsightTime < gpGlobals->curtime)
+		{
+			m_bIronsightToggle = true;
+
+			m_flReIronsightTime = gpGlobals->curtime + 0.4f;
+			EnableIronsights();
+		}
+		else if (!(pOwner->m_nButtons & IN_IRONSIGHT) && m_bIronsightToggle && m_flReIronsightTime < gpGlobals->curtime)
+		{
+			m_bIronsightToggle = false;
+
+			m_flReIronsightTime = gpGlobals->curtime + 0.4f;
+			DisableIronsights();
+		}
+	}
+	else
+	{
+		if (pOwner->m_nButtons & IN_IRONSIGHT && !m_bIronsightToggle && m_flReIronsightTime < gpGlobals->curtime)
+		{
+			m_bIronsightToggle = true;
+
+			m_flReIronsightTime = gpGlobals->curtime + 0.4f;
+			ToggleIronsights();
+		}
+		else if (!(pOwner->m_nButtons & IN_IRONSIGHT) && m_bIronsightToggle)
+		{
+			m_bIronsightToggle = false;
+		}
+	}
+#endif
 	
 	// Shotgun uses same timing and ammo for secondary attack
 	if ((m_bDelayedFire2 || pOwner->m_nButtons & IN_ATTACK2)&&(m_flNextPrimaryAttack <= gpGlobals->curtime))

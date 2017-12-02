@@ -24,6 +24,9 @@
 #define	SF_FIRE_NO_GLOW				0x00000020
 #define SF_FIRE_DIE_PERMANENT		0x00000080
 #define SF_FIRE_VISIBLE_FROM_ABOVE	0x00000100
+#ifdef C17
+#define SF_FIRE_COLLIDING_SMOKE		0x00000200
+#endif
 
 //==================================================
 // CFire
@@ -43,7 +46,11 @@ enum fireType_e
 //==================================================
 // FireSystem
 //==================================================
+#ifdef C17
+bool FireSystem_StartFire(const Vector &position, float fireHeight, float attack, float fuel, int flags, CBaseEntity *owner, fireType_e type = FIRE_NATURAL, int particlesize = 1);
+#else
 bool FireSystem_StartFire( const Vector &position, float fireHeight, float attack, float fuel, int flags, CBaseEntity *owner, fireType_e type = FIRE_NATURAL);
+#endif
 void FireSystem_ExtinguishInRadius( const Vector &origin, float radius, float rate );
 void FireSystem_AddHeatInRadius( const Vector &origin, float radius, float heat );
 

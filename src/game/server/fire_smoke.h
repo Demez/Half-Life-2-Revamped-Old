@@ -29,7 +29,11 @@ public:
 	virtual	~CBaseFire( void );
 
 	virtual void	Scale( float size, float time );
+#ifdef C17
+	virtual void	Scale(float start, float size, float time, int particlesize);
+#else
 	virtual void	Scale( float start, float size, float time );
+#endif
 	virtual void	Enable( int state = true );
 
 	//Client-side
@@ -37,6 +41,9 @@ public:
 	CNetworkVar( float, m_flScale );
 	CNetworkVar( float, m_flScaleTime );
 	CNetworkVar( int, m_nFlags );
+#ifdef C17
+	CNetworkVar(int, m_nParticleScale);
+#endif
 };
 
 //==================================================
@@ -60,6 +67,9 @@ public:
 	void	Spawn();
 	void	Precache();
 	void	EnableSmoke( int state = true );
+#ifdef C17
+	void	EnableCollidingSmoke(int state = true);
+#endif
 	void	EnableGlow( int state = true );
 	void	EnableVisibleFromAbove( int state = true );
 	

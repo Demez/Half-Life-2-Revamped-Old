@@ -9,6 +9,9 @@
 #include "basecombatweapon_shared.h"
 #include "baseviewmodel_shared.h"
 #include "particles_new.h"
+#ifdef C17
+#include "iinput.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -37,14 +40,25 @@ Vector GetTracerOrigin( const CEffectData &data )
 
 		C_BaseEntity *pEnt = data.GetEntity();
 
-// This check should probably be for all multiplayer games, investigate later
+		// This check should probably be for all multiplayer games, investigate later
 #if defined( HL2MP ) || defined( TF_CLIENT_DLL )
 		if ( pEnt && pEnt->IsDormant() )
 			return vecStart;
+#elif C17
+		// 10/09/2008: It should.
+		if (gpGlobals->maxClients > 1)
+		{
+			if (pEnt && pEnt->IsDormant())
+				return vecStart;
+		}
 #endif
 
 		C_BaseCombatWeapon *pWpn = dynamic_cast<C_BaseCombatWeapon *>( pEnt );
+#ifdef C17
+		if (pWpn && pWpn->IsCarriedByLocalPlayer() && !::input->CAM_IsThirdPerson())
+#else
 		if ( pWpn && pWpn->ShouldDrawUsingViewModel() )
+#endif
 		{
 			C_BasePlayer *player = ToBasePlayer( pWpn->GetOwner() );
 

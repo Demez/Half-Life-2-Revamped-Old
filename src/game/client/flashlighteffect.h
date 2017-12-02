@@ -20,7 +20,11 @@ public:
 	CFlashlightEffect(int nEntIndex = 0);
 	virtual ~CFlashlightEffect();
 
+#ifndef C17
 	virtual void UpdateLight(const Vector &vecPos, const Vector &vecDir, const Vector &vecRight, const Vector &vecUp, int nDistance);
+#else
+	virtual void UpdateLight(const Vector &vecPos, const Vector &vecDir, const Vector &vecRight, const Vector &vecUp, int nDistance, bool bMuzzleFlash);
+#endif
 	void TurnOn();
 	void TurnOff();
 	bool IsOn( void ) { return m_bIsOn;	}
@@ -34,10 +38,17 @@ protected:
 	void LightOffOld();
 	void LightOffNew();
 
+#ifdef C17
+	void UpdateLightNew(const Vector &vecPos, const Vector &vecDir, const Vector &vecRight, const Vector &vecUp, bool bMuzzleFlash);
+#else
 	void UpdateLightNew(const Vector &vecPos, const Vector &vecDir, const Vector &vecRight, const Vector &vecUp);
+#endif
 	void UpdateLightOld(const Vector &vecPos, const Vector &vecDir, int nDistance);
 
 	bool m_bIsOn;
+#ifdef C17
+	bool m_bUseShadows;
+#endif
 	int m_nEntIndex;
 	ClientShadowHandle_t m_FlashlightHandle;
 
@@ -47,6 +58,10 @@ protected:
 
 	// Texture for flashlight
 	CTextureReference m_FlashlightTexture;
+#ifdef C17
+	CTextureReference m_MuzzlelightTexture;
+	CTextureReference m_ARMuzzlelightTexture;
+#endif
 };
 
 class CHeadlightEffect : public CFlashlightEffect

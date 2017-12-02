@@ -86,6 +86,9 @@ public:
 	virtual void	StartMessageMode( int iMessageModeType ) = 0;
 	virtual vgui::Panel *GetMessagePanel() = 0;
 	virtual void	OverrideMouseInput( float *x, float *y ) = 0;
+#ifdef C17
+	virtual bool	CreateMove(float flInputSampleTime, CUserCmd *cmd, bool bVguiUpdate) = 0;
+#endif
 	virtual bool	CreateMove( float flInputSampleTime, CUserCmd *cmd ) = 0;
 
 	virtual void	LevelInit( const char *newmap ) = 0;

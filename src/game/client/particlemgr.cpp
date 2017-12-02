@@ -30,6 +30,9 @@
 #include "rtime.h"
 #endif
 #include "tier0/icommandline.h"
+#ifdef C17
+#include "viewrender.h"
+#endif
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -1535,8 +1538,12 @@ void EndSimulateParticles( void )
 	g_pParticleSystemMgr->CommitProfileInformation( flETime > .001 * r_particle_sim_spike_threshold_ms.GetInt() );
 }
 
-
+#ifdef C17
+//City17: Changed.
+static ConVar r_threaded_particles("r_threaded_particles", "1", FCVAR_ARCHIVE);
+#else
 static ConVar r_threaded_particles( "r_threaded_particles", "1" );
+#endif
 
 static float s_flThreadedPSystemTimeStep;
 
@@ -1774,7 +1781,11 @@ void CParticleMgr::BuildParticleSimList( CUtlVector< CNewParticleEffect* > &list
 	}
 }
 
+#ifdef C17
+static ConVar r_particle_timescale("r_particle_timescale", "1.0", FCVAR_CHEAT /*| FCVAR_DEVELOPMENTONLY*/);
+#else
 static ConVar r_particle_timescale( "r_particle_timescale", "1.0", FCVAR_CHEAT | FCVAR_DEVELOPMENTONLY );
+#endif
 
 static int CountChildParticleSystems( CParticleCollection *p )
 {

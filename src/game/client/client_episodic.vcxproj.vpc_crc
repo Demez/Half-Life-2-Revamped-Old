@@ -1,7 +1,7 @@
 [vpc crc file version 2]
-8209bbc3 D:\sourceengine\personal-projects\Half-Life-2-Revamped\src\devtools\bin\vpc.exe
-_Nc_VS2013/vpcgame:episodic_
-fb21d74d client_episodic.vpc
+8209bbc3 C:\Users\Gabriel Savard\Desktop\City-17-Episode-One-Source-2013-master\src\devtools\bin\vpc.exe
+_Nc_VS2013/vpcgame:valve_
+8819857d client_episodic.vpc
 c7ae28fd ..\..\game\client\client_base.vpc
 4832e67a ..\..\vpc_scripts\source_dll_base.vpc
 d752cf80 ..\..\vpc_scripts\platform_dirs.vpc

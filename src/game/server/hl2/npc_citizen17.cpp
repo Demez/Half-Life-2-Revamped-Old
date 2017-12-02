@@ -52,11 +52,20 @@ const int MAX_PLAYER_SQUAD = 4;
 ConVar	sk_citizen_health				( "sk_citizen_health",					"0");
 ConVar	sk_citizen_heal_player			( "sk_citizen_heal_player",				"25");
 ConVar	sk_citizen_heal_player_delay	( "sk_citizen_heal_player_delay",		"25");
+#ifdef C17
+ConVar	sk_citizen_giveammo_player_delay("sk_citizen_giveammo_player_delay", "30");
+ConVar	sk_citizen_giveammo_player_delay_vital("sk_citizen_giveammo_player_delay_vital", "10");
+#else
 ConVar	sk_citizen_giveammo_player_delay( "sk_citizen_giveammo_player_delay",	"10");
+#endif
 ConVar	sk_citizen_heal_player_min_pct	( "sk_citizen_heal_player_min_pct",		"0.60");
 ConVar	sk_citizen_heal_player_min_forced( "sk_citizen_heal_player_min_forced",		"10.0");
+#ifdef C17
+ConVar	sk_citizen_heal_ally_delay("sk_citizen_heal_ally_delay", "50");
+#else
+ConVar	sk_citizen_heal_ally_delay("sk_citizen_heal_ally_delay", "20");
+#endif
 ConVar	sk_citizen_heal_ally			( "sk_citizen_heal_ally",				"30");
-ConVar	sk_citizen_heal_ally_delay		( "sk_citizen_heal_ally_delay",			"20");
 ConVar	sk_citizen_heal_ally_min_pct	( "sk_citizen_heal_ally_min_pct",		"0.90");
 ConVar	sk_citizen_player_stare_time	( "sk_citizen_player_stare_time",		"1.0" );
 ConVar  sk_citizen_player_stare_dist	( "sk_citizen_player_stare_dist",		"72" );
@@ -267,7 +276,9 @@ static const char *g_ppszRandomHeads[] =
 	"female_04.mdl",
 	"male_06.mdl",
 	"female_06.mdl",
+#ifndef C17
 	"male_07.mdl",
+#endif
 	"female_07.mdl",
 	"male_08.mdl",
 	"male_09.mdl",
@@ -2200,6 +2211,14 @@ bool CNPC_Citizen::ShouldLookForBetterWeapon()
 				m_flNextWeaponSearchTime = OTHER_DEFER_SEARCH_TIME;
 				bDefer = true;
 			}
+#ifdef C17
+			else if (FClassnameIs(pWeapon, "weapon_ar3"))
+			{
+				// Content to keep this weapon forever
+				m_flNextWeaponSearchTime = OTHER_DEFER_SEARCH_TIME;
+				bDefer = true;
+			}
+#endif
 			else if( FClassnameIs( pWeapon, "weapon_rpg" ) )
 			{
 				// Content to keep this weapon forever

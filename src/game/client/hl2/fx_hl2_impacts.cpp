@@ -262,7 +262,11 @@ void ImpactHelicopterCallback( const CEffectData &data )
 		FX_AirboatGunImpact( vecOrigin, tr.plane.normal, IsXbox() ? 1 : 2 );
 
 		// Only do metal + computer custom effects
+#ifdef C17
+		if ((iMaterial == CHAR_TEX_METAL) || (iMaterial == CHAR_TEX_COMPUTER) || (iMaterial == CHAR_TEX_EXPLOSIVE))
+#else
 		if ( (iMaterial == CHAR_TEX_METAL) || (iMaterial == CHAR_TEX_COMPUTER) )
+#endif
 		{
 			PerformCustomEffects( vecOrigin, tr, vecShotDir, iMaterial, 1.0, FLAGS_CUSTIOM_EFFECTS_NOFLECKS );
 		}

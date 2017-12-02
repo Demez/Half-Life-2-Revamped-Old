@@ -40,7 +40,9 @@ struct SpawnInfo_t
 static DynamicResupplyItems_t g_DynamicResupplyHealthItems[] =
 {
 	{ "item_healthkit", "Health",	0, 0.0f, },
+#ifndef C17
 	{ "item_battery",	"Armor",	0, 0.0f },
+#endif
 };
 
 // Ammo types
@@ -50,6 +52,9 @@ static DynamicResupplyItems_t g_DynamicResupplyAmmoItems[] =
 	{ "item_ammo_smg1",				"SMG1",			SIZE_AMMO_SMG1,			0.4f },
 	{ "item_ammo_smg1_grenade",		"SMG1_Grenade", SIZE_AMMO_SMG1_GRENADE, 0.0f },
 	{ "item_ammo_ar2",				"AR2",			SIZE_AMMO_AR2,			0.0f },
+#ifdef C17
+	{ "item_ammo_ar3",				"AR3",			SIZE_AMMO_AR3,			0.0f },
+#endif
 	{ "item_box_buckshot",			"Buckshot",		SIZE_AMMO_BUCKSHOT,		0.0f },
 	{ "item_rpg_round",				"RPG_Round",	SIZE_AMMO_RPG_ROUND,	0.0f },
 	{ "weapon_frag",				"Grenade",		1,						0.1f },

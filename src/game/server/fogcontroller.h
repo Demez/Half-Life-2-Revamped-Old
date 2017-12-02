@@ -32,8 +32,17 @@ public:
 	CFogController();
 	~CFogController();
 
+#ifdef C17
+	virtual void ReadParams(KeyValues *pKeyValue);
+	virtual void PrepareFogParams(const char *pKeyName);
+#endif
+
 	// Parse data from a map file
 	virtual void Activate();
+#ifdef C17
+	virtual void StartTransition();
+	virtual void SetLerpValuesTo(Color primary, Color secondary, float start, float end, float density, float farz);
+#endif
 	virtual int UpdateTransmitState();
 
 	// Input handlers
@@ -51,11 +60,23 @@ public:
 	void InputSetColorSecondaryLerpTo(inputdata_t &data);
 	void InputSetStartDistLerpTo(inputdata_t &data);
 	void InputSetEndDistLerpTo(inputdata_t &data);
+#ifdef C17
+	void InputSetMaxDensLerpTo(inputdata_t &data);
+	void InputSetFarZLerpTo(inputdata_t &data);
+	//void InputSetLerpRate(inputdata_t &data);
+#endif
 
 	void InputStartFogTransition(inputdata_t &data);
 
+#ifdef C17
+	void InputSetUseBlending(inputdata_t &data);
+#endif
+
 	int DrawDebugTextOverlays(void);
 
+#ifdef C17
+	//void LerpFog( color32 *changefog, color32 *lerpfog );
+#endif
 	void SetLerpValues( void );
 	void Spawn( void );
 
@@ -66,6 +87,12 @@ public:
 	CNetworkVarEmbedded( fogparams_t, m_fog );
 	bool					m_bUseAngles;
 	int						m_iChangedVariables;
+
+#ifdef C17
+private:
+	string_t		m_iszFogSet;
+	float			m_flLerpSpeed;
+#endif
 };
 
 //=============================================================================

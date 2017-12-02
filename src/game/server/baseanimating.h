@@ -15,6 +15,9 @@
 #include "studio.h"
 #include "datacache/idatacache.h"
 #include "tier0/threadtools.h"
+#ifdef C17
+#include "datacache/imdlcache.h"
+#endif
 
 
 struct animevent_t;
@@ -331,6 +334,11 @@ public:
 
 	bool PrefetchSequence( int iSequence );
 
+#ifdef C17
+	// L4D Glow
+	virtual void SetGlow(bool state, Color glowColor = Color(255, 255, 255));
+#endif
+
 private:
 	void LockStudioHdr();
 	void UnlockStudioHdr();
@@ -339,6 +347,15 @@ private:
 	void InputSetLightingOriginRelative( inputdata_t &inputdata );
 	void InputSetLightingOrigin( inputdata_t &inputdata );
 	void InputSetModelScale( inputdata_t &inputdata );
+
+#ifdef C17
+	void InputSetReceiveProjected(inputdata_t &inputdata);
+	//void InputSetRenderInSunShafts( inputdata_t &inputdata );
+	void InputSetRenderInReflections(inputdata_t &inputdata);
+	void InputSetRenderInRefractions(inputdata_t &inputdata);
+	void InputSetGlowState(inputdata_t &inputdata);
+	void InputSetGlowColor(inputdata_t &inputdata);
+#endif
 
 	bool CanSkipAnimation( void );
 
@@ -421,6 +438,16 @@ private:
 	CThreadFastMutex	m_StudioHdrInitLock;
 	CThreadFastMutex	m_BoneSetupMutex;
 
+#ifdef C17
+	CNetworkVar(bool, m_bEnableGlow);
+	CNetworkVar(color32, m_GlowColor);
+
+	CNetworkVar(bool, m_bReceiveProjected);
+	//CNetworkVar( bool, m_bRenderInSunShafts );
+	CNetworkVar(bool, m_bRenderInReflections);
+	CNetworkVar(bool, m_bRenderInRefractions);
+#endif
+
 // FIXME: necessary so that cyclers can hack m_bSequenceFinished
 friend class CFlexCycler;
 friend class CCycler;
@@ -432,6 +459,9 @@ friend class CBlendingCycler;
 //-----------------------------------------------------------------------------
 inline CStudioHdr *CBaseAnimating::GetModelPtr( void ) 
 { 
+#ifdef C17
+	MDLCACHE_CRITICAL_SECTION();
+#endif
 	if ( IsDynamicModelLoading() )
 		return NULL;
 

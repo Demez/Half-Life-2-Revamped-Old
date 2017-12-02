@@ -31,6 +31,10 @@ public:
 	virtual float	GetMinRestTime( void );
 	virtual float	GetMaxRestTime( void );
 
+#ifdef C17
+	const char *GetTracerType(void) { return "gunfire_pistol_beams"; }
+#endif
+
 	virtual void Equip( CBaseCombatCharacter *pOwner );
 
 	float	GetFireRate( void ) { return 0.1f; }

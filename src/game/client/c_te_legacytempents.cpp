@@ -35,6 +35,9 @@
 #include "c_te_effect_dispatch.h"
 #include "c_props.h"
 #include "c_basedoor.h"
+#ifdef C17
+#include "viewrender.h"
+#endif
 
 // NOTE: Always include this last!
 #include "tier0/memdbgon.h"

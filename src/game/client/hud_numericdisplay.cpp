@@ -159,20 +159,46 @@ void CHudNumericDisplay::PaintLabel( void )
 //-----------------------------------------------------------------------------
 // Purpose: renders the vgui panel
 //-----------------------------------------------------------------------------
+#ifdef C17
+void CHudNumericDisplay::Paint(bool bMedium)
+#else
 void CHudNumericDisplay::Paint()
+#endif
 {
 	if (m_bDisplayValue)
 	{
 		// draw our numbers
 		surface()->DrawSetTextColor(GetFgColor());
+#ifndef C17
 		PaintNumbers(m_hNumberFont, digit_xpos, digit_ypos, m_iValue);
+#else
+		if (!bMedium)
+		{
+			PaintNumbers(m_hNumberFont, digit_xpos, digit_ypos, m_iValue);
+		}
+		else
+		{
+			PaintNumbers(m_hMediumNumberFont, digit_xpos, digit_ypos, m_iValue);
+		}
+#endif
 
 		// draw the overbright blur
 		for (float fl = m_flBlur; fl > 0.0f; fl -= 1.0f)
 		{
 			if (fl >= 1.0f)
 			{
+#ifdef C17
+				if (!bMedium)
+				{
+					PaintNumbers(m_hNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
+				}
+				else
+				{
+					PaintNumbers(m_hMediumNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
+				}
+#else
 				PaintNumbers(m_hNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
+#endif
 			}
 			else
 			{
@@ -180,7 +206,18 @@ void CHudNumericDisplay::Paint()
 				Color col = GetFgColor();
 				col[3] *= fl;
 				surface()->DrawSetTextColor(col);
+#ifdef C17
+				if (!bMedium)
+				{
+					PaintNumbers(m_hNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
+				}
+				else
+				{
+					PaintNumbers(m_hMediumNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
+				}
+#else
 				PaintNumbers(m_hNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
+#endif
 			}
 		}
 	}

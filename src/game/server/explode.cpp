@@ -13,6 +13,9 @@
 #include "vstdlib/random.h"
 #include "tier1/strtools.h"
 #include "shareddefs.h"
+#ifdef C17
+#include "particle_parse.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -174,6 +177,10 @@ void CEnvExplosion::Precache( void )
 	{
 		m_sFireballSprite = PrecacheModel( STRING( m_iszFireballSprite ) );
 	}
+
+#ifdef C17
+	PrecacheParticleSystem("spark_shower");
+#endif
 }
 
 void CEnvExplosion::Spawn( void )
@@ -351,6 +358,19 @@ void CEnvExplosion::InputExplode( inputdata_t &inputdata )
 	SetThink( &CEnvExplosion::Smoke );
 	SetNextThink( gpGlobals->curtime + 0.3 );
 
+#ifdef C17
+	if (!(UTIL_PointContents(GetAbsOrigin()) & CONTENTS_WATER))
+	{
+		// draw sparks
+		if (!(m_spawnflags & SF_ENVEXPLOSION_NOSPARKS))
+		{
+			QAngle angles;
+			VectorAngles(tr.plane.normal, angles);
+			//Create( "spark_shower", vecExplodeOrigin, angles, NULL );
+			DispatchParticleEffect("spark_shower", vecExplodeOrigin, angles);
+		}
+	}
+#else
 	// Only do these effects if we're not submerged
 	if ( UTIL_PointContents( GetAbsOrigin() ) & CONTENTS_WATER )
 	{
@@ -367,6 +387,7 @@ void CEnvExplosion::InputExplode( inputdata_t &inputdata )
 			}
 		}
 	}
+#endif
 }
 
 

@@ -150,7 +150,11 @@ ConVar hunter_hate_thrown_striderbusters_tolerance( "hunter_hate_thrown_striderb
 ConVar hunter_seek_thrown_striderbusters_tolerance( "hunter_seek_thrown_striderbusters_tolerance", "400.0" );
 ConVar hunter_retreat_striderbusters( "hunter_retreat_striderbusters", "1", FCVAR_NONE, "If true, the hunter will retreat when a buster is glued to him." );
 
+#ifdef C17
+ConVar hunter_allow_nav_jump("hunter_allow_nav_jump", "1");
+#else
 ConVar hunter_allow_nav_jump( "hunter_allow_nav_jump", "0" );
+#endif
 ConVar g_debug_hunter_charge( "g_debug_hunter_charge", "0" );
 
 ConVar hunter_stand_still( "hunter_stand_still", "0" ); // used for debugging, keeps them rooted in place

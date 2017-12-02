@@ -7,8 +7,23 @@
 #include "cbase.h"
 #include "c_sun.h"
 
+#ifdef C17
+//City17:
+#include "view.h"
+#include "view_scene.h"
+#include "viewrender.h"
+#include "materialsystem/imaterialvar.h"
+#include "ScreenSpaceEffects.h"
+#include "city17/c17_screeneffects.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
+
+#ifdef C17
+extern ConVar	r_post_sunshaft;
+extern ConVar	r_drawsprites;
+#endif
 
 static void RecvProxy_HDRColorScale( const CRecvProxyData *pData, void *pStruct, void *pOut )
 {
@@ -41,10 +56,11 @@ C_Sun::C_Sun()
 	m_GlowOverlay.m_bInSky = true;
 }
 
-
+#ifndef C17
 C_Sun::~C_Sun()
 {
 }
+#endif
 
 
 void C_Sun::OnDataChanged( DataUpdateType_t updateType )
@@ -137,5 +153,154 @@ void C_Sun::OnDataChanged( DataUpdateType_t updateType )
 	}
 }
 
+#ifdef C17
+void C_SunGlowOverlay::Activate()
+{
+	CGlowOverlay::Activate();
+}
 
+void C_SunGlowOverlay::Deactivate()
+{
+	CGlowOverlay::Deactivate();
+}
 
+void C_SunGlowOverlay::Draw(bool bCacheFullSceneState)
+{
+	// Get the vector to the sun.
+	Vector vToGlow;
+
+	if (m_bDirectional)
+		vToGlow = m_vDirection;
+	else
+		vToGlow = m_vPos - CurrentViewOrigin();
+
+	if (!r_drawsprites.GetBool())
+		return;
+
+	VectorNormalize(vToGlow);
+
+	//float flDot = vToGlow.Dot( CurrentViewForward() );
+	float flDot = 0.0f;
+
+	//Normal sun behavior. Check for occlusion.
+	UpdateGlowObstruction(vToGlow, bCacheFullSceneState, true);
+	//if( m_flGlowObstructionScale == 0 )
+	//return;
+
+	bool bWireframe = ShouldDrawInWireFrameMode() || (r_drawsprites.GetInt() == 2);
+
+	CMatRenderContextPtr pRenderContext(materials);
+
+	for (int iSprite = 0; iSprite < m_nSprites; iSprite++)
+	{
+		CGlowSprite *pSprite = &m_Sprites[iSprite];
+
+		// Figure out the color and size to draw it.
+		float flHorzSize, flVertSize;
+		Vector vColor;
+		CalcSpriteColorAndSize(flDot, pSprite, &flHorzSize, &flVertSize, &vColor);
+
+		// If we're alpha'd out, then don't bother
+		//if ( vColor.LengthSqr() < 0.00001f )
+		//continue;
+
+		// Setup the basis to draw the sprite.
+		Vector vBasePt, vUp, vRight;
+		CalcBasis(vToGlow, flHorzSize, flVertSize, vBasePt, vUp, vRight);
+
+		//Get our diagonal radius
+		//float radius = (vRight+vUp).Length();
+		//if ( R_CullSphere( view->GetFrustum(), 5, &vBasePt, radius ) )
+		//continue;
+
+		// Get our material (deferred default load)
+		if (m_Sprites[iSprite].m_pMaterial == NULL)
+		{
+			m_Sprites[iSprite].m_pMaterial = materials->FindMaterial("sprites/light_glow02_add_noz", TEXTURE_GROUP_CLIENT_EFFECTS);
+		}
+
+		Assert(m_Sprites[iSprite].m_pMaterial);
+		static unsigned int		nHDRColorScaleCache = 0;
+		IMaterialVar *pHDRColorScaleVar = m_Sprites[iSprite].m_pMaterial->FindVarFast("$hdrcolorscale", &nHDRColorScaleCache);
+		if (pHDRColorScaleVar)
+		{
+			pHDRColorScaleVar->SetFloatValue(m_flHDRColorScale);
+		}
+		IMaterialVar *pColorVar = m_Sprites[iSprite].m_pMaterial->FindVar("$mutable_01", NULL);
+		if (pColorVar)
+		{
+			pColorVar->SetVecValue(m_Sprites[iSprite].m_vColor.x, m_Sprites[iSprite].m_vColor.y, m_Sprites[iSprite].m_vColor.z, 1.0f);
+		}
+
+		// Draw the sprite.
+		IMesh *pMesh = pRenderContext->GetDynamicMesh(false, 0, 0, m_Sprites[iSprite].m_pMaterial);
+
+		CMeshBuilder builder;
+		builder.Begin(pMesh, MATERIAL_QUADS, 1);
+
+		Vector vPt;
+
+		vPt = vBasePt - vRight + vUp;
+		builder.Position3fv(vPt.Base());
+		builder.Color4f(VectorExpand(vColor), 1);
+		builder.TexCoord2f(0, 0, 1);
+		builder.AdvanceVertex();
+
+		vPt = vBasePt + vRight + vUp;
+		builder.Position3fv(vPt.Base());
+		builder.Color4f(VectorExpand(vColor), 1);
+		builder.TexCoord2f(0, 1, 1);
+		builder.AdvanceVertex();
+
+		vPt = vBasePt + vRight - vUp;
+		builder.Position3fv(vPt.Base());
+		builder.Color4f(VectorExpand(vColor), 1);
+		builder.TexCoord2f(0, 1, 0);
+		builder.AdvanceVertex();
+
+		vPt = vBasePt - vRight - vUp;
+		builder.Position3fv(vPt.Base());
+		builder.Color4f(VectorExpand(vColor), 1);
+		builder.TexCoord2f(0, 0, 0);
+		builder.AdvanceVertex();
+
+		builder.End(false, true);
+
+		if (bWireframe)
+		{
+			IMaterial *pWireframeMaterial = materials->FindMaterial("debug/debugwireframevertexcolor", TEXTURE_GROUP_OTHER);
+			pRenderContext->Bind(pWireframeMaterial);
+
+			// Draw the sprite.
+			IMesh *pMesh = pRenderContext->GetDynamicMesh(false, 0, 0, pWireframeMaterial);
+
+			CMeshBuilder builder;
+			builder.Begin(pMesh, MATERIAL_QUADS, 1);
+
+			Vector vPt;
+
+			vPt = vBasePt - vRight + vUp;
+			builder.Position3fv(vPt.Base());
+			builder.Color3f(1.0f, 0.0f, 0.0f);
+			builder.AdvanceVertex();
+
+			vPt = vBasePt + vRight + vUp;
+			builder.Position3fv(vPt.Base());
+			builder.Color3f(1.0f, 0.0f, 0.0f);
+			builder.AdvanceVertex();
+
+			vPt = vBasePt + vRight - vUp;
+			builder.Position3fv(vPt.Base());
+			builder.Color3f(1.0f, 0.0f, 0.0f);
+			builder.AdvanceVertex();
+
+			vPt = vBasePt - vRight - vUp;
+			builder.Position3fv(vPt.Base());
+			builder.Color3f(1.0f, 0.0f, 0.0f);
+			builder.AdvanceVertex();
+
+			builder.End(false, true);
+		}
+	}
+}
+#endif

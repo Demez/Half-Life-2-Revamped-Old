@@ -185,9 +185,26 @@ void CGlowOverlay::UpdateSkyGlowObstruction( float zFar, bool bCacheFullSceneSta
 	}
 }
 
-
+#ifdef C17
+void CGlowOverlay::UpdateGlowObstruction(const Vector &vToGlow, bool bCacheFullSceneState, bool bIsSun)
+#else
 void CGlowOverlay::UpdateGlowObstruction( const Vector &vToGlow, bool bCacheFullSceneState )
+#endif
 {
+#ifdef C17
+	if (bIsSun)
+	{
+		const CViewSetup *pViewSetup = view->GetViewSetup();
+		Vector pos = CurrentViewOrigin() + m_vDirection * (pViewSetup->zFar * 0.999f);
+		pixelvis_queryparams_t params;
+		params.Init(pos, m_flProxyRadius, CalcGlowAspect());
+		params.bSizeInScreenspace = true;
+		// use a pixel query to occlude with models
+		m_flGlowObstructionScale = 1.0f;
+		return;
+	}
+#endif
+
 	// If we already cached the glow obstruction and are still using that, early-out
 	if ( bCacheFullSceneState && m_bCacheGlowObstruction )
 		return;

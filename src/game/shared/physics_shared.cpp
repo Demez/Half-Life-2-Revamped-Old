@@ -944,6 +944,9 @@ void PhysFrictionEffect( Vector &vecPos, Vector vecVel, float energy, int surfac
 
 	switch ( phit->game.material )
 	{
+#ifdef C17
+	case CHAR_TEX_PLASTER:
+#endif
 	case CHAR_TEX_DIRT:
 		
 		if ( energy < MASS10_SPEED2ENERGY(15) )
@@ -952,6 +955,9 @@ void PhysFrictionEffect( Vector &vecPos, Vector vecVel, float energy, int surfac
 		g_pEffects->Dust( vecPos, invVecVel, 1, 16 );
 		break;
 
+#ifdef C17
+	case CHAR_TEX_BRICK:
+#endif
 	case CHAR_TEX_CONCRETE:
 		
 		if ( energy < MASS10_SPEED2ENERGY(28) )
@@ -965,11 +971,19 @@ void PhysFrictionEffect( Vector &vecPos, Vector vecVel, float energy, int surfac
 	if ( energy > MASS10_SPEED2ENERGY(50) )
 	{
 		// make sparks for metal/concrete scrapes with enough energy
+#ifdef C17
+		if (psurf->game.material == CHAR_TEX_METAL || psurf->game.material == CHAR_TEX_GRATE || psurf->game.material == CHAR_TEX_EXPLOSIVE)
+#else
 		if ( psurf->game.material == CHAR_TEX_METAL || psurf->game.material == CHAR_TEX_GRATE )
+#endif
 		{	
 			switch ( phit->game.material )
 			{
 			case CHAR_TEX_CONCRETE:
+#ifdef C17
+			case CHAR_TEX_EXPLOSIVE:
+			case CHAR_TEX_BRICK:
+#endif
 			case CHAR_TEX_METAL:
 
 				g_pEffects->MetalSparks( vecPos, invVecVel );

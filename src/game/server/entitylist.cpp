@@ -721,7 +721,11 @@ CBaseEntity *CGlobalEntityList::FindEntityInSphere( CBaseEntity *pStartEntity, c
 //				or Use handler, NULL otherwise.
 // Output : Returns a pointer to the found entity, NULL if none.
 //-----------------------------------------------------------------------------
+#ifdef C17
+CBaseEntity *CGlobalEntityList::FindEntityByNameNearest(const char *szName, const Vector &vecSrc, float flRadius, CBaseEntity *pSearchingEntity, CBaseEntity *pActivator, CBaseEntity *pCaller, int brushPrecision)
+#else
 CBaseEntity *CGlobalEntityList::FindEntityByNameNearest( const char *szName, const Vector &vecSrc, float flRadius, CBaseEntity *pSearchingEntity, CBaseEntity *pActivator, CBaseEntity *pCaller )
+#endif
 {
 	CBaseEntity *pEntity = NULL;
 
@@ -740,7 +744,23 @@ CBaseEntity *CGlobalEntityList::FindEntityByNameNearest( const char *szName, con
 		if ( !pSearch->edict() )
 			continue;
 
+#ifndef C17
 		float flDist2 = (pSearch->GetAbsOrigin() - vecSrc).LengthSqr();
+#else
+		Vector origin;
+		if (pSearch->IsBSPModel() && pSearch->CollisionProp())
+		{
+			if (brushPrecision == BRUSHPRECISION_NEAREST)
+				pSearch->CollisionProp()->CalcNearestPoint(vecSrc, &origin);
+			else
+				origin = pSearch->CollisionProp()->GetCollisionOrigin();
+		}
+		else
+			origin = pSearch->GetAbsOrigin();
+
+
+		float flDist2 = (origin - vecSrc).LengthSqr();
+#endif
 
 		if (flMaxDist2 > flDist2)
 		{
@@ -765,7 +785,11 @@ CBaseEntity *CGlobalEntityList::FindEntityByNameNearest( const char *szName, con
 //				or Use handler, NULL otherwise.
 // Output : Returns a pointer to the found entity, NULL if none.
 //-----------------------------------------------------------------------------
+#ifdef C17
+CBaseEntity *CGlobalEntityList::FindEntityByNameWithin(CBaseEntity *pStartEntity, const char *szName, const Vector &vecSrc, float flRadius, CBaseEntity *pSearchingEntity, CBaseEntity *pActivator, CBaseEntity *pCaller, int brushPrecision)
+#else
 CBaseEntity *CGlobalEntityList::FindEntityByNameWithin( CBaseEntity *pStartEntity, const char *szName, const Vector &vecSrc, float flRadius, CBaseEntity *pSearchingEntity, CBaseEntity *pActivator, CBaseEntity *pCaller )
+#endif
 {
 	//
 	// Check for matching class names within the search radius.
@@ -782,7 +806,23 @@ CBaseEntity *CGlobalEntityList::FindEntityByNameWithin( CBaseEntity *pStartEntit
 		if ( !pEntity->edict() )
 			continue;
 
+#ifdef C17
+		Vector origin;
+		if (pEntity->IsBSPModel() && pEntity->CollisionProp())
+		{
+			if (brushPrecision == BRUSHPRECISION_NEAREST)
+				pEntity->CollisionProp()->CalcNearestPoint(vecSrc, &origin);
+			else
+				origin = pEntity->CollisionProp()->GetCollisionOrigin();
+		}
+		else
+			origin = pEntity->GetAbsOrigin();
+
+
+		float flDist2 = (origin - vecSrc).LengthSqr();
+#else
 		float flDist2 = (pEntity->GetAbsOrigin() - vecSrc).LengthSqr();
+#endif
 
 		if (flMaxDist2 > flDist2)
 		{
@@ -802,7 +842,11 @@ CBaseEntity *CGlobalEntityList::FindEntityByNameWithin( CBaseEntity *pStartEntit
 //			flRadius - Search radius for classname search, 0 to search everywhere.
 // Output : Returns a pointer to the found entity, NULL if none.
 //-----------------------------------------------------------------------------
+#ifdef C17
+CBaseEntity *CGlobalEntityList::FindEntityByClassnameNearest(const char *szName, const Vector &vecSrc, float flRadius, int brushPrecision)
+#else
 CBaseEntity *CGlobalEntityList::FindEntityByClassnameNearest( const char *szName, const Vector &vecSrc, float flRadius )
+#endif
 {
 	CBaseEntity *pEntity = NULL;
 
@@ -821,7 +865,23 @@ CBaseEntity *CGlobalEntityList::FindEntityByClassnameNearest( const char *szName
 		if ( !pSearch->edict() )
 			continue;
 
+#ifdef C17
+		Vector origin;
+		if (pSearch->IsBSPModel() && pSearch->CollisionProp())
+		{
+			if (brushPrecision == BRUSHPRECISION_NEAREST)
+				pSearch->CollisionProp()->CalcNearestPoint(vecSrc, &origin);
+			else
+				origin = pSearch->CollisionProp()->GetCollisionOrigin();
+		}
+		else
+			origin = pSearch->GetAbsOrigin();
+
+
+		float flDist2 = (origin - vecSrc).LengthSqr();
+#else
 		float flDist2 = (pSearch->GetAbsOrigin() - vecSrc).LengthSqr();
+#endif
 
 		if (flMaxDist2 > flDist2)
 		{
@@ -843,7 +903,11 @@ CBaseEntity *CGlobalEntityList::FindEntityByClassnameNearest( const char *szName
 //			flRadius - Search radius for classname search, 0 to search everywhere.
 // Output : Returns a pointer to the found entity, NULL if none.
 //-----------------------------------------------------------------------------
+#ifdef C17
+CBaseEntity *CGlobalEntityList::FindEntityByClassnameWithin(CBaseEntity *pStartEntity, const char *szName, const Vector &vecSrc, float flRadius, int brushPrecision)
+#else
 CBaseEntity *CGlobalEntityList::FindEntityByClassnameWithin( CBaseEntity *pStartEntity, const char *szName, const Vector &vecSrc, float flRadius )
+#endif
 {
 	//
 	// Check for matching class names within the search radius.
@@ -860,7 +924,23 @@ CBaseEntity *CGlobalEntityList::FindEntityByClassnameWithin( CBaseEntity *pStart
 		if ( !pEntity->edict() )
 			continue;
 
+#ifdef C17
+		Vector origin;
+		if (pEntity->IsBSPModel() && pEntity->CollisionProp())
+		{
+			if (brushPrecision == BRUSHPRECISION_NEAREST)
+				pEntity->CollisionProp()->CalcNearestPoint(vecSrc, &origin);
+			else
+				origin = pEntity->CollisionProp()->GetCollisionOrigin();
+		}
+		else
+			origin = pEntity->GetAbsOrigin();
+
+
+		float flDist2 = (origin - vecSrc).LengthSqr();
+#else
 		float flDist2 = (pEntity->GetAbsOrigin() - vecSrc).LengthSqr();
+#endif
 
 		if (flMaxDist2 > flDist2)
 		{
@@ -943,6 +1023,20 @@ CBaseEntity *CGlobalEntityList::FindEntityGeneric( CBaseEntity *pStartEntity, co
 //				or Use handler, NULL otherwise.
 // Output : Returns a pointer to the found entity, NULL if none.
 //-----------------------------------------------------------------------------
+#ifdef C17
+CBaseEntity *CGlobalEntityList::FindEntityGenericWithin(CBaseEntity *pStartEntity, const char *szName, const Vector &vecSrc, float flRadius, CBaseEntity *pSearchingEntity, CBaseEntity *pActivator, CBaseEntity *pCaller, int brushPrecision)
+{
+	CBaseEntity *pEntity = NULL;
+
+	pEntity = gEntList.FindEntityByNameWithin(pStartEntity, szName, vecSrc, flRadius, pSearchingEntity, pActivator, pCaller, brushPrecision);
+	if (!pEntity)
+	{
+		pEntity = gEntList.FindEntityByClassnameWithin(pStartEntity, szName, vecSrc, flRadius, brushPrecision);
+	}
+
+	return pEntity;
+}
+#else
 CBaseEntity *CGlobalEntityList::FindEntityGenericWithin( CBaseEntity *pStartEntity, const char *szName, const Vector &vecSrc, float flRadius, CBaseEntity *pSearchingEntity, CBaseEntity *pActivator, CBaseEntity *pCaller )
 {
 	CBaseEntity *pEntity = NULL;
@@ -954,7 +1048,8 @@ CBaseEntity *CGlobalEntityList::FindEntityGenericWithin( CBaseEntity *pStartEnti
 	}
 
 	return pEntity;
-} 
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Finds the nearest entity by target name or class name within a radius.
@@ -968,6 +1063,20 @@ CBaseEntity *CGlobalEntityList::FindEntityGenericWithin( CBaseEntity *pStartEnti
 //				or Use handler, NULL otherwise.
 // Output : Returns a pointer to the found entity, NULL if none.
 //-----------------------------------------------------------------------------
+#ifdef C17
+CBaseEntity *CGlobalEntityList::FindEntityGenericNearest(const char *szName, const Vector &vecSrc, float flRadius, CBaseEntity *pSearchingEntity, CBaseEntity *pActivator, CBaseEntity *pCaller, int brushPrecision)
+{
+	CBaseEntity *pEntity = NULL;
+
+	pEntity = gEntList.FindEntityByNameNearest(szName, vecSrc, flRadius, pSearchingEntity, pActivator, pCaller, brushPrecision);
+	if (!pEntity)
+	{
+		pEntity = gEntList.FindEntityByClassnameNearest(szName, vecSrc, flRadius, brushPrecision);
+	}
+
+	return pEntity;
+}
+#else
 CBaseEntity *CGlobalEntityList::FindEntityGenericNearest( const char *szName, const Vector &vecSrc, float flRadius, CBaseEntity *pSearchingEntity, CBaseEntity *pActivator, CBaseEntity *pCaller )
 {
 	CBaseEntity *pEntity = NULL;
@@ -979,7 +1088,8 @@ CBaseEntity *CGlobalEntityList::FindEntityGenericNearest( const char *szName, co
 	}
 
 	return pEntity;
-} 
+}
+#endif
 
 
 //-----------------------------------------------------------------------------

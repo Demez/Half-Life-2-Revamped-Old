@@ -2201,6 +2201,13 @@ const char *CFuncTank::GetTracerType( void )
 //			forward - 
 //			pAttacker - 
 //-----------------------------------------------------------------------------
+#ifdef C17_HAPTICS
+//Haptics adding in convars for effects while firing
+ConVar hap_sv_turret_force_x("hap_sv_turret_force_x", "10", FCVAR_ARCHIVE);
+ConVar hap_sv_turret_force_y("hap_sv_turret_force_y", "2", FCVAR_ARCHIVE);
+ConVar hap_sv_turret_force_z("hap_sv_turret_force_z", "4", FCVAR_ARCHIVE);
+ConVar hap_sv_turret_force_scale("hap_sv_turret_force_scale", "1.5", FCVAR_ARCHIVE);
+#endif
 void CFuncTank::Fire( int bulletCount, const Vector &barrelEnd, const Vector &forward, CBaseEntity *pAttacker, bool bIgnoreSpread )
 {
 	// If we have a specific effect handler, apply it's effects
@@ -2249,6 +2256,30 @@ void CFuncTank::Fire( int bulletCount, const Vector &barrelEnd, const Vector &fo
 		{
 			CSoundEnt::InsertSound( SOUND_MOVE_AWAY, barrelEnd + forward * 32.0f, 32.0f, 0.2f, pAttacker, SOUNDENT_CHANNEL_WEAPON );
 		}
+#ifdef C17_HAPTICS
+		// Haptics adding in a haptics punch
+		CBasePlayer *pPlayer = dynamic_cast<CBasePlayer*>(pAttacker);
+		if (pPlayer)
+		{
+
+			QAngle vecScratch;
+
+			// do this to get a hard discontinuity, clear out anything under 10 degrees punch
+			pPlayer->ViewPunchReset(10);
+
+			//Apply this to the view angles as well
+			vecScratch.x = hap_sv_turret_force_x.GetFloat();
+			vecScratch.y = hap_sv_turret_force_y.GetFloat();
+			vecScratch.z = hap_sv_turret_force_z.GetFloat();
+
+			//Wibble left and right
+			if (random->RandomInt(0, 1))
+				vecScratch.y *= -1;
+
+			pPlayer->HapticsPunch(vecScratch, hap_sv_turret_force_scale.GetFloat());
+		}
+		// End of haptic insert
+#endif
 	}
 
 

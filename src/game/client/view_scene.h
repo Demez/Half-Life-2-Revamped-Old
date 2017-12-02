@@ -37,6 +37,9 @@ extern int g_viewscene_refractUpdateFrame;
 extern bool g_bAllowMultipleRefractUpdatesPerScenePerFrame;
 bool DrawingShadowDepthView( void );
 bool DrawingMainView();
+#ifdef C17
+bool DrawingSunShaftView(void);
+#endif
 
 inline void UpdateRefractTexture( int x, int y, int w, int h, bool bForceUpdate = false )
 {
@@ -122,17 +125,51 @@ inline void UpdateScreenEffectTexture( int textureIndex, int x, int y, int w, in
 //-----------------------------------------------------------------------------
 inline void DrawScreenEffectMaterial( IMaterial *pMaterial, int x, int y, int w, int h )
 {
+#ifndef C17
 	Rect_t actualRect;
 	UpdateScreenEffectTexture( 0, x, y, w, h, false, &actualRect );
 	ITexture *pTexture = GetFullFrameFrameBufferTexture( 0 );
+#endif
 
 	CMatRenderContextPtr pRenderContext( materials );
 
+#ifndef C17
 	pRenderContext->DrawScreenSpaceRectangle( pMaterial, x, y, w, h,
 		actualRect.x, actualRect.y, actualRect.x+actualRect.width-1, actualRect.y+actualRect.height-1, 
 		pTexture->GetActualWidth(), pTexture->GetActualHeight() );
+#else
+	ITexture *pSrc = GetFullFrameFrameBufferTexture(0);
+	int nSrcWidth = pSrc->GetActualWidth();
+	int nSrcHeight = pSrc->GetActualHeight();
+	int dest_width, dest_height, nDummy;
+	pRenderContext->GetViewport(nDummy, nDummy, dest_width, dest_height);
+	UpdateScreenEffectTexture(0, x, y, w, h, true);
+
+	if (pMaterial != NULL)
+	{
+		pRenderContext->DrawScreenSpaceRectangle(
+			pMaterial,
+			0, 0, dest_width, dest_height,
+			0, 0, nSrcWidth - 1, nSrcHeight - 1,
+			nSrcWidth, nSrcHeight);
+	}
+#endif
 }
 
+#ifdef C17
+inline void DrawScreenEffectQuad(IMaterial *pMaterial, int w, int h)
+{
+	if (pMaterial != NULL)
+	{
+		CMatRenderContextPtr pRenderContext(materials);
+		pRenderContext->DrawScreenSpaceRectangle(
+			pMaterial,
+			0, 0, w, h,
+			0, 0, w - 1, h - 1,
+			w, h);
+	}
+}
+#endif
 
 //intended for use by dynamic meshes to naively update front buffer textures needed by a material
 inline void UpdateFrontBufferTexturesForMaterial( IMaterial *pMaterial, bool bForce = false )

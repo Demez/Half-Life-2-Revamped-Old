@@ -27,6 +27,9 @@
 #include "hl2_shareddefs.h"
 #include "rumble_shared.h"
 #include "gamestats.h"
+#ifdef C17
+#include "particle_parse.h"
+#endif
 
 #ifdef PORTAL
 	#include "portal_util_shared.h"
@@ -342,7 +345,18 @@ void CMissile::DoExplosion( void )
 {
 	// Explode
 	ExplosionCreate( GetAbsOrigin(), GetAbsAngles(), GetOwnerEntity(), GetDamage(), CMissile::EXPLOSION_RADIUS, 
+#ifndef C17
 		SF_ENVEXPLOSION_NOSPARKS | SF_ENVEXPLOSION_NODLIGHTS | SF_ENVEXPLOSION_NOSMOKE, 0.0f, this);
+#else
+		SF_ENVEXPLOSION_NOSPARKS | SF_ENVEXPLOSION_NOFIREBALL | SF_ENVEXPLOSION_NOPARTICLES | SF_ENVEXPLOSION_NODLIGHTS | SF_ENVEXPLOSION_NOSMOKE, 0.0f, this);
+
+	// Only do these effects if we're not submerged
+	if (!(UTIL_PointContents(GetAbsOrigin()) & CONTENTS_WATER))
+	{
+		DispatchParticleEffect("grenade_explosion_main", GetAbsOrigin(), vec3_angle);
+		DispatchParticleEffect("weapon_grenade_attachments", GetAbsOrigin(), vec3_angle);
+	}
+#endif
 }
 
 
@@ -1420,6 +1434,9 @@ CWeaponRPG::CWeaponRPG()
 	m_bInitialStateUpdate= false;
 	m_bHideGuiding = false;
 	m_bGuiding = false;
+#ifdef C17
+	m_bHolstering = false;
+#endif
 
 	m_fMinRange1 = m_fMinRange2 = 40*12;
 	m_fMaxRange1 = m_fMaxRange2 = 500*12;
@@ -1831,6 +1848,10 @@ bool CWeaponRPG::Deploy( void )
 {
 	m_bInitialStateUpdate = true;
 
+#ifdef C17
+	m_bHolstering = false;
+#endif
+
 	return BaseClass::Deploy();
 }
 
@@ -1842,6 +1863,10 @@ bool CWeaponRPG::Holster( CBaseCombatWeapon *pSwitchingTo )
 	//Can't have an active missile out
 	if ( m_hMissile != NULL )
 		return false;
+
+#ifdef C17
+	m_bHolstering = true;
+#endif
 
 	StopGuiding();
 	return BaseClass::Holster( pSwitchingTo );
@@ -1855,6 +1880,11 @@ void CWeaponRPG::StartGuiding( void )
 	// Don't start back up if we're overriding this
 	if ( m_bHideGuiding )
 		return;
+
+#ifdef C17
+	if (m_bHolstering)
+		return;
+#endif
 
 	m_bGuiding = true;
 

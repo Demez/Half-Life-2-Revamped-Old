@@ -26,6 +26,9 @@
 #define SIZE_AMMO_SMG1				45
 #define SIZE_AMMO_SMG1_LARGE		225
 #define SIZE_AMMO_AR2				20
+#ifdef C17
+#define SIZE_AMMO_AR3				1
+#endif
 #define SIZE_AMMO_AR2_LARGE			100
 #define SIZE_AMMO_RPG_ROUND			1
 #define SIZE_AMMO_SMG1_GRENADE		1

@@ -46,6 +46,9 @@
 #include "gamestats.h"
 #include "filters.h"
 #include "tier0/icommandline.h"
+#ifdef C17
+#include "particle_parse.h"
+#endif
 
 #ifdef HL2_EPISODIC
 #include "npc_alyx_episodic.h"
@@ -196,6 +199,9 @@ public:
 	COutputEvent m_PlayerHasAmmo;
 	COutputEvent m_PlayerHasNoAmmo;
 	COutputEvent m_PlayerDied;
+#ifdef C17
+	COutputEvent m_PlayerDamaged;
+#endif
 	COutputEvent m_PlayerMissedAR2AltFire; // Player fired a combine ball which did not dissolve any enemies. 
 
 	COutputInt m_RequestedPlayerHealth;
@@ -209,6 +215,11 @@ public:
 	void InputEnableCappedPhysicsDamage( inputdata_t &inputdata );
 	void InputDisableCappedPhysicsDamage( inputdata_t &inputdata );
 	void InputSetLocatorTargetEntity( inputdata_t &inputdata );
+#ifdef C17
+	void InputSetPlayerEnterSmokeVolume(inputdata_t &inputdata);
+	void InputSetPlayerExitSmokeVolume(inputdata_t &inputdata);
+	void InputDisableIronsights(inputdata_t &inputdata);
+#endif
 #ifdef PORTAL
 	void InputSuppressCrosshair( inputdata_t &inputdata );
 #endif // PORTAL2
@@ -395,6 +406,9 @@ CHL2_Player::CHL2_Player()
 
 	m_flArmorReductionTime = 0.0f;
 	m_iArmorReductionFrom = 0;
+#ifdef C17
+	fRebreathTime = 0.0f;
+#endif
 }
 
 //
@@ -405,7 +419,13 @@ CHL2_Player::CHL2_Player()
 #ifdef HL2MP
 	CSuitPowerDevice SuitDeviceSprint( bits_SUIT_DEVICE_SPRINT, 25.0f );				// 100 units in 4 seconds
 #else
+#ifdef C17
+//CSuitPowerDevice SuitDeviceSprint( bits_SUIT_DEVICE_SPRINT, 12.5f );				// 100 units in 8 seconds
+//City17: Slower sprint suit useage rate.
+	CSuitPowerDevice SuitDeviceSprint(bits_SUIT_DEVICE_SPRINT, 8.3f);					// 100 units in 12 seconds
+#else
 	CSuitPowerDevice SuitDeviceSprint( bits_SUIT_DEVICE_SPRINT, 12.5f );				// 100 units in 8 seconds
+#endif
 #endif
 
 #ifdef HL2_EPISODIC
@@ -426,8 +446,12 @@ void CHL2_Player::Precache( void )
 {
 	BaseClass::Precache();
 
+#ifndef C17
 	PrecacheScriptSound( "HL2Player.SprintNoPower" );
 	PrecacheScriptSound( "HL2Player.SprintStart" );
+#else
+	PrecacheScriptSound("C17Player.OutOfBreath");
+#endif
 	PrecacheScriptSound( "HL2Player.UseDeny" );
 	PrecacheScriptSound( "HL2Player.FlashLightOn" );
 	PrecacheScriptSound( "HL2Player.FlashLightOff" );
@@ -442,6 +466,7 @@ void CHL2_Player::Precache( void )
 //-----------------------------------------------------------------------------
 void CHL2_Player::CheckSuitZoom( void )
 {
+#ifndef C17 //City17:
 //#ifndef _XBOX 
 	//Adrian - No zooming without a suit!
 	if ( IsSuitEquipped() )
@@ -456,6 +481,7 @@ void CHL2_Player::CheckSuitZoom( void )
 		}
 	}
 //#endif//_XBOX
+#endif
 }
 
 void CHL2_Player::EquipSuit( bool bPlayEffects )
@@ -484,8 +510,13 @@ void CHL2_Player::HandleSpeedChanges( void )
 
 	bool bCanSprint = CanSprint();
 	bool bIsSprinting = IsSprinting();
+#ifdef C17
+	bool bWantSprint = (bCanSprint && IsSuitEquipped() && (m_nButtons & IN_SPEED) && (m_nButtons & IN_FORWARD));
+	if (bIsSprinting != bWantSprint && ((buttonsChanged & IN_SPEED) || (buttonsChanged & IN_FORWARD)))
+#else
 	bool bWantSprint = ( bCanSprint && IsSuitEquipped() && (m_nButtons & IN_SPEED) );
 	if ( bIsSprinting != bWantSprint && (buttonsChanged & IN_SPEED) )
+#endif
 	{
 		// If someone wants to sprint, make sure they've pressed the button to do so. We want to prevent the
 		// case where a player can hold down the sprint key and burn tiny bursts of sprint as the suit recharges
@@ -643,6 +674,14 @@ void CHL2_Player::PreThink(void)
 		}
 	}
 
+#ifdef C17
+	//Ironsight Check!
+	if (!(GetFlags() & FL_ONGROUND))
+	{
+		DisableIronsights();
+	}
+#endif
+
 	VPROF_SCOPE_BEGIN( "CHL2_Player::PreThink-Speed" );
 	HandleSpeedChanges();
 #ifdef HL2_EPISODIC
@@ -716,6 +755,7 @@ void CHL2_Player::PreThink(void)
 	CheckTimeBasedDamage();
 	VPROF_SCOPE_END();
 
+#ifndef C17
 	VPROF_SCOPE_BEGIN( "CHL2_Player::PreThink-CheckSuitUpdate" );
 	CheckSuitUpdate();
 	VPROF_SCOPE_END();
@@ -723,6 +763,7 @@ void CHL2_Player::PreThink(void)
 	VPROF_SCOPE_BEGIN( "CHL2_Player::PreThink-CheckSuitZoom" );
 	CheckSuitZoom();
 	VPROF_SCOPE_END();
+#endif
 
 	if (m_lifeState >= LIFE_DYING)
 	{
@@ -867,7 +908,16 @@ void CHL2_Player::PreThink(void)
 	// Update weapon's ready status
 	UpdateWeaponPosture();
 
+#ifdef C17
+	// If we're in VGUI mode we should avoid shooting
+	if (GetVGUIMode())
+	{
+		m_nButtons &= ~(IN_ATTACK | IN_ATTACK2);
+	}
+#endif
+
 	// Disallow shooting while zooming
+#ifndef C17
 	if ( IsX360() )
 	{
 		if ( IsZooming() )
@@ -892,6 +942,7 @@ void CHL2_Player::PreThink(void)
 			m_nButtons &= ~(IN_ATTACK|IN_ATTACK2);
 		}
 	}
+#endif
 }
 
 void CHL2_Player::PostThink( void )
@@ -1111,7 +1162,11 @@ void CHL2_Player::Spawn(void)
 
 #ifndef HL2MP
 #ifndef PORTAL
+#ifdef C17
+	SetModel("models/humans/group03/male_09.mdl");
+#else
 	SetModel( "models/player.mdl" );
+#endif
 #endif
 #endif
 
@@ -1170,7 +1225,12 @@ bool CHL2_Player::CanSprint()
 			!IsWalking() &&												// Not if we're walking
 			!( m_Local.m_bDucked && !m_Local.m_bDucking ) &&			// Nor if we're ducking
 			(GetWaterLevel() != 3) &&									// Certainly not underwater
+#ifdef C17
+			(GlobalEntity_GetState("suit_no_sprint") != GLOBAL_ON) &&	// Out of the question without the sprint module
+			!m_HL2Local.m_bLowStamina);									// City 17: Are we too tired? No way we're running.
+#else
 			(GlobalEntity_GetState("suit_no_sprint") != GLOBAL_ON) );	// Out of the question without the sprint module
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1203,7 +1263,9 @@ void CHL2_Player::StartSprinting( void )
 		{
 			CPASAttenuationFilter filter( this );
 			filter.UsePredictionRules();
+#ifndef C17
 			EmitSound( filter, entindex(), "HL2Player.SprintNoPower" );
+#endif
 		}
 		return;
 	}
@@ -1211,14 +1273,38 @@ void CHL2_Player::StartSprinting( void )
 	if( !SuitPower_AddDevice( SuitDeviceSprint ) )
 		return;
 
+#ifdef C17
+	float speed = GetAbsVelocity().Length2D();
+
+	if (speed > 0)
+		DisableIronsights();
+#endif
+
 	CPASAttenuationFilter filter( this );
 	filter.UsePredictionRules();
+#ifndef C17
 	EmitSound( filter, entindex(), "HL2Player.SprintStart" );
+#endif
 
 	SetMaxSpeed( HL2_SPRINT_SPEED );
 	m_fIsSprinting = true;
 }
 
+#ifdef C17
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void CHL2_Player::DisableIronsights(void)
+{
+	CBaseCombatWeapon *pWeapon = dynamic_cast<CBaseCombatWeapon *>(GetActiveWeapon());
+
+	// If we don't have a weapon, don't try to end ironsights on it!
+	if (!pWeapon)
+		return;
+
+	//All checks are handled in the weapons' disable ironsights call. We're just running it from here.
+	pWeapon->DisableIronsights();
+}
+#endif
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -1782,22 +1868,29 @@ void CHL2_Player::SetupVisibility( CBaseEntity *pViewEntity, unsigned char *pvs,
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-void CHL2_Player::SuitPower_Update( void )
+void CHL2_Player::SuitPower_Update(void)
 {
-	if( SuitPower_ShouldRecharge() )
+#ifdef C17
+	if (GetWaterLevel() >= 3)
 	{
-		SuitPower_Charge( SUITPOWER_CHARGE_RATE * gpGlobals->frametime );
+		StopSound("C17Player.OutOfBreath");
 	}
-	else if( m_HL2Local.m_bitsActiveDevices )
+#endif
+
+	if (SuitPower_ShouldRecharge())
+	{
+		SuitPower_Charge(SUITPOWER_CHARGE_RATE * gpGlobals->frametime);
+	}
+	else if (m_HL2Local.m_bitsActiveDevices)
 	{
 		float flPowerLoad = m_flSuitPowerLoad;
 
 		//Since stickysprint quickly shuts off sprint if it isn't being used, this isn't an issue.
-		if ( !sv_stickysprint.GetBool() )
+		if (!sv_stickysprint.GetBool())
 		{
-			if( SuitPower_IsDeviceActive(SuitDeviceSprint) )
+			if (SuitPower_IsDeviceActive(SuitDeviceSprint))
 			{
-				if( !fabs(GetAbsVelocity().x) && !fabs(GetAbsVelocity().y) )
+				if (!fabs(GetAbsVelocity().x) && !fabs(GetAbsVelocity().y))
 				{
 					// If player's not moving, don't drain sprint juice.
 					flPowerLoad -= SuitDeviceSprint.GetDeviceDrainRate();
@@ -1805,26 +1898,36 @@ void CHL2_Player::SuitPower_Update( void )
 			}
 		}
 
-		if( SuitPower_IsDeviceActive(SuitDeviceFlashlight) )
+		if (SuitPower_IsDeviceActive(SuitDeviceFlashlight))
 		{
 			float factor;
 
 			factor = 1.0f / m_flFlashlightPowerDrainScale;
 
-			flPowerLoad -= ( SuitDeviceFlashlight.GetDeviceDrainRate() * (1.0f - factor) );
+			flPowerLoad -= (SuitDeviceFlashlight.GetDeviceDrainRate() * (1.0f - factor));
 		}
 
-		if( !SuitPower_Drain( flPowerLoad * gpGlobals->frametime ) )
+		if (!SuitPower_Drain(flPowerLoad * gpGlobals->frametime))
 		{
+#ifdef C17
+			m_HL2Local.m_bLowStamina = true;
+			if (fRebreathTime <= gpGlobals->curtime && GetWaterLevel() < 3)
+			{
+				EmitSound("C17Player.OutOfBreath");
+				fRebreathTime = gpGlobals->curtime + 13;
+			}
+#endif
+
 			// TURN OFF ALL DEVICES!!
-			if( IsSprinting() )
+			if (IsSprinting())
 			{
 				StopSprinting();
 			}
 
-			if ( Flashlight_UseLegacyVersion() )
+#ifndef C17
+			if (Flashlight_UseLegacyVersion())
 			{
-				if( FlashlightIsOn() )
+				if (FlashlightIsOn())
 				{
 #ifndef HL2MP
 					FlashlightTurnOff();
@@ -1833,15 +1936,16 @@ void CHL2_Player::SuitPower_Update( void )
 			}
 		}
 
-		if ( Flashlight_UseLegacyVersion() )
+		if (Flashlight_UseLegacyVersion())
 		{
 			// turn off flashlight a little bit after it hits below one aux power notch (5%)
-			if( m_HL2Local.m_flSuitPower < 4.8f && FlashlightIsOn() )
+			if (m_HL2Local.m_flSuitPower < 4.8f && FlashlightIsOn())
 			{
 #ifndef HL2MP
 				FlashlightTurnOff();
 #endif
 			}
+#endif
 		}
 	}
 }
@@ -1894,7 +1998,16 @@ void CHL2_Player::SuitPower_Charge( float flPower )
 	{
 		// Full charge, clamp.
 		m_HL2Local.m_flSuitPower = 100.0;
+#ifdef C17
+		m_HL2Local.m_bLowStamina = false;
+#endif
 	}
+#ifdef C17
+	else if (m_HL2Local.m_flSuitPower == 100.0 && m_HL2Local.m_bLowStamina)
+	{
+		m_HL2Local.m_bLowStamina = false;
+	}
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1978,6 +2091,7 @@ ConVar	sk_battery( "sk_battery","0" );
 
 bool CHL2_Player::ApplyBattery( float powerMultiplier )
 {
+#ifndef C17 //City17:
 	const float MAX_NORMAL_BATTERY = 100;
 	if ((ArmorValue() < MAX_NORMAL_BATTERY) && IsSuitEquipped())
 	{
@@ -2010,6 +2124,7 @@ bool CHL2_Player::ApplyBattery( float powerMultiplier )
 		//SetSuitUpdate(szcharge, FALSE, SUIT_NEXT_IN_30SEC);
 		return true;		
 	}
+#endif
 	return false;
 }
 
@@ -2028,6 +2143,12 @@ void CHL2_Player::FlashlightTurnOn( void )
 	if( m_bFlashlightDisabled )
 		return;
 
+#ifdef C17
+	CBaseCombatWeapon *pWeapon = dynamic_cast<CBaseCombatWeapon *>(GetActiveWeapon());
+	if (pWeapon == NULL)
+		return;
+#endif
+
 	if ( Flashlight_UseLegacyVersion() )
 	{
 		if( !SuitPower_AddDevice( SuitDeviceFlashlight ) )
@@ -2040,6 +2161,18 @@ void CHL2_Player::FlashlightTurnOn( void )
 
 	AddEffects( EF_DIMLIGHT );
 	EmitSound( "HL2Player.FlashLightOn" );
+
+#ifdef C17
+	CBasePlayer *pPlayer = (CBasePlayer *)this;
+	if (pPlayer)
+	{
+		CBaseViewModel *pVM = pPlayer->GetViewModel();
+		if (pVM)
+		{
+			pVM->SetBodygroup(2, 0);
+		}
+	}
+#endif
 
 	variant_t flashlighton;
 	flashlighton.SetFloat( m_HL2Local.m_flSuitPower / 100.0f );
@@ -2059,6 +2192,18 @@ void CHL2_Player::FlashlightTurnOff( void )
 
 	RemoveEffects( EF_DIMLIGHT );
 	EmitSound( "HL2Player.FlashLightOff" );
+
+#ifdef C17
+	CBasePlayer *pPlayer = (CBasePlayer *)this;
+	if (pPlayer)
+	{
+		CBaseViewModel *pVM = pPlayer->GetViewModel();
+		if (pVM)
+		{
+			pVM->SetBodygroup(2, 1);
+		}
+	}
+#endif
 
 	variant_t flashlightoff;
 	flashlightoff.SetFloat( m_HL2Local.m_flSuitPower / 100.0f );
@@ -2350,6 +2495,10 @@ int	CHL2_Player::OnTakeDamage( const CTakeDamageInfo &info )
 
 	gamestats->Event_PlayerDamage( this, info );
 
+#ifdef C17
+	FirePlayerProxyOutput("PlayerDamaged", variant_t(), this, this);
+#endif
+
 	return BaseClass::OnTakeDamage( playerDamage );
 }
 
@@ -2462,6 +2611,12 @@ void CHL2_Player::Event_KilledOther( CBaseEntity *pVictim, const CTakeDamageInfo
 void CHL2_Player::Event_Killed( const CTakeDamageInfo &info )
 {
 	BaseClass::Event_Killed( info );
+
+#ifdef C17
+	//City 17: We can't have low stamina if we're dead.
+	if (m_HL2Local.m_bLowStamina)
+		m_HL2Local.m_bLowStamina = false;
+#endif
 
 	FirePlayerProxyOutput( "PlayerDied", variant_t(), this, this );
 	NotifyScriptsOfDeath();
@@ -2935,6 +3090,19 @@ void CHL2_Player::UpdateWeaponPosture( void )
 
 		CBaseEntity *aimTarget = tr.m_pEnt;
 
+#ifdef C17
+		if (GetVGUIMode())
+		{
+			DisableIronsights();
+			//We're over a friendly, drop our weapon
+			if (Weapon_Lower() == false)
+			{
+				//FIXME: We couldn't lower our weapon!
+			}
+			return;
+		}
+#endif
+
 		//If we're over something
 		if (  aimTarget && !tr.DidHitWorld() )
 		{
@@ -3121,6 +3289,11 @@ void CHL2_Player::PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize )
 	// can't pick up what you're standing on
 	if ( GetGroundEntity() == pObject )
 		return;
+
+#ifdef C17
+	if (FClassnameIs(pObject, "npc_grenade_hopwire"))
+		return;
+#endif
 	
 	if ( bLimitMassAndSize == true )
 	{
@@ -3153,6 +3326,13 @@ float CHL2_Player::GetHeldObjectMass( IPhysicsObject *pHeldObject )
 	}
 	return mass;
 }
+
+#ifdef C17
+CBaseEntity	*CHL2_Player::GetHeldObject(void)
+{
+	return PhysCannonGetHeldEntity(GetActiveWeapon());
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Force the player to drop any physics objects he's carrying
@@ -3244,7 +3424,7 @@ void CHL2_Player::UpdateClientData( void )
 	}
 
 	// Update Flashlight
-#ifdef HL2_EPISODIC
+#if defined HL2_EPISODIC && !defined C17
 	if ( Flashlight_UseLegacyVersion() == false )
 	{
 		if ( FlashlightIsOn() && sv_infinite_aux_power.GetBool() == false )
@@ -3714,8 +3894,30 @@ const impactdamagetable_t &CHL2_Player::GetPhysicsImpactDamageTable()
 //-----------------------------------------------------------------------------
 void CHL2_Player::Splash( void )
 {
+#ifdef C17
+	Vector start = EyePosition();
+	Vector end = GetAbsOrigin();
+
+	// Straight down
+	end.z -= 64;
+
+	// Fill in default values, just in case.
+
+	Ray_t ray;
+	ray.Init(start, end, GetPlayerMins(), GetPlayerMaxs());
+
+	trace_t	tr;
+	UTIL_TraceRay(ray, MASK_WATER, this, COLLISION_GROUP_NONE, &tr);
+
+	if ((tr.fraction == 1.0f))
+		return;
+#endif
+
 	CEffectData data;
 	data.m_fFlags = 0;
+#ifdef C17
+	data.m_vOrigin = tr.endpos;
+#endif
 	data.m_vOrigin = GetAbsOrigin();
 	data.m_vNormal = Vector(0,0,1);
 	data.m_vAngles = QAngle( 0, 0, 0 );
@@ -3764,6 +3966,22 @@ void CHL2_Player::FirePlayerProxyOutput( const char *pszOutputName, variant_t va
 	GetPlayerProxy()->FireNamedOutput( pszOutputName, variant, pActivator, pCaller );
 }
 
+#ifdef C17
+void CHL2_Player::SetSmokeStatus(bool status)
+{
+	if (status)
+	{
+		DispatchParticleEffect("apartments_screenspace", PATTACH_ABSORIGIN_FOLLOW, this);
+		m_HL2Local.m_bInSmokeVolume = true;
+	}
+	else
+	{
+		StopParticleEffects(this);
+		m_HL2Local.m_bInSmokeVolume = false;
+	}
+}
+#endif
+
 LINK_ENTITY_TO_CLASS( logic_playerproxy, CLogicPlayerProxy);
 
 BEGIN_DATADESC( CLogicPlayerProxy )
@@ -3773,6 +3991,9 @@ BEGIN_DATADESC( CLogicPlayerProxy )
 	DEFINE_OUTPUT( m_PlayerHasAmmo, "PlayerHasAmmo" ),
 	DEFINE_OUTPUT( m_PlayerHasNoAmmo, "PlayerHasNoAmmo" ),
 	DEFINE_OUTPUT( m_PlayerDied,	"PlayerDied" ),
+#ifdef C17
+	DEFINE_OUTPUT(m_PlayerDamaged, "PlayerDamaged"),
+#endif
 	DEFINE_OUTPUT( m_PlayerMissedAR2AltFire, "PlayerMissedAR2AltFire" ),
 	DEFINE_INPUTFUNC( FIELD_VOID,	"RequestPlayerHealth",	InputRequestPlayerHealth ),
 	DEFINE_INPUTFUNC( FIELD_VOID,	"SetFlashlightSlowDrain",	InputSetFlashlightSlowDrain ),
@@ -3782,6 +4003,11 @@ BEGIN_DATADESC( CLogicPlayerProxy )
 	DEFINE_INPUTFUNC( FIELD_VOID,	"LowerWeapon", InputLowerWeapon ),
 	DEFINE_INPUTFUNC( FIELD_VOID,	"EnableCappedPhysicsDamage", InputEnableCappedPhysicsDamage ),
 	DEFINE_INPUTFUNC( FIELD_VOID,	"DisableCappedPhysicsDamage", InputDisableCappedPhysicsDamage ),
+#ifdef C17
+	DEFINE_INPUTFUNC(FIELD_VOID, "SetPlayerEnterSmokeVolume", InputSetPlayerEnterSmokeVolume),
+	DEFINE_INPUTFUNC(FIELD_VOID, "SetPlayerExitSmokeVolume", InputSetPlayerExitSmokeVolume),
+	DEFINE_INPUTFUNC(FIELD_VOID, "DisableIronsights", InputDisableIronsights),
+#endif
 	DEFINE_INPUTFUNC( FIELD_STRING,	"SetLocatorTargetEntity", InputSetLocatorTargetEntity ),
 #ifdef PORTAL
 	DEFINE_INPUTFUNC( FIELD_VOID,	"SuppressCrosshair", InputSuppressCrosshair ),
@@ -3928,3 +4154,41 @@ void CLogicPlayerProxy::InputSuppressCrosshair( inputdata_t &inputdata )
 	pPlayer->SuppressCrosshair( true );
 }
 #endif // PORTAL
+#ifdef C17
+void CLogicPlayerProxy::InputSetPlayerEnterSmokeVolume(inputdata_t &inputdata)
+{
+	if (m_hPlayer == NULL)
+		return;
+
+	CHL2_Player *pPlayer = dynamic_cast<CHL2_Player*>(m_hPlayer.Get());
+
+	if (pPlayer)
+	{
+		pPlayer->SetSmokeStatus(true);
+	}
+}
+
+void CLogicPlayerProxy::InputSetPlayerExitSmokeVolume(inputdata_t &inputdata)
+{
+	if (m_hPlayer == NULL)
+		return;
+
+	CHL2_Player *pPlayer = dynamic_cast<CHL2_Player*>(m_hPlayer.Get());
+
+	if (pPlayer)
+	{
+		pPlayer->SetSmokeStatus(false);
+	}
+}
+
+void CLogicPlayerProxy::InputDisableIronsights(inputdata_t &inputdata)
+{
+	if (m_hPlayer == NULL)
+		return;
+
+	CHL2_Player *pPlayer = dynamic_cast<CHL2_Player*>(m_hPlayer.Get());
+
+	if (pPlayer)
+		pPlayer->DisableIronsights();
+}
+#endif

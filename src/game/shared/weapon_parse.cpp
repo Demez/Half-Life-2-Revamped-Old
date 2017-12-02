@@ -166,7 +166,11 @@ void PrecacheFileWeaponInfoDatabase( IFileSystem *filesystem, const unsigned cha
 		return;
 
 	KeyValues *manifest = new KeyValues( "weaponscripts" );
+#ifdef C17
+	if (manifest->LoadFromFile(filesystem, "scripts/weapons/weapon_manifest.txt", "GAME"))
+#else
 	if ( manifest->LoadFromFile( filesystem, "scripts/weapon_manifest.txt", "GAME" ) )
+#endif
 	{
 		for ( KeyValues *sub = manifest->GetFirstSubKey(); sub != NULL ; sub = sub->GetNextKey() )
 		{
@@ -283,7 +287,11 @@ bool ReadWeaponDataFromFileForSlot( IFileSystem* filesystem, const char *szWeapo
 		return true;
 
 	char sz[128];
+#ifdef C17
+	Q_snprintf(sz, sizeof(sz), "scripts/weapons/%s", szWeaponName);
+#else
 	Q_snprintf( sz, sizeof( sz ), "scripts/%s", szWeaponName );
+#endif
 
 	KeyValues *pKV = ReadEncryptedKVFile( filesystem, sz, pICEKey,
 #if defined( DOD_DLL )
@@ -445,6 +453,71 @@ void FileWeaponInfo_t::Parse( KeyValues *pKeyValuesData, const char *szWeaponNam
 	else
 		Q_strncpy( szAmmo2, pAmmo, sizeof( szAmmo2 )  );
 	iAmmo2Type = GetAmmoDef()->Index( szAmmo2 );
+
+#ifdef C17
+	// Now read the flashlight variables
+	KeyValues *pFlash = pKeyValuesData->FindKey("Flashlight");
+	if (pFlash)
+	{
+		const char *szAttachmentName = pFlash->GetString("attachment", "muzzle");
+		Q_strncpy(szFlashlightAttachmentName, szAttachmentName, MAX_WEAPON_STRING);
+
+		m_bHasFlashlight = true;
+	}
+	else
+	{
+		m_bHasFlashlight = false;
+	}
+
+	// Now read the ironsight variables
+	KeyValues *pSights = pKeyValuesData->FindKey("Ironsight");
+	if (pSights)
+	{
+		vecIronsightPosOffset.x = pSights->GetFloat("forward", 0.0f);
+		vecIronsightPosOffset.y = pSights->GetFloat("right", 0.0f);
+		vecIronsightPosOffset.z = pSights->GetFloat("up", 0.0f);
+
+		angIronsightAngOffset[PITCH] = pSights->GetFloat("pitch", 0.0f);
+		angIronsightAngOffset[YAW] = pSights->GetFloat("yaw", 0.0f);
+		angIronsightAngOffset[ROLL] = pSights->GetFloat("roll", 0.0f);
+
+		flIronsightFOVOffset = pSights->GetFloat("fov", 0.0f);
+		flIronsightTime = pSights->GetFloat("time", 0.35f);
+		m_bCanSight = true;
+		m_bKeepCrosshair = (pSights->GetInt("crosshair", 0) != 0) ? true : false;
+
+		flChromaticAmount = pSights->GetFloat("chromatic", 3.5f);
+		flBlurAmount = pSights->GetFloat("blur", 10.0f);
+	}
+	else
+	{
+		vecIronsightPosOffset = vec3_origin;
+		angIronsightAngOffset.Init();
+		flIronsightFOVOffset = 0.0f;
+		flIronsightTime = 0.35f;
+		m_bCanSight = false;
+		m_bKeepCrosshair = false;
+		flChromaticAmount = 3.5f;
+		flBlurAmount = 10.0f;
+	}
+
+	// Now read the muzzleflash values
+	KeyValues *pMuzzleFlash = pKeyValuesData->FindKey("MuzzleFlash");
+	if (pMuzzleFlash)
+	{
+		iMuzzleFlashFOV = pMuzzleFlash->GetInt("fov", 90);
+		flMuzzleFlashColorMax = pMuzzleFlash->GetFloat("color_max", 4.9f);
+		flMuzzleFlashColorMin = pMuzzleFlash->GetFloat("color_min", 4.4f);
+		iTexIndex = pMuzzleFlash->GetInt("tex_index", 1);
+		iMuzzleFlashFarZ = pMuzzleFlash->GetInt("farz", 650);
+
+		m_bHasMuzzle = true;
+	}
+	else
+	{
+		m_bHasMuzzle = false;
+	}
+#endif
 
 	// Now read the weapon sounds
 	memset( aShootSounds, 0, sizeof( aShootSounds ) );

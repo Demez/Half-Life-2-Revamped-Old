@@ -21,14 +21,23 @@
 #define CHAR_TEX_GRATE			'G'
 #define CHAR_TEX_ALIENFLESH		'H'
 #define CHAR_TEX_CLIP			'I'
+#ifdef C17
+#define CHAR_TEX_EXPLOSIVE		'J' //City17 - Base: 'CHAR_TEX_METAL'
+#define CHAR_TEX_PLASTER		'K' //City17 - Base: 'CHAR_TEX_DIRT'
+#else
 //#define CHAR_TEX_UNUSED		'J'
 //#define CHAR_TEX_UNUSED		'K'
+#endif
 #define CHAR_TEX_PLASTIC		'L'
 #define CHAR_TEX_METAL			'M'
 #define CHAR_TEX_SAND			'N'
 #define CHAR_TEX_FOLIAGE		'O'
 #define CHAR_TEX_COMPUTER		'P'
+#ifdef C17
+#define CHAR_TEX_BRICK			'Q' //City17 - Base: 'CHAR_TEX_CONCRETE'
+#else
 //#define CHAR_TEX_UNUSED		'Q'
+#endif
 //#define CHAR_TEX_UNUSED		'R'
 #define CHAR_TEX_SLOSH			'S'
 #define CHAR_TEX_TILE			'T'

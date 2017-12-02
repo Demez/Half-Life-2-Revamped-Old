@@ -9,6 +9,13 @@
 
 #include "hl2_player_shared.h"
 
+#ifdef C17
+#ifndef CLIENT_DLL
+#include "in_buttons.h"
+#include "hl2_player.h"
+#endif
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -68,7 +75,9 @@ void CBaseHLCombatWeapon::ItemHolsterFrame( void )
 	if ( ( gpGlobals->curtime - m_flHolsterTime ) > sk_auto_reload_time.GetFloat() )
 	{
 		// Just load the clip with no animations
+#ifndef C17 // City17: No longer do this.
 		FinishReload();
+#endif
 		m_flHolsterTime = gpGlobals->curtime;
 	}
 }
@@ -81,6 +90,23 @@ bool CBaseHLCombatWeapon::CanLower()
 		return false;
 	return true;
 }
+
+#ifdef C17
+//-----------------------------------------------------------------------------
+bool CBaseHLCombatWeapon::CanSprint()
+{
+	if (SelectWeightedSequence(ACT_VM_SPRINT) == ACTIVITY_NOT_AVAILABLE)
+		return false;
+	return true;
+}
+
+bool CBaseHLCombatWeapon::CanWalkBob()
+{
+	if (SelectWeightedSequence(ACT_VM_WALK) == ACTIVITY_NOT_AVAILABLE)
+		return false;
+	return true;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Drops the weapon into a lowered pose
@@ -165,6 +191,11 @@ bool CBaseHLCombatWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
 //-----------------------------------------------------------------------------
 bool CBaseHLCombatWeapon::WeaponShouldBeLowered( void )
 {
+#ifdef C17
+	if (IsIronsighted())
+		return false;
+#endif
+
 	// Can't be in the middle of another animation
   	if ( GetIdealActivity() != ACT_VM_IDLE_LOWERED && GetIdealActivity() != ACT_VM_IDLE &&
 		 GetIdealActivity() != ACT_VM_IDLE_TO_LOWERED && GetIdealActivity() != ACT_VM_LOWERED_TO_IDLE )
@@ -175,8 +206,34 @@ bool CBaseHLCombatWeapon::WeaponShouldBeLowered( void )
 	
 #if !defined( CLIENT_DLL )
 
+#ifdef C17
+	CHL2_Player *player = dynamic_cast<CHL2_Player*>(GetOwner());
+	if (player)
+	{
+		if (player->HasLowStamina())
+			return true;
+
+		if (!(player->GetFlags() & FL_ONGROUND) && player->GetWaterLevel() < 3)
+			return true;
+	}
+#endif
+
 	if ( GlobalEntity_GetState( "friendly_encounter" ) == GLOBAL_ON )
 		return true;
+
+#ifdef C17
+	//Trace forward and see if he hit a wall.
+	trace_t tr;
+	Vector forward;
+	player->EyeVectors(&forward);
+	UTIL_TraceLine(player->EyePosition(),
+		player->EyePosition() + forward * 36,
+		MASK_SOLID, this, COLLISION_GROUP_WEAPON, &tr);
+
+	//If we hit something.
+	if (tr.fraction != 1.0)
+		return true;
+#endif
 
 #endif
 
@@ -188,6 +245,36 @@ bool CBaseHLCombatWeapon::WeaponShouldBeLowered( void )
 //-----------------------------------------------------------------------------
 void CBaseHLCombatWeapon::WeaponIdle( void )
 {
+#ifdef C17
+#ifndef CLIENT_DLL
+	CHL2_Player *player = dynamic_cast<CHL2_Player*>(GetOwner());
+#else
+	C_BasePlayer *player = dynamic_cast<C_BasePlayer*>(GetOwner());
+#endif
+
+	if (!player)
+		return;
+
+	float speed = player->GetLocalVelocity().Length2D();
+
+	if (CanSprint() &&
+#ifndef CLIENT_DLL
+	(player->m_nButtons & IN_FORWARD) && (player->m_nButtons & IN_SPEED) &&
+#endif
+		speed >= 300 && !(player->GetWaterLevel() == 3) && (player->GetFlags() & FL_ONGROUND))
+	{
+		if (GetActivity() != ACT_VM_SPRINT && (GetActivity() == ACT_VM_IDLE || GetActivity() == ACT_VM_WALK || GetActivity() == ACT_VM_IDLE_LOWERED) || GetActivity() == ACT_VM_IDLE_TO_LOWERED || GetActivity() == ACT_VM_LOWERED_TO_IDLE)
+			SendWeaponAnim(ACT_VM_SPRINT);
+		else if (HasWeaponIdleTimeElapsed())
+			SendWeaponAnim(ACT_VM_SPRINT);
+	}
+	//See if we should idle high or low
+	else if (WeaponShouldBeLowered())
+	{
+#if !defined( CLIENT_DLL )
+		player->Weapon_Lower();
+#endif
+#else
 	//See if we should idle high or low
 	if ( WeaponShouldBeLowered() )
 	{
@@ -199,7 +286,7 @@ void CBaseHLCombatWeapon::WeaponIdle( void )
 			pPlayer->Weapon_Lower();
 		}
 #endif
-
+#endif
 		// Move to lowered position if we're not there yet
 		if ( GetActivity() != ACT_VM_IDLE_LOWERED && GetActivity() != ACT_VM_IDLE_TO_LOWERED 
 			 && GetActivity() != ACT_TRANSITION )
@@ -212,6 +299,15 @@ void CBaseHLCombatWeapon::WeaponIdle( void )
 			SendWeaponAnim( ACT_VM_IDLE_LOWERED );
 		}
 	}
+#ifdef C17
+	else if (CanWalkBob() && speed >= 100 && !(player->GetWaterLevel() == 3) && (player->GetFlags() & FL_ONGROUND))
+	{
+		if (GetActivity() != ACT_VM_WALK && (GetActivity() == ACT_VM_IDLE || GetActivity() == ACT_VM_SPRINT))
+			SendWeaponAnim(ACT_VM_WALK);
+		else if (HasWeaponIdleTimeElapsed())
+			SendWeaponAnim(ACT_VM_WALK);
+	}
+#endif
 	else
 	{
 		// See if we need to raise immediately
@@ -219,6 +315,16 @@ void CBaseHLCombatWeapon::WeaponIdle( void )
 		{
 			SendWeaponAnim( ACT_VM_IDLE );
 		}
+#ifdef C17
+		else if (speed <= 300 && GetActivity() == ACT_VM_SPRINT)
+		{
+			SendWeaponAnim(ACT_VM_IDLE);
+		}
+		else if (speed <= 100 && GetActivity() == ACT_VM_WALK)
+		{
+			SendWeaponAnim(ACT_VM_IDLE);
+		}
+#endif
 		else if ( HasWeaponIdleTimeElapsed() ) 
 		{
 			SendWeaponAnim( ACT_VM_IDLE );
@@ -229,8 +335,8 @@ void CBaseHLCombatWeapon::WeaponIdle( void )
 float	g_lateralBob;
 float	g_verticalBob;
 
-//#if defined( CLIENT_DLL ) && ( !defined( HL2MP ) && !defined( PORTAL ) )
-
+#if defined( CLIENT_DLL ) && ( !defined( HL2MP ) && !defined( PORTAL ) )
+#ifndef C17
 #define	HL2_BOB_CYCLE_MIN	1.0f
 #define	HL2_BOB_CYCLE_MAX	0.45f
 #define	HL2_BOB			0.002f
@@ -253,7 +359,6 @@ static ConVar	v_ipitch_level( "v_ipitch_level", "0.3"/*, FCVAR_UNREGISTERED*/ );
 // Purpose: 
 // Output : float
 //-----------------------------------------------------------------------------
-/*
 float CBaseHLCombatWeapon::CalcViewmodelBob( void )
 {
 	static	float bobtime;
@@ -329,14 +434,6 @@ float CBaseHLCombatWeapon::CalcViewmodelBob( void )
 //			&angles - 
 //			viewmodelindex - 
 //-----------------------------------------------------------------------------
-
-static ConVar viewmodelbob_vertical_roll("viewmodelbob_vertical_roll", "0.5");
-static ConVar viewmodelbob_vertical_pitch("viewmodelbob_vertical_pitch", "0.4");
-static ConVar viewmodelbob_zaxis("viewmodelbob_zaxis", "0.1");
-static ConVar viewmodelbob_lateral_yaw("viewmodelbob_lateral_yaw", "0.3");
-static ConVar viewmodelbob_lateral("viewmodelbob_lateral", "0.8");
-static ConVar viewmodelbob_scale("viewmodelbob_scale", "0.1");
-
 void CBaseHLCombatWeapon::AddViewmodelBob( CBaseViewModel *viewmodel, Vector &origin, QAngle &angles )
 {
 	Vector	forward, right;
@@ -345,125 +442,21 @@ void CBaseHLCombatWeapon::AddViewmodelBob( CBaseViewModel *viewmodel, Vector &or
 	CalcViewmodelBob();
 
 	// Apply bob, but scaled down to 40%
-	VectorMA(origin, g_verticalBob * 0.1f, forward, origin); //0.1f
-	//VectorMA(origin, g_verticalBob * viewmodelbob_scale.GetFloat(), forward, origin);
+	VectorMA( origin, g_verticalBob * 0.1f, forward, origin );
 	
 	// Z bob a bit more
 	origin[2] += g_verticalBob * 0.1f;
-	//origin[2] += g_verticalBob * viewmodelbob_zaxis.GetFloat();
 	
 	// bob the angles
-	angles[ ROLL ]	+= g_verticalBob * 0.5f; //0.5f
-	//angles[ROLL] += g_verticalBob * viewmodelbob_vertical_roll.GetFloat();
-	angles[ PITCH ]	-= g_verticalBob * 0.4f; //0.4f
-	//angles[PITCH] -= g_verticalBob * viewmodelbob_vertical_pitch.GetFloat();
+	angles[ ROLL ]	+= g_verticalBob * 0.5f;
+	angles[ PITCH ]	-= g_verticalBob * 0.4f;
 
-	angles[ YAW ]	-= g_lateralBob  * 0.3f; //0.3f
-	//angles[YAW] -= g_lateralBob  * viewmodelbob_lateral_yaw.GetFloat();
+	angles[ YAW ]	-= g_lateralBob  * 0.3f;
 
-	VectorMA( origin, g_lateralBob * 0.8f, right, origin ); //0.8f
-	//VectorMA(origin, g_lateralBob * viewmodelbob_scale.GetFloat(), right, origin); //0.8f
+	VectorMA( origin, g_lateralBob * 0.8f, right, origin );
 }
-*/
+#endif
 
-float CBaseHLCombatWeapon::CalcViewmodelBob(void)
-{
-	static	float bobtime;
-	static	float lastbobtime;
-	float	cycle;
-
-	CBasePlayer *player = ToBasePlayer(GetOwner());
-	//Assert( player );
-
-	//NOTENOTE: For now, let this cycle continue when in the air, because it snaps badly without it
-
-	if ((!gpGlobals->frametime) || (player == NULL))
-	{
-		//NOTENOTE: We don't use this return value in our case (need to restructure the calculation function setup!)
-		return 0.0f;// just use old value
-	}
-
-	//Find the speed of the player
-	float speed = player->GetLocalVelocity().Length2D();
-
-	//FIXME: This maximum speed value must come from the server.
-	//		 MaxSpeed() is not sufficient for dealing with sprinting - jdw
-
-	speed = clamp(speed, -500, 500);
-
-	float bob_offset = RemapVal(speed, 0, 500, 0.0f, 1.0f);
-
-	bobtime += (gpGlobals->curtime - lastbobtime) * bob_offset;
-	lastbobtime = gpGlobals->curtime;
-
-	//Calculate the vertical bob
-	cycle = bobtime - (int)(bobtime / HL2_BOB_CYCLE_MAX)*HL2_BOB_CYCLE_MAX;
-	cycle /= HL2_BOB_CYCLE_MAX;
-
-	if (cycle < HL2_BOB_UP)
-	{
-		cycle = M_PI * cycle / HL2_BOB_UP;
-	}
-	else
-	{
-		cycle = M_PI + M_PI*(cycle - HL2_BOB_UP) / (1.0 - HL2_BOB_UP);
-	}
-
-	g_verticalBob = speed*0.1f;
-	g_verticalBob = g_verticalBob*0.10 + g_verticalBob*0.10*sin(cycle);
-
-	g_verticalBob = clamp(g_verticalBob, -10.0f, 10.0f);
-
-	//Calculate the lateral bob
-	cycle = bobtime - (int)(bobtime / HL2_BOB_CYCLE_MAX * 2)*HL2_BOB_CYCLE_MAX * 2;
-	cycle /= HL2_BOB_CYCLE_MAX * 2;
-
-	if (cycle < HL2_BOB_UP)
-	{
-		cycle = M_PI * cycle / HL2_BOB_UP;
-	}
-	else
-	{
-		cycle = M_PI + M_PI*(cycle - HL2_BOB_UP) / (1.0 - HL2_BOB_UP);
-	}
-
-	g_lateralBob = speed*0.1f;
-	g_lateralBob = g_lateralBob*0.10 + g_lateralBob*0.10*sin(cycle);
-	g_lateralBob = clamp(g_lateralBob, -10.0f, 10.0f);
-
-	//NOTENOTE: We don't use this return value in our case (need to restructure the calculation function setup!)
-	return 0.0f;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: 
-// Input  : &origin - 
-//			&angles - 
-//			viewmodelindex - 
-//-----------------------------------------------------------------------------
-void CBaseHLCombatWeapon::AddViewmodelBob(CBaseViewModel *viewmodel, Vector &origin, QAngle &angles)
-{
-	Vector	forward, right;
-	AngleVectors(angles, &forward, &right, NULL);
-
-	CalcViewmodelBob();
-
-	// Apply bob, but scaled down to 40%
-	VectorMA(origin, g_verticalBob * 0.0f, forward, origin);
-
-	// Z bob a bit more
-	origin[2] += g_verticalBob * 0.1f;
-
-	// bob the angles
-	angles[ROLL] += g_verticalBob * -0.2f; //right and left
-	angles[PITCH] -= g_verticalBob * -0.2f; //up and down
-
-	angles[YAW] -= g_lateralBob  * 0.2f;
-
-	VectorMA(origin, g_lateralBob * 0.2f, right, origin);
-}
-
-/*
 //-----------------------------------------------------------------------------
 Vector CBaseHLCombatWeapon::GetBulletSpread( WeaponProficiency_t proficiency )
 {
@@ -475,14 +468,17 @@ float CBaseHLCombatWeapon::GetSpreadBias( WeaponProficiency_t proficiency )
 {
 	return BaseClass::GetSpreadBias( proficiency );
 }
-
 //-----------------------------------------------------------------------------
+
 const WeaponProficiencyInfo_t *CBaseHLCombatWeapon::GetProficiencyValues()
 {
 	return NULL;
 }
 
+#else
+
 // Server stubs
+#ifndef C17
 float CBaseHLCombatWeapon::CalcViewmodelBob( void )
 {
 	return 0.0f;
@@ -496,9 +492,8 @@ float CBaseHLCombatWeapon::CalcViewmodelBob( void )
 //-----------------------------------------------------------------------------
 void CBaseHLCombatWeapon::AddViewmodelBob( CBaseViewModel *viewmodel, Vector &origin, QAngle &angles )
 {
-
 }
-*/
+#endif
 
 //-----------------------------------------------------------------------------
 Vector CBaseHLCombatWeapon::GetBulletSpread( WeaponProficiency_t proficiency )
@@ -541,4 +536,4 @@ const WeaponProficiencyInfo_t *CBaseHLCombatWeapon::GetDefaultProficiencyValues(
 	return g_BaseWeaponProficiencyTable;
 }
 
-//#endif
+#endif

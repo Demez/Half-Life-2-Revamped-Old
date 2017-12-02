@@ -36,7 +36,9 @@ public:
 
 protected:
 
+#ifndef C17
 	void	KillStriders( void );
+#endif
 
 	CHandle<CGravityVortexController>	m_hVortexController;
 };

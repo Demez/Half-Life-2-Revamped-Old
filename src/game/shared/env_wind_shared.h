@@ -169,6 +169,9 @@ public:
 	int m_iszGustSound;		// name of the wind sound to play for gusts.
 	int m_iWindDir;			// wind direction (yaw)
 	float m_flWindSpeed;	// the wind speed
+#ifdef C17
+	bool	m_bGusting;			// is the wind gusting right now?
+#endif
 
 	CNetworkVar( int, m_iInitialWindDir );
 	CNetworkVar( float, m_flInitialWindSpeed );
@@ -200,7 +203,9 @@ private:
 	float	m_flSimTime;		// What's the time I last simulated up to?
 	float	m_flSwitchTime;		// when do I actually switch from gust to not gust
 	float	m_flAveWindSpeed;	// the average wind speed
+#ifndef C17
 	bool	m_bGusting;			// is the wind gusting right now?
+#endif
 
 	float m_flWindAngleVariation;
 	float m_flWindSpeedVariation;

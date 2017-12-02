@@ -185,6 +185,7 @@ void C_EnvScreenOverlay::ClientThink( void )
 	}
 }
 
+#ifndef C17
 // Effect types
 enum 
 {
@@ -192,6 +193,7 @@ enum
 	SCREENEFFECT_EP1_INTRO,
 	SCREENEFFECT_EP2_GROGGY,
 };
+#endif
 
 // ============================================================================
 //  Screenspace effect
@@ -206,13 +208,29 @@ public:
 	virtual void ReceiveMessage( int classID, bf_read &msg );
 
 private:
+#ifdef C17
+	char	m_iszEffectName[MAX_PATH];
+	char	m_iszEffectValue[MAX_PATH];
+	int		m_iValue;
+	float	m_flValue;
+	Color	m_ColorValue;
+#else
 	float	m_flDuration;
 	int		m_nType;
+#endif
 };
 
 IMPLEMENT_CLIENTCLASS_DT( C_EnvScreenEffect, DT_EnvScreenEffect, CEnvScreenEffect )
+#ifdef C17
+	RecvPropString( RECVINFO( m_iszEffectName ) ),
+	RecvPropString( RECVINFO( m_iszEffectValue ) ),
+	RecvPropInt( RECVINFO( m_iValue ) ),
+	RecvPropFloat( RECVINFO( m_flValue ) ),
+	RecvPropInt( RECVINFO( m_ColorValue ), 0, RecvProxy_IntToColor32 ),
+#else
 	RecvPropFloat( RECVINFO( m_flDuration ) ),
 	RecvPropInt( RECVINFO( m_nType ) ),
+#endif
 END_RECV_TABLE()
 
 //-----------------------------------------------------------------------------
@@ -235,6 +253,81 @@ void C_EnvScreenEffect::ReceiveMessage( int classID, bf_read &msg )
 	{
 		// Effect turning on
 		case 0: // FIXME: Declare
+#ifdef C17
+		{
+			if (m_iszEffectName == NULL)
+				return;
+
+			g_pScreenSpaceEffects->EnableScreenSpaceEffect(m_iszEffectName);
+		}
+		break;
+
+		// Effect turning off
+		case 1:	// FIXME: Declare
+		{
+			if (m_iszEffectName == NULL)
+				return;
+
+			g_pScreenSpaceEffects->DisableScreenSpaceEffect(m_iszEffectName);
+		}
+		break;
+
+		case 2:
+		{
+			if (m_iszEffectName == NULL)
+				return;
+
+			if (m_iszEffectValue == NULL)
+				return;
+
+			KeyValues *pKeys = new KeyValues("keys");
+			if (pKeys == NULL)
+				return;
+
+			pKeys->SetInt(m_iszEffectValue, m_iValue);
+
+			g_pScreenSpaceEffects->SetScreenSpaceEffectParams(m_iszEffectName, pKeys);
+			pKeys->deleteThis();
+		}
+		break;
+
+		case 3:
+		{
+			if (m_iszEffectName == NULL)
+				return;
+
+			if (m_iszEffectValue == NULL)
+				return;
+
+			KeyValues *pKeys = new KeyValues("keys");
+			if (pKeys == NULL)
+				return;
+
+			pKeys->SetFloat(m_iszEffectValue, m_flValue);
+
+			g_pScreenSpaceEffects->SetScreenSpaceEffectParams(m_iszEffectName, pKeys);
+			pKeys->deleteThis();
+		}
+		break;
+
+		case 4:
+		{
+			if (m_iszEffectName == NULL)
+				return;
+
+			if (m_iszEffectValue == NULL)
+				return;
+
+			KeyValues *pKeys = new KeyValues("keys");
+			if (pKeys == NULL)
+				return;
+
+			pKeys->SetColor(m_iszEffectValue, m_ColorValue);
+
+			g_pScreenSpaceEffects->SetScreenSpaceEffectParams(m_iszEffectName, pKeys);
+			pKeys->deleteThis();
+		}
+#else
 			{		
 				// Create a keyvalue block to set these params
 				KeyValues *pKeys = new KeyValues( "keys" );
@@ -321,7 +414,7 @@ void C_EnvScreenEffect::ReceiveMessage( int classID, bf_read &msg )
 
 				g_pScreenSpaceEffects->SetScreenSpaceEffectParams( "ep2_groggy", pKeys );
 			}
-
+#endif
 			break;
 	}
 }

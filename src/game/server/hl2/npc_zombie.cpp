@@ -164,6 +164,11 @@ private:
 	CSimTimer 	  		 m_NextTimeToStartDoorBash;
 
 	Vector				 m_vPositionCharged;
+
+#ifdef C17
+	int					m_iZombieSex;
+	int					m_iZombieSkin;
+#endif
 };
 
 LINK_ENTITY_TO_CLASS( npc_zombie, CZombie );
@@ -236,7 +241,15 @@ void CZombie::Precache( void )
 
 	PrecacheModel( "models/zombie/classic.mdl" );
 	PrecacheModel( "models/zombie/classic_torso.mdl" );
-	PrecacheModel( "models/zombie/classic_legs.mdl" );
+#ifdef C17
+#if 0
+	PrecacheModel( "models/zombie/classic_female.mdl" );
+	PrecacheModel( "models/zombie/classic_torso_female.mdl" );
+	PrecacheModel( "models/zombie/classic_rebel.mdl" );
+	PrecacheModel( "models/zombie/classic_torso_rebel_female.mdl" );
+#endif
+#endif
+	PrecacheModel("models/zombie/classic_legs.mdl");
 
 	PrecacheScriptSound( "Zombie.FootstepRight" );
 	PrecacheScriptSound( "Zombie.FootstepLeft" );
@@ -274,6 +287,11 @@ void CZombie::Spawn( void )
 	}
 
 	m_fIsHeadless = false;
+
+#ifdef C17
+	m_iZombieSex = random->RandomInt(1, 2);
+	m_iZombieSkin = random->RandomInt(1, 4);
+#endif
 
 #ifdef HL2_EPISODIC
 	SetBloodColor( BLOOD_COLOR_ZOMBIE );
@@ -470,7 +488,22 @@ const char *CZombie::GetLegsModel( void )
 //-----------------------------------------------------------------------------
 const char *CZombie::GetTorsoModel( void )
 {
-	return "models/zombie/classic_torso.mdl";
+#ifdef C17
+#if 0
+	if ( m_iZombieSex == 1 ) // Male
+#endif
+#endif
+	{
+		return "models/zombie/classic_torso.mdl";
+	}
+#ifdef C17
+#if 0
+	else // Female
+	{
+		return "models/zombie/classic_torso_female.mdl";
+	}
+#endif
+#endif
 }
 
 
@@ -482,14 +515,48 @@ void CZombie::SetZombieModel( void )
 
 	if ( m_fIsTorso )
 	{
-		SetModel( "models/zombie/classic_torso.mdl" );
+#ifdef C17
+#if 0
+		if ( m_iZombieSex == 1 ) // Male
+#endif
+#endif
+		{
+			SetModel("models/zombie/classic_torso.mdl");
+		}
+#ifdef C17
+#if 0
+		else // Female
+		{
+			SetModel( "models/zombie/classic_torso_female.mdl" );
+		}
+#endif
+#endif
 		SetHullType( HULL_TINY );
 	}
 	else
 	{
-		SetModel( "models/zombie/classic.mdl" );
+#ifdef C17
+#if 0
+		if ( m_iZombieSex == 1 ) // Male
+#endif
+#endif
+		{
+			SetModel("models/zombie/classic.mdl");
+		}
+#ifdef C17
+#if 0
+		else // Female
+		{
+			SetModel( "models/zombie/classic_female.mdl" );
+		}
+#endif
+#endif
 		SetHullType( HULL_HUMAN );
 	}
+
+#ifdef C17
+	m_nSkin = m_iZombieSkin;
+#endif
 
 	SetBodygroup( ZOMBIE_BODYGROUP_HEADCRAB, !m_fIsHeadless );
 

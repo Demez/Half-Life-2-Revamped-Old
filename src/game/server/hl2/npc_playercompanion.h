@@ -357,6 +357,10 @@ private:
 	// Derived classes should not use the expresser directly
 	virtual CAI_Expresser *GetExpresser()	{ return BaseClass::GetExpresser(); }
 
+#ifdef C17
+	int				SelectAlertSchedule();
+#endif
+
 protected:
 	//-----------------------------------------------------
 

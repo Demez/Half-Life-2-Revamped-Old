@@ -54,6 +54,10 @@
 #include "replay/replay_ragdoll.h"
 #include "studio_stats.h"
 #include "tier1/callqueue.h"
+#ifdef C17
+#include "util_shared.h"
+#include "viewrender.h"
+#endif
 
 #ifdef TF_CLIENT_DLL
 #include "c_tf_player.h"
@@ -65,6 +69,9 @@
 
 static ConVar cl_SetupAllBones( "cl_SetupAllBones", "0" );
 ConVar r_sequence_debug( "r_sequence_debug", "" );
+#ifdef C17
+ConVar cl_ragdoll_fade_out_time("cl_ragdoll_fade_out_time", "10.0");
+#endif
 
 // If an NPC is moving faster than this, he should play the running footstep sound
 const float RUN_SPEED_ESTIMATE_SQR = 150.0f * 150.0f;
@@ -201,6 +208,16 @@ IMPLEMENT_CLIENTCLASS_DT(C_BaseAnimating, DT_BaseAnimating, CBaseAnimating)
 	RecvPropFloat( RECVINFO( m_fadeMaxDist ) ), 
 	RecvPropFloat( RECVINFO( m_flFadeScale ) ), 
 
+#ifdef C17
+	RecvPropBool(RECVINFO(m_bEnableGlow)),
+	RecvPropInt(RECVINFO(m_GlowColor), 0, RecvProxy_IntToColor32),
+
+	RecvPropBool(RECVINFO(m_bReceiveProjected)),
+	//RecvPropBool(RECVINFO( m_bRenderInSunShafts )),
+	RecvPropBool(RECVINFO(m_bRenderInReflections)),
+	RecvPropBool(RECVINFO(m_bRenderInRefractions)),
+#endif
+
 END_RECV_TABLE()
 
 BEGIN_PREDICTION_DATA( C_BaseAnimating )
@@ -287,6 +304,9 @@ C_ClientRagdoll::C_ClientRagdoll( bool bRestoring )
 	m_bFadingOut = false;
 	m_bImportant = false;
 	m_bNoModelParticles = false;
+#ifdef C17
+	m_flFadeOutDelay = gpGlobals->curtime + cl_ragdoll_fade_out_time.GetFloat();
+#endif
 
 	SetClassname("client_ragdoll");
 
@@ -376,6 +396,10 @@ void C_ClientRagdoll::OnRestore( void )
 	RagdollMoved();
 }
 
+#ifdef C17
+extern void SpawnBlood(Vector vecSpot, const Vector &vecDir, int bloodColor, float flDamage);
+#endif
+
 void C_ClientRagdoll::ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName )
 {
 	VPROF( "C_ClientRagdoll::ImpactTrace" );
@@ -402,6 +426,13 @@ void C_ClientRagdoll::ImpactTrace( trace_t *pTrace, int iDamageType, const char 
 		VectorNormalize( dir );
 
 		dir *= 4000;  // adjust impact strenght
+
+#ifdef C17
+		SpawnBlood(pTrace->endpos, dir, BloodColor(), 100);
+		TraceBleed(100, dir, pTrace, iDamageType);
+
+		EmitSound("Flesh.BulletImpact");
+#endif
 
 		// apply force where we hit it
 		pPhysicsObject->ApplyForceOffset( dir, hitpos );	
@@ -573,6 +604,11 @@ void C_ClientRagdoll::ClientThink( void )
 
 	HandleAnimatedFriction();
 
+#ifdef C17
+	if (gpGlobals->curtime >= m_flFadeOutDelay)
+		SUB_Remove();
+#endif
+
 	FadeOut();
 }
 
@@ -722,6 +758,18 @@ C_BaseAnimating::C_BaseAnimating() :
 
 	m_bReceivedSequence = false;
 
+#ifdef C17
+	//L4D Glow
+	m_bClientGlow = false;
+	m_pEntGlowEffect = (CEntGlowEffect*)g_pScreenSpaceEffects->GetScreenSpaceEffect("c17_l4dglow");
+	m_bEnableGlow = false;
+
+	m_bReceiveProjected = true;
+	//m_bRenderInSunShafts = true;
+	m_bRenderInReflections = true;
+	m_bRenderInRefractions = true;
+#endif
+
 	m_boneIndexAttached = -1;
 	m_flOldModelScale = 0.0f;
 
@@ -798,6 +846,11 @@ int C_BaseAnimating::VPhysicsGetObjectList( IPhysicsObject **pList, int listMax 
 //-----------------------------------------------------------------------------
 ShadowType_t C_BaseAnimating::ShadowCastType()
 {
+#ifdef C17
+	if ( /*CurrentViewID() == VIEW_SUN_SHAFTS ||*/ CurrentViewID() == VIEW_SHADOW_DEPTH_TEXTURE)
+		return SHADOWS_NONE;
+#endif
+
 	CStudioHdr *pStudioHdr = GetModelPtr();
 	if ( !pStudioHdr || !pStudioHdr->SequencesAvailable() )
 		return SHADOWS_NONE;
@@ -2570,9 +2623,15 @@ void C_BaseAnimating::CalculateIKLocks( float currentTime )
 	}
 
 #if defined( HL2_CLIENT_DLL )
-	if (minHeight < FLT_MAX)
+#ifdef C17
+	// Let's not bother sending IK Ground Contact info in MP games
+	if (1 == gpGlobals->maxClients)
+#endif
 	{
-		input->AddIKGroundContactInfo( entindex(), minHeight, maxHeight );
+		if (minHeight < FLT_MAX)
+		{
+			input->AddIKGroundContactInfo(entindex(), minHeight, maxHeight);
+		}
 	}
 #endif
 
@@ -3042,6 +3101,13 @@ void C_BaseAnimating::InvalidateBoneCaches()
 	g_iModelBoneCounter++;
 }
 
+#ifdef C17
+bool C_BaseAnimating::ShouldReceiveProjectedTextures(int flags)
+{
+	return m_bReceiveProjected;
+}
+#endif
+
 bool C_BaseAnimating::ShouldDraw()
 {
 	return !IsDynamicModelLoading() && BaseClass::ShouldDraw();
@@ -3058,6 +3124,14 @@ int C_BaseAnimating::DrawModel( int flags )
 	VPROF_BUDGET( "C_BaseAnimating::DrawModel", VPROF_BUDGETGROUP_MODEL_RENDERING );
 	if ( !m_bReadyToDraw )
 		return 0;
+
+#ifdef C17
+	if (!m_bRenderInReflections && (CurrentViewID() == VIEW_REFLECTION))
+		return 0;
+
+	if (!m_bRenderInRefractions && (CurrentViewID() == VIEW_REFRACTION))
+		return 0;
+#endif
 
 	int drawn = 0;
 
@@ -3301,15 +3375,25 @@ int C_BaseAnimating::InternalDrawModel( int flags )
 
 extern ConVar muzzleflash_light;
 
-void C_BaseAnimating::ProcessMuzzleFlashEvent() //New muzzle flash
+void C_BaseAnimating::ProcessMuzzleFlashEvent()
 {
+#ifdef C17
+	if (IsViewModel())
+	{
+		C_BasePlayer *pPlayer = ToBasePlayer(dynamic_cast<C_BaseViewModel *>(this)->GetOwner());
+		if (pPlayer && pPlayer == C_BasePlayer::GetLocalPlayer())
+		{
+			pPlayer->DisplayMuzzleLight();
+		}
+	}
+#endif
+
 	// If we have an attachment, then stick a light on it.
 	if ( muzzleflash_light.GetBool() )
 	{
 		//FIXME: We should really use a named attachment for this
 		if ( m_Attachments.Count() > 0 )
 		{
-			/*
 			Vector vAttachment;
 			QAngle dummyAngles;
 			GetAttachment( 1, vAttachment, dummyAngles );
@@ -3324,24 +3408,6 @@ void C_BaseAnimating::ProcessMuzzleFlashEvent() //New muzzle flash
 			el->color.g = 192;
 			el->color.b = 64;
 			el->color.exponent = 5;
-			*/
-
-			Vector vAttachment, vAng;
-			QAngle angles;
-
-			GetAttachment(1, vAttachment, angles); // set 1 instead "attachment"
-
-			AngleVectors(angles, &vAng);
-			vAttachment += vAng * 2;
-
-			dlight_t *dl = effects->CL_AllocDlight(index);
-			dl->origin = vAttachment;
-			dl->color.r = 252;
-			dl->color.g = 238;
-			dl->color.b = 128;
-			dl->die = gpGlobals->curtime + 0.05f;
-			dl->radius = random->RandomFloat(245.0f, 256.0f);
-			dl->decay = 512.0f;
 		}
 	}
 }
@@ -4100,6 +4166,12 @@ void C_BaseAnimating::FireObsoleteEvent( const Vector& origin, const QAngle& ang
 	case CL_EVENT_NPC_MUZZLEFLASH2:
 	case CL_EVENT_NPC_MUZZLEFLASH3:
 		{
+#ifdef C17
+			C_BaseEntity *follow = GetFollowedEntity();
+			if (follow && follow->IsPlayer() && ::input->CAM_IsThirdPerson())
+				break;
+#endif
+
 			int iAttachment = -1;
 			bool bFirstPerson = true;
 
@@ -4525,6 +4597,33 @@ void C_BaseAnimating::PostDataUpdate( DataUpdateType_t updateType )
 			m_iv_flCycle.Reset();
 		}
 	}
+
+#ifdef C17
+	color32 col = m_GlowColor.Get();
+	// Did we change glow states?
+	if (m_bClientGlow != m_bEnableGlow)
+	{
+		if (m_bEnableGlow)
+		{
+			// Register us with the effect
+			m_pEntGlowEffect->RegisterEnt(this, Color(col.r, col.g, col.b, col.a));
+		}
+		else
+		{
+			// Stop glowing
+			m_pEntGlowEffect->DeregisterEnt(this);
+		}
+
+		m_bClientGlow = m_bEnableGlow;
+	}
+	else
+	{
+		// Maybe we changed color? Set it anyway (not a costly function at all)
+#if HACKHACK
+		m_pEntGlowEffect->SetEntColor(this, Color(col.r, col.g, col.b, col.a)); // hitmen047: just for a while
+#endif
+	}
+#endif
 }
 
 //-----------------------------------------------------------------------------

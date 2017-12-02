@@ -47,6 +47,9 @@
 #include "weapon_physcannon.h"
 #include "ammodef.h"
 #include "vehicle_base.h"
+#ifdef C17
+#include "particle_parse.h"
+#endif
  
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -520,6 +523,18 @@ bool CNPC_BaseZombie::OverrideMoveFacing( const AILocalMoveGoal_t &move, float f
 	return true;
 }
 
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: Defines the chances of spawning with the fly particle.
+// Input  :
+// Output :
+//-----------------------------------------------------------------------------
+int CNPC_BaseZombie::FliesChance(void)
+{
+	return random->RandomInt(1, 2);
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: For innate melee attack
 // Input  :
@@ -949,7 +964,7 @@ int CNPC_BaseZombie::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 //-----------------------------------------------------------------------------
 void CNPC_BaseZombie::MakeAISpookySound( float volume, float duration )
 {
-#ifdef HL2_EPISODIC
+#if defined HL2_EPISODIC && !defined C17
 	if ( HL2GameRules()->IsAlyxInDarknessMode() )
 	{
 		CSoundEnt::InsertSound( SOUND_COMBAT, EyePosition(), volume, duration, this, SOUNDENT_CHANNEL_SPOOKY_NOISE );
@@ -1705,6 +1720,18 @@ void CNPC_BaseZombie::Spawn( void )
 	GetEnemies()->SetFreeKnowledgeDuration( 6.0 );
 
 	m_ActBusyBehavior.SetUseRenderBounds(true);
+
+#ifdef C17
+	if (FliesChance() == 1)
+	{
+		m_bFlies = true;
+		DispatchParticleEffect("flies", PATTACH_POINT_FOLLOW, this, "headcrab");
+	}
+	else
+	{
+		m_bFlies = false;
+	}
+#endif
 }
 
 
@@ -1723,6 +1750,9 @@ void CNPC_BaseZombie::Precache( void )
 	PrecacheModel( GetTorsoModel() );
 
 	PrecacheParticleSystem( "blood_impact_zombie_01" );
+#ifdef C17
+	PrecacheParticleSystem("flies");
+#endif
 
 	BaseClass::Precache();
 }

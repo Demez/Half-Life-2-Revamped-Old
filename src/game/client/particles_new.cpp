@@ -17,6 +17,12 @@
 #include "vprof.h"
 #include "input.h"
 
+#ifdef C17
+//City17:
+#include "view.h"
+#include "viewrender.h"
+#endif
+
 extern ConVar cl_particleeffect_aabb_buffer;
 
 //extern ConVar cl_particle_show_bbox;
@@ -506,6 +512,12 @@ int CNewParticleEffect::DrawModel( int flags )
 	VPROF_BUDGET( "CNewParticleEffect::DrawModel", VPROF_BUDGETGROUP_PARTICLE_RENDERING );
 	if ( r_DrawParticles.GetBool() == false )
 		return 0;
+
+#ifdef C17
+	// City17: DX7? Don't draw.
+	if (engine->GetDXSupportLevel() < 80)
+		return 0;
+#endif
 
 	if ( !g_pClientMode->ShouldDrawParticles() || !ParticleMgr()->ShouldRenderParticleSystems() )
 		return 0;

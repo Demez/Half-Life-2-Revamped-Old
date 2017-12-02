@@ -30,6 +30,10 @@ public:
 
 	CNetworkVar( float, m_flSuitPower );
 	CNetworkVar( bool,	m_bZooming );
+#ifdef C17
+	CNetworkVar(bool, m_bInSmokeVolume);
+	CNetworkVar(bool, m_bLowStamina);
+#endif
 	CNetworkVar( int,	m_bitsActiveDevices );
 	CNetworkVar( int,	m_iSquadMemberCount );
 	CNetworkVar( int,	m_iSquadMedicCount );

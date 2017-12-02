@@ -1691,6 +1691,11 @@ private:
 	COutputEvent m_OnUser3;
 	COutputEvent m_OnUser4;
 
+#ifdef C17
+	COutputEvent m_OnKilled;
+	COutputEvent m_OnSpawned;
+#endif
+
 	QAngle			m_angAbsRotation;
 
 	CNetworkVector( m_vecOrigin );

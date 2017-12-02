@@ -636,11 +636,13 @@ void CWorld::Precache( void )
 
 	g_Language.SetValue( LANGUAGE_ENGLISH );	// TODO use VGUI to get current language
 
+#ifndef C17
 	if ( g_Language.GetInt() == LANGUAGE_GERMAN )
 	{
 		PrecacheModel( "models/germangibs.mdl" );
 	}
 	else
+#endif
 	{
 		PrecacheModel( "models/gibs/hgibs.mdl" );
 	}

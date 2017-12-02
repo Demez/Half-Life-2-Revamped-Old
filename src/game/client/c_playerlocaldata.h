@@ -75,6 +75,11 @@ public:
 
 	bool					m_bSlowMovement;
 
+#ifdef C17
+	//Tony; added so tonemap controller can work in multiplayer with inputs.
+	tonemap_params_t		m_TonemapParams;
+#endif
+
 };
 
 #endif // C_PLAYERLOCALDATA_H

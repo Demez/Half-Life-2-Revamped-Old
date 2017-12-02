@@ -167,6 +167,19 @@ void CWeaponAR2::ItemPostFrame( void )
 //-----------------------------------------------------------------------------
 Activity CWeaponAR2::GetPrimaryAttackActivity( void )
 {
+#ifdef C17
+	//City17: Adjusted to make 3 round burst optimal in ironsights, or in general.
+	if (m_nShotsFired > 4 && !m_bIsIronsighted)
+		return ACT_VM_RECOIL3;
+
+	if (m_nShotsFired > 3)
+		return ACT_VM_RECOIL2;
+
+	if (m_nShotsFired > 2)
+		return ACT_VM_RECOIL1;
+
+	return ACT_VM_PRIMARYATTACK;
+#else
 	if ( m_nShotsFired < 2 )
 		return ACT_VM_PRIMARYATTACK;
 
@@ -177,6 +190,7 @@ Activity CWeaponAR2::GetPrimaryAttackActivity( void )
 		return ACT_VM_RECOIL2;
 
 	return ACT_VM_RECOIL3;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -191,7 +205,12 @@ void CWeaponAR2::DoImpactEffect( trace_t &tr, int nDamageType )
 	data.m_vOrigin = tr.endpos + ( tr.plane.normal * 1.0f );
 	data.m_vNormal = tr.plane.normal;
 
-	DispatchEffect( "AR2Impact", data );
+#ifdef C17
+	if (!(tr.surface.flags & SURF_SKY))
+#endif
+	{
+		DispatchEffect("AR2Impact", data);
+	}
 
 	BaseClass::DoImpactEffect( tr, nDamageType );
 }
@@ -207,6 +226,11 @@ void CWeaponAR2::DelayedAttack( void )
 	
 	if ( pOwner == NULL )
 		return;
+
+#ifdef C17
+	// turn off ironsights
+	DisableIronsights();
+#endif
 
 	// Deplete the clip completely
 	SendWeaponAnim( ACT_VM_SECONDARYATTACK );
@@ -286,6 +310,11 @@ void CWeaponAR2::SecondaryAttack( void )
 	{
 		pPlayer->RumbleEffect(RUMBLE_AR2_ALT_FIRE, 0, RUMBLE_FLAG_RESTART );
 	}
+
+#ifdef C17
+	// turn off ironsights
+	DisableIronsights();
+#endif
 
 	SendWeaponAnim( ACT_VM_FIDGET );
 	WeaponSound( SPECIAL1 );

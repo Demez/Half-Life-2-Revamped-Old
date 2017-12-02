@@ -103,7 +103,11 @@ public:
 	
 	int				m_iPortalVersion;
 
+#ifdef C17
+protected: //City17: was private
+#else
 private:
+#endif
 	
 	unsigned short	m_AreaPortalsElement;	// link into g_AreaPortals.
 };

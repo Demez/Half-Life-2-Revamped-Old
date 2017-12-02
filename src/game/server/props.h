@@ -407,6 +407,39 @@ protected:
 	CNetworkVar( bool, m_bAwake );
 };
 
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+class CPlugProp : public CPhysicsProp
+{
+	DECLARE_CLASS(CPlugProp, CPhysicsProp);
+	DECLARE_SERVERCLASS();
+
+public:
+	~CPlugProp();
+	CPlugProp(void)
+	{
+	}
+
+	// Inputs
+	void InputSetPlugStateOn(inputdata_t &inputdata);
+	void InputSetPlugStateOff(inputdata_t &inputdata);
+
+	void OnPhysGunPickup(CBasePlayer *pPhysGunUser, PhysGunPickup_t reason);
+	void Use(CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value);
+
+	DECLARE_DATADESC();
+
+private:
+
+	COutputEvent m_OnGrabbed;
+	COutputEvent m_OnStatePlugged;
+	COutputEvent m_OnStateUnPlugged;
+
+	bool		m_bIsPlugged;
+};
+#endif
 
 // An interface so that objects parented to props can receive collision interaction events.
 enum parentCollisionInteraction_t

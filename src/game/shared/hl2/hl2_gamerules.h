@@ -69,7 +69,11 @@ private:
 
 	virtual void			InitDefaultAIRelationships( void );
 	virtual const char*		AIClassText(int classType);
+#ifdef C17
+	virtual const char *GetGameDescription(void) { return "City 17: Episode One"; }
+#else
 	virtual const char *GetGameDescription( void ) { return "Half-Life 2"; }
+#endif
 
 	// Ammo
 	virtual void			PlayerThink( CBasePlayer *pPlayer );
@@ -97,6 +101,12 @@ private:
 	float AdjustPlayerDamageInflicted( float damage );
 
 	int						DefaultFOV( void ) { return 75; }
+#endif
+
+#ifdef C17
+public:
+	virtual int				GetRegeneratingHealthMax(int iHealth);
+	virtual float			GetRegeneratingHealthRate();
 #endif
 };
 

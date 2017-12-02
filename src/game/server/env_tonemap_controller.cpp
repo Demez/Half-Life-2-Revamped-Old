@@ -11,6 +11,10 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+#ifdef C17
+#include "player.h"	//Tony; need player.h so we can trigger inputs on the player, from our inputs!
+#endif
+
 ConVar mat_hdr_tonemapscale( "mat_hdr_tonemapscale", "1.0", FCVAR_CHEAT, "The HDR tonemap scale. 1 = Use autoexposure, 0 = eyes fully closed, 16 = eyes wide open." );
 
 // 0 - eyes fully closed / fully black
@@ -118,6 +122,24 @@ int CEnvTonemapController::UpdateTransmitState()
 //-----------------------------------------------------------------------------
 void CEnvTonemapController::InputSetTonemapScale( inputdata_t &inputdata )
 {
+#ifdef C17
+	//Tony; in multiplayer, we check to see if the activator is a player, if they are, we trigger an input on them, and then get out.
+	//if there is no activator, or the activator is not a player; ie: LogicAuto, we set the 'global' values.
+	if ((gpGlobals->maxClients > 1))
+	{
+		if (inputdata.pActivator != NULL && inputdata.pActivator->IsPlayer())
+		{
+			//			DevMsg("activator is a player: InputSetTonemapScale\n");
+			CBasePlayer *pPlayer = ToBasePlayer(inputdata.pActivator);
+			if (pPlayer)
+			{
+				pPlayer->InputSetTonemapScale(inputdata);
+				return;
+			}
+		}
+	}
+#endif
+
 	float flRemapped = inputdata.value.Float();
 	mat_hdr_tonemapscale.SetValue( flRemapped );
 }
@@ -127,6 +149,12 @@ void CEnvTonemapController::InputSetTonemapScale( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CEnvTonemapController::InputBlendTonemapScale( inputdata_t &inputdata )
 {
+#ifdef C17
+	//Tony; TODO!!! -- tonemap scale blending does _not_ work properly in multiplayer..
+	if ((gpGlobals->maxClients > 1))
+		return;
+#endif
+
 	char parseString[255];
 	Q_strncpy(parseString, inputdata.value.String(), sizeof(parseString));
 
@@ -177,6 +205,24 @@ void CEnvTonemapController::InputSetBloomScaleRange( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CEnvTonemapController::InputSetTonemapRate( inputdata_t &inputdata )
 {
+#ifdef C17
+	//Tony; in multiplayer, we check to see if the activator is a player, if they are, we trigger an input on them, and then get out.
+	//if there is no activator, or the activator is not a player; ie: LogicAuto, we set the 'global' values.
+	if ((gpGlobals->maxClients > 1))
+	{
+		if (inputdata.pActivator != NULL && inputdata.pActivator->IsPlayer())
+		{
+			//			DevMsg("activator is a player: InputSetTonemapRate\n");
+			CBasePlayer *pPlayer = ToBasePlayer(inputdata.pActivator);
+			if (pPlayer)
+			{
+				pPlayer->InputSetTonemapRate(inputdata);
+				return;
+			}
+		}
+	}
+#endif
+
 	// TODO: There should be a better way to do this.
 	ConVarRef mat_hdr_manual_tonemap_rate( "mat_hdr_manual_tonemap_rate" );
 	if ( mat_hdr_manual_tonemap_rate.IsValid() )
@@ -208,6 +254,24 @@ void CEnvTonemapController::UpdateTonemapScaleBlend( void )
 //-----------------------------------------------------------------------------
 void CEnvTonemapController::InputSetAutoExposureMin( inputdata_t &inputdata )
 {
+#ifdef C17
+	//Tony; in multiplayer, we check to see if the activator is a player, if they are, we trigger an input on them, and then get out.
+	//if there is no activator, or the activator is not a player; ie: LogicAuto, we set the 'global' values.
+	if ((gpGlobals->maxClients > 1))
+	{
+		if (inputdata.pActivator != NULL && inputdata.pActivator->IsPlayer())
+		{
+			//			DevMsg("activator is a player: InputSetAutoExposureMin\n");
+			CBasePlayer *pPlayer = ToBasePlayer(inputdata.pActivator);
+			if (pPlayer)
+			{
+				pPlayer->InputSetAutoExposureMin(inputdata);
+				return;
+			}
+		}
+	}
+#endif
+
 	m_flCustomAutoExposureMin = inputdata.value.Float();
 	m_bUseCustomAutoExposureMin = true;
 }
@@ -217,6 +281,24 @@ void CEnvTonemapController::InputSetAutoExposureMin( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CEnvTonemapController::InputSetAutoExposureMax( inputdata_t &inputdata )
 {
+#ifdef C17
+	//Tony; in multiplayer, we check to see if the activator is a player, if they are, we trigger an input on them, and then get out.
+	//if there is no activator, or the activator is not a player; ie: LogicAuto, we set the 'global' values.
+	if ((gpGlobals->maxClients > 1))
+	{
+		if (inputdata.pActivator != NULL && inputdata.pActivator->IsPlayer())
+		{
+			//			DevMsg("activator is a player: InputSetAutoExposureMax\n");
+			CBasePlayer *pPlayer = ToBasePlayer(inputdata.pActivator);
+			if (pPlayer)
+			{
+				pPlayer->InputSetAutoExposureMax(inputdata);
+				return;
+			}
+		}
+	}
+#endif
+
 	m_flCustomAutoExposureMax = inputdata.value.Float();
 	m_bUseCustomAutoExposureMax = true;
 }
@@ -226,6 +308,24 @@ void CEnvTonemapController::InputSetAutoExposureMax( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CEnvTonemapController::InputUseDefaultAutoExposure( inputdata_t &inputdata )
 {
+#ifdef C17
+	//Tony; in multiplayer, we check to see if the activator is a player, if they are, we trigger an input on them, and then get out.
+	//if there is no activator, or the activator is not a player; ie: LogicAuto, we set the 'global' values.
+	if ((gpGlobals->maxClients > 1))
+	{
+		if (inputdata.pActivator != NULL && inputdata.pActivator->IsPlayer())
+		{
+			//			DevMsg("activator is a player: InputUseDefaultAutoExposure\n");
+			CBasePlayer *pPlayer = ToBasePlayer(inputdata.pActivator);
+			if (pPlayer)
+			{
+				pPlayer->InputUseDefaultAutoExposure(inputdata);
+				return;
+			}
+		}
+	}
+#endif
+
 	m_bUseCustomAutoExposureMin = false;
 	m_bUseCustomAutoExposureMax = false;
 }
@@ -235,6 +335,24 @@ void CEnvTonemapController::InputUseDefaultAutoExposure( inputdata_t &inputdata 
 //-----------------------------------------------------------------------------
 void CEnvTonemapController::InputSetBloomScale( inputdata_t &inputdata )
 {
+#ifdef C17
+	//Tony; in multiplayer, we check to see if the activator is a player, if they are, we trigger an input on them, and then get out.
+	//if there is no activator, or the activator is not a player; ie: LogicAuto, we set the 'global' values.
+	if ((gpGlobals->maxClients > 1))
+	{
+		if (inputdata.pActivator != NULL && inputdata.pActivator->IsPlayer())
+		{
+			//			DevMsg("activator is a player: InputSetBloomScale\n");
+			CBasePlayer *pPlayer = ToBasePlayer(inputdata.pActivator);
+			if (pPlayer)
+			{
+				pPlayer->InputSetBloomScale(inputdata);
+				return;
+			}
+		}
+	}
+#endif
+
 	m_flCustomBloomScale = inputdata.value.Float();
 	m_flCustomBloomScaleMinimum = m_flCustomBloomScale;
 	m_bUseCustomBloomScale = true;
@@ -245,5 +363,23 @@ void CEnvTonemapController::InputSetBloomScale( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CEnvTonemapController::InputUseDefaultBloomScale( inputdata_t &inputdata )
 {
+#ifdef C17
+	//Tony; in multiplayer, we check to see if the activator is a player, if they are, we trigger an input on them, and then get out.
+	//if there is no activator, or the activator is not a player; ie: LogicAuto, we set the 'global' values.
+	if ((gpGlobals->maxClients > 1))
+	{
+		if (inputdata.pActivator != NULL && inputdata.pActivator->IsPlayer())
+		{
+			//			DevMsg("activator is a player: InputUseDefaultBloomScale\n");
+			CBasePlayer *pPlayer = ToBasePlayer(inputdata.pActivator);
+			if (pPlayer)
+			{
+				pPlayer->InputUseDefaultBloomScale(inputdata);
+				return;
+			}
+		}
+	}
+#endif
+
 	m_bUseCustomBloomScale = false;
 }

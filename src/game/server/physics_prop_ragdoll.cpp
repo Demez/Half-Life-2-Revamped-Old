@@ -82,6 +82,9 @@ BEGIN_DATADESC(CRagdollProp)
 	DEFINE_FIELD( m_hKiller, FIELD_EHANDLE ),
 
 	DEFINE_KEYFIELD( m_bStartDisabled, FIELD_BOOLEAN, "StartDisabled" ),
+#ifdef C17
+	DEFINE_KEYFIELD(m_bShouldBleed, FIELD_BOOLEAN, "ShouldBleed"),
+#endif
 
 	DEFINE_INPUTFUNC( FIELD_VOID, "StartRagdollBoogie", InputStartRadgollBoogie ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "EnableMotion", InputEnableMotion ),
@@ -89,6 +92,10 @@ BEGIN_DATADESC(CRagdollProp)
 	DEFINE_INPUTFUNC( FIELD_VOID, "Enable",		InputTurnOn ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "Disable",	InputTurnOff ),
 	DEFINE_INPUTFUNC( FIELD_FLOAT, "FadeAndRemove", InputFadeAndRemove ),
+#ifdef C17
+	DEFINE_INPUTFUNC(FIELD_VOID, "EnableBleeding", InputEnableBleeding),
+	DEFINE_INPUTFUNC(FIELD_VOID, "DisableBleeding", InputDisableBleeding),
+#endif
 
 	DEFINE_FIELD( m_hUnragdoll, FIELD_EHANDLE ),
 	DEFINE_FIELD( m_bFirstCollisionAfterLaunch, FIELD_BOOLEAN ),
@@ -275,6 +282,9 @@ CRagdollProp::CRagdollProp( void )
 	m_allAsleep = false;
 	m_flFadeScale = 1;
 	m_flDefaultFadeScale = 1;
+#ifdef C17
+	m_bShouldBleed = false;
+#endif
 }
 
 CRagdollProp::~CRagdollProp( void )
@@ -819,6 +829,15 @@ void CRagdollProp::TraceAttack( const CTakeDamageInfo &info, const Vector &dir, 
 	{
 		VPhysicsSwapObject( m_ragdoll.list[ptr->physicsbone].pObject );
 	}
+
+#ifdef C17
+	if (!(info.GetDamageType() == DMG_BLAST) && (m_bShouldBleed))
+	{
+		SpawnBlood(ptr->endpos, dir, BloodColor(), 100);
+		TraceBleed(100, dir, ptr, info.GetDamageType());
+	}
+#endif
+
 	BaseClass::TraceAttack( info, dir, ptr, pAccumulator );
 }
 
@@ -1682,6 +1701,24 @@ void CRagdollProp::InputDisableMotion( inputdata_t &inputdata )
 {
 	DisableMotion();
 }
+
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: Enable blood effects on bullet impact.
+//-----------------------------------------------------------------------------
+void CRagdollProp::InputEnableBleeding(inputdata_t &inputdata)
+{
+	m_bShouldBleed = true;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Disable blood effects on bullet impact.
+//-----------------------------------------------------------------------------
+void CRagdollProp::InputDisableBleeding(inputdata_t &inputdata)
+{
+	m_bShouldBleed = false;
+}
+#endif
 
 void CRagdollProp::InputTurnOn( inputdata_t &inputdata )
 {

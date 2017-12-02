@@ -206,6 +206,7 @@ void CRecharge::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE use
 		return;
 
 	// Only usable if you have the HEV suit on
+#ifndef C17 //City17: No armor.
 	if ( !((CBasePlayer *)pActivator)->IsSuitEquipped() )
 	{
 		if (m_flSoundTime <= gpGlobals->curtime)
@@ -215,6 +216,7 @@ void CRecharge::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE use
 		}
 		return;
 	}
+#endif
 
 	// if there is no juice left, turn it off
 	if (m_iJuice <= 0)

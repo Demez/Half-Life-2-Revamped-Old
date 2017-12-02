@@ -16,7 +16,7 @@
 #include "tier0/memdbgon.h"
 
 // some cvars used by player movement system
-#if defined( HL2_DLL ) || defined( HL2_CLIENT_DLL )
+#if (defined( HL2_DLL ) || defined( HL2_CLIENT_DLL )) && !defined C17
 #define DEFAULT_GRAVITY_STRING	"600"
 #else
 #define DEFAULT_GRAVITY_STRING	"800"
@@ -79,7 +79,11 @@ ConVar	sv_wateraccelerate(  "sv_wateraccelerate", "10", FCVAR_NOTIFY | FCVAR_REP
 ConVar	sv_waterfriction(  "sv_waterfriction", "1", FCVAR_NOTIFY | FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY );      
 ConVar	sv_footsteps	( "sv_footsteps", "1", FCVAR_NOTIFY | FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY, "Play footstep sound for players" );
 ConVar	sv_rollspeed	( "sv_rollspeed", "200", FCVAR_NOTIFY | FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY);
+#ifdef C17
+ConVar	sv_rollangle("sv_rollangle", "1.5", FCVAR_REPLICATED | FCVAR_ARCHIVE, "Max view roll angle");
+#else
 ConVar	sv_rollangle	( "sv_rollangle", "0", FCVAR_NOTIFY | FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY, "Max view roll angle");
+#endif
 #endif // CSTRIKE_DLL
 
 #if defined( DOD_DLL ) || defined( CSTRIKE_DLL ) || defined( HL1MP_DLL )

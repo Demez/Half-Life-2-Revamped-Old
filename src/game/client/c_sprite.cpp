@@ -20,6 +20,9 @@
 #include "tier1/KeyValues.h"
 #include "toolframework/itoolframework.h"
 #include "toolframework_client.h"
+#ifdef C17
+#include "iinput.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -392,6 +395,15 @@ int C_SpriteRenderer::DrawSprite(
 		C_BaseEntity *ent = attachedto->GetBaseEntity();
 		if ( ent )
 		{
+#ifdef C17
+			if (ent->GetBaseAnimating() && ent->GetBaseAnimating()->IsViewModel() && ::input->CAM_IsThirdPerson())
+			{
+				C_BaseViewModel *pVm = (C_BaseViewModel*)ent;
+				C_BasePlayer *pOwner = (pVm->GetOwner() && pVm->GetOwner()->IsPlayer()) ? (C_BasePlayer*)pVm->GetOwner() : NULL;
+				if (pOwner && pOwner->GetActiveWeapon())
+					return 0; //worldmodels don't have the same attachments, so just get out (crossbow)
+			}
+#endif
 			// don't draw viewmodel effects in reflections
 			if ( CurrentViewID() == VIEW_REFLECTION )
 			{

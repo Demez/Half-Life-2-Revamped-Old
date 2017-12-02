@@ -246,6 +246,9 @@ protected:
 	bool				m_bInitialStateUpdate;
 	bool				m_bGuiding;
 	bool				m_bHideGuiding;		//User to override the player's wish to guide under certain circumstances
+#ifdef C17
+	bool				m_bHolstering;
+#endif
 	Vector				m_vecNPCLaserDot;
 	CHandle<CLaserDot>	m_hLaserDot;
 	CHandle<CMissile>	m_hMissile;

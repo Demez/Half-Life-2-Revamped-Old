@@ -16,6 +16,9 @@
 #include "vstdlib/random.h"
 #include "engine/IEngineSound.h"
 #include "world.h"
+#ifdef C17
+#include "particle_parse.h"
+#endif
 
 #ifdef PORTAL
 	#include "portal_util_shared.h"
@@ -210,9 +213,22 @@ void CGrenadeAR2::Detonate(void)
 		g_sModelIndexFireball,
 		2.0, 
 		15,
+#ifdef C17
+		TE_EXPLFLAG_NOFIREBALL | TE_EXPLFLAG_NOFIREBALLSMOKE,
+#else
 		TE_EXPLFLAG_NONE,
+#endif
 		m_DmgRadius,
 		m_flDamage );
+
+#ifdef C17
+	// Only do these effects if we're not submerged
+	if (!(UTIL_PointContents(GetAbsOrigin()) & CONTENTS_WATER))
+	{
+		DispatchParticleEffect("grenade_explosion_main", GetAbsOrigin(), vec3_angle);
+		//DispatchParticleEffect( "weapon_grenade_attachments", GetAbsOrigin(), vec3_angle );
+	}
+#endif
 
 	Vector vecForward = GetAbsVelocity();
 	VectorNormalize(vecForward);

@@ -107,6 +107,12 @@ ConVar	sk_npc_dmg_ar2			( "sk_npc_dmg_ar2","0", FCVAR_REPLICATED);
 ConVar	sk_max_ar2				( "sk_max_ar2","0", FCVAR_REPLICATED);
 ConVar	sk_max_ar2_altfire		( "sk_max_ar2_altfire","0", FCVAR_REPLICATED);
 
+#ifdef C17
+ConVar	sk_plr_dmg_ar3("sk_plr_dmg_ar3", "0", FCVAR_REPLICATED);
+ConVar	sk_npc_dmg_ar3("sk_npc_dmg_ar3", "0", FCVAR_REPLICATED);
+ConVar	sk_max_ar3("sk_max_ar3", "0", FCVAR_REPLICATED);
+#endif
+
 ConVar	sk_plr_dmg_alyxgun		( "sk_plr_dmg_alyxgun","0", FCVAR_REPLICATED );
 ConVar	sk_npc_dmg_alyxgun		( "sk_npc_dmg_alyxgun","0", FCVAR_REPLICATED);
 ConVar	sk_max_alyxgun			( "sk_max_alyxgun","0", FCVAR_REPLICATED);
@@ -181,6 +187,10 @@ ConVar	sk_max_gauss_round		( "sk_max_gauss_round", "0", FCVAR_REPLICATED );
 ConVar	sk_npc_dmg_gunship			( "sk_npc_dmg_gunship", "0", FCVAR_REPLICATED );
 ConVar	sk_npc_dmg_gunship_to_plr	( "sk_npc_dmg_gunship_to_plr", "0", FCVAR_REPLICATED );
 
+#ifdef C17
+ConVar sv_regeneration_rate("sk_regeneration_rate", "2.0", FCVAR_REPLICATED);
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : iDmgType - 
@@ -206,7 +216,7 @@ bool CHalfLife2::Damage_IsTimeBased( int iDmgType )
 	// Damage types that are time-based.
 #ifdef HL2_EPISODIC
 	// This makes me think EP2 should have its own rules, but they are #ifdef all over in here.
-	return ( ( iDmgType & ( DMG_PARALYZE | DMG_NERVEGAS | DMG_POISON | DMG_RADIATION | DMG_DROWNRECOVER | DMG_ACID | DMG_SLOWBURN ) ) != 0 ); //Added a missing DMG type
+	return ( ( iDmgType & ( DMG_PARALYZE | DMG_NERVEGAS | DMG_POISON | DMG_RADIATION | DMG_DROWNRECOVER | DMG_SLOWBURN ) ) != 0 );
 #else
 	return BaseClass::Damage_IsTimeBased( iDmgType );
 #endif
@@ -1771,6 +1781,51 @@ bool CHalfLife2::ShouldBurningPropsEmitLight()
 
 #endif//CLIENT_DLL
 
+#ifdef C17
+int CHalfLife2::GetRegeneratingHealthMax(int iHealth)
+{
+	if (iHealth <= 0)
+		return 0;
+	else if (iHealth <= 20)
+		return 20;
+	else if (iHealth <= 40)
+		return 40;
+	else if (iHealth <= 60)
+		return 60;
+	else if (iHealth <= 80)
+		return 80;
+	else
+		return 100;
+}
+
+float CHalfLife2::GetRegeneratingHealthRate(void)
+{
+	/*#ifdef CLIENT_DLL
+	ConVarRef skill( "skill" );
+	if(!skill.IsValid())
+	return sv_regeneration_rate_easy.GetFloat();
+	switch( skill.GetInt() )
+	#else
+	switch( GetSkillLevel() )
+	#endif
+	{
+	case SKILL_EASY:
+	return sv_regeneration_rate_easy.GetFloat();
+
+	case SKILL_MEDIUM:
+	return sv_regeneration_rate_medium.GetFloat();
+
+	case SKILL_HARD:
+	return sv_regeneration_rate_hard.GetFloat();
+
+	default:
+	return 0.0f;
+	}*/
+
+	return sv_regeneration_rate.GetFloat();
+}
+#endif
+
 // ------------------------------------------------------------------------------------ //
 // Global functions.
 // ------------------------------------------------------------------------------------ //
@@ -1799,6 +1854,9 @@ CAmmoDef *GetAmmoDef()
 		bInitted = true;
 
 		def.AddAmmoType("AR2",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_ar2",			"sk_npc_dmg_ar2",			"sk_max_ar2",			BULLET_IMPULSE(200, 1225), 0 );
+#ifdef C17
+		def.AddAmmoType("AR3",				DMG_DISSOLVE,				TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_ar3",			"sk_npc_dmg_ar3",			"sk_max_ar3",			BULLET_IMPULSE(800, 8000), 0) ;
+#endif
 		def.AddAmmoType("AlyxGun",			DMG_BULLET,					TRACER_LINE,			"sk_plr_dmg_alyxgun",		"sk_npc_dmg_alyxgun",		"sk_max_alyxgun",		BULLET_IMPULSE(200, 1225), 0 );
 		def.AddAmmoType("Pistol",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_pistol",		"sk_npc_dmg_pistol",		"sk_max_pistol",		BULLET_IMPULSE(200, 1225), 0 );
 		def.AddAmmoType("SMG1",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_smg1",			"sk_npc_dmg_smg1",			"sk_max_smg1",			BULLET_IMPULSE(200, 1225), 0 );

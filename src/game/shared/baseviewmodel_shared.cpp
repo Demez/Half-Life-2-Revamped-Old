@@ -13,6 +13,7 @@
 #include "prediction.h"
 #include "client_virtualreality.h"
 #include "sourcevr/isourcevirtualreality.h"
+#include "ivieweffects.h"
 #else
 #include "vguiscreen.h"
 #endif
@@ -172,6 +173,7 @@ void CBaseViewModel::SpawnControlPanels()
 	{
 		Q_snprintf( buf, sizeof( buf ), pAttachmentNameLL, nPanel );
 		int nLLAttachmentIndex = pEntityToSpawnOn->LookupAttachment(buf);
+#ifndef C17
 		if (nLLAttachmentIndex <= 0)
 		{
 			// Try and use my panels then
@@ -181,17 +183,25 @@ void CBaseViewModel::SpawnControlPanels()
 			if (nLLAttachmentIndex <= 0)
 				return;
 		}
+#endif
 
 		Q_snprintf( buf, sizeof( buf ), pAttachmentNameUR, nPanel );
 		int nURAttachmentIndex = pEntityToSpawnOn->LookupAttachment(buf);
+#ifdef C17
+		if (nLLAttachmentIndex <= 0)
+			return;
+#else
 		if (nURAttachmentIndex <= 0)
 		{
 			// Try and use my panels then
 			Q_snprintf( buf, sizeof( buf ), pOrgUR, nPanel );
 			nURAttachmentIndex = pEntityToSpawnOn->LookupAttachment(buf);
+#endif
 			if (nURAttachmentIndex <= 0)
 				return;
+#ifdef C17
 		}
+#endif
 
 		const char *pScreenName;
 		weapon->GetControlPanelInfo( nPanel, pScreenName );
@@ -205,14 +215,22 @@ void CBaseViewModel::SpawnControlPanels()
 
 		// Compute the screen size from the attachment points...
 		matrix3x4_t	panelToWorld;
+#ifdef C17
+		bool a = pEntityToSpawnOn->GetAttachment(nLLAttachmentIndex, panelToWorld);
+#else
 		pEntityToSpawnOn->GetAttachment( nLLAttachmentIndex, panelToWorld );
+#endif
 
 		matrix3x4_t	worldToPanel;
 		MatrixInvert( panelToWorld, worldToPanel );
 
 		// Now get the lower right position + transform into panel space
 		Vector lr, lrlocal;
+#ifdef C17
+		bool b = pEntityToSpawnOn->GetAttachment(nURAttachmentIndex, panelToWorld);
+#else
 		pEntityToSpawnOn->GetAttachment( nURAttachmentIndex, panelToWorld );
+#endif
 		MatrixGetColumn( panelToWorld, 3, lr );
 		VectorTransform( lr, worldToPanel, lrlocal );
 
@@ -222,7 +240,11 @@ void CBaseViewModel::SpawnControlPanels()
 		CVGuiScreen *pScreen = CreateVGuiScreen( pScreenClassname, pScreenName, pEntityToSpawnOn, this, nLLAttachmentIndex );
 		pScreen->ChangeTeam( GetTeamNumber() );
 		pScreen->SetActualSize( flWidth, flHeight );
+#ifdef C17
+		pScreen->SetActive(true);
+#else
 		pScreen->SetActive( false );
+#endif
 		pScreen->MakeVisibleOnlyToTeammates( false );
 	
 #ifdef INVASION_DLL
@@ -378,34 +400,60 @@ void CBaseViewModel::SendViewModelMatchingSequence( int sequence )
 	ResetSequenceInfo();
 }
 
-#if defined( CLIENT_DLL )
-#include "ivieweffects.h"
+#ifdef C17
+void CBaseViewModel::CalcIronsights(Vector &pos, QAngle &ang)
+{
+	CBaseCombatWeapon *pWeapon = GetOwningWeapon();
+
+	if (!pWeapon)
+		return;
+
+	//get delta time for interpolation
+	float delta((gpGlobals->curtime - pWeapon->m_flIronsightedTime) / pWeapon->GetIronsightTime()); //modify this value to adjust how fast the interpolation is
+	float exp = (pWeapon->IsIronsighted()) ?
+		(delta > 1.0f) ? 1.0f : delta : //normal blending
+		(delta > 1.0f) ? 0.0f : 1.0f - delta; //reverse interpolation
+
+	if (exp == 0.0f) //fully not ironsighted; save performance
+		return;
+
+	Vector newPos = pos;
+	QAngle newAng = ang;
+
+	Vector vForward, vRight, vUp, vOffset;
+	AngleVectors(newAng, &vForward, &vRight, &vUp);
+	vOffset = pWeapon->GetIronsightPositionOffset();
+
+	newPos += vForward * vOffset.x;
+	newPos += vRight * vOffset.y;
+	newPos += vUp * vOffset.z;
+	newAng += pWeapon->GetIronsightAngleOffset();
+	//fov is handled by CBaseCombatWeapon
+
+	pos += (newPos - pos) * exp;
+	ang += (newAng - ang) * exp;
+}
+
+static ConVar v_shake_amplitude("v_shake_amplitude", "0.1", FCVAR_CHEAT);
 #endif
 
 void CBaseViewModel::CalcViewModelView( CBasePlayer *owner, const Vector& eyePosition, const QAngle& eyeAngles )
 {
 	// UNDONE: Calc this on the server?  Disabled for now as it seems unnecessary to have this info on the server
-//#if defined(CLIENT_DLL) || defined (HL2_DLL)
-//#if defined(CLIENT_DLL)
+#if defined( CLIENT_DLL )
 	QAngle vmangoriginal = eyeAngles;
 	QAngle vmangles = eyeAngles;
 	Vector vmorigin = eyePosition;
 
-	static ConVar viewmodel_offset_x("viewmodel_offset_x", "0.0", FCVAR_REPLICATED | FCVAR_ARCHIVE);	 // the viewmodel offset from default in X
-	static ConVar viewmodel_offset_y("viewmodel_offset_y", "0.0", FCVAR_REPLICATED | FCVAR_ARCHIVE);	 // the viewmodel offset from default in Y
-	static ConVar viewmodel_offset_z("viewmodel_offset_z", "0.0", FCVAR_REPLICATED | FCVAR_ARCHIVE);	 // the viewmodel offset from default in Z
-
-	//viewmodel_offset
-	Vector vecRight;
-	Vector vecUp;
-	Vector vecForward;
-	AngleVectors(vmangoriginal, &vecForward, &vecRight, &vecUp);
-	//Vector vecOffset = Vector( viewmodel_offset_x.GetFloat(), viewmodel_offset_y.GetFloat(), viewmodel_offset_z.GetFloat() ); 
-	vmorigin += (vecForward * viewmodel_offset_y.GetFloat()) + (vecUp * viewmodel_offset_z.GetFloat()) + (vecRight * viewmodel_offset_x.GetFloat());
-
 	CBaseCombatWeapon *pWeapon = m_hWeapon.Get();
 	//Allow weapon lagging
+#ifdef C17
+	//only if not in ironsight-mode
+	if (pWeapon != NULL && !pWeapon->IsIronsighted_ViewModel())
+#else
 	if ( pWeapon != NULL )
+#endif
+#ifndef C17
 	{
 #if defined( CLIENT_DLL )
 		if ( !prediction->InPrediction() )
@@ -420,6 +468,7 @@ void CBaseViewModel::CalcViewModelView( CBasePlayer *owner, const Vector& eyePos
 	}
 	// Add model-specific bob even if no weapon associated (for head bob for off hand models)
 	AddViewModelBob( owner, vmorigin, vmangles );
+#endif
 #if !defined ( CSTRIKE_DLL )
 	// This was causing weapon jitter when rotating in updated CS:S; original Source had this in above InPrediction block  07/14/10
 	// Add lag
@@ -430,14 +479,22 @@ void CBaseViewModel::CalcViewModelView( CBasePlayer *owner, const Vector& eyePos
 	if ( !prediction->InPrediction() )
 	{
 		// Let the viewmodel shake at about 10% of the amplitude of the player's view
+#ifdef C17
+		vieweffects->ApplyShake(vmorigin, vmangles, v_shake_amplitude.GetFloat());
+#else
 		vieweffects->ApplyShake( vmorigin, vmangles, 0.1 );	
+#endif
 	}
 #endif
 
-	//if( UseVR() )
-	//{
-	//	g_ClientVirtualReality.OverrideViewModelTransform( vmorigin, vmangles, pWeapon && pWeapon->ShouldUseLargeViewModelVROverride() );
-	//}
+	if( UseVR() )
+	{
+		g_ClientVirtualReality.OverrideViewModelTransform( vmorigin, vmangles, pWeapon && pWeapon->ShouldUseLargeViewModelVROverride() );
+	}
+
+#ifdef C17
+	CalcIronsights(vmorigin, vmangles);
+#endif
 
 	SetLocalOrigin( vmorigin );
 	SetLocalAngles( vmangles );
@@ -468,15 +525,22 @@ void CBaseViewModel::CalcViewModelView( CBasePlayer *owner, const Vector& eyePos
 		SetLocalAngles( vmangles );
 	}
 #endif
-//#endif
+#endif
 
 }
 
-/*
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+#ifdef C17
+static ConVar v_maxlag("v_maxlag", "1.5", FCVAR_CHEAT | FCVAR_CLIENTDLL);
+static ConVar v_lagspeed("v_lagspeed", "5.0", FCVAR_CHEAT | FCVAR_CLIENTDLL);
+static ConVar v_lag_pitchmul_forward("v_lag_pitchmul_forward", "0.035", FCVAR_CHEAT | FCVAR_CLIENTDLL);
+static ConVar v_lag_pitchmul_right("v_lag_pitchmul_right", "0.03", FCVAR_CHEAT | FCVAR_CLIENTDLL);
+static ConVar v_lag_pitchmul_up("v_lag_pitchmul_up", "0.02", FCVAR_CHEAT | FCVAR_CLIENTDLL);
+#else
 float g_fMaxViewModelLag = 1.5f;
+#endif
 
 void CBaseViewModel::CalcViewModelLag( Vector& origin, QAngle& angles, QAngle& original_angles )
 {
@@ -492,16 +556,24 @@ void CBaseViewModel::CalcViewModelLag( Vector& origin, QAngle& angles, QAngle& o
 		Vector vDifference;
 		VectorSubtract( forward, m_vecLastFacing, vDifference );
 
-		static ConVar viewmodel_sway_speed("viewmodel_sway_speed", "5.0");
-		//float flSpeed = 5.0f;
-		float flSpeed = viewmodel_sway_speed.GetFloat();
+#ifdef C17
+		float flSpeed = v_lagspeed.GetFloat();
+#else
+		float flSpeed = 5.0f;
+#endif
 
 		// If we start to lag too far behind, we'll increase the "catch up" speed.  Solves the problem with fast cl_yawspeed, m_yaw or joysticks
 		//  rotating quickly.  The old code would slam lastfacing with origin causing the viewmodel to pop to a new position
 		float flDiff = vDifference.Length();
+#ifdef C17
+		if ((flDiff > v_maxlag.GetFloat()) && (v_maxlag.GetFloat() > 0.0f))
+		{
+			float flScale = flDiff / v_maxlag.GetFloat();
+#else
 		if ( (flDiff > g_fMaxViewModelLag) && (g_fMaxViewModelLag > 0.0f) )
-		{	
+		{
 			float flScale = flDiff / g_fMaxViewModelLag;
+#endif
 			flSpeed *= flScale;
 		}
 
@@ -509,9 +581,11 @@ void CBaseViewModel::CalcViewModelLag( Vector& origin, QAngle& angles, QAngle& o
 		VectorMA( m_vecLastFacing, flSpeed * gpGlobals->frametime, vDifference, m_vecLastFacing );
 		// Make sure it doesn't grow out of control!!!
 		VectorNormalize( m_vecLastFacing );
-		static ConVar viewmodel_sway_scale("viewmodel_sway_scale", "1.0");
-		static ConVar viewmodel_sway_scale2("viewmodel_sway_scale2", "-1.0");
-		VectorMA(origin, viewmodel_sway_scale.GetFloat(), vDifference * viewmodel_sway_scale2.GetFloat(), origin); //5.0f and -1.0f
+#ifdef C17
+		VectorMA(origin, v_lagspeed.GetFloat(), vDifference * -1.0f, origin);
+#else
+		VectorMA( origin, 5.0f, vDifference * -1.0f, origin );
+#endif
 
 		Assert( m_vecLastFacing.IsValid() );
 	}
@@ -525,80 +599,26 @@ void CBaseViewModel::CalcViewModelLag( Vector& origin, QAngle& angles, QAngle& o
 	else if ( pitch < -180.0f )
 		pitch += 360.0f;
 
+#ifdef C17
+	if (v_maxlag.GetFloat() == 0.0f)
+#else
 	if ( g_fMaxViewModelLag == 0.0f )
+#endif
 	{
 		origin = vOriginalOrigin;
 		angles = vOriginalAngles;
 	}
 
 	//FIXME: These are the old settings that caused too many exposed polys on some models
+#ifdef C17
+	VectorMA(origin, -pitch * v_lag_pitchmul_forward.GetFloat(), forward, origin);
+	VectorMA(origin, -pitch * v_lag_pitchmul_right.GetFloat(), right, origin);
+	VectorMA(origin, -pitch * v_lag_pitchmul_up.GetFloat(), up, origin);
+#else
 	VectorMA( origin, -pitch * 0.035f,	forward,	origin );
 	VectorMA( origin, -pitch * 0.03f,		right,	origin );
 	VectorMA( origin, -pitch * 0.02f,		up,		origin);
-}
-*/
-
-//-----------------------------------------------------------------------------
-// Purpose: 
-//-----------------------------------------------------------------------------
-
-float g_fMaxViewModelLag = 0.0f;
-
-void CBaseViewModel::CalcViewModelLag(Vector& origin, QAngle& angles, QAngle& original_angles)
-{
-	Vector vOriginalOrigin = origin;
-	QAngle vOriginalAngles = angles;
-
-	// Calculate our drift
-	Vector	forward;
-	AngleVectors(angles, &forward, NULL, NULL);
-
-	if (gpGlobals->frametime != 0.0f)
-	{
-		Vector vDifference;
-		VectorSubtract(forward, m_vecLastFacing, vDifference);
-
-		float flSpeed = 5.0f;
-
-		// If we start to lag too far behind, we'll increase the "catch up" speed.  Solves the problem with fast cl_yawspeed, m_yaw or joysticks
-		//  rotating quickly.  The old code would slam lastfacing with origin causing the viewmodel to pop to a new position
-		float flDiff = vDifference.Length();
-		if ((flDiff > g_fMaxViewModelLag) && (g_fMaxViewModelLag > 0.0f))
-		{
-			float flScale = flDiff / g_fMaxViewModelLag;
-			flSpeed *= flScale;
-		}
-
-		// FIXME:  Needs to be predictable?
-		VectorMA(m_vecLastFacing, flSpeed * gpGlobals->frametime, vDifference, m_vecLastFacing);
-		// Make sure it doesn't grow out of control!!!
-		VectorNormalize(m_vecLastFacing);
-		VectorMA(origin, 3.0f, vDifference * -1.0f, origin);
-
-		Assert(m_vecLastFacing.IsValid());
-	}
-
-	//Vector right, up;
-	//AngleVectors( original_angles, &forward, &right, &up );
-
-	float pitch = original_angles[PITCH];
-
-	if (pitch > 180.0f)
-		pitch -= 360.0f;
-	else if (pitch < -180.0f)
-		pitch += 360.0f;
-
-
-	if (g_fMaxViewModelLag == 0.0f)
-	{
-		origin = vOriginalOrigin;
-		angles = vOriginalAngles;
-	}
-
-	//FIXME: These are the old settings that caused too many exposed polys on some models
-	//VectorMA( origin, -pitch * 0.0f,	forward,	origin );
-	//VectorMA( origin, -pitch * 0.0f,		right,	origin );
-	//VectorMA( origin, -pitch * 0.0f,		up,		origin);
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -769,5 +789,4 @@ bool CBaseViewModel::GetAttachmentVelocity( int number, Vector &originVel, Quate
 
 	return BaseClass::GetAttachmentVelocity( number, originVel, angleVel );
 }
-
 #endif

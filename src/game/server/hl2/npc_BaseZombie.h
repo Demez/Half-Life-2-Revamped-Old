@@ -285,6 +285,10 @@ protected:
 
 private:
 	bool m_bIsSlumped;
+#ifdef C17
+	bool m_bFlies;
+	int FliesChance(void);
+#endif
 
 };
 

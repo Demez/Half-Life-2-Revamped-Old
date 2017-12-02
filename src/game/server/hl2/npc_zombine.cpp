@@ -169,6 +169,11 @@ private:
 	
 	int		m_iGrenadeCount;
 
+#ifdef C17
+	int		m_iZombineSkin;
+	int		FliesChance(void);
+#endif
+
 	EHANDLE	m_hGrenade;
 
 protected:
@@ -196,12 +201,39 @@ const char *CNPC_Zombine::pMoanSounds[] =
 	"ATV_engine_null",
 };
 
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: Defines the chances of spawning with the fly particle.
+// Input  :
+// Output :
+//-----------------------------------------------------------------------------
+int CNPC_Zombine::FliesChance(void)
+{
+	return random->RandomInt(1, 8);
+}
+#endif
+
 void CNPC_Zombine::Spawn( void )
 {
 	Precache();
 
 	m_fIsTorso = false;
 	m_fIsHeadless = false;
+
+#ifdef C17
+	int ShotgunChance = random->RandomInt(1, 5);
+	if (ShotgunChance == 5)
+	{
+		m_iZombineSkin = 1;
+}
+	else
+	{
+		m_iZombineSkin = 2;
+	}
+#if 0
+	m_iZombineSkin = random->RandomInt(1,2);
+#endif
+#endif
 	
 #ifdef HL2_EPISODIC
 	SetBloodColor( BLOOD_COLOR_ZOMBIE );
@@ -255,6 +287,9 @@ void CNPC_Zombine::Precache( void )
 void CNPC_Zombine::SetZombieModel( void )
 {
 	SetModel( "models/zombie/zombie_soldier.mdl" );
+#ifdef C17
+	m_nSkin = m_iZombineSkin;
+#endif
 	SetHullType( HULL_HUMAN );
 
 	SetBodygroup( ZOMBIE_BODYGROUP_HEADCRAB, !m_fIsHeadless );

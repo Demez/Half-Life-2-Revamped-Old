@@ -158,6 +158,13 @@ public:
 	// Client only, tracks whether we've predicted this command at least once
 	bool	hasbeenpredicted;
 
+#ifdef C17_HAPTICS
+#if !defined( CLIENT_DLL )
+	// Haptics true if client is using haptics. ( only server side. )
+	bool	haptics;
+#endif
+#endif
+
 	// Back channel to communicate IK state
 #if defined( HL2_DLL ) || defined( HL2_CLIENT_DLL )
 	CUtlVector< CEntityGroundContact > entitygroundcontact;

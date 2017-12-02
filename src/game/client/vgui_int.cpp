@@ -23,6 +23,15 @@
 #include <KeyValues.h>
 #include "filesystem.h"
 #include "matsys_controls/matsyscontrols.h"
+#if 0
+#ifdef C17
+#include "city17/c17_OptionsDialog.h"
+#include "city17/c17_AchievementsDialog.h"
+//Tony; so we can load localization at initialize
+#include <vgui/ILocalize.h>
+#include <tier3/tier3.h>
+#endif
+#endif
 
 #ifdef SIXENSE
 #include "sixense/in_sixense.h"
@@ -36,6 +45,12 @@ using namespace vgui;
 
 void MP3Player_Create( vgui::VPANEL parent );
 void MP3Player_Destroy();
+#if 0
+#ifdef C17
+void C17Options_Destroy();
+void C17Achievements_Destroy();
+#endif
+#endif
 
 #include <vgui/IInputInternal.h>
 vgui::IInputInternal *g_InputInternal = NULL;
@@ -240,6 +255,13 @@ void VGui_Shutdown()
 	messagechars->Destroy();
 	loadingdisc->Destroy();
 	internalCenterPrint->Destroy();
+
+#if 0
+#ifdef C17
+	C17Options_Destroy();
+	C17Achievements_Destroy();
+#endif
+#endif
 
 	if ( g_pClientMode )
 	{

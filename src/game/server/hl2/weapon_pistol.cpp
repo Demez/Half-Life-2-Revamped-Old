@@ -17,6 +17,9 @@
 #include "game.h"
 #include "vstdlib/random.h"
 #include "gamestats.h"
+#ifdef C17
+#include "particle_parse.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -63,13 +66,21 @@ public:
 	virtual const Vector& GetBulletSpread( void )
 	{		
 		// Handle NPCs first
+#ifdef C17
+		static Vector npcCone = VECTOR_CONE_3DEGREES;
+#else
 		static Vector npcCone = VECTOR_CONE_5DEGREES;
+#endif
 		if ( GetOwner() && GetOwner()->IsNPC() )
 			return npcCone;
 			
 		static Vector cone;
 
+#ifdef C17
+		if (!(m_bIsIronsighted))
+#else
 		if ( pistol_use_new_accuracy.GetBool() )
+#endif
 		{
 			float ramp = RemapValClamped(	m_flAccuracyPenalty, 
 											0.0f, 
@@ -78,7 +89,11 @@ public:
 											1.0f ); 
 
 			// We lerp from very accurate to inaccurate over time
+#ifdef C17
+			VectorLerp(VECTOR_CONE_1DEGREES, VECTOR_CONE_3DEGREES, ramp, cone);
+#else
 			VectorLerp( VECTOR_CONE_1DEGREES, VECTOR_CONE_6DEGREES, ramp, cone );
+#endif
 		}
 		else
 		{
@@ -103,6 +118,10 @@ public:
 	{
 		return 0.5f; 
 	}
+
+#ifdef C17
+	const char *GetTracerType(void) { return "gunfire_pistol_beams"; }
+#endif
 
 	DECLARE_ACTTABLE();
 
@@ -188,6 +207,13 @@ void CWeaponPistol::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCh
 			Vector vecShootOrigin, vecShootDir;
 			vecShootOrigin = pOperator->Weapon_ShootPosition();
 
+#ifdef C17
+			Vector vecShootOrigin2; //The origin of the shot 
+			QAngle	angShootDir2;    //The angle of the shot
+
+			GetAttachment(LookupAttachment("muzzle"), vecShootOrigin2, angShootDir2);
+#endif
+
 			CAI_BaseNPC *npc = pOperator->MyNPCPointer();
 			ASSERT( npc != NULL );
 
@@ -195,9 +221,15 @@ void CWeaponPistol::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCh
 
 			CSoundEnt::InsertSound( SOUND_COMBAT|SOUND_CONTEXT_GUNFIRE, pOperator->GetAbsOrigin(), SOUNDENT_VOLUME_PISTOL, 0.2, pOperator, SOUNDENT_CHANNEL_WEAPON, pOperator->GetEnemy() );
 
+#ifdef C17
+			DispatchParticleEffect("muzzle_pistol", vecShootOrigin2, angShootDir2);
+#endif
+
 			WeaponSound( SINGLE_NPC );
 			pOperator->FireBullets( 1, vecShootOrigin, vecShootDir, VECTOR_CONE_PRECALCULATED, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 2 );
+#ifndef C17
 			pOperator->DoMuzzleFlash();
+#endif
 			m_iClip1 = m_iClip1 - 1;
 		}
 		break;
@@ -213,10 +245,19 @@ void CWeaponPistol::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCh
 void CWeaponPistol::DryFire( void )
 {
 	WeaponSound( EMPTY );
+#ifndef C17 //No recoil for dryfired animation.
 	SendWeaponAnim( ACT_VM_DRYFIRE );
+#else
+	// turn off ironsights
+	DisableIronsights();
+#endif
 	
 	m_flSoonestPrimaryAttack	= gpGlobals->curtime + PISTOL_FASTEST_DRY_REFIRE_TIME;
+#ifndef C17
 	m_flNextPrimaryAttack		= gpGlobals->curtime + SequenceDuration();
+#else
+	m_flNextPrimaryAttack = gpGlobals->curtime + 0.5f;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -239,6 +280,7 @@ void CWeaponPistol::PrimaryAttack( void )
 
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 
+#ifndef C17
 	if( pOwner )
 	{
 		// Each time the player fires the pistol, reset the view punch. This prevents
@@ -247,6 +289,7 @@ void CWeaponPistol::PrimaryAttack( void )
 		// great for a feature we're evaluating. (sjb)
 		pOwner->ViewPunchReset();
 	}
+#endif
 
 	BaseClass::PrimaryAttack();
 
@@ -364,7 +407,11 @@ void CWeaponPistol::AddViewKick( void )
 
 	QAngle	viewPunch;
 
+#ifdef C17
+	viewPunch.x = random->RandomFloat(-0.25f, -0.5f);
+#else
 	viewPunch.x = random->RandomFloat( 0.25f, 0.5f );
+#endif
 	viewPunch.y = random->RandomFloat( -.6f, .6f );
 	viewPunch.z = 0.0f;
 

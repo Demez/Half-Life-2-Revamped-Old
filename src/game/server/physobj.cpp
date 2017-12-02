@@ -1664,7 +1664,11 @@ void CPhysMagnet::VPhysicsCollision( int index, gamevcollisionevent_t *pEvent )
 	// Make sure it's made of metal
 	const surfacedata_t *phit = physprops->GetSurfaceData( pEvent->surfaceProps[otherIndex] );
 	char cTexType = phit->game.material;
+#ifdef C17
+	if (cTexType != CHAR_TEX_METAL && cTexType != CHAR_TEX_COMPUTER && cTexType != CHAR_TEX_EXPLOSIVE)
+#else
 	if ( cTexType != CHAR_TEX_METAL && cTexType != CHAR_TEX_COMPUTER )
+#endif
 	{
 		// If we don't have a model, we're done. The texture we hit wasn't metal.
 		if ( !pOther->GetBaseAnimating() )

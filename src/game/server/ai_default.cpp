@@ -963,6 +963,10 @@ AI_DEFINE_SCHEDULE
 	"		COND_LIGHT_DAMAGE"
 	"		COND_HEAVY_DAMAGE"
 	"		COND_HEAR_DANGER"
+	"		COND_HEAR_PLAYER"
+	"		COND_HEAR_BULLET_IMPACT"
+	"		COND_HEAR_COMBAT"
+	"		COND_HEAR_WORLD"
 );
 
 //=========================================================

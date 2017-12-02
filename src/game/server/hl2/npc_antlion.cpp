@@ -2543,7 +2543,7 @@ int CNPC_Antlion::SelectSchedule( void )
 
 void CNPC_Antlion::Ignite ( float flFlameLifetime, bool bNPCOnly, float flSize, bool bCalledByLevelDesigner )
 {
-#ifdef HL2_EPISODIC
+#if defined HL2_EPISODIC && !defined C17
 	float flDamage = m_iHealth + 1;
 
 	CTakeDamageInfo	dmgInfo( this, this, flDamage, DMG_GENERIC );
@@ -3503,6 +3503,10 @@ void CNPC_Antlion::CreateDust( bool placeDecal )
 
 		if ( hl2_episodic.GetBool() == true || ( pdata->game.material == CHAR_TEX_CONCRETE ) || 
 			 ( pdata->game.material == CHAR_TEX_DIRT ) ||
+#ifdef C17
+			 (pdata->game.material == CHAR_TEX_PLASTER) ||
+			 (pdata->game.material == CHAR_TEX_BRICK) ||
+#endif
 			 ( pdata->game.material == CHAR_TEX_SAND ) ) 
 		{
 

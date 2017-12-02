@@ -1,18 +1,19 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
 // $NoKeywords: $
 //=============================================================================//
 
-#ifndef C_ENVPROJECTEDTEXTURE_H
-#define C_ENVPROJECTEDTEXTURE_H
+#ifndef C_ENVPROJECTED_TEXTURE_H
+#define C_ENVPROJECTED_TEXTURE_H
 #ifdef _WIN32
 #pragma once
 #endif
 
 #include "c_baseentity.h"
 #include "basetypes.h"
+
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -23,16 +24,15 @@ class C_EnvProjectedTexture : public C_BaseEntity
 public:
 	DECLARE_CLIENTCLASS();
 
-	//city17ep1 projtex
-	//void SetLightColor(byte r, byte g, byte b, byte a);
-	//
+	void SetLightColor(byte r, byte g, byte b, byte a);
 
 	virtual void OnDataChanged(DataUpdateType_t updateType);
 	void	ShutDownLightHandle(void);
 
-	virtual void Simulate(); //this was changed to a bool, but i dont even want to bother with this. its too much changing
+	virtual void Simulate();
 
-	void	UpdateLight( void );
+	bool	IsWithinFarZ(float flLightFOV);
+	void	UpdateLight(void);
 
 	C_EnvProjectedTexture();
 	~C_EnvProjectedTexture();
@@ -42,45 +42,41 @@ public:
 	static C_EnvProjectedTexture *Create();
 
 private:
-	
+
 	inline bool IsBBoxVisible(void);
 	bool IsBBoxVisible(Vector vecExtentsMin,
-					   Vector vecExtentsMax);
+		Vector vecExtentsMax);
 
 	ClientShadowHandle_t m_LightHandle;
-
-	//projtex caching
 	bool m_bForceUpdate;
-	//
 
 	EHANDLE	m_hTargetEntity;
 
-	bool	m_bState;
-	//projtex caching		
-	bool	m_bAlwaysUpdate;
-	//
-	float	m_flLightFOV;
-	bool	m_bEnableShadows;
-	bool	m_bLightOnlyTarget;
-	bool	m_bLightWorld;
-	bool	m_bCameraSpace;
-	//projtex brightness
-	//float	m_flBrightnessScale;
-	//
-	Vector	m_LinearFloatLightColor;
-	//city17ep1 projtex
-	/*color32     m_LightColor;
+	bool		m_bState;
+	bool		m_bAlwaysUpdate;
+	float		m_flLightFOV;
+	float		m_flLightHorFOV;
+	bool		m_bEnableShadows;
+	bool		m_bLightOnlyTarget;
+	bool		m_bLightWorld;
+	bool		m_bCameraSpace;
+	bool		m_bAtten;
+	bool		m_bClientWantsShadows;
+	color32		m_LightColor;
+	float		m_fBrightness;
 	Vector		m_CurrentLinearFloatLightColor;
 	float		m_flCurrentLinearFloatLightAlpha;
 	float		m_flColorTransitionTime;
-	float		m_fBrightness;*/
-	//
-	float	m_flAmbient;
-	float	m_flNearZ;
-	float	m_flFarZ;
-	char	m_SpotlightTextureName[MAX_PATH];
-	int		m_nSpotlightTextureFrame;
-	int		m_nShadowQuality;
+	float		m_flAmbient;
+	float		m_flNearZ;
+	float		m_flFarZ;
+	float		m_flAtten;
+	float		m_flQuadratic;
+	char		m_SpotlightTextureName[MAX_PATH];
+	char		m_SpotlightDX8TextureName[MAX_PATH];
+	CTextureReference m_SpotlightTexture;
+	int			m_nSpotlightTextureFrame;
+	int			m_nShadowQuality;
 
 	Vector	m_vecExtentsMin;
 	Vector	m_vecExtentsMax;
@@ -88,11 +84,11 @@ private:
 	static float m_flVisibleBBoxMinHeight;
 };
 
+/*
 bool C_EnvProjectedTexture::IsBBoxVisible(void)
 {
 	return IsBBoxVisible(GetAbsOrigin() + m_vecExtentsMin, GetAbsOrigin() + m_vecExtentsMax);
 }
+*/
 
-//C_EnvProjectedTexture* GetEnvProjectedTextureList();
-
-#endif // C_ENVPROJECTEDTEXTURE_H
+#endif // C_ENV_PROJECTED_TEXTURE_H

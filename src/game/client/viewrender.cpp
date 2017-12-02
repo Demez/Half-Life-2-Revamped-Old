@@ -50,12 +50,13 @@
 #include "renderparm.h"
 #include "studio_stats.h"
 #include "con_nprint.h"
-//3D-Grass
-//#include "ShaderEditor/Grass/CGrassCluster.h"
-//
 #include "clientmode_shared.h"
 #include "sourcevr/isourcevirtualreality.h"
 #include "client_virtualreality.h"
+#ifdef C17
+#include "city17/c17_screeneffects.h"
+#include "renderparm.h"
+#endif
 
 #ifdef PORTAL
 //#include "C_Portal_Player.h"
@@ -78,7 +79,12 @@
 #endif // USE_MONITORS
 
 // Projective textures
-#include "c_env_projectedtexture.h"
+#include "C_Env_Projected_Texture.h"
+
+#ifdef C17
+// Shader Editor
+#include "ShaderEditor/ShaderEditorSystem.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -172,6 +178,34 @@ static ConVar pyro_dof( "pyro_dof", "1", FCVAR_ARCHIVE );
 #endif
 
 extern ConVar cl_leveloverview;
+
+#ifdef C17
+void ps30_shader_callback(IConVar *pConVar, char const *pOldString, float flOldValue)
+{
+	ConVarRef var(pConVar);
+
+	if (var.GetBool() && !(g_pMaterialSystemHardwareConfig->SupportsShaderModel_3_0()))
+	{
+		var.SetValue("0");
+		Warning("Your GPU does not support Shader Model 3.0! Changes undone!\n");
+	}
+}
+ConVar r_post_sunshaft("r_post_sunshaft", "0", FCVAR_ARCHIVE, 0, ps30_shader_callback);
+ConVar r_post_anamorphic_bloom("r_post_anamorphic_bloom", "0", FCVAR_ARCHIVE, 0, ps30_shader_callback);
+ConVar r_post_fxaa("r_post_fxaa", "0", FCVAR_ARCHIVE, 0, ps30_shader_callback);
+
+void ps20b_shader_callback(IConVar *pConVar, char const *pOldString, float flOldValue)
+{
+	ConVarRef var(pConVar);
+
+	if (var.GetBool() && !(g_pMaterialSystemHardwareConfig->SupportsPixelShaders_2_b()))
+	{
+		var.SetValue("0");
+		Warning("Your GPU does not support Shader Model 2.0b! Changes undone!\n");
+	}
+}
+ConVar r_post_complements("r_post_complements", "0", FCVAR_CHEAT, 0, ps20b_shader_callback);
+#endif
 
 extern ConVar localplayer_visionflags;
 
@@ -383,7 +417,11 @@ public:
 	  {
 	  }
 
+#ifdef C17
+	bool			Setup(const CViewSetup &view, int *pClearFlags, SkyboxVisibility_t *pSkyboxVisible, bool bOcclusionPassIn = false);
+#else
 	bool			Setup( const CViewSetup &view, int *pClearFlags, SkyboxVisibility_t *pSkyboxVisible );
+#endif
 	void			Draw();
 
 protected:
@@ -395,6 +433,9 @@ protected:
 	virtual SkyboxVisibility_t	ComputeSkyboxVisibility();
 
 	bool			GetSkyboxFogEnable();
+#ifdef C17
+	bool			bOcclusionPass;
+#endif
 
 	void			Enable3dSkyboxFog( void );
 	void			DrawInternal( view_id_t iSkyBoxViewID, bool bInvokePreAndPostRender, ITexture *pRenderTarget, ITexture *pDepthTarget );
@@ -935,6 +976,9 @@ CViewRender::CViewRender()
 {
 	m_flCheapWaterStartDistance = 0.0f;
 	m_flCheapWaterEndDistance = 0.1f;
+#ifdef C17
+	m_flViewModelBlurAmount = 0.0f;
+#endif
 	m_BaseDrawFlags = 0;
 	m_pActiveRenderer = NULL;
 	m_pCurrentlyDrawingEntity = NULL;
@@ -1051,6 +1095,21 @@ void CViewRender::DrawViewModels( const CViewSetup &view, bool drawViewmodel )
 	// Restore the matrices
 	pRenderContext->MatrixMode( MATERIAL_PROJECTION );
 	pRenderContext->PushMatrix();
+
+#if 0
+#ifdef C17
+	pRenderContext->LoadIdentity();
+	pRenderContext->PerspectiveOffCenterX(
+		view.fovViewmodel, //fov
+		engine->GetScreenAspectRatio(), // * 0.75f, // aspect
+		view.zNearViewmodel, //z near
+		view.zFarViewmodel, //z far
+		0.0f - fa_vanish_viewModScale * offVert, // bottom
+		1.0f - fa_vanish_viewModScale * offVert, // top
+		0.0f - fa_vanish_viewModScale * offHor, // left
+		1.0f - fa_vanish_viewModScale * offHor); // right
+#endif
+#endif
 
 	CViewSetup viewModelSetup( view );
 	viewModelSetup.zNear = view.zNearViewmodel;
@@ -1226,6 +1285,7 @@ void CViewRender::PerformScreenOverlay( int x, int y, int w, int h )
 	}
 }
 
+#ifndef C17
 void CViewRender::DrawUnderwaterOverlay( void )
 {
 	IMaterial *pOverlayMat = m_UnderWaterOverlayMaterial;
@@ -1267,6 +1327,7 @@ void CViewRender::DrawUnderwaterOverlay( void )
 		}
 	}
 }
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Returns the min/max fade distances
@@ -1322,6 +1383,9 @@ void CViewRender::ViewDrawScene( bool bDrew3dSkybox, SkyboxVisibility_t nSkyboxV
 
 	// this allows the refract texture to be updated once per *scene* on 360
 	// (e.g. once for a monitor scene and once for the main scene)
+#ifdef C17
+	if ( /*viewID != VIEW_SUN_SHAFTS &&*/ viewID != VIEW_SHADOW_DEPTH_TEXTURE)
+#endif
 	g_viewscene_refractUpdateFrame = gpGlobals->framecount - 1;
 
 	g_pClientShadowMgr->PreRender();
@@ -1360,6 +1424,11 @@ void CViewRender::ViewDrawScene( bool bDrew3dSkybox, SkyboxVisibility_t nSkyboxV
 
 	ParticleMgr()->IncrementFrameCode();
 
+#ifdef C17
+	//if( CurrentViewID() == VIEW_SUN_SHAFTS )
+	CGlowOverlay::DrawOverlays(view.m_bCacheFullSceneState);
+#endif
+
 	DrawWorldAndEntities( drawSkybox, view, nClearFlags, pCustomVisibility );
 
 	// Disable fog for the rest of the stuff
@@ -1369,7 +1438,6 @@ void CViewRender::ViewDrawScene( bool bDrew3dSkybox, SkyboxVisibility_t nSkyboxV
 	// render->DrawMaskEntities()
 
 	// Here are the overlays...
-
 	CGlowOverlay::DrawOverlays( view.m_bCacheFullSceneState );
 
 	// issue the pixel visibility tests
@@ -1914,7 +1982,9 @@ const char *COM_GetModDirectory();
 // This renders the entire 3D view.
 void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatToDraw )
 {
+#ifndef C17
 	m_UnderWaterOverlayMaterial.Shutdown();					// underwater view will set
+#endif
 
 	m_CurrentView = view;
 
@@ -1988,6 +2058,9 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 		if ( ( bDrew3dSkybox = pSkyView->Setup( view, &nClearFlags, &nSkyboxVisible ) ) != false )
 		{
 			AddViewToScene( pSkyView );
+#ifdef C17
+			g_ShaderEditorSystem->UpdateSkymask();
+#endif
 		}
 		SafeRelease( pSkyView );
 
@@ -2038,6 +2111,16 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 				}
 				pRenderContext.SafeRelease();
 			}
+
+#ifdef C17
+			if (!building_cubemaps.GetBool())
+			{
+				if (view.m_bDoBloomAndToneMapping)
+				{
+					PerformPreViewmodelPostProcessEffects(view.x, view.y, view.width, view.height);
+				}
+			}
+#endif
 		}
 
 		GetClientModeNormal()->DoPostScreenSpaceEffects( &view );
@@ -2045,6 +2128,7 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 		// Now actually draw the viewmodel
 		DrawViewModels( view, whatToDraw & RENDERVIEW_DRAWVIEWMODEL );
 
+#ifndef C17
 		DrawUnderwaterOverlay();
 
 		PixelVisibility_EndScene();
@@ -2061,28 +2145,66 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 		IMaterial* pMaterial = blend ? m_ModulateSingleColor : m_TranslucentSingleColor;
 		render->ViewDrawFade( color, pMaterial );
 		PerformScreenOverlay( view.x, view.y, view.width, view.height );
+#else
+		g_ShaderEditorSystem->UpdateSkymask(bDrew3dSkybox);
+		PixelVisibility_EndScene();
+#endif
 
 		// Prevent sound stutter if going slow
 		engine->Sound_ExtraUpdate();	
 	
+#ifdef C17
+		// And here are the screen-space effects
+		if (!building_cubemaps.GetBool())
+#else
 		if ( !building_cubemaps.GetBool() && view.m_bDoBloomAndToneMapping )
+#endif
 		{
 			pRenderContext.GetFrom( materials );
 			{
-				PIXEVENT( pRenderContext, "DoEnginePostProcessing" );
-
-				bool bFlashlightIsOn = false;
-				C_BasePlayer *pLocal = C_BasePlayer::GetLocalPlayer();
-				if ( pLocal )
+#ifdef C17
+				if (view.m_bDoBloomAndToneMapping)
+#endif
 				{
-					bFlashlightIsOn = pLocal->IsEffectActive( EF_DIMLIGHT );
+					PIXEVENT(pRenderContext, "DoEnginePostProcessing");
+
+					bool bFlashlightIsOn = false;
+					C_BasePlayer *pLocal = C_BasePlayer::GetLocalPlayer();
+					if (pLocal)
+					{
+						bFlashlightIsOn = pLocal->IsEffectActive(EF_DIMLIGHT);
+					}
+					DoEnginePostProcessing(view.x, view.y, view.width, view.height, bFlashlightIsOn);
 				}
-				DoEnginePostProcessing( view.x, view.y, view.width, view.height, bFlashlightIsOn );
+#ifdef C17
+				//Biohazard:
+				PIXEVENT(pRenderContext, "PerformShaderEditorEffects");
+				g_ShaderEditorSystem->CustomPostRender();
+
+				//City17:
+				PIXEVENT(pRenderContext, "PerformScreenSpaceEffects");
+				PerformScreenSpaceEffects(view.x, view.y, view.width, view.height);
+#endif
 			}
 			pRenderContext.SafeRelease();
 		}
 
+#ifdef C17
+		// Draw fade over entire screen if needed
+		byte color[4];
+		bool blend;
+		vieweffects->GetFadeParams(&color[0], &color[1], &color[2], &color[3], &blend);
+
+		// Draw an overlay to make it even harder to see inside smoke particle systems.
+		DrawSmokeFogOverlay();
+
+		// Overlay screen fade on entire screen
+		IMaterial* pMaterial = blend ? m_ModulateSingleColor : m_TranslucentSingleColor;
+		render->ViewDrawFade(color, pMaterial);
+		PerformScreenOverlay(view.x, view.y, view.width, view.height);
+#else
 		// And here are the screen-space effects
+#endif
 
 		if ( IsPC() )
 		{
@@ -2092,7 +2214,9 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 			engine->GrabPreColorCorrectedFrame( view.x, view.y, view.width, view.height );
 		}
 
+#ifndef C17
 		PerformScreenSpaceEffects( 0, 0, view.width, view.height );
+#endif
 
 		if ( g_pMaterialSystemHardwareConfig->GetHDRType() == HDR_TYPE_INTEGER )
 		{
@@ -2283,6 +2407,11 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 		// The crosshair, etc. needs to get at the current setup stuff
 		AllowCurrentViewAccess( true );
 
+#ifdef C17
+		// ADDED
+		SetupCurrentView(view.origin, view.angles, VIEW_MAIN);
+#endif
+
 		// Draw the in-game stuff based on the actual viewport being used
 		render->VGui_Paint( PAINT_INGAMEPANELS );
 
@@ -2359,7 +2488,57 @@ void CViewRender::Render2DEffectsPostHUD( const CViewSetup &view )
 {
 }
 
+#ifdef C17
+ConVar r_post_reload_blur("r_post_reload_blur", "1", FCVAR_ARCHIVE);
+ConVar r_post_reload_blur_amount("r_post_reload_blur_amount", "1.0", FCVAR_CHEAT);
+ConVar r_post_reload_blur_rate("r_post_reload_blur_rate", "0.1", FCVAR_CHEAT);
 
+void CViewRender::PerformPreViewmodelPostProcessEffects(int x, int y, int width, int height)
+{
+	if (!r_post_reload_blur.GetBool())
+		return;
+
+	C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
+
+	if (!player || !player->GetActiveWeapon())
+		return;
+
+	bool blurstate = player->GetActiveWeapon()->GetBlurState();
+
+	if (blurstate)
+	{
+		if (m_flViewModelBlurAmount != r_post_reload_blur_amount.GetFloat())
+		{
+			m_flViewModelBlurAmount = FLerp(m_flViewModelBlurAmount, r_post_reload_blur_amount.GetFloat(), r_post_reload_blur_rate.GetFloat());
+		}
+	}
+	else
+	{
+		if (m_flViewModelBlurAmount >= 0.01f)
+		{
+			m_flViewModelBlurAmount = FLerp(m_flViewModelBlurAmount, 0.0f, r_post_reload_blur_rate.GetFloat());
+		}
+		else
+		{
+			return;
+		}
+	}
+
+	VPROF("CViewRender::PerformPreViewmodelPostProcessEffects()");
+	IMaterialVar *var;
+
+	IMaterial *pBlurX = materials->FindMaterial("effects/shaders/screen_blurx", TEXTURE_GROUP_PIXEL_SHADERS, true);
+	IMaterial *pBlurY = materials->FindMaterial("effects/shaders/screen_blury", TEXTURE_GROUP_PIXEL_SHADERS, true);
+
+	var = pBlurX->FindVar("$BLURSIZE", NULL);
+	var->SetFloatValue(m_flViewModelBlurAmount);
+	var = pBlurY->FindVar("$BLURSIZE", NULL);
+	var->SetFloatValue(m_flViewModelBlurAmount);
+
+	DrawScreenEffectMaterial(pBlurX, x, y, width, height);
+	DrawScreenEffectMaterial(pBlurY, x, y, width, height);
+}
+#endif
 
 //-----------------------------------------------------------------------------
 //
@@ -3102,6 +3281,9 @@ bool CViewRender::DrawOneMonitor( ITexture *pRenderTarget, int cameraNum, C_Poin
 	monitorView.m_bOrtho = false;
 	monitorView.m_flAspectRatio = pCameraEnt->UseScreenAspectRatio() ? 0.0f : 1.0f;
 	monitorView.m_bViewToProjectionOverride = false;
+#ifdef C17
+	monitorView.m_bDoBloomAndToneMapping = false;
+#endif
 
 	// @MULTICORE (toml 8/11/2006): this should be a renderer....
 	Frustum frustum;
@@ -3992,10 +4174,6 @@ void CRendering3dView::DrawOpaqueRenderables( ERenderDepthMode DepthMode )
 			//
 			RopeManager()->DrawRenderCache( bShadowDepth );
 			g_pParticleSystemMgr->DrawRenderCache( bShadowDepth );
-			
-			//3D-Grass
-			//CGrassClusterManager::GetInstance()->RenderClusters( DepthMode == DEPTH_MODE_SHADOW );
-			//
 
 			return;
 		}
@@ -4678,6 +4856,20 @@ bool CSkyboxView::GetSkyboxFogEnable()
 //-----------------------------------------------------------------------------
 void CSkyboxView::Enable3dSkyboxFog( void )
 {
+#ifdef C17
+	if (bOcclusionPass)
+	{
+		CMatRenderContextPtr pRenderContext(materials);
+		pRenderContext->FogMode(MATERIAL_FOG_LINEAR);
+		float fogColor[3] = { 0, 0, 0 };
+		pRenderContext->FogColor3fv(fogColor);
+		pRenderContext->FogStart(0.0f);
+		pRenderContext->FogEnd(0.0f);
+		pRenderContext->FogMaxDensity(1.0f);
+		return;
+	}
+#endif
+
 	C_BasePlayer *pbp = C_BasePlayer::GetLocalPlayer();
 	if( !pbp )
 	{
@@ -4831,7 +5023,11 @@ void CSkyboxView::DrawInternal( view_id_t iSkyBoxViewID, bool bInvokePreAndPostR
 //-----------------------------------------------------------------------------
 // 
 //-----------------------------------------------------------------------------
+#ifdef C17
+bool CSkyboxView::Setup(const CViewSetup &view, int *pClearFlags, SkyboxVisibility_t *pSkyboxVisible, bool bOcclusionPassIn)
+#else
 bool CSkyboxView::Setup( const CViewSetup &view, int *pClearFlags, SkyboxVisibility_t *pSkyboxVisible )
+#endif
 {
 	BaseClass::Setup( view );
 
@@ -4855,6 +5051,10 @@ bool CSkyboxView::Setup( const CViewSetup &view, int *pClearFlags, SkyboxVisibil
 	{
 		m_DrawFlags |= DF_DRAWSKYBOX;
 	}
+
+#ifdef C17
+	bOcclusionPass = bOcclusionPassIn;
+#endif
 
 	return true;
 }
@@ -4966,7 +5166,6 @@ void CShadowDepthView::Draw()
 {
 	VPROF_BUDGET( "CShadowDepthView::Draw", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
 
-
 	// Start view
 	unsigned int visFlags;
 	m_pMainView->SetupVis( (*this), visFlags );  // @MULTICORE (toml 8/9/2006): Portal problem, not sending custom vis down
@@ -4991,9 +5190,11 @@ void CShadowDepthView::Draw()
 		render->Push3DView( (*this), VIEW_CLEAR_DEPTH, m_pRenderTarget, GetFrustum() );
 	}
 
+#ifdef C17
 	pRenderContext.GetFrom(materials);
 	pRenderContext->PushRenderTargetAndViewport(m_pRenderTarget, m_pDepthTexture, 0, 0, m_pDepthTexture->GetMappingWidth(), m_pDepthTexture->GetMappingWidth());
 	pRenderContext.SafeRelease();
+#endif
 
 	SetupCurrentView( origin, angles, VIEW_SHADOW_DEPTH_TEXTURE );
 
@@ -5038,9 +5239,10 @@ void CShadowDepthView::Draw()
 		//Resolve() the depth texture here. Before the pop so the copy will recognize that the resolutions are the same
 		pRenderContext->CopyRenderTargetToTextureEx( m_pDepthTexture, -1, NULL, NULL );
 	}
-	
-	pRenderContext->PopRenderTargetAndViewport();
 
+#ifdef C17
+	pRenderContext->PopRenderTargetAndViewport();
+#endif
 	render->PopView( GetFrustum() );
 
 #if defined( _X360 )
@@ -5368,7 +5570,12 @@ void CBaseWorldView::DrawExecute( float waterHeight, view_id_t viewID, float wat
 	int savedViewID = g_CurrentViewID;
 
 	// @MULTICORE (toml 8/16/2006): rethink how, where, and when this is done...
-	g_CurrentViewID = VIEW_SHADOW_DEPTH_TEXTURE;
+#ifdef C17
+	if ( /*viewID != VIEW_SUN_SHAFTS &&*/ viewID != VIEW_SHADOW_DEPTH_TEXTURE && viewID != VIEW_REFLECTION && viewID != VIEW_REFRACTION)
+#endif
+	{
+		g_CurrentViewID = VIEW_SHADOW_DEPTH_TEXTURE;
+	}
 	MaybeInvalidateLocalPlayerAnimation();
 	g_pClientShadowMgr->ComputeShadowTextures( *this, m_pWorldListInfo->m_LeafCount, m_pWorldListInfo->m_pLeafList );
 	MaybeInvalidateLocalPlayerAnimation();
@@ -5991,6 +6198,7 @@ void CUnderWaterView::Setup( const CViewSetup &view, bool bDrawSkybox, const Vis
 
 	CalcWaterEyeAdjustments( fogInfo, m_waterHeight, m_waterZAdjust, m_bSoftwareUserClipPlane );
 
+#ifndef C17
 	IMaterial *pWaterMaterial = fogInfo.m_pFogVolumeMaterial;
 	if (engine->GetDXSupportLevel() >= 90 )					// screen voerlays underwater are a dx9 feature
 	{
@@ -6005,6 +6213,7 @@ void CUnderWaterView::Setup( const CViewSetup &view, bool bDrawSkybox, const Vis
 			}
 		}
 	}
+#endif
 	// NOTE: We're not drawing the 2d skybox under water since it's assumed to not be visible.
 
 	// render the world underwater

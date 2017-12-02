@@ -319,13 +319,45 @@ public:
 
 	virtual void			PreThink( void );
 	virtual void			PostThink( void );
+#ifdef C17
+	virtual int				TakeHealth(float flHealth, int bitsDamageType, bool bIsRegen = false);
+#else
 	virtual int				TakeHealth( float flHealth, int bitsDamageType );
+#endif
 	virtual void			TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator );
 	bool					ShouldTakeDamageInCommentaryMode( const CTakeDamageInfo &inputInfo );
 	virtual int				OnTakeDamage( const CTakeDamageInfo &info );
 	virtual void			DamageEffect(float flDamage, int fDamageType);
 
 	virtual void			OnDamagedByExplosion( const CTakeDamageInfo &info );
+
+#ifdef C17_HAPTICS
+	// Haptics returns true if client has a haptics device.
+	bool					HapticsHasDevice();
+
+	// Haptics These functions are haptic related and send messages to the client regarding haptics
+	// effects. They will only send the message to the client if they are using a haptic device.
+
+	// Haptics handles sending damage effects to client. 
+	//( there is no client call back for this effect it is sent directly to the clients haptic device )
+	void					HapticsDamage(CBaseEntity *eInflictor, float fDamage, int bitDamageType);
+
+	// Haptics sends a small bump to the client.
+	void					HapticsStep(int type, float strength);
+
+	// Haptics sends a punch effect to the client with direction and scale of foce. (this will not send if fStrength is 0)
+	void					HapticsPunch(const QAngle &angleOffset, float fStrength = 1.0);
+
+	// Haptics sets simulated mass on client's haptic device. Setting mass to zero will turn off the effect.
+	// make sure to turn off this effect ( by entering zero ) when finished.
+	void					HapticsMass(float mass);
+
+	// Haptics updates clients haptic velocity history ( must initialize either vehicle mode or avatar mode prior to this )
+	void					HapticsVelocityUpdate(Vector velocity);
+
+	// Haptics tells client to use a specific vehicle threshold for our type. (look at vehicle.h for defines of vehicle type)
+	void					HapticsVehicleStart(int VEHICLE_TYPE);
+#endif
 
 	void					PauseBonusProgress( bool bPause = true );
 	void					SetBonusProgress( int iBonusProgress );
@@ -412,7 +444,7 @@ public:
 	virtual	void			Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector *pvecTarget /* = NULL */, const Vector *pVelocity /* = NULL */ );
 	virtual	bool			Weapon_Switch( CBaseCombatWeapon *pWeapon, int viewmodelindex = 0 );		// Switch to given weapon if has ammo (false if failed)
 	virtual void			Weapon_SetLast( CBaseCombatWeapon *pWeapon );
-	virtual bool			Weapon_ShouldSetLast( CBaseCombatWeapon *pOldWeapon, CBaseCombatWeapon *pNewWeapon ) { return true; }
+	virtual bool			Weapon_ShouldSetLast( CBaseCombatWeapon *pOldWeapon, CBaseCombatWeapon *pNewWeapon )
 	virtual bool			Weapon_ShouldSelectItem( CBaseCombatWeapon *pWeapon );
 	void					Weapon_DropSlot( int weaponSlot );
 	CBaseCombatWeapon		*Weapon_GetLast( void ) { return m_hLastWeapon.Get(); }
@@ -550,8 +582,13 @@ public:
 	virtual void			PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize = true ) {}
 	virtual void			ForceDropOfCarriedPhysObjects( CBaseEntity *pOnlyIfHoldindThis = NULL ) {}
 	virtual float			GetHeldObjectMass( IPhysicsObject *pHeldObject );
+#ifdef C17
+	virtual CBaseEntity		*GetHeldObject(void);
 
+	virtual void			CheckSuitUpdate();
+#else
 	void					CheckSuitUpdate();
+#endif
 	void					SetSuitUpdate(const char *name, int fgroup, int iNoRepeat);
 	virtual void			UpdateGeigerCounter( void );
 	void					CheckTimeBasedDamage( void );
@@ -614,6 +651,12 @@ public:
 
 	virtual bool			ShouldAnnounceAchievement( void ){ return true; }
 
+#ifdef C17
+	bool		m_pVGUImode;
+	bool		GetVGUIMode(void) { return m_pVGUImode; }
+	void		SetVGUImode(bool newmode) { m_pVGUImode = newmode; }
+#endif
+
 #if defined USES_ECON_ITEMS
 	// Wearables
 	virtual void			EquipWearable( CEconWearable *pItem );
@@ -662,7 +705,11 @@ public:
 	bool	IsConnected() const		{ return m_iConnected != PlayerDisconnected; }
 	bool	IsDisconnecting() const	{ return m_iConnected == PlayerDisconnecting; }
 	bool	IsSuitEquipped() const	{ return m_Local.m_bWearingSuit; }
+#ifdef C17
+	virtual int		ArmorValue() const { return m_ArmorValue; }
+#else
 	int		ArmorValue() const		{ return m_ArmorValue; }
+#endif
 	bool	HUDNeedsRestart() const { return m_fInitHUD; }
 	float	MaxSpeed() const		{ return m_flMaxspeed; }
 	Activity GetActivity( ) const	{ return m_Activity; }
@@ -818,6 +865,11 @@ private:
 	int					DetermineSimulationTicks( void );
 	void				AdjustPlayerTimeBase( int simulation_ticks );
 
+#ifdef C17_HAPTICS
+	// Haptics enabled client.
+	bool				m_bHaptics;
+#endif
+
 public:
 	
 
@@ -927,6 +979,9 @@ protected:
 	int						m_iVehicleAnalogBias;
 
 	void					UpdateButtonState( int nUserCmdButtonMask );
+#ifdef C17
+	void					WaterSplash(const char *ParticleName, const char *SlimeParticleName);
+#endif
 
 	bool	m_bPauseBonusProgress;
 	CNetworkVar( int, m_iBonusProgress );
@@ -957,6 +1012,9 @@ protected:
 													//Only this entity can change the zoom state once it has ownership
 
 	float					m_tbdPrev;				// Time-based damage timer
+#ifdef C17
+	float					m_fTimeLastHurt;
+#endif
 	int						m_idrowndmg;			// track drowning damage taken
 	int						m_idrownrestored;		// track drowning damage restored
 	int						m_nPoisonDmg;			// track recoverable poison damage taken
@@ -1117,6 +1175,10 @@ private:
 
 	EHANDLE					m_hViewEntity;
 
+#ifdef C17
+	//CNetworkHandle(CBaseEntity, m_hViewEntity);
+#endif
+
 	// Movement constraints
 	CNetworkHandle( CBaseEntity, m_hConstraintEntity );
 	CNetworkVector( m_vecConstraintCenter );
@@ -1213,7 +1275,26 @@ private:
 public:
 	virtual unsigned int PlayerSolidMask( bool brushOnly = false ) const;	// returns the solid mask for the given player, so bots can have a more-restrictive set
 
+#ifdef C17
+private:
+		//
+		//Tony; new tonemap controller changes, specifically for multiplayer.
+		//
+		void	ClearTonemapParams();		//Tony; we need to clear our tonemap params every time we spawn to -1, if we trigger an input, the values will be set again.
+public:
+	void	InputSetTonemapScale(inputdata_t &inputdata);			//Set m_Local.
+																	//	void	InputBlendTonemapScale( inputdata_t &inputdata );		//TODO; this should be calculated on the client, if we use it; perhaps an entity message would suffice? .. hmm..
+	void	InputSetTonemapRate(inputdata_t &inputdata);
+	void	InputSetAutoExposureMin(inputdata_t &inputdata);
+	void	InputSetAutoExposureMax(inputdata_t &inputdata);
+	void	InputSetBloomScale(inputdata_t &inputdata);
+
+	//Tony; restore defaults (set min/max to -1.0 so nothing gets overridden)
+	void	InputUseDefaultAutoExposure(inputdata_t &inputdata);
+	void	InputUseDefaultBloomScale(inputdata_t &inputdata);
+	//	void	InputSetBloomScaleRange( inputdata_t &inputdata );
 };
+#endif
 
 typedef CHandle<CBasePlayer> CBasePlayerHandle;
 

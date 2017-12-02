@@ -463,6 +463,9 @@ protected:
 
 private:
 	Hull_t		m_eHull;
+#ifdef C17
+	friend class CShowWeapon;
+#endif
 
 	void				UpdateGlowEffect( void );
 	void				DestroyGlowEffect( void );

@@ -8,6 +8,11 @@
 #include "usermessages.h"
 #include <bitbuf.h>
 
+#ifdef C17_HAPTICS
+// Haptics message registers
+#include "../haptics/shared_haptic_registers.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -21,6 +26,11 @@ CUserMessages::CUserMessages()
 {
 	// Game specific registration function;
 	RegisterUserMessages();
+
+#ifdef C17_HAPTICS
+	// Haptics Register haptic related messages
+	RegisterHapticUserMessages();
+#endif
 }
 
 CUserMessages::~CUserMessages()

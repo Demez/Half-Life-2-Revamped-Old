@@ -36,14 +36,20 @@ public:
 	virtual bool	WeaponShouldBeLowered( void );
 
 			bool	CanLower();
+#ifdef C17
+			bool	CanSprint();
+			bool	CanWalkBob();
+#endif
 	virtual bool	Ready( void );
 	virtual bool	Lower( void );
 	virtual bool	Deploy( void );
 	virtual bool	Holster( CBaseCombatWeapon *pSwitchingTo );
 	virtual void	WeaponIdle( void );
 
+#ifndef C17
 	virtual void	AddViewmodelBob( CBaseViewModel *viewmodel, Vector &origin, QAngle &angles );
 	virtual	float	CalcViewmodelBob( void );
+#endif
 
 	virtual Vector	GetBulletSpread( WeaponProficiency_t proficiency );
 	virtual float	GetSpreadBias( WeaponProficiency_t proficiency );

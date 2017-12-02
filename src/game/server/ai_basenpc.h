@@ -721,6 +721,11 @@ protected:
 
 	bool				IsInChoreo() const;
 
+#ifdef C17
+	//City 17: Moved to public for rebel behavior override.
+	int					SelectInteractionSchedule();
+#endif
+
 private:
 	// This function maps the type through TranslateSchedule() and then retrieves the pointer
 	// to the actual CAI_Schedule from the database of schedules available to this class.
@@ -748,7 +753,9 @@ private:
 	int					SelectCombatSchedule();
 	virtual int			SelectDeadSchedule();
 	int					SelectScriptSchedule();
+#ifndef C17
 	int					SelectInteractionSchedule();
+#endif
 
 	void				OnStartTask( void ) 					{ SetTaskStatus( TASKSTATUS_RUN_MOVE_AND_TASK ); }
 	void 				SetTaskStatus( TaskStatus_e status )	{ m_ScheduleState.fTaskStatus = status; 	}
@@ -1122,6 +1129,11 @@ private:
 public:
 	CAI_MoveMonitor	m_CommandMoveMonitor;
 
+#ifdef C17
+	//City 17: Moved to public for rebel behavior override.
+	CHandle<CAI_BaseNPC>				 m_hForcedInteractionPartner;
+#endif
+
 	//-----------------------------------------------------
 	// Dynamic scripted NPC interactions
 	//-----------------------------------------------------
@@ -1153,7 +1165,9 @@ protected:
 
 private:
 	// Forced interactions
+#ifndef C17
 	CHandle<CAI_BaseNPC>				 m_hForcedInteractionPartner;
+#endif
 	Vector								 m_vecForcedWorldPosition;
 	float								m_flForcedInteractionTimeout; // Abort the interaction if it hasn't started by this time.
 

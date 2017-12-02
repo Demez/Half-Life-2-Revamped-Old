@@ -122,6 +122,10 @@ extern ConVar sk_dmg_sniper_penetrate_npc;
 
 #define SNIPER_MAX_GROUP_TARGETS	16
 
+#ifdef C17
+#define COMBINE_SKIN_SNIPER		2
+#endif
+
 
 //=========================================================
 //=========================================================
@@ -933,6 +937,9 @@ void CProtoSniper::Spawn( void )
 
 	/// HACK:
 	SetModel( "models/combine_soldier.mdl" );
+#ifdef C17
+	m_nSkin = COMBINE_SKIN_SNIPER;
+#endif
 
 	//m_hBullet = (CSniperBullet *)Create( "sniperbullet", GetBulletOrigin(), GetLocalAngles(), NULL );
 

@@ -5,6 +5,11 @@
 //=============================================================================
 
 #include "cbase.h"
+#ifdef C17
+#include "ScreenSpaceEffects.h"
+#include "city17/c17_screeneffects.h"
+#include "view_scene.h"
+#endif
 
 class C_PropScalable : public C_BaseAnimating
 {
@@ -15,9 +20,25 @@ class C_PropScalable : public C_BaseAnimating
 public:
 
 	C_PropScalable();
+#ifdef C17
+	~C_PropScalable();
+#endif
 
 	virtual void ApplyBoneMatrixTransform( matrix3x4_t& transform );
 	virtual void GetRenderBounds( Vector &theMins, Vector &theMaxs );
+
+#ifdef C17
+	//virtual int DrawModel( int flags );
+
+	// Should this object cast shadows?
+	virtual ShadowType_t	ShadowCastType() { return SHADOWS_NONE; }
+
+	// Should this object receive shadows?
+	virtual bool			ShouldReceiveProjectedTextures(int flags)
+	{
+		return false;
+	}
+#endif
 
 	// Must be available to proxy functions
 	float m_flScaleX;
@@ -110,6 +131,13 @@ C_PropScalable::C_PropScalable( void )
 
 	m_nCalcFrame = 0;
 }
+
+#ifdef C17
+C_PropScalable::~C_PropScalable(void)
+{
+
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Calculates the scake of the object once per frame

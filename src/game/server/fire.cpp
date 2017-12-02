@@ -87,7 +87,11 @@ public:
 	virtual void UpdateOnRemove( void );
 
 	void	Precache( void );
+#ifdef C17
+	void	Init(const Vector &position, float scale, float attackTime, float fuel, int flags, int fireType, int m_nFireParticleSize);
+#else
 	void	Init( const Vector &position, float scale, float attackTime, float fuel, int flags, int fireType );
+#endif
 	bool	GoOut();
 	
 	void	BurnThink();
@@ -175,6 +179,9 @@ protected:
 	float	m_flDamageTime;
 	float	m_lastDamage;
 	float	m_flFireSize;	// size of the fire in world units
+#ifdef C17
+	int		m_nFireParticleSize;
+#endif
 
 	float	m_flHeatLevel;	// Used as a "health" for the fire.  > 0 means the fire is burning
 	float	m_flHeatAbsorb;	// This much heat must be "absorbed" before it gets transferred to the flame size
@@ -387,7 +394,11 @@ bool FireSystem_CanAddFire( Vector *position, float separationRadius, fireType_e
 // Input  : &position - position to start the fire at
 //			flags - any special modifiers
 //-----------------------------------------------------------------------------
+#ifdef C17
+bool FireSystem_StartFire(const Vector &position, float fireHeight, float attack, float fuel, int flags, CBaseEntity *owner, fireType_e type, int particlesize)
+#else
 bool FireSystem_StartFire( const Vector &position, float fireHeight, float attack, float fuel, int flags, CBaseEntity *owner, fireType_e type )
+#endif
 {
 	VPROF_FIRE( "FireSystem_StartFire1" );
 
@@ -416,7 +427,11 @@ bool FireSystem_StartFire( const Vector &position, float fireHeight, float attac
 	// Fires not placed by a designer should be cleaned up automatically (not catch fire again)
 	fire->AddSpawnFlags( SF_FIRE_DIE_PERMANENT );
 	fire->Spawn();
+#ifdef C17
+	fire->Init(testPos, fireHeight, attack, fuel, flags, type, particlesize);
+#else
 	fire->Init( testPos, fireHeight, attack, fuel, flags, type );
+#endif
 	fire->Start();
 	fire->SetOwner( owner );
 
@@ -435,7 +450,11 @@ bool FireSystem_StartFire( const Vector &position, float fireHeight, float attac
 //			type - 
 // Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
+#ifdef C17
+bool FireSystem_StartFire(CBaseAnimating *pEntity, float fireHeight, float attack, float fuel, int flags, CBaseEntity *owner, fireType_e type, int particlesize)
+#else
 bool FireSystem_StartFire( CBaseAnimating *pEntity, float fireHeight, float attack, float fuel, int flags, CBaseEntity *owner, fireType_e type )
+#endif
 {
 	VPROF_FIRE( "FireSystem_StartFire2" );
 
@@ -467,7 +486,11 @@ bool FireSystem_StartFire( CBaseAnimating *pEntity, float fireHeight, float atta
 	// Fires not placed by a designer should be cleaned up automatically (not catch fire again).
 	fire->AddSpawnFlags( SF_FIRE_DIE_PERMANENT );
 	fire->Spawn();
+#ifdef C17
+	fire->Init(testPos, fireHeight, attack, fuel, flags, type, particlesize);
+#else
 	fire->Init( testPos, fireHeight, attack, fuel, flags, type );
+#endif
 	fire->Start();
 	fire->SetOwner( owner );
 
@@ -538,6 +561,9 @@ BEGIN_DATADESC( CFire )
 	DEFINE_FIELD( m_flDamageTime, FIELD_TIME ),
 	DEFINE_FIELD( m_lastDamage, FIELD_TIME ),
 	DEFINE_KEYFIELD( m_flFireSize,	FIELD_FLOAT, "firesize" ),
+#ifdef C17
+	DEFINE_KEYFIELD(m_nFireParticleSize, FIELD_INTEGER, "particlesize"),
+#endif
 
 	DEFINE_KEYFIELD( m_flHeatLevel,	FIELD_FLOAT,	"ignitionpoint" ),
  	DEFINE_FIELD( m_flHeatAbsorb, FIELD_FLOAT ),
@@ -616,17 +642,44 @@ void CFire::Precache( void )
 		
 		if ( m_spawnflags & SF_FIRE_SMOKELESS )
 		{
+#ifdef C17
+			//No Smoke
+			PrecacheParticleSystem("c17_fire_tiny_nosmoke");
+			PrecacheParticleSystem("c17_fire_small_nosmoke");
+			PrecacheParticleSystem("c17_fire_medium_nosmoke");
+			PrecacheParticleSystem("c17_fire_large_nosmoke");
+#else
 			PrecacheParticleSystem( "env_fire_tiny" );
 			PrecacheParticleSystem( "env_fire_small" );
 			PrecacheParticleSystem( "env_fire_medium" );
 			PrecacheParticleSystem( "env_fire_large" );
+#endif
 		}
 		else
 		{
+#ifdef C17
+			if (m_spawnflags & SF_FIRE_COLLIDING_SMOKE)
+			{
+				//Colliding Smoke
+				PrecacheParticleSystem("c17_fire_tiny_collide");
+				PrecacheParticleSystem("c17_fire_small_collide");
+				PrecacheParticleSystem("c17_fire_medium_collide");
+				PrecacheParticleSystem("c17_fire_large_collide");
+			}
+			else
+			{
+				//Smoke
+				PrecacheParticleSystem("c17_fire_tiny");
+				PrecacheParticleSystem("c17_fire_small");
+				PrecacheParticleSystem("c17_fire_medium");
+				PrecacheParticleSystem("c17_fire_large");
+			}
+#else
 			PrecacheParticleSystem( "env_fire_tiny_smoke" );
 			PrecacheParticleSystem( "env_fire_small_smoke" );
 			PrecacheParticleSystem( "env_fire_medium_smoke" );
 			PrecacheParticleSystem( "env_fire_large_smoke" );
+#endif
 		}
 	}
 
@@ -710,7 +763,11 @@ void CFire::StartFire( void )
 
 	int spawnflags = m_spawnflags;
 	m_spawnflags |= SF_FIRE_START_ON;
+#ifdef C17
+	Init(vFirePos, m_flFireSize, m_flAttackTime, GetHealth(), m_spawnflags, (fireType_e)m_nFireType, m_nFireParticleSize);
+#else
 	Init( vFirePos, m_flFireSize, m_flAttackTime, GetHealth(), m_spawnflags, (fireType_e) m_nFireType );
+#endif
 	Start();
 	m_spawnflags = spawnflags;
 }
@@ -733,7 +790,11 @@ void CFire::Spawn( void )
 	// set up the ignition point
 	m_flHeatAbsorb = m_flHeatLevel * 0.05;
 	m_flHeatLevel = 0;
+#ifndef C17
 	Init( GetAbsOrigin(), m_flFireSize, m_flAttackTime, m_flFuel, m_spawnflags, m_nFireType );
+#else
+	Init(GetAbsOrigin(), m_flFireSize, m_flAttackTime, m_flFuel, m_spawnflags, m_nFireType, m_nFireParticleSize);
+#endif
 	
 	if( m_bStartDisabled )
 	{
@@ -782,6 +843,9 @@ void CFire::SpawnEffect( fireType_e type, float scale )
 		{
 			CFireSmoke	*fireSmoke = (CFireSmoke *) CreateEntityByName( "_firesmoke" );
 			fireSmoke->EnableSmoke( ( m_spawnflags & SF_FIRE_SMOKELESS )==false );
+#ifdef C17
+			fireSmoke->EnableCollidingSmoke((m_spawnflags & SF_FIRE_COLLIDING_SMOKE) == false);
+#endif
 			fireSmoke->EnableGlow( ( m_spawnflags & SF_FIRE_NO_GLOW )==false );
 			fireSmoke->EnableVisibleFromAbove( ( m_spawnflags & SF_FIRE_VISIBLE_FROM_ABOVE )!=false );
 			
@@ -809,7 +873,11 @@ void CFire::SpawnEffect( fireType_e type, float scale )
 	UTIL_SetOrigin( pEffect, GetAbsOrigin() );
 	pEffect->Spawn();
 	pEffect->SetParent( this );
+#ifdef C17
+	pEffect->Scale(m_flFireSize, m_flFireSize, 0, m_nFireParticleSize);
+#else
 	pEffect->Scale( m_flFireSize, m_flFireSize, 0 );
+#endif
 	//Start it going
 	pEffect->Enable( ( m_spawnflags & SF_FIRE_START_ON ) );
 	m_hEffect = pEffect;
@@ -820,7 +888,11 @@ void CFire::SpawnEffect( fireType_e type, float scale )
 // Input  : &position - where the fire resides
 //			lifetime - 
 //-----------------------------------------------------------------------------
+#ifdef C17
+void CFire::Init(const Vector &position, float scale, float attackTime, float fuel, int flags, int fireType, int particlescale)
+#else
 void CFire::Init( const Vector &position, float scale, float attackTime, float fuel, int flags, int fireType )
+#endif
 {
 	m_flAttackTime = attackTime;
 	
@@ -848,6 +920,9 @@ void CFire::Init( const Vector &position, float scale, float attackTime, float f
 
 	SetSolid( SOLID_NONE );
 	m_flFireSize = scale;
+#ifdef C17
+	m_nFireParticleSize = particlescale;
+#endif
 	m_flMaxHeat = FIRE_MAX_HEAT_LEVEL * FIRE_SCALE_FROM_SIZE(scale);
 	//See if we should start on
 	if ( m_spawnflags & SF_FIRE_START_FULL )

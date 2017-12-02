@@ -44,6 +44,12 @@ extern ConVar cam_idealyaw;
 // For showing/hiding the scoreboard
 #include <game/client/iviewport.h>
 
+#ifdef C17_HAPTICS
+#include "../haptics/in_haptics.h" // Haptics addition
+//really bad, but we need to ship the button fix ==MJB==
+#include "weapon_selection.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -88,6 +94,28 @@ extern ConVar cl_mouselook;
 
 #define UsingMouselook() cl_mouselook.GetBool()
 
+#ifdef C17
+static ConVar cam_ots_freeaim("cam_ots_freeaim_enable", "1", FCVAR_ARCHIVE);
+static ConVar cam_ots_freeaim_use_interval("cam_ots_freeaim_interval_enable", "0", FCVAR_ARCHIVE); // use an interval for view turning
+static ConVar cam_ots_freeaim_movethreshold("cam_ots_freeaim_move_threshold", "0.7", FCVAR_ARCHIVE);
+static ConVar cam_ots_freeaim_movemax("cam_ots_freeaim_move_max", "0.25", FCVAR_ARCHIVE);
+
+static ConVar cam_ots_freeaim_speedturn("cam_ots_freeaim_speed_turn", "1", FCVAR_ARCHIVE);
+static ConVar cam_ots_freeaim_speed_evenyaw("cam_ots_freeaim_speed_evenYawSpeed", "1", FCVAR_ARCHIVE);
+
+static ConVar cam_ots_freeaim_autoturn_speed("cam_ots_freeaim_autoturn_speed", "250", FCVAR_ARCHIVE);
+
+extern void ScreenToWorld(int mousex, int mousey, float fov, const Vector& vecRenderOrigin, const QAngle& vecRenderAngles, Vector& vecPickingRay);
+#endif
+
+#ifdef C17_HAPTICS
+// Haptics addition
+extern int var_hap_togglehaptics;
+extern int var_hap_togglemovement;
+extern ConVar hap_cursor;
+#endif
+
+
 /*
 ===============================================================================
 
@@ -129,8 +157,21 @@ static	kbutton_t	in_lookup;
 static	kbutton_t	in_lookdown;
 static	kbutton_t	in_use;
 static	kbutton_t	in_jump;
+#ifdef C17_HAPTICS
+kbutton_t	in_attack;
+kbutton_t	in_attack2;
+
+// Haptics addition
+kbutton_t	in_hap_togglehaptics;
+kbutton_t	in_hap_togglemovement;
+kbutton_t	in_hap_holdcamera;
+#else
 static	kbutton_t	in_attack;
 static	kbutton_t	in_attack2;
+#endif
+#ifdef C17
+static	kbutton_t	in_ironsight;
+#endif
 static	kbutton_t	in_up;
 static	kbutton_t	in_down;
 static	kbutton_t	in_duck;
@@ -467,6 +508,10 @@ void IN_StrafeDown( const CCommand &args ) {KeyDown(&in_strafe, args[1] );}
 void IN_StrafeUp( const CCommand &args ) {KeyUp(&in_strafe, args[1] );}
 void IN_Attack2Down( const CCommand &args ) { KeyDown(&in_attack2, args[1] );}
 void IN_Attack2Up( const CCommand &args ) {KeyUp(&in_attack2, args[1] );}
+#ifdef C17
+void IN_IronsightDown(const CCommand &args) { KeyDown(&in_ironsight, args[1]); }
+void IN_IronsightUp(const CCommand &args) { KeyUp(&in_ironsight, args[1]); }
+#endif
 void IN_UseDown ( const CCommand &args ) {KeyDown(&in_use, args[1] );}
 void IN_UseUp ( const CCommand &args ) {KeyUp(&in_use, args[1] );}
 void IN_JumpDown ( const CCommand &args ) {KeyDown(&in_jump, args[1] );}
@@ -490,6 +535,16 @@ void IN_Grenade2Down( const CCommand &args ) { KeyDown( &in_grenade2, args[1] );
 void IN_XboxStub( const CCommand &args ) { /*do nothing*/ }
 void IN_Attack3Down( const CCommand &args ) { KeyDown(&in_attack3, args[1] );}
 void IN_Attack3Up( const CCommand &args ) { KeyUp(&in_attack3, args[1] );}
+
+#ifdef C17_HAPTICS
+// Haptics addition
+void IN_ToggleHapticsUp(const CCommand &args) { KeyUp(&in_hap_togglehaptics, args[1]); }
+void IN_ToggleHapticsDown(const CCommand &args) { KeyDown(&in_hap_togglehaptics, args[1]); var_hap_togglehaptics = 1; }
+void IN_ToggleMovementUp(const CCommand &args) { KeyUp(&in_hap_togglemovement, args[1]); }
+void IN_ToggleMovementDown(const CCommand &args) { KeyDown(&in_hap_togglemovement, args[1]); var_hap_togglemovement = 1; }
+void IN_HoldCameraUp(const CCommand &args) { KeyUp(&in_hap_holdcamera, args[1]); }
+void IN_HoldCameraDown(const CCommand &args) { KeyDown(&in_hap_holdcamera, args[1]); }
+#endif
 
 void IN_DuckToggle( const CCommand &args ) 
 { 
@@ -947,6 +1002,10 @@ void CInput::ControllerMove( float frametime, CUserCmd *cmd )
 
 	JoyStickMove( frametime, cmd);
 
+#ifdef C17_HAPTICS
+	cliHaptics->HapticsMove(frametime, cmd); // Haptics addition
+#endif
+
 	// NVNT if we have a haptic device..
 	if(haptics && haptics->HasDevice())
 	{
@@ -1067,7 +1126,11 @@ void CInput::ExtraMouseSample( float frametime, bool active )
 	}
 
 	// Let the move manager override anything it wants to.
+#ifdef C17
+	if (g_pClientMode->CreateMove(frametime, cmd, true))
+#else
 	if ( g_pClientMode->CreateMove( frametime, cmd ) )
+#endif
 	{
 		// Get current view angles after the client mode tweaks with it
 		engine->SetViewAngles( cmd->viewangles );
@@ -1105,7 +1168,11 @@ void CInput::ExtraMouseSample( float frametime, bool active )
 void CInput::CreateMove ( int sequence_number, float input_sample_frametime, bool active )
 {	
 	CUserCmd *cmd = &m_pCommands[ sequence_number % MULTIPLAYER_BACKUP ];
+#ifdef C17
+	CVerifiedUserCmd *pVerified = &m_pVerifiedCommands[sequence_number % MULTIPLAYER_BACKUP];
+#else
 	CVerifiedUserCmd *pVerified = &m_pVerifiedCommands[ sequence_number % MULTIPLAYER_BACKUP ];
+#endif
 
 	cmd->Reset();
 
@@ -1154,6 +1221,11 @@ void CInput::CreateMove ( int sequence_number, float input_sample_frametime, boo
 			GetAccumulatedMouseDeltasAndResetAccumulators( &mx, &my );
 			ResetMouse();
 		}
+#ifdef C17_HAPTICS
+		// Haptics shut down the haptics device if we are not using the cursor movement from it.
+		if (hap_cursor.GetInt() == 0)
+			cliHaptics->Shutdown_Haptics();
+#endif
 	}
 	// Retreive view angles from engine ( could have been set in IN_AdjustAngles above )
 	engine->GetViewAngles( viewangles );
@@ -1188,6 +1260,16 @@ void CInput::CreateMove ( int sequence_number, float input_sample_frametime, boo
 #else
 	// Set button and flag bits
 	cmd->buttons = GetButtonBits( 1 );
+#endif
+
+#ifdef C17_HAPTICS
+	//==MJB== hack to fix the weapon selection issue - this could probably be optimized by using a global for the selection object
+	class CHudWeaponSelection;
+	CBaseHudWeaponSelection* hud = (CBaseHudWeaponSelection*)GET_HUDELEMENT(CHudWeaponSelection);
+	if (hud->IsInSelectionMode())
+	{
+		cmd->buttons &= ~(IN_ATTACK | IN_ATTACK2);
+	}
 #endif
 
 	// Using joystick?
@@ -1461,6 +1543,9 @@ int CInput::GetButtonBits( int bResetState )
 	CalcButtonBits( bits, IN_MOVELEFT, s_ClearInputState, &in_moveleft, bResetState );
 	CalcButtonBits( bits, IN_MOVERIGHT, s_ClearInputState, &in_moveright, bResetState );
 	CalcButtonBits( bits, IN_ATTACK2, s_ClearInputState, &in_attack2, bResetState );
+#ifdef C17
+	CalcButtonBits(bits, IN_IRONSIGHT, s_ClearInputState, &in_ironsight, bResetState);
+#endif
 	CalcButtonBits( bits, IN_RELOAD, s_ClearInputState, &in_reload, bResetState );
 	CalcButtonBits( bits, IN_ALT1, s_ClearInputState, &in_alt1, bResetState );
 	CalcButtonBits( bits, IN_ALT2, s_ClearInputState, &in_alt2, bResetState );
@@ -1469,6 +1554,13 @@ int CInput::GetButtonBits( int bResetState )
 	CalcButtonBits( bits, IN_GRENADE1, s_ClearInputState, &in_grenade1, bResetState );
 	CalcButtonBits( bits, IN_GRENADE2, s_ClearInputState, &in_grenade2, bResetState );
 	CalcButtonBits( bits, IN_ATTACK3, s_ClearInputState, &in_attack3, bResetState );
+
+#ifdef C17_HAPTICS
+	// Haptics addition
+	CalcButtonBits(bits, IN_HAP_TOGGLEHAPTICS, s_ClearInputState, &in_hap_togglehaptics, bResetState);
+	CalcButtonBits(bits, IN_HAP_TOGGLEMOVE, s_ClearInputState, &in_hap_togglemovement, bResetState);
+	CalcButtonBits(bits, IN_HAP_HOLDCAMERA, s_ClearInputState, &in_hap_holdcamera, bResetState);
+#endif
 
 	if ( KeyState(&in_ducktoggle) )
 	{
@@ -1591,6 +1683,10 @@ static ConCommand startattack("+attack", IN_AttackDown);
 static ConCommand endattack("-attack", IN_AttackUp);
 static ConCommand startattack2("+attack2", IN_Attack2Down);
 static ConCommand endattack2("-attack2", IN_Attack2Up);
+#ifdef C17
+static ConCommand startironsight("+ironsight", IN_IronsightDown);
+static ConCommand endironsight("-ironsight", IN_IronsightUp);
+#endif
 static ConCommand startuse("+use", IN_UseDown);
 static ConCommand enduse("-use", IN_UseUp);
 static ConCommand startjump("+jump", IN_JumpDown);
@@ -1626,6 +1722,16 @@ static ConCommand endgrenade2( "-grenade2", IN_Grenade2Up );
 static ConCommand startgrenade2( "+grenade2", IN_Grenade2Down );
 static ConCommand startattack3("+attack3", IN_Attack3Down);
 static ConCommand endattack3("-attack3", IN_Attack3Up);
+
+#ifdef C17_HAPTICS
+// Haptics addition
+static ConCommand endhap_togglehaptics("-hap_togglehaptics", IN_ToggleHapticsUp);
+static ConCommand starthap_togglehaptics("+hap_togglehaptics", IN_ToggleHapticsDown);
+static ConCommand endhap_togglemovement("-hap_togglemovement", IN_ToggleMovementUp);
+static ConCommand starthap_togglemovement("+hap_togglemovement", IN_ToggleMovementDown);
+static ConCommand endhap_holdcamera("-hap_holdcamera", IN_HoldCameraUp);
+static ConCommand starthap_holdcamera("+hap_holdcamera", IN_HoldCameraDown);
+#endif
 
 #ifdef TF_CLIENT_DLL
 static ConCommand toggle_duck( "toggle_duck", IN_DuckToggle );
@@ -1683,6 +1789,11 @@ void CInput::Shutdown_All(void)
 	DeactivateMouse();
 	Shutdown_Keyboard();
 
+#ifdef C17_HAPTICS
+	cliHaptics->Shutdown_Haptics(); // Haptics addition
+#endif
+
+
 	delete[] m_pCommands;
 	m_pCommands = NULL;
 
@@ -1695,6 +1806,9 @@ void CInput::LevelInit( void )
 #if defined( HL2_CLIENT_DLL )
 	// Remove any IK information
 	m_EntityGroundContact.RemoveAll();
+#endif
+#ifdef C17_HAPTICS
+	cliHaptics->LevelInit();
 #endif
 }
 
