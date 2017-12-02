@@ -1046,6 +1046,12 @@ public:
 
 	// For sv_pure mode. The filesystem figures out which files the client needs to reload to be "pure" ala the server's preferences.
 	virtual void ReloadFilesInList( IFileList *pFilesToReload ) = 0;
+
+	//asw projtex stuff
+	// call this once the render targets are allocated permanently at the beginning of the game
+	/*virtual void FinishRenderTargetAllocation(void) = 0;
+	virtual void ReEnableRenderTargetAllocation_IRealizeIfICallThisAllTexturesWillBeUnloadedAndLoadTimeWillSufferHorribly(void) = 0;
+	*///
 	virtual	bool				AllowThreading( bool bAllow, int nServiceThread ) = 0;
 
 	// Extended version of FindMaterial().

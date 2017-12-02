@@ -45,7 +45,7 @@ DEFINE_INPUTFUNC(FIELD_BOOLEAN, "LightOnlyTarget", InputSetLightOnlyTarget),
 DEFINE_INPUTFUNC(FIELD_BOOLEAN, "LightWorld", InputSetLightWorld),
 DEFINE_INPUTFUNC(FIELD_BOOLEAN, "EnableShadows", InputSetEnableShadows),
 // this is broken . . need to be able to set color and intensity like light_dynamic
-DEFINE_INPUTFUNC( FIELD_COLOR32, "LightColor", InputSetLightColor ),
+//DEFINE_INPUTFUNC( FIELD_COLOR32, "LightColor", InputSetLightColor ),
 DEFINE_INPUTFUNC(FIELD_FLOAT, "Ambient", InputSetAmbient),
 DEFINE_INPUTFUNC(FIELD_STRING, "SpotlightTexture", InputSetSpotlightTexture),
 DEFINE_THINKFUNC(InitialThink),
@@ -184,10 +184,10 @@ void CEnvProjectedTexture::InputSetEnableShadows( inputdata_t &inputdata )
 	m_bEnableShadows = inputdata.value.Bool();
 }
 
-void CEnvProjectedTexture::InputSetLightColor( inputdata_t &inputdata )
+/*void CEnvProjectedTexture::InputSetLightColor( inputdata_t &inputdata )
 {
 	m_LightColor = inputdata.value.Color32();
-}
+}*/
 
 void CEnvProjectedTexture::InputSetAmbient( inputdata_t &inputdata )
 {

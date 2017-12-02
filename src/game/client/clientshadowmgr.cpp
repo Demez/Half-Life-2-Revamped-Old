@@ -108,12 +108,12 @@ static ConVar r_worldlight_mincastintensity("r_worldlight_mincastintensity", "0.
 
 static ConVar r_flashlightdepthtexture( "r_flashlightdepthtexture", "1" );
 
-//high projtex
-#if defined( _X360 )
+//projtex high
+/*#if defined( _X360 )
 ConVar r_flashlightdepthreshigh( "r_flashlightdepthreshigh", "1024" );
 #else
 ConVar r_flashlightdepthreshigh("r_flashlightdepthreshigh", "4096");
-#endif
+#endif*/
 
 #if defined( _X360 )
 ConVar r_flashlightdepthres( "r_flashlightdepthres", "512" );
@@ -176,6 +176,9 @@ public:
 	void			GetTotalTextureSize( int& w, int& h );
 
 	void			DebugPrintCache( void );
+
+	//asw projtex stuff
+	//void InitRenderTargets(void);
 
 private:
 	typedef unsigned short FragmentHandle_t;
@@ -259,6 +262,12 @@ void CTextureAllocator::Init()
 		m_Cache[i].m_List = m_Fragments.InvalidIndex();
 	}
 
+	//asw projtex stuff
+	//InitRenderTargets();
+//}
+
+//void CTextureAllocator::InitRenderTargets( void )
+//{
 #if !defined( _X360 )
 	// don't need depth buffer for shadows
 	m_TexturePage.InitRenderTarget( TEXTURE_PAGE_SIZE, TEXTURE_PAGE_SIZE, RT_SIZE_NO_CHANGE, IMAGE_FORMAT_ARGB8888, MATERIAL_RT_DEPTH_NONE, false, "_rt_Shadows" );
@@ -697,7 +706,7 @@ void CTextureAllocator::GetTextureRect(TextureHandle_t handle, int& x, int& y, i
 // Defines how big of a shadow texture we should be making per caster...
 //-----------------------------------------------------------------------------
 #define TEXEL_SIZE_PER_CASTER_SIZE	4.0f //2.0f
-#define MAX_FALLOFF_AMOUNT 20 //240
+#define MAX_FALLOFF_AMOUNT 100 //240
 #define MAX_CLIP_PLANE_COUNT 4 //4
 #define SHADOW_CULL_TOLERANCE 0.5f //0.5f
 
@@ -719,6 +728,9 @@ public:
 
 	// Inherited from IClientShadowMgr
 	virtual bool Init();
+	//asw projtex stuff
+	//virtual void InitRenderTargets();
+
 	virtual void PostInit() {}
 	virtual void Shutdown();
 	virtual void LevelInitPreEntity();
@@ -932,6 +944,9 @@ private:
 	// Causes all shadows to be re-updated
 	void UpdateAllShadows();
 
+	//asw projtex stuff
+	//void RemoveAllShadowDecals();
+
 	// One of these gets called with every shadow that potentially will need to re-render
 	bool DrawRenderToTextureShadow( unsigned short clientShadowHandle, float flArea );
 	void DrawRenderToTextureShadowLOD( unsigned short clientShadowHandle );
@@ -1020,7 +1035,11 @@ private:
 	// If either changes in a frame, PreRender() will catch it and do the appropriate allocation, deallocation or reallocation
 	bool m_bDepthTextureActive;
 	int m_nDepthTextureResolution; // Assume square (height == width)
-	//int m_nDepthTextureResolutionHigh;
+
+	//asw projtex stuff //projtex high
+	/*int m_nDepthTextureResolutionHigh; // Assume square (height == width)
+	int m_nLowResStart; // Place in the shadow render target where the low res shadows start
+	bool m_bDepthTexturesAllocated;*/
 
 	CUtlVector< CTextureReference > m_DepthTextureCache;
 	CUtlVector< bool > m_DepthTextureCacheLocks;
@@ -1032,6 +1051,9 @@ private:
 
 	friend class CVisibleShadowList;
 	friend class CVisibleShadowFrustumList;
+
+	//projtex high
+	//void CalculateRenderTargetsAndSizes(void);
 };
 
 //-----------------------------------------------------------------------------
@@ -1222,6 +1244,22 @@ int CVisibleShadowList::FindShadows( const CViewSetup *pView, int nLeafCount, Le
 	return nCount;
 }
 
+//asw projtex stuff //proktex high
+// sniff the command line parameters, etc. to determine how many shadow rt's and their dimensions
+/*void CClientShadowMgr::CalculateRenderTargetsAndSizes(void)
+{
+	bool bTools = CommandLine()->CheckParm("-tools") != NULL;
+
+	m_nDepthTextureResolution = r_flashlightdepthres.GetInt();
+	m_nDepthTextureResolutionHigh = r_flashlightdepthreshigh.GetInt();
+	if (bTools)									// Higher resolution shadow maps in tools mode
+	{
+		char defaultRes[] = "2048";
+		m_nDepthTextureResolution = atoi(CommandLine()->ParmValue("-sfm_shadowmapres", defaultRes));
+	}
+	//m_nMaxDepthTextureShadows = bTools ? MAX_DEPTH_TEXTURE_SHADOWS_TOOLS : MAX_DEPTH_TEXTURE_SHADOWS;	// Just one shadow depth texture in games, more in tools
+	m_nMaxDepthTextureShadows = 3;
+}*/
 
 //-----------------------------------------------------------------------------
 // Constructor
@@ -1234,7 +1272,7 @@ CClientShadowMgr::CClientShadowMgr() :
 	m_bShadowFromWorldLights(false)
 {
 	m_nDepthTextureResolution = r_flashlightdepthres.GetInt();
-	//high projtex
+	//projtex high
 	//m_nDepthTextureResolutionHigh = r_flashlightdepthreshigh.GetInt();
 	//
 	m_bThreaded = false;
@@ -1350,7 +1388,13 @@ static void ShadowRestoreFunc( int nChangeFlags )
 // Initialization, shutdown
 //-----------------------------------------------------------------------------
 bool CClientShadowMgr::Init()
+//asw projtex stuff
 {
+	/*return true;
+}
+
+void CClientShadowMgr::InitRenderTargets()
+{*/
 	m_bRenderTargetNeedsClear = false;
 	m_SimpleShadow.Init( "decals/simpleshadow", TEXTURE_GROUP_DECAL );
 
@@ -1360,15 +1404,6 @@ bool CClientShadowMgr::Init()
 
 	SetShadowBlobbyCutoffArea( 0.005 );
 
-	//bool bTools = CommandLine()->CheckParm( "-tools" ) != NULL;
-	//m_nMaxDepthTextureShadows = bTools ? 4 : 1;	// Just one shadow depth texture in games, more in tools
-
-	//asw projtex stuff
-	/*if (r_shadowrendertotexture.GetBool())
-	{
-		InitRenderToTextureShadows();
-	}*/
-	
 	m_nMaxDepthTextureShadows = 3; //with your number
 
 	bool bLowEnd = ( g_pMaterialSystemHardwareConfig->GetDXSupportLevel() < 80 );
@@ -1418,14 +1453,31 @@ void CClientShadowMgr::InitDepthTextureShadows()
 	timer.Start();
  
 	// SAUL: set m_nDepthTextureResolution to the depth resolution we want
-	//m_nDepthTextureResolution = r_flashlightdepthres.GetInt();
-	//high projtex
-	//r_flashlightdepthreshigh.SetValue(m_nDepthTextureResolutionHigh);
+	m_nDepthTextureResolution = r_flashlightdepthres.GetInt();
+	//projtex high
+	/*m_nDepthTextureResolutionHigh = r_flashlightdepthreshigh.GetInt();
+	r_flashlightdepthreshigh.SetValue(m_nDepthTextureResolutionHigh);*/
 	//
 
+	//asw projtex stuff
 	if( !m_bDepthTextureActive )
 	{
 		m_bDepthTextureActive = true;
+
+	/*if (m_bDepthTextureActive)
+		return;
+
+	m_bDepthTextureActive = true;*/
+
+	//projtex high
+	/*if (!r_flashlightdepthtexture.GetBool())
+		return;
+
+	if (!m_bDepthTexturesAllocated || m_nDepthTextureResolution != r_flashlightdepthres.GetInt() || m_nDepthTextureResolutionHigh != r_flashlightdepthreshigh.GetInt())
+	{
+		CalculateRenderTargetsAndSizes();
+		m_bDepthTexturesAllocated = true;
+		//*/
 
 		ImageFormat dstFormat  = materials->GetShadowDepthTextureFormat();	// Vendor-dependent depth texture format
 #if !defined( _X360 )
@@ -1454,6 +1506,9 @@ void CClientShadowMgr::InitDepthTextureShadows()
 			char strRTName[64];
 			Q_snprintf( strRTName, ARRAYSIZE( strRTName ), "_rt_ShadowDepthTexture_%d", i );
 
+			//projtex high
+			//int nTextureResolution = ( i < MAX_DEPTH_TEXTURE_HIGHRES_SHADOWS ? m_nDepthTextureResolutionHigh : m_nDepthTextureResolution );
+
 #if defined( _X360 )
 			// create a render target to use as a resolve target to get the shared depth buffer
 			// surface is effectively never used
@@ -1462,6 +1517,7 @@ void CClientShadowMgr::InitDepthTextureShadows()
 #else
 			// SAUL: we want to create a *DEPTH TEXTURE* of specific size, so use RT_SIZE_NO_CHANGE and MATERIAL_RT_DEPTH_ONLY
 			depthTex.InitRenderTarget( m_nDepthTextureResolution, m_nDepthTextureResolution, RT_SIZE_NO_CHANGE, dstFormat, MATERIAL_RT_DEPTH_ONLY, false, strRTName );
+			//depthTex.InitRenderTarget(nTextureResolution, nTextureResolution, RT_SIZE_OFFSCREEN, dstFormat, MATERIAL_RT_DEPTH_NONE, false, strRTName);
 #endif
 
 			if ( i == 0 )
@@ -1470,9 +1526,10 @@ void CClientShadowMgr::InitDepthTextureShadows()
 				m_nDepthTextureResolution = depthTex->GetActualWidth();
 				r_flashlightdepthres.SetValue( m_nDepthTextureResolution );
 
-				//high projtex
+				//projtex high
 				//m_nDepthTextureResolutionHigh = m_DepthTextureCache[0]->GetActualWidth();
-				//r_flashlightdepthreshigh.SetValue(m_nDepthTextureResolutionHigh);
+				/*m_nDepthTextureResolutionHigh = depthTex->GetActualWidth();
+				r_flashlightdepthreshigh.SetValue(m_nDepthTextureResolutionHigh);*/
 				//
 			}
 			
@@ -1588,9 +1645,18 @@ void CClientShadowMgr::SetShadowColor( unsigned char r, unsigned char g, unsigne
 	m_SimpleShadow->ColorModulate( fr, fg, fb );
 
 	if (m_RenderToTextureActive)
-	{
+	{	
+		//asw shit
 		m_RenderShadow->ColorModulate( fr, fg, fb );
 		m_RenderModelShadow->ColorModulate( fr, fg, fb );
+		/*if (m_RenderShadow)
+		{
+			m_RenderShadow->ColorModulate(fr, fg, fb);
+		}
+		if (m_RenderModelShadow)
+		{
+			m_RenderModelShadow->ColorModulate(fr, fg, fb);
+		}*/
 	}
 
 	m_AmbientLightColor.r = r;
@@ -3055,6 +3121,28 @@ void CClientShadowMgr::PreRender()
 
 		bool bDepthTextureActive     = r_flashlightdepthtexture.GetBool();
 		int  nDepthTextureResolution = r_flashlightdepthres.GetInt();
+		//projtex high
+		/*int  nDepthTextureResolutionHigh = r_flashlightdepthreshigh.GetInt();
+
+		if ((bDepthTextureActive == true) && (m_bDepthTextureActive == true) &&
+			(nDepthTextureResolution != m_nDepthTextureResolution || nDepthTextureResolutionHigh != m_nDepthTextureResolutionHigh))
+		{
+			// If shadow depth texturing remains on, but resolution changed, shut down and reinitialize depth textures
+			ShutdownDepthTextureShadows();
+			InitDepthTextureShadows();
+		}
+		else
+		{
+			if (bDepthTextureActive && !m_bDepthTextureActive)
+			{
+				// If shadow depth texture is now needed but wasn't allocated, allocate it
+				// Turning on shadow depth mapping
+				//materials->ReEnableRenderTargetAllocation_IRealizeIfICallThisAllTexturesWillBeUnloadedAndLoadTimeWillSufferHorribly();
+				InitDepthTextureShadows();	// only allocates buffers if they don't already exist
+				//materials->FinishRenderTargetAllocation();
+			}
+		}
+		//*/
 
 		// If shadow depth texture size or enable/disable changed, do appropriate deallocation/(re)allocation
 		if ( ( bDepthTextureActive != m_bDepthTextureActive ) || ( nDepthTextureResolution != m_nDepthTextureResolution ) )
@@ -3127,11 +3215,10 @@ void CClientShadowMgr::PreRender()
 	m_bUpdatingDirtyShadows = false;
 }
 
-
 //-----------------------------------------------------------------------------
 // Gets the entity whose shadow this shadow will render into
 //-----------------------------------------------------------------------------
-IClientRenderable *CClientShadowMgr::GetParentShadowEntity( ClientShadowHandle_t handle )
+IClientRenderable *CClientShadowMgr::GetParentShadowEntity(ClientShadowHandle_t handle)
 {
 	ClientShadow_t& shadow = m_Shadows[handle];
 	IClientRenderable *pRenderable = ClientEntityList().GetClientRenderableFromHandle( shadow.m_Entity );

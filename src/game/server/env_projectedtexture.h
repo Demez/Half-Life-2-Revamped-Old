@@ -62,7 +62,7 @@ public:
 	//CNetworkVar(float, m_flBrightnessScale);
 	//
 	//projtex Light Color
-	CNetworkColor32(m_LightColor);
+	//CNetworkColor32(m_LightColor);
 	//
 	CNetworkVector( m_LinearFloatLightColor );
 	CNetworkVar( float, m_flAmbient );
