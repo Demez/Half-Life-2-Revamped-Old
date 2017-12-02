@@ -28,6 +28,7 @@ $Group "game"
 	"raytrace"
 	"server"
 	"tier1"
+	"game_shader_dx9"
 	"vgui_controls"
 }
 

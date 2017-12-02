@@ -5,9 +5,9 @@
 //-----------------------------------------------------------------------------
 
 $Macro SRCDIR		"..\.."
-$Macro GAMENAME "hl2-revamped"
+$Macro GAMENAME "mod_hl2"
 $Include "$SRCDIR\materialsystem\stdshaders\game_shader_dx9_base.vpc"
 
-$Project "Shaders (HL2-revamped)"
+$Project "Shaders (HL2)"
 {
 }

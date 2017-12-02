@@ -386,14 +386,14 @@ void CBaseViewModel::CalcViewModelView( CBasePlayer *owner, const Vector& eyePos
 {
 	// UNDONE: Calc this on the server?  Disabled for now as it seems unnecessary to have this info on the server
 //#if defined(CLIENT_DLL) || defined (HL2_DLL)
-#if defined(CLIENT_DLL)
+//#if defined(CLIENT_DLL)
 	QAngle vmangoriginal = eyeAngles;
 	QAngle vmangles = eyeAngles;
 	Vector vmorigin = eyePosition;
 
-	static ConVar viewmodel_offset_x("viewmodel_offset_x", "-3.0", FCVAR_REPLICATED | FCVAR_ARCHIVE);	 // the viewmodel offset from default in X
-	static ConVar viewmodel_offset_y("viewmodel_offset_y", "-1.0", FCVAR_REPLICATED | FCVAR_ARCHIVE);	 // the viewmodel offset from default in Y
-	static ConVar viewmodel_offset_z("viewmodel_offset_z", "1.0", FCVAR_REPLICATED | FCVAR_ARCHIVE);	 // the viewmodel offset from default in Z
+	static ConVar viewmodel_offset_x("viewmodel_offset_x", "0.0", FCVAR_REPLICATED | FCVAR_ARCHIVE);	 // the viewmodel offset from default in X
+	static ConVar viewmodel_offset_y("viewmodel_offset_y", "0.0", FCVAR_REPLICATED | FCVAR_ARCHIVE);	 // the viewmodel offset from default in Y
+	static ConVar viewmodel_offset_z("viewmodel_offset_z", "0.0", FCVAR_REPLICATED | FCVAR_ARCHIVE);	 // the viewmodel offset from default in Z
 
 	//viewmodel_offset
 	Vector vecRight;
@@ -434,10 +434,10 @@ void CBaseViewModel::CalcViewModelView( CBasePlayer *owner, const Vector& eyePos
 	}
 #endif
 
-	if( UseVR() )
-	{
-		g_ClientVirtualReality.OverrideViewModelTransform( vmorigin, vmangles, pWeapon && pWeapon->ShouldUseLargeViewModelVROverride() );
-	}
+	//if( UseVR() )
+	//{
+	//	g_ClientVirtualReality.OverrideViewModelTransform( vmorigin, vmangles, pWeapon && pWeapon->ShouldUseLargeViewModelVROverride() );
+	//}
 
 	SetLocalOrigin( vmorigin );
 	SetLocalAngles( vmangles );
@@ -468,10 +468,11 @@ void CBaseViewModel::CalcViewModelView( CBasePlayer *owner, const Vector& eyePos
 		SetLocalAngles( vmangles );
 	}
 #endif
-#endif
+//#endif
 
 }
 
+/*
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -534,6 +535,70 @@ void CBaseViewModel::CalcViewModelLag( Vector& origin, QAngle& angles, QAngle& o
 	VectorMA( origin, -pitch * 0.035f,	forward,	origin );
 	VectorMA( origin, -pitch * 0.03f,		right,	origin );
 	VectorMA( origin, -pitch * 0.02f,		up,		origin);
+}
+*/
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+
+float g_fMaxViewModelLag = 0.0f;
+
+void CBaseViewModel::CalcViewModelLag(Vector& origin, QAngle& angles, QAngle& original_angles)
+{
+	Vector vOriginalOrigin = origin;
+	QAngle vOriginalAngles = angles;
+
+	// Calculate our drift
+	Vector	forward;
+	AngleVectors(angles, &forward, NULL, NULL);
+
+	if (gpGlobals->frametime != 0.0f)
+	{
+		Vector vDifference;
+		VectorSubtract(forward, m_vecLastFacing, vDifference);
+
+		float flSpeed = 5.0f;
+
+		// If we start to lag too far behind, we'll increase the "catch up" speed.  Solves the problem with fast cl_yawspeed, m_yaw or joysticks
+		//  rotating quickly.  The old code would slam lastfacing with origin causing the viewmodel to pop to a new position
+		float flDiff = vDifference.Length();
+		if ((flDiff > g_fMaxViewModelLag) && (g_fMaxViewModelLag > 0.0f))
+		{
+			float flScale = flDiff / g_fMaxViewModelLag;
+			flSpeed *= flScale;
+		}
+
+		// FIXME:  Needs to be predictable?
+		VectorMA(m_vecLastFacing, flSpeed * gpGlobals->frametime, vDifference, m_vecLastFacing);
+		// Make sure it doesn't grow out of control!!!
+		VectorNormalize(m_vecLastFacing);
+		VectorMA(origin, 3.0f, vDifference * -1.0f, origin);
+
+		Assert(m_vecLastFacing.IsValid());
+	}
+
+	//Vector right, up;
+	//AngleVectors( original_angles, &forward, &right, &up );
+
+	float pitch = original_angles[PITCH];
+
+	if (pitch > 180.0f)
+		pitch -= 360.0f;
+	else if (pitch < -180.0f)
+		pitch += 360.0f;
+
+
+	if (g_fMaxViewModelLag == 0.0f)
+	{
+		origin = vOriginalOrigin;
+		angles = vOriginalAngles;
+	}
+
+	//FIXME: These are the old settings that caused too many exposed polys on some models
+	//VectorMA( origin, -pitch * 0.0f,	forward,	origin );
+	//VectorMA( origin, -pitch * 0.0f,		right,	origin );
+	//VectorMA( origin, -pitch * 0.0f,		up,		origin);
 }
 
 //-----------------------------------------------------------------------------

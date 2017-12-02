@@ -1020,6 +1020,7 @@ private:
 	// If either changes in a frame, PreRender() will catch it and do the appropriate allocation, deallocation or reallocation
 	bool m_bDepthTextureActive;
 	int m_nDepthTextureResolution; // Assume square (height == width)
+	//int m_nDepthTextureResolutionHigh;
 
 	CUtlVector< CTextureReference > m_DepthTextureCache;
 	CUtlVector< bool > m_DepthTextureCacheLocks;
@@ -1234,7 +1235,7 @@ CClientShadowMgr::CClientShadowMgr() :
 {
 	m_nDepthTextureResolution = r_flashlightdepthres.GetInt();
 	//high projtex
-	m_nDepthTextureResolutionHigh = r_flashlightdepthreshigh.GetInt();
+	//m_nDepthTextureResolutionHigh = r_flashlightdepthreshigh.GetInt();
 	//
 	m_bThreaded = false;
 
@@ -1417,9 +1418,9 @@ void CClientShadowMgr::InitDepthTextureShadows()
 	timer.Start();
  
 	// SAUL: set m_nDepthTextureResolution to the depth resolution we want
-	m_nDepthTextureResolution = r_flashlightdepthres.GetInt();
+	//m_nDepthTextureResolution = r_flashlightdepthres.GetInt();
 	//high projtex
-	r_flashlightdepthreshigh.SetValue(m_nDepthTextureResolutionHigh);
+	//r_flashlightdepthreshigh.SetValue(m_nDepthTextureResolutionHigh);
 	//
 
 	if( !m_bDepthTextureActive )
@@ -1470,8 +1471,8 @@ void CClientShadowMgr::InitDepthTextureShadows()
 				r_flashlightdepthres.SetValue( m_nDepthTextureResolution );
 
 				//high projtex
-				m_nDepthTextureResolutionHigh = m_DepthTextureCache[0]->GetActualWidth();
-				r_flashlightdepthreshigh.SetValue(m_nDepthTextureResolutionHigh);
+				//m_nDepthTextureResolutionHigh = m_DepthTextureCache[0]->GetActualWidth();
+				//r_flashlightdepthreshigh.SetValue(m_nDepthTextureResolutionHigh);
 				//
 			}
 			
