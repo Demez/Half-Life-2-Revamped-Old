@@ -87,6 +87,9 @@ IMPLEMENT_CLIENTCLASS_DT( C_FireSmoke, DT_FireSmoke, CFireSmoke )
 	RecvPropInt( RECVINFO( m_nFlags ) ),
 	RecvPropInt( RECVINFO( m_nFlameModelIndex ) ),
 	RecvPropInt( RECVINFO( m_nFlameFromAboveModelIndex ) ),
+#ifdef C17
+	RecvPropInt(RECVINFO(m_nParticleScale)),
+#endif
 END_RECV_TABLE()
 
 //==================================================
@@ -107,6 +110,13 @@ C_FireSmoke::~C_FireSmoke()
 		m_hEffect = NULL;
 	}
 
+#ifdef C17
+	if (m_hRefractEffect)
+	{
+		m_hRefractEffect->StopEmission(false, false, true);
+		m_hRefractEffect = NULL;
+	}
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -166,6 +176,75 @@ bool C_FireSmoke::ShouldDraw()
 void C_FireSmoke::Start( void )
 {
 	const char *lpszEffectName;
+#ifdef C17
+	const char *lpszRefractEffectName;
+	/*int nSize = (int) floor( m_flStartScale / 36.0f );
+	switch ( nSize )*/
+	if (m_nFlags & bitsFIRESMOKE_SMOKE)
+	{
+		switch (m_nParticleScale)
+		{
+		case 0:
+			lpszEffectName = "c17_firefx_small";
+			break;
+
+		case 1:
+			lpszEffectName = "c17_firefx_medium";
+			break;
+
+		case 2:
+			lpszEffectName = "c17_firefx_large";
+			break;
+
+		case 3:
+		default:
+			lpszEffectName = "c17_fire_tiny";
+			break;
+		}
+	}
+	else
+	{
+		switch (m_nParticleScale)
+		{
+		case 0:
+			lpszEffectName = "c17_firefx_small_nosmoke";
+			break;
+
+		case 1:
+			lpszEffectName = "c17_firefx_medium_nosmoke";
+			break;
+
+		case 2:
+			lpszEffectName = "c17_firefx_large_nosmoke";
+			break;
+
+		case 3:
+		default:
+			lpszEffectName = "c17_fire_tiny_nosmoke";
+			break;
+		}
+	}
+
+	switch (m_nParticleScale)
+	{
+	case 0:
+		lpszRefractEffectName = "c17_firefx_small_distortion";
+		break;
+
+	case 1:
+		lpszRefractEffectName = "c17_firefx_medium_distortion";
+		break;
+
+	case 2:
+		lpszRefractEffectName = "c17_firefx_large_distortion";
+		break;
+
+	case 3:
+	default:
+		lpszRefractEffectName = "c17_firefx_tiny_distortion";
+		break;
+	}
+#else
 	int nSize = (int) floor( m_flStartScale / 36.0f );
 	switch ( nSize )
 	{
@@ -186,10 +265,17 @@ void C_FireSmoke::Start( void )
 		lpszEffectName = ( m_nFlags & bitsFIRESMOKE_SMOKE ) ? "env_fire_large_smoke" : "env_fire_large";
 		break;
 	}
+#endif
 
 	// Create the effect of the correct size
 	m_hEffect = ParticleProp()->Create( lpszEffectName, PATTACH_ABSORIGIN );
 
+#ifdef C17
+	if (m_nFlags & bitsFIRESMOKE_SMOKE_COLLISION)
+	{
+		m_hRefractEffect = ParticleProp()->Create(lpszRefractEffectName, PATTACH_ABSORIGIN);
+	}
+#endif
 }
 
 

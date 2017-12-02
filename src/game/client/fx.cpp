@@ -52,7 +52,11 @@ CLIENTEFFECT_REGISTER_END()
 #endif
 
 //Whether or not we should emit a dynamic light
+#ifdef C17
+ConVar muzzleflash_light("muzzleflash_light", "0", FCVAR_ARCHIVE);
+#else
 ConVar muzzleflash_light( "muzzleflash_light", "1", FCVAR_ARCHIVE );
+#endif
 
 extern void FX_TracerSound( const Vector &start, const Vector &end, int iTracerType );
 

@@ -225,6 +225,9 @@ private:
 	float m_flNextPainSoundTime;
 
 	bool m_bNearEnemy;
+#ifdef C17
+	int	FliesChance(void);
+#endif
 
 	// NOT serialized:
 	int m_nThrowCrab;				// The crab we are about to throw.
@@ -389,6 +392,17 @@ const char *CNPC_PoisonZombie::GetHeadcrabModel( void )
 	return s_szHeadcrabModel;
 }
 
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: Defines the chances of spawning with the fly particle.
+// Input  :
+// Output :
+//-----------------------------------------------------------------------------
+int CNPC_PoisonZombie::FliesChance(void)
+{
+	return random->RandomInt(1, 2);
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Turns the given crab on or off.

@@ -29,8 +29,8 @@
 #endif // TF_CLIENT_DLL || TF_DLL
 
 #if !defined( CLIENT_DLL )
-extern void OnBaseCombatWeaponCreated( CBaseCombatWeapon * );
-extern void OnBaseCombatWeaponDestroyed( CBaseCombatWeapon * );
+void OnBaseCombatWeaponCreated( CBaseCombatWeapon * );
+void OnBaseCombatWeaponDestroyed( CBaseCombatWeapon * );
 
 void *SendProxy_SendLocalWeaponDataTable( const SendProp *pProp, const void *pStruct, const void *pVarData, CSendProxyRecipients *pRecipients, int objectID );
 #endif
@@ -212,6 +212,14 @@ public:
 
 	virtual void			SetViewModel();
 
+#ifdef C17
+	bool					IsIronsighted(void);
+	bool					IsIronsighted_ViewModel(void);
+	void					ToggleIronsights(void) { m_bIsIronsighted ? DisableIronsights() : EnableIronsights(); }
+	void					EnableIronsights(void);
+	void					DisableIronsights(void);
+#endif
+
 	virtual bool			HasWeaponIdleTimeElapsed( void );
 	virtual void			SetWeaponIdleTime( float time );
 	virtual float			GetWeaponIdleTime( void );
@@ -253,6 +261,9 @@ public:
 #ifdef CLIENT_DLL
 	virtual void			CreateMove( float flInputSampleTime, CUserCmd *pCmd, const QAngle &vecOldViewAngles ) {}
 	virtual int				CalcOverrideModelIndex() OVERRIDE;
+#ifdef C17
+	bool					GetBlurState(void) { return m_bReloadBlur; }
+#endif
 #endif
 
 	virtual bool			IsWeaponZoomed() { return false; }		// Is this weapon in its 'zoomed in' mode?
@@ -264,6 +275,33 @@ public:
 	virtual bool			Reload( void );
 	bool					DefaultReload( int iClipSize1, int iClipSize2, int iActivity );
 	bool					ReloadsSingly( void ) const;
+
+#ifdef C17
+	// Ironsight Scripts
+	Vector					GetIronsightPositionOffset(void) const;
+	QAngle					GetIronsightAngleOffset(void) const;
+	float					GetIronsightFOVOffset(void) const;
+	float					GetIronsightTime(void) const;
+	bool					CanSight(void) const;
+	bool					ShouldKeepCrosshair(void) const;
+
+#ifdef CLIENT_DLL
+	// Flashlight Scripts
+	bool					HasFlashlight(void) const;
+	virtual char			*GetFlashlightAttachment(void);
+
+	// Muzzleflash Scripts
+	int						GetMuzzleFlashFOV(void) const;
+	float					GetMuzzleFlashColorMax(void) const;
+	float					GetMuzzleFlashColorMin(void) const;
+	int						GetTexIndex(void) const;
+	int						GetMuzzleFlashFarZ(void) const;
+	bool					HasMuzzleFlash(void) const;
+
+	float					GetChromaticAmount(void) const;
+	float					GetBlurAmount(void) const;
+#endif
+#endif
 
 	virtual bool			AutoFiresFullClip( void ) { return false; }
 	virtual bool			CanOverload( void ) { return false; }
@@ -317,8 +355,10 @@ public:
 	void					SetOwner( CBaseCombatCharacter *owner );
 	virtual void			OnPickedUp( CBaseCombatCharacter *pNewOwner );
 
+#ifndef C17
 	virtual void			AddViewmodelBob( CBaseViewModel *viewmodel, Vector &origin, QAngle &angles ) {};
 	virtual float			CalcViewmodelBob( void ) { return 0.0f; };
+#endif
 
 	// Returns information about the various control panels
 	virtual void 			GetControlPanelInfo( int nPanelIndex, const char *&pPanelName );
@@ -390,6 +430,10 @@ public:
 	virtual	int				ActivityListCount( void ) { return 0; }
 
 	virtual void			Activate( void );
+
+#ifdef C17
+	float					m_flReIronsightTime;
+#endif
 
 	virtual bool ShouldUseLargeViewModelVROverride() { return false; }
 public:
@@ -543,6 +587,13 @@ public:
 	CNetworkVar( int, m_nViewModelIndex );
 
 	// Weapon firing
+#ifdef C17
+	CNetworkVar(bool, m_bReloadBlur);
+	CNetworkVar(float, m_flHolsterTime);
+	CNetworkVar(bool, m_bIsIronsighted);
+	CNetworkVar(bool, m_bIronsightToggle);
+	CNetworkVar(float, m_flIronsightedTime);
+#endif
 	CNetworkVar( float, m_flNextPrimaryAttack );						// soonest time ItemPostFrame will call PrimaryAttack
 	CNetworkVar( float, m_flNextSecondaryAttack );					// soonest time ItemPostFrame will call SecondaryAttack
 	CNetworkVar( float, m_flTimeWeaponIdle );							// soonest time ItemPostFrame will call WeaponIdle
@@ -597,6 +648,12 @@ public:
 
 	float					m_flUnlockTime;
 	EHANDLE					m_hLocker;				// Who locked this weapon.
+
+#ifdef C17
+#ifndef CLIENT_DLL
+	float					m_flReloadTime;
+#endif
+#endif
 
 	CNetworkVar( bool, m_bFlipViewModel );
 

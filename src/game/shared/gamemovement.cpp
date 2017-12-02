@@ -14,6 +14,16 @@
 #include "decals.h"
 #include "coordsize.h"
 #include "rumble_shared.h"
+#ifdef C17
+#include "basecombatweapon_shared.h"
+//City17:
+#ifndef CLIENT_DLL
+#include "hl2_player.h"
+#else
+#include "c_basehlplayer.h"
+#endif
+
+#endif
 
 #if defined(HL2_DLL) || defined(HL2_CLIENT_DLL)
 	#include "hl_movedata.h"
@@ -50,11 +60,6 @@ ConVar xc_uncrouch_on_jump( "xc_uncrouch_on_jump", "1", FCVAR_ARCHIVE, "Uncrouch
 ConVar player_limit_jump_speed( "player_limit_jump_speed", "1", FCVAR_REPLICATED );
 #endif
 
-// shitty camera nob
-ConVar cl_viewbob_enabled("cl_viewbob_enabled", "0", 0, "Oscillation Toggle", true, 0, true, 1);
-ConVar cl_viewbob_timer("cl_viewbob_timer", "10", 0, "Speed of Oscillation");
-ConVar cl_viewbob_scale("cl_viewbob_scale", "0.05", 0, "Magnitude of Oscillation");
-
 // option_duck_method is a carrier convar. Its sole purpose is to serve an easy-to-flip
 // convar which is ONLY set by the X360 controller menu to tell us which way to bind the
 // duck controls. Its value is meaningless anytime we don't have the options window open.
@@ -68,6 +73,28 @@ ConVar debug_latch_reset_onduck( "debug_latch_reset_onduck", "1", FCVAR_CHEAT );
 
 // [MD] I'll remove this eventually. For now, I want the ability to A/B the optimizations.
 bool g_bMovementOptimizations = true;
+
+#ifdef C17
+// Camera Bob
+ConVar cl_viewbob_enabled("cl_headbob_enabled", "1", FCVAR_REPLICATED | FCVAR_ARCHIVE, "Toggles head movements.");
+ConVar cl_viewbob_timer("cl_headbob_timer", "10", FCVAR_REPLICATED, "Speed of head bobs.", true, 1.0, true, 30.0);
+ConVar cl_viewbob_scale("cl_headbob_scale", "0.010", FCVAR_REPLICATED, "Movement of head per step.", true, 0.001, true, 1.0);
+ConVar cl_viewbob_scale_sprinting("cl_headbob_scale_sprinting", "0.020", FCVAR_REPLICATED, "Movement of head per step while sprinting.", true, 0.001, true, 1.0);
+ConVar cl_viewbob_scale_ducking("cl_headbob_scale_ducking", "0.050", FCVAR_REPLICATED, "Movement of head per step while crouching.", true, 0.001, true, 1.0);
+ConVar cl_viewbob_x_multiplier("cl_headbob_x_multiplier", "1.5", FCVAR_REPLICATED);
+ConVar cl_viewbob_y_mulitplier("cl_headbob_y_mulitplier", "2", FCVAR_REPLICATED);
+ConVar cl_viewbob_z_multiplier("cl_headbob_z_multiplier", "0.7", FCVAR_REPLICATED);
+ConVar cl_viewbob_x_divisor("cl_headbob_x_divisor", "75", FCVAR_REPLICATED);
+ConVar cl_viewbob_y_divisor("cl_headbob_y_divisor", "400", FCVAR_REPLICATED);
+ConVar cl_viewbob_z_divisor("cl_headbob_z_divisor", "120", FCVAR_REPLICATED);
+
+// City17
+ConVar cl_jumpkick_enabled("cl_jumpkick_enabled", "1", FCVAR_REPLICATED | FCVAR_ARCHIVE, "Enable or disable viewkick effects when jumping and landing.");
+ConVar cl_jumpkick_down_division("cl_jumpkick_down_division", "40", FCVAR_REPLICATED, "When a player lands from a high jump, their velocity is divided by this amount, then applied to the verticle angle of a viewkick.");
+ConVar cl_jumpkick_up_x("cl_jumpkick_up_x", "-1.2", FCVAR_REPLICATED, "This is the amount of kick that occurs vertically when a player jumps up.");
+ConVar cl_jumpkick_up_roll("cl_jumpkick_up_roll", "1.0", FCVAR_REPLICATED, "This determines the amount of roll that occurs when a player jumps and lands. The roll is a random between the set value, and the negative of the set value.");
+ConVar cl_jumpkick_down_roll("cl_jumpkick_down_roll", "2.0", FCVAR_REPLICATED, "This determines the amount of roll that occurs when a player jumps and lands. The roll is a random between the set value, and the negative of the set value.");
+#endif
 
 // Roughly how often we want to update the info about the ground surface we're on.
 // We don't need to do this very often.
@@ -1894,11 +1921,50 @@ void CGameMovement::StayOnGround( void )
 	}
 }
 
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+float CGameMovement::ViewBobAmount(void)
+{
+	if (player)
+	{
+		CHLMoveData *pMoveData = (CHLMoveData*)mv;
+
+		if (player->m_Local.m_bDucked)
+		{
+			return cl_viewbob_scale_ducking.GetFloat();
+		}
+
+		if (pMoveData && pMoveData->m_bIsSprinting)
+		{
+			return cl_viewbob_scale_sprinting.GetFloat();
+		}
+	}
+
+	return cl_viewbob_scale.GetFloat();
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 void CGameMovement::WalkMove( void )
 {
+#ifdef C17
+	if (cl_viewbob_enabled.GetBool() && !engine->IsPaused())
+	{
+		float xoffset = sin(cl_viewbob_x_multiplier.GetFloat() * gpGlobals->curtime * cl_viewbob_timer.GetFloat()) * player->GetAbsVelocity().Length() * ViewBobAmount() / cl_viewbob_x_divisor.GetFloat();
+		float yoffset = sin(cl_viewbob_y_mulitplier.GetFloat() * gpGlobals->curtime * cl_viewbob_timer.GetFloat()) * player->GetAbsVelocity().Length() * ViewBobAmount() / cl_viewbob_y_divisor.GetFloat();
+		float zoffset = sin(cl_viewbob_z_multiplier.GetFloat() * gpGlobals->curtime * cl_viewbob_timer.GetFloat()) * player->GetAbsVelocity().Length() * ViewBobAmount() / cl_viewbob_z_divisor.GetFloat();
+#ifdef C17_HAPTICS
+		player->ViewPunch(QAngle(xoffset, yoffset, zoffset), false);
+#else		
+		player->ViewPunch(QAngle(xoffset, yoffset, zoffset));
+#endif
+	}
+#endif
+
 	int i;
 
 	Vector wishvel;
@@ -2422,6 +2488,15 @@ bool CGameMovement::CheckJumpButton( void )
 
 
 	// In the air now.
+
+#ifdef C17
+	// City17: Viewpunch to kick the player's view up.
+	if (cl_jumpkick_enabled.GetBool())
+	{
+		player->ViewPunch(QAngle(cl_jumpkick_up_x.GetFloat(), 0, RandomFloat(cl_jumpkick_up_roll.GetFloat(), -(cl_jumpkick_up_roll.GetFloat()))));
+	}
+#endif
+
     SetGroundEntity( NULL );
 	
 	player->PlayStepSound( (Vector &)mv->GetAbsOrigin(), player->m_pSurfaceData, 1.0, true );
@@ -2437,14 +2512,21 @@ bool CGameMovement::CheckJumpButton( void )
 	float flMul;
 	if ( g_bMovementOptimizations )
 	{
-#if defined(HL2_DLL) || defined(HL2_CLIENT_DLL)
+#ifndef C17
+#if defined(HL2_DLL) || defined(HL2_CLIENT_DLL) 
 		Assert( GetCurrentGravity() == 600.0f );
 		flMul = 160.0f;	// approx. 21 units.
 #else
 		Assert( GetCurrentGravity() == 800.0f );
 		flMul = 268.3281572999747f;
 #endif
-
+#else
+		// City17 Settings:
+		Assert(sv_gravity.GetFloat() == 800.0f);
+		//flMul = 220.0f;
+		//flMul = 183.303028;
+		flMul = 185.0f; // approx. 21 units at a gravity of 800.
+#endif
 	}
 	else
 	{
@@ -3077,7 +3159,7 @@ void CGameMovement::CheckVelocity( void )
 			mv->SetAbsOrigin( org );
 		}
 
-// Bound it.
+		// Bound it.
 		if (mv->m_vecVelocity[i] > sv_maxvelocity.GetFloat()) 
 		{
 			DevMsg( 1, "PM  Got a velocity too high on %s\n", DescribeAxis( i ) );
@@ -3950,6 +4032,18 @@ void CGameMovement::CheckFalling( void )
 			{
 				fvol = 0;
 			}
+
+#ifdef C17
+			// City17: Falling punch.
+			if (cl_jumpkick_enabled.GetBool())
+			{
+#ifdef C17_HAPTICS
+				player->ViewPunch(QAngle((player->m_Local.m_flFallVelocity / cl_jumpkick_down_division.GetFloat()), 0, RandomFloat(cl_jumpkick_down_roll.GetFloat(), -(cl_jumpkick_down_roll.GetFloat()))), false);
+#else
+#endif
+				player->ViewPunch(QAngle((player->m_Local.m_flFallVelocity / cl_jumpkick_down_division.GetFloat()), 0, RandomFloat(cl_jumpkick_down_roll.GetFloat(), -(cl_jumpkick_down_roll.GetFloat()))));
+			}
+#endif
 		}
 
 		PlayerRoughLandingEffects( fvol );

@@ -20,6 +20,9 @@ BEGIN_DATADESC( CBaseFire )
 	DEFINE_FIELD( m_flScale, FIELD_FLOAT ),
 	DEFINE_FIELD( m_flScaleTime, FIELD_TIME ),
 	DEFINE_FIELD( m_nFlags, FIELD_INTEGER ),
+#ifdef C17
+	DEFINE_FIELD(m_nParticleScale, FIELD_INTEGER),
+#endif
 
 END_DATADESC()
 
@@ -34,6 +37,9 @@ CBaseFire::CBaseFire( void )
 	m_flScale			= 0.0f;
 	m_flScaleTime		= 0.0f;
 	m_nFlags			= bitsFIRE_NONE;
+#ifdef C17
+	m_nParticleScale = 1;
+#endif
 }
 
 CBaseFire::~CBaseFire( void )
@@ -58,12 +64,19 @@ void CBaseFire::Scale( float size, float time )
 //			size - destination size
 //			time - time to scale across
 //-----------------------------------------------------------------------------
+#ifdef C17
+void CBaseFire::Scale(float start, float size, float time, int particlesize)
+#else
 void CBaseFire::Scale( float start, float size, float time )
+#endif
 {
 	//Send to the client
 	m_flStartScale	= start;
 	m_flScale		= size;
 	m_flScaleTime	= time;
+#ifdef C17
+	m_nParticleScale = particlesize;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -95,6 +108,9 @@ IMPLEMENT_SERVERCLASS_ST( CFireSmoke, DT_FireSmoke )
 	SendPropFloat(	SENDINFO( m_flScale ),		0,	SPROP_NOSCALE),
 	SendPropFloat(	SENDINFO( m_flScaleTime ),	0,	SPROP_NOSCALE),
 	SendPropInt(	SENDINFO( m_nFlags ),		8,  SPROP_UNSIGNED ),
+#ifdef C17
+	SendPropInt(SENDINFO(m_nParticleScale), 0, SPROP_UNSIGNED),
+#endif
 	SendPropModelIndex(	SENDINFO( m_nFlameModelIndex ) ),
 	SendPropModelIndex(	SENDINFO( m_nFlameFromAboveModelIndex ) ),
 END_SEND_TABLE()
@@ -108,6 +124,9 @@ BEGIN_DATADESC( CFireSmoke )
 	DEFINE_FIELD( m_nFlags,				FIELD_INTEGER ),
 	DEFINE_FIELD( m_nFlameModelIndex,	FIELD_MODELINDEX ),
 	DEFINE_FIELD( m_nFlameFromAboveModelIndex,	FIELD_MODELINDEX ),
+#ifdef C17
+	DEFINE_FIELD(m_nParticleScale, FIELD_INTEGER),
+#endif
 
 END_DATADESC()
 
@@ -161,7 +180,23 @@ void CFireSmoke::EnableSmoke( int state )
 		m_nFlags &= ~bitsFIRESMOKE_SMOKE;
 	}
 }
-
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : state - 
+//-----------------------------------------------------------------------------
+void CFireSmoke::EnableCollidingSmoke(int state)
+{
+	if (state)
+	{
+		m_nFlags |= bitsFIRESMOKE_SMOKE_COLLISION;
+	}
+	else
+	{
+		m_nFlags &= ~bitsFIRESMOKE_SMOKE_COLLISION;
+	}
+}
+#endif
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : state - 

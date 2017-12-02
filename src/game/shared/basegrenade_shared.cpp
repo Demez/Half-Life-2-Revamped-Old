@@ -9,6 +9,11 @@
 #include "basegrenade_shared.h"
 #include "shake.h"
 #include "engine/IEngineSound.h"
+#ifdef C17
+#if !defined( CLIENT_DLL )
+#include "particle_parse.h"
+#endif
+#endif
 
 #if !defined( CLIENT_DLL )
 
@@ -71,6 +76,9 @@ BEGIN_NETWORK_TABLE( CBaseGrenade, DT_BaseGrenade )
 	SendPropVector( SENDINFO( m_vecVelocity ), 0, SPROP_NOSCALE ), 
 	// HACK: Use same flag bits as player for now
 	SendPropInt			( SENDINFO(m_fFlags), PLAYER_FLAG_BITS, SPROP_UNSIGNED, SendProxy_CropFlagsToPlayerFlagBitsLength ),
+#ifdef C17
+	SendPropTime(SENDINFO(m_flNextAttack)),
+#endif
 #else
 	RecvPropFloat( RECVINFO( m_flDamage ) ),
 	RecvPropFloat( RECVINFO( m_DmgRadius ) ),
@@ -82,6 +90,9 @@ BEGIN_NETWORK_TABLE( CBaseGrenade, DT_BaseGrenade )
 	RecvPropVector( RECVINFO(m_vecVelocity), 0, RecvProxy_LocalVelocity ),
 
 	RecvPropInt( RECVINFO( m_fFlags ) ),
+#ifdef C17
+	RecvPropTime(RECVINFO(m_flNextAttack)),
+#endif
 #endif
 END_NETWORK_TABLE()
 
@@ -146,7 +157,11 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 			!( contents & MASK_WATER ) ? g_sModelIndexFireball : g_sModelIndexWExplosion,
 			m_DmgRadius * .03, 
 			25,
+#ifdef C17
+			TE_EXPLFLAG_NOFIREBALL | TE_EXPLFLAG_NOFIREBALLSMOKE,
+#else
 			TE_EXPLFLAG_NONE,
+#endif
 			m_DmgRadius,
 			m_flDamage,
 			&vecNormal,
@@ -160,10 +175,23 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 			!( contents & MASK_WATER ) ? g_sModelIndexFireball : g_sModelIndexWExplosion,
 			m_DmgRadius * .03, 
 			25,
+#ifdef C17
+			TE_EXPLFLAG_NOFIREBALL | TE_EXPLFLAG_NOFIREBALLSMOKE,
+#else
 			TE_EXPLFLAG_NONE,
+#endif
 			m_DmgRadius,
 			m_flDamage );
 	}
+
+#ifdef C17
+	// Only do these effects if we're not submerged
+	if (!(UTIL_PointContents(GetAbsOrigin()) & CONTENTS_WATER))
+	{
+		DispatchParticleEffect("grenade_explosion_main", vecAbsOrigin, vec3_angle);
+		//DispatchParticleEffect( "weapon_grenade_attachments", vecAbsOrigin, vec3_angle );
+	}
+#endif
 
 #if !defined( CLIENT_DLL )
 	CSoundEnt::InsertSound ( SOUND_COMBAT, GetAbsOrigin(), BASEGRENADE_EXPLOSION_VOLUME, 3.0 );

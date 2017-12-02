@@ -511,6 +511,9 @@ BEGIN_PREDICTION_DATA_NO_BASE( C_BaseEntity )
 //	DEFINE_PRED_FIELD( m_pMovePeer, FIELD_EHANDLE ),
 //	DEFINE_PRED_FIELD( m_pMovePrevPeer, FIELD_EHANDLE ),
 
+#ifdef C17
+	DEFINE_PRED_FIELD(m_angNetworkAngles, FIELD_VECTOR, FTYPEDESC_INSENDTABLE | FTYPEDESC_NOERRORCHECK),
+#endif
 	DEFINE_PRED_FIELD_TOL( m_vecNetworkOrigin, FIELD_VECTOR, FTYPEDESC_INSENDTABLE, coordTolerance ),
 	DEFINE_PRED_FIELD( m_angNetworkAngles, FIELD_VECTOR, FTYPEDESC_INSENDTABLE | FTYPEDESC_NOERRORCHECK ),
 	DEFINE_FIELD( m_vecAbsOrigin, FIELD_VECTOR ),
@@ -834,8 +837,19 @@ void C_BaseEntity::Interp_UpdateInterpolationAmounts( VarMapping_t *map )
 	int c = map->m_Entries.Count();
 	for ( int i = 0; i < c; i++ )
 	{
+#ifdef C17
+		// Come on valve, you're better than this.
+		VarMapEntry_t *e = &map->m_Entries[i];
+		if (!e)
+			return;
+
+		IInterpolatedVar *watcher = e->watcher;
+		if (!watcher)
+			return;
+#else
 		VarMapEntry_t *e = &map->m_Entries[ i ];
 		IInterpolatedVar *watcher = e->watcher;
+#endif
 		watcher->SetInterpolationAmount( GetInterpolationAmount( watcher->GetType() ) ); 
 	}
 }

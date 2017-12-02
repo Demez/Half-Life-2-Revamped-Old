@@ -22,6 +22,9 @@
 #include "worldsize.h"
 #include "game.h"
 #include "shot_manipulator.h"
+#if defined C17
+#include "particle_parse.h"
+#endif
 
 #ifdef HL2_DLL
 #include "ai_interactions.h"
@@ -995,7 +998,12 @@ void CAI_BaseNPC::NotifyFriendsOfDamage( CBaseEntity *pAttackerEntity )
 				{
 					if ( (originNpc.AsVector2D() - origin.AsVector2D()).LengthSqr() < NEAR_XY_SQ )
 					{
-						if ( pNpc->GetSquad() == GetSquad() || IRelationType( pNpc ) == D_LI )
+#ifdef C17
+						//Tony; add a check to make sure this doesn't get called if the npc isn't in a squad
+						if ((pNpc->GetSquad() == GetSquad() && !(pNpc->GetSquad() == NULL || GetSquad() == NULL)) || IRelationType(pNpc) == D_LI)
+#else
+						if (pNpc->GetSquad() == GetSquad() || IRelationType(pNpc) == D_LI)
+#endif
 							pNpc->OnFriendDamaged( this, pAttacker );
 					}
 				}

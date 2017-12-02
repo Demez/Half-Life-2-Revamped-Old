@@ -1273,7 +1273,7 @@ void C_BreakableSurface::DrawOneHighlight( IBrushSurface* pBrushSurface, IMesh* 
 
 bool C_BreakableSurface::ShouldReceiveProjectedTextures( int flags )
 {
-	return true;
+	return false;
 }
 
 

@@ -62,6 +62,22 @@ public:
 
 	void SetDirection( const Vector &dir ) { m_vecDirection = dir; VectorNormalize( m_vecDirection ); }
 
+#ifdef C17
+	void SetDrawWithSunShafts(bool state) { m_bDrawWithSunShafts = state; }
+
+	void Draw(bool bCacheFullSceneState)
+	{
+		extern ConVar r_post_sunshaft;
+		if (!m_bDrawWithSunShafts && r_post_sunshaft.GetBool())
+			return;
+
+		CGlowOverlay::Draw(bCacheFullSceneState);
+	}
+
+public:
+	bool	m_bDrawWithSunShafts;
+#endif
+
 protected:
 
 	Vector	m_vecOrigin;
@@ -102,6 +118,10 @@ public:
 	C_LightGlowOverlay	m_Glow;
 
 	float				m_flGlowProxySize;
+
+#ifdef C17
+	bool				m_bDrawWithSunShafts;
+#endif
 };
 
 static void RecvProxy_HDRColorScale( const CRecvProxyData *pData, void *pStruct, void *pOut )
@@ -124,6 +144,9 @@ IMPLEMENT_CLIENTCLASS_DT_NOBASE( C_LightGlow, DT_LightGlow, CLightGlow )
 	RecvPropInt( RECVINFO_NAME(m_hNetworkMoveParent, moveparent), 0, RecvProxy_IntToMoveParent ),
 	RecvPropFloat(RECVINFO(m_flGlowProxySize)),
 	RecvPropFloat("HDRColorScale", 0, SIZEOF_IGNORE, 0, RecvProxy_HDRColorScale),
+#ifdef C17
+	RecvPropBool(RECVINFO(m_bDrawWithSunShafts)),
+#endif
 END_RECV_TABLE()
 
 //-----------------------------------------------------------------------------
@@ -134,6 +157,10 @@ m_nHorizontalSize( 0 ), m_nVerticalSize( 0 ), m_nMinDist( 0 ), m_nMaxDist( 0 )
 {
 	m_Glow.m_bDirectional = false;
 	m_Glow.m_bInSky = false;
+#ifdef C17
+	m_bDrawWithSunShafts = true;
+	m_Glow.m_bDrawWithSunShafts = true;
+#endif
 }
 
 void C_LightGlow::Simulate( void )
@@ -194,6 +221,9 @@ void C_LightGlow::OnDataChanged( DataUpdateType_t updateType )
 	AngleVectors( GetAbsAngles(), &forward, NULL, NULL );
 	
 	m_Glow.SetDirection( forward );
+#ifdef C17
+	m_Glow.SetDrawWithSunShafts(m_bDrawWithSunShafts);
+#endif
 }
 
 //-----------------------------------------------------------------------------

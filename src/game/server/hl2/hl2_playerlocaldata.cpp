@@ -17,6 +17,10 @@
 BEGIN_SEND_TABLE_NOBASE( CHL2PlayerLocalData, DT_HL2Local )
 	SendPropFloat( SENDINFO(m_flSuitPower), 10, SPROP_UNSIGNED | SPROP_ROUNDUP, 0.0, 100.0 ),
 	SendPropInt( SENDINFO(m_bZooming), 1, SPROP_UNSIGNED ),
+#ifdef C17
+	SendPropBool(SENDINFO(m_bInSmokeVolume)),
+	SendPropBool(SENDINFO(m_bLowStamina)),
+#endif
 	SendPropInt( SENDINFO(m_bitsActiveDevices), MAX_SUIT_DEVICES, SPROP_UNSIGNED ),
 	SendPropInt( SENDINFO(m_iSquadMemberCount) ),
 	SendPropInt( SENDINFO(m_iSquadMedicCount) ),
@@ -37,6 +41,10 @@ END_SEND_TABLE()
 BEGIN_SIMPLE_DATADESC( CHL2PlayerLocalData )
 	DEFINE_FIELD( m_flSuitPower, FIELD_FLOAT ),
 	DEFINE_FIELD( m_bZooming, FIELD_BOOLEAN ),
+#ifdef C17
+	DEFINE_FIELD(m_bInSmokeVolume, FIELD_BOOLEAN),
+	DEFINE_FIELD(m_bLowStamina, FIELD_BOOLEAN),
+#endif
 	DEFINE_FIELD( m_bitsActiveDevices, FIELD_INTEGER ),
 	DEFINE_FIELD( m_iSquadMemberCount, FIELD_INTEGER ),
 	DEFINE_FIELD( m_iSquadMedicCount, FIELD_INTEGER ),
@@ -58,6 +66,10 @@ CHL2PlayerLocalData::CHL2PlayerLocalData()
 	m_flSuitPower = 0.0;
 	m_bZooming = false;
 	m_bWeaponLowered = false;
+#ifdef C17
+	m_bInSmokeVolume = false;
+	m_bLowStamina = false;
+#endif
 	m_hAutoAimTarget.Set(NULL);
 	m_hLadder.Set(NULL);
 	m_vecAutoAimPoint.GetForModify().Init();

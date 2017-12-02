@@ -43,6 +43,10 @@ public:
 
 	CNetworkVar( float, m_flGlowProxySize );
 	CNetworkVar( float, m_flHDRColorScale );
+
+#ifdef C17
+	CNetworkVar(bool, m_bDrawWithSunShafts);
+#endif
 };
 
 extern void SendProxy_Angles( const SendProp *pProp, const void *pStruct, const void *pData, DVariant *pOut, int iElement, int objectID );
@@ -60,6 +64,9 @@ IMPLEMENT_SERVERCLASS_ST_NOBASE( CLightGlow, DT_LightGlow )
 	SendPropEHandle (SENDINFO_NAME(m_hMoveParent, moveparent)),
 	SendPropFloat( SENDINFO(m_flGlowProxySize ), 6,	SPROP_ROUNDUP,	0.0f,	64.0f ),
 	SendPropFloat( SENDINFO_NAME( m_flHDRColorScale, HDRColorScale ), 0,	SPROP_NOSCALE,	0.0f,	100.0f ),
+#ifdef C17
+	SendPropBool(SENDINFO(m_bDrawWithSunShafts)),
+#endif
 END_SEND_TABLE()
 
 LINK_ENTITY_TO_CLASS( env_lightglow, CLightGlow );
@@ -73,6 +80,9 @@ BEGIN_DATADESC( CLightGlow )
 	DEFINE_KEYFIELD( m_nOuterMaxDist,		FIELD_INTEGER,	"OuterMaxDist" ),
 	DEFINE_KEYFIELD( m_flGlowProxySize,		FIELD_FLOAT,	"GlowProxySize" ),
 	DEFINE_KEYFIELD( m_flHDRColorScale,		FIELD_FLOAT,	"HDRColorScale" ),
+#ifdef C17
+	DEFINE_KEYFIELD(m_bDrawWithSunShafts, FIELD_BOOLEAN, "DrawWithSunShafts"),
+#endif
 	DEFINE_INPUTFUNC( FIELD_COLOR32, "Color",  InputColor ),
 
 END_DATADESC()
@@ -88,6 +98,10 @@ CLightGlow::CLightGlow( void )
 	m_nMaxDist = 0.0f;
 
 	m_flGlowProxySize = 2.0f;
+
+#ifdef C17
+	m_bDrawWithSunShafts = true;
+#endif
 }
 
 //-----------------------------------------------------------------------------

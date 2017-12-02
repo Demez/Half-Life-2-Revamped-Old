@@ -189,6 +189,11 @@ void CBaseHudWeaponSelection::ProcessInput()
 
 			// select weapon
 			SelectWeapon();
+
+#ifdef C17_HAPTICS
+			input->ClearInputButton(IN_ATTACK);
+			input->ClearInputButton(IN_ATTACK2);
+#endif
 		}
 	}
 }
@@ -251,6 +256,12 @@ int	CBaseHudWeaponSelection::KeyInput( int down, ButtonCode_t keynum, const char
 
 	if ( down >= 1 && keynum >= KEY_1 && keynum <= KEY_9 )
 	{
+#ifdef C17
+		//Tony; 0 is actually '10' (slot10)
+		if (keynum == KEY_0)
+			keynum = KEY_A; //Dealing with button codes, so just use KEY_A, which is equal to 11  anyway.
+#endif
+
 		if ( HandleHudMenuInput( keynum - KEY_0 ) )
 			return 0;
 	}
@@ -303,11 +314,13 @@ void CBaseHudWeaponSelection::UserCmd_Slot2(void)
 
 void CBaseHudWeaponSelection::UserCmd_Slot3(void)
 {
+#ifndef C17
 	if( HUDTYPE_CAROUSEL == hud_fastswitch.GetInt() )
 	{
 		engine->ClientCmd( "phys_swap" );
 	}
 	else
+#endif
 	{
 		SelectSlot( 3 );
 	}

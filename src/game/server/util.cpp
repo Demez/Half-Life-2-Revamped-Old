@@ -1383,8 +1383,10 @@ void UTIL_BloodStream( const Vector &origin, const Vector &direction, int color,
 	if ( !UTIL_ShouldShowBlood( color ) )
 		return;
 
+#ifndef C17
 	if ( g_Language.GetInt() == LANGUAGE_GERMAN && color == BLOOD_COLOR_RED )
 		color = 0;
+#endif
 
 	CPVSFilter filter( origin );
 	te->BloodStream( filter, 0.0, &origin, &direction, 247, 63, 14, 255, MIN( amount, 255 ) );

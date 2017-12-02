@@ -213,7 +213,28 @@ BEGIN_DATADESC( CBaseAnimating )
 	DEFINE_KEYFIELD( m_flModelScale, FIELD_FLOAT, "modelscale" ),
 	DEFINE_INPUTFUNC( FIELD_VECTOR, "SetModelScale", InputSetModelScale ),
 
+#ifdef C17
 	DEFINE_FIELD( m_fBoneCacheFlags, FIELD_SHORT ),
+
+	//L4D Glow
+	DEFINE_KEYFIELD(m_bEnableGlow, FIELD_BOOLEAN, "glow"),
+	DEFINE_INPUTFUNC(FIELD_BOOLEAN, "SetGlowState", InputSetGlowState),
+	DEFINE_KEYFIELD(m_GlowColor, FIELD_COLOR32, "glowcolor"),
+	DEFINE_INPUTFUNC(FIELD_COLOR32, "SetGlowColor", InputSetGlowColor),
+
+	// Graphics
+	DEFINE_KEYFIELD(m_bReceiveProjected, FIELD_BOOLEAN, "ReceiveProjected"),
+	DEFINE_INPUTFUNC(FIELD_BOOLEAN, "SetReceiveProjected", InputSetReceiveProjected),
+
+	//DEFINE_KEYFIELD( m_bRenderInSunShafts, FIELD_BOOLEAN, "RenderInSunShafts" ),
+	//DEFINE_INPUTFUNC( FIELD_BOOLEAN, "SetRenderInSunShafts", InputSetRenderInSunShafts ),
+
+	DEFINE_KEYFIELD(m_bRenderInReflections, FIELD_BOOLEAN, "RenderInReflections"),
+	DEFINE_INPUTFUNC(FIELD_BOOLEAN, "SetRenderInReflections", InputSetRenderInReflections),
+
+	DEFINE_KEYFIELD(m_bRenderInRefractions, FIELD_BOOLEAN, "RenderInRefractions"),
+	DEFINE_INPUTFUNC(FIELD_BOOLEAN, "SetRenderInRefractions", InputSetRenderInRefractions),
+#endif
 
 	END_DATADESC()
 
@@ -261,6 +282,17 @@ IMPLEMENT_SERVERCLASS_ST(CBaseAnimating, DT_BaseAnimating)
 	SendPropFloat( SENDINFO( m_fadeMaxDist ), 0, SPROP_NOSCALE ),
 	SendPropFloat( SENDINFO( m_flFadeScale ), 0, SPROP_NOSCALE ),
 
+#ifdef C17
+	// L4D Glow
+	SendPropBool(SENDINFO(m_bEnableGlow)),
+	SendPropInt(SENDINFO(m_GlowColor), 32, SPROP_UNSIGNED, SendProxy_Color32ToInt),
+
+	SendPropBool(SENDINFO(m_bReceiveProjected)),
+	//SendPropBool( SENDINFO( m_bRenderInSunShafts ) ),
+	SendPropBool(SENDINFO(m_bRenderInReflections)),
+	SendPropBool(SENDINFO(m_bRenderInRefractions)),
+#endif
+
 END_SEND_TABLE()
 
 
@@ -288,6 +320,18 @@ CBaseAnimating::CBaseAnimating()
 	m_fadeMaxDist = 0;
 	m_flFadeScale = 0.0f;
 	m_fBoneCacheFlags = 0;
+
+#ifdef C17
+	// L4D Glow
+	color32 col32 = { 255, 255, 255, 100 };
+	m_GlowColor.Set(col32);
+	m_bEnableGlow = false;
+
+	m_bReceiveProjected = true;
+	//m_bRenderInSunShafts = true;
+	m_bRenderInReflections = true;
+	m_bRenderInRefractions = true;
+#endif
 }
 
 CBaseAnimating::~CBaseAnimating()
@@ -612,6 +656,39 @@ void CBaseAnimating::InputSetLightingOrigin( inputdata_t &inputdata )
 	string_t strLightingOrigin = MAKE_STRING( inputdata.value.String() );
 	SetLightingOrigin( strLightingOrigin );
 }
+
+#ifdef C17
+void CBaseAnimating::InputSetReceiveProjected(inputdata_t &inputdata)
+{
+	m_bReceiveProjected = inputdata.value.Bool();
+}
+
+/*void CBaseAnimating::InputSetRenderInSunShafts( inputdata_t &inputdata )
+{
+m_bRenderInSunShafts = inputdata.value.Bool();
+}*/
+
+void CBaseAnimating::InputSetRenderInReflections(inputdata_t &inputdata)
+{
+	m_bRenderInReflections = inputdata.value.Bool();
+}
+
+void CBaseAnimating::InputSetRenderInRefractions(inputdata_t &inputdata)
+{
+	m_bRenderInRefractions = inputdata.value.Bool();
+}
+
+void CBaseAnimating::InputSetGlowState(inputdata_t &inputdata)
+{
+	m_bEnableGlow = inputdata.value.Bool();
+}
+
+void CBaseAnimating::InputSetGlowColor(inputdata_t &inputdata)
+{
+	color32 color = inputdata.value.Color32();
+	m_GlowColor.Set(color);
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: SetModelScale input handler
@@ -3561,6 +3638,16 @@ bool CBaseAnimating::PrefetchSequence( int iSequence )
 
 	return Studio_PrefetchSequence( pStudioHdr, iSequence );
 }
+
+#if C17
+void CBaseAnimating::SetGlow(bool state, Color glowColor)
+{
+	color32 col32 = { glowColor.r(), glowColor.g(), glowColor.b(), glowColor.a() };
+
+	m_GlowColor.Set(col32);
+	m_bEnableGlow.Set(state);
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 

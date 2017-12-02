@@ -58,6 +58,7 @@ private:
 //---------------------------------------------------------
 inline const Vector &CShotManipulator::ApplySpread( const Vector &vecSpread, float bias )
 {
+#ifndef C17
 	// get circular gaussian spread
 	float x, y, z;
 
@@ -87,6 +88,23 @@ inline const Vector &CShotManipulator::ApplySpread( const Vector &vecSpread, flo
 	} while (z > 1);
 
 	m_vecResult = m_vecShotDirection + x * vecSpread.x * m_vecRight + y * vecSpread.y * m_vecUp;
+#else
+	// get circular gaussian spread
+	float x, y;
+	float r, theta;
+	float sinTheta, cosTheta;
+
+	// Generate a random polar coordinate
+	r = random->RandomFloat(0, 1);
+	theta = random->RandomFloat(0, DEG2RAD(360));
+
+	// Convert to cartesian (X/Y) coordinates
+	SinCos(theta, &sinTheta, &cosTheta);
+	x = r * sinTheta;
+	y = r * cosTheta;
+
+	m_vecResult = m_vecShotDirection + x * vecSpread.x * m_vecRight + y * vecSpread.y * m_vecUp;
+#endif
 
 	return m_vecResult;
 }

@@ -38,6 +38,11 @@ STUB_WEAPON_CLASS( weapon_crowbar, WeaponCrowbar, C_BaseHLBludgeonWeapon );
 #ifdef HL2_EPISODIC
 STUB_WEAPON_CLASS( weapon_hopwire, WeaponHopwire, C_BaseHLCombatWeapon );
 //STUB_WEAPON_CLASS( weapon_proto1, WeaponProto1, C_BaseHLCombatWeapon );
+#ifdef C17
+STUB_WEAPON_CLASS(weapon_ar3, WeaponAR3, C_HLMachineGun);
+STUB_WEAPON_CLASS(weapon_medkit, MedKit, C_BaseHLCombatWeapon);
+STUB_WEAPON_CLASS(weapon_stunbaton, WeaponStunbaton, C_BaseHLBludgeonWeapon);
+#endif
 #endif
 #ifdef HL2_LOSTCOAST
 STUB_WEAPON_CLASS( weapon_oldmanharpoon, WeaponOldManHarpoon, C_WeaponCitizenPackage );

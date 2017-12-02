@@ -21,15 +21,12 @@
 #include "env_detail_controller.h"
 #include "tier0/icommandline.h"
 #include "c_world.h"
-//3D-Grass
-//#include "ShaderEditor/Grass/CGrassCluster.h"
-//
 
 #include "tier0/valve_minmax_off.h"
 #include <algorithm>
 #include "tier0/valve_minmax_on.h"
 
-#if defined(DOD_DLL) || defined(CSTRIKE_DLL)
+#if defined(DOD_DLL) || defined(CSTRIKE_DLL) || defined ( C17 )
 #define USE_DETAIL_SHAPES
 #endif
 
@@ -619,7 +616,7 @@ void CDetailModel::GetRenderBoundsWorldspace( Vector& mins, Vector& maxs )
 
 bool CDetailModel::ShouldReceiveProjectedTextures( int flags )
 {
-	return true;
+	return false;
 }
 
 bool CDetailModel::UsesPowerOfTwoFrameBufferTexture()
@@ -1064,7 +1061,11 @@ void CDetailModel::DrawTypeSprite( CMeshBuilder &meshBuilder )
 #ifndef USE_DETAIL_SHAPES
 	meshBuilder.Position3fv( vecOrigin.Base() );
 #else
+#ifdef C17
+	meshBuilder.Position3fv((vecOrigin/*+vecSway*/).Base());
+#else
 	meshBuilder.Position3fv( (vecOrigin+vecSway).Base() );
+#endif
 #endif
 
 	meshBuilder.Color4ubv( color );
@@ -1087,7 +1088,11 @@ void CDetailModel::DrawTypeSprite( CMeshBuilder &meshBuilder )
 #ifndef USE_DETAIL_SHAPES
 	meshBuilder.Position3fv( vecOrigin.Base() );
 #else
+#ifdef C17
+	meshBuilder.Position3fv((vecOrigin/*+vecSway*/).Base());
+#else
 	meshBuilder.Position3fv( (vecOrigin+vecSway).Base() );
+#endif
 #endif
 	meshBuilder.Color4ubv( color );
 	meshBuilder.TexCoord2f( 0, texlr.x, texul.y );
@@ -1142,6 +1147,7 @@ void CDetailModel::DrawTypeShapeCross( CMeshBuilder &meshBuilder )
 	float flSizeX = ( lr.x - ul.x ) / 2;
 	float flSizeY = ( lr.y - ul.y );
 
+#ifndef C17
 	UpdatePlayerAvoid();
 
 	// sway based on time plus a random seed that is constant for this instance of the sprite
@@ -1151,6 +1157,7 @@ void CDetailModel::DrawTypeShapeCross( CMeshBuilder &meshBuilder )
 	{
 		vecSway += UTIL_YawToVector( m_pAdvInfo->m_flSwayYaw ) * sin(gpGlobals->curtime+m_Origin.x) * flSwayAmplitude;
 	}
+#endif
 
 	Vector vecOrigin;
 	VectorMA( m_Origin, ul.y, m_pAdvInfo->m_vecAnglesUp[0], vecOrigin );
@@ -1183,6 +1190,9 @@ void CDetailModel::DrawTypeShapeCross( CMeshBuilder &meshBuilder )
 	//debugoverlay->AddLineOverlay( m_Origin, m_Origin + forward * 20, 0, 0, 255, true, 0.01 );
 
 	int iDrawn = 0;
+#ifdef C17
+	Vector vecSway;
+#endif
 	while( iDrawn < 4 )
 	{
 		switch( iBranch )
@@ -1266,10 +1276,12 @@ void CDetailModel::DrawTypeShapeTri( CMeshBuilder &meshBuilder )
 	Vector vecOrigin;
 	Vector vecHeight, vecWidth;
 
+#ifndef C17
 	UpdatePlayerAvoid();
 
 	Vector vecSwayYaw = UTIL_YawToVector( m_pAdvInfo->m_flSwayYaw );
 	float flSwayAmplitude = m_pAdvInfo->m_flSwayAmount * cl_detail_max_sway.GetFloat();
+#endif
 
 	int iDrawn = 0;
 	while( iDrawn < 3 )
@@ -1282,8 +1294,10 @@ void CDetailModel::DrawTypeShapeTri( CMeshBuilder &meshBuilder )
 		VectorMA( vecOrigin, m_pAdvInfo->m_flShapeSize*flWidth, m_pAdvInfo->m_vecAnglesForward[iBranch], vecOrigin );
 
 		// sway is calculated per side so they don't sway exactly the same
+#ifndef C17
 		Vector vecSway = ( m_pAdvInfo->m_vecCurrentAvoid * flWidth ) + 
 			vecSwayYaw * sin(gpGlobals->curtime+m_Origin.x+iBranch) * flSwayAmplitude;
+#endif
 
 		DrawSwayingQuad( meshBuilder, vecOrigin, vecSway, texul, texlr, color, vecWidth, vecHeight );
 		
@@ -1301,6 +1315,7 @@ void CDetailModel::DrawTypeShapeTri( CMeshBuilder &meshBuilder )
 #ifdef USE_DETAIL_SHAPES
 void CDetailModel::UpdatePlayerAvoid( void )
 {
+#ifndef C17
 	float flForce = cl_detail_avoid_force.GetFloat();
 
 	if ( flForce < 0.1 )
@@ -1360,6 +1375,7 @@ void CDetailModel::UpdatePlayerAvoid( void )
 	m_pAdvInfo->m_vecCurrentAvoid[0] = Approach( vecMaxAvoid[0], m_pAdvInfo->m_vecCurrentAvoid[0], flRecoverSpeed );
 	m_pAdvInfo->m_vecCurrentAvoid[1] = Approach( vecMaxAvoid[1], m_pAdvInfo->m_vecCurrentAvoid[1], flRecoverSpeed );
 	m_pAdvInfo->m_vecCurrentAvoid[2] = Approach( vecMaxAvoid[2], m_pAdvInfo->m_vecCurrentAvoid[2], flRecoverSpeed );
+#endif
 }
 #endif
 
@@ -1371,7 +1387,11 @@ void CDetailModel::UpdatePlayerAvoid( void )
 void CDetailModel::DrawSwayingQuad( CMeshBuilder &meshBuilder, Vector vecOrigin, Vector vecSway, Vector2D texul, Vector2D texlr, unsigned char *color,
 								   Vector width, Vector height )
 {
+#ifdef C17
+	meshBuilder.Position3fv((vecOrigin /*+ vecSway*/).Base());
+#else
 	meshBuilder.Position3fv( (vecOrigin + vecSway).Base() );
+#endif
 	meshBuilder.TexCoord2fv( 0, texul.Base() );
 	meshBuilder.Color4ubv( color );
 	meshBuilder.AdvanceVertex();
@@ -1389,7 +1409,11 @@ void CDetailModel::DrawSwayingQuad( CMeshBuilder &meshBuilder, Vector vecOrigin,
 	meshBuilder.AdvanceVertex();
 
 	vecOrigin -= height;
+#ifdef C17
+	meshBuilder.Position3fv((vecOrigin /*+ vecSway*/).Base());
+#else
 	meshBuilder.Position3fv( (vecOrigin + vecSway).Base() );
+#endif
 	meshBuilder.TexCoord2f( 0, texlr.x, texul.y );
 	meshBuilder.Color4ubv( color );
 	meshBuilder.AdvanceVertex();
@@ -1474,6 +1498,7 @@ void CDetailObjectSystem::LevelInitPreEntity()
 		}
 	}
 
+#ifndef C17
 	if ( m_DetailObjects.Count() || m_DetailSpriteDict.Count() )
 	{
 		// There are detail objects in the level, so precache the material
@@ -1492,6 +1517,7 @@ void CDetailObjectSystem::LevelInitPreEntity()
 			}
 		}
 	}
+#endif
 
 	int detailPropLightingLump;
 	if( g_pMaterialSystemHardwareConfig->GetHDRType() != HDR_TYPE_NONE )
@@ -1515,6 +1541,7 @@ void CDetailObjectSystem::LevelInitPreEntity()
 
 void CDetailObjectSystem::LevelInitPostEntity()
 {
+#ifndef C17
 	const char *pDetailSpriteMaterial = DETAIL_SPRITE_MATERIAL;
 	C_World *pWorld = GetClientWorldEntity();
 	if ( pWorld && pWorld->GetDetailSpriteMaterial() && *(pWorld->GetDetailSpriteMaterial()) )
@@ -1522,6 +1549,32 @@ void CDetailObjectSystem::LevelInitPostEntity()
 		pDetailSpriteMaterial = pWorld->GetDetailSpriteMaterial(); 
 	}
 	m_DetailSpriteMaterial.Init( pDetailSpriteMaterial, TEXTURE_GROUP_OTHER );
+#else
+	if (m_DetailObjects.Count() || m_DetailSpriteDict.Count())
+	{
+		const char *pDetailSpriteMaterial = DETAIL_SPRITE_MATERIAL;
+		C_World *pWorld = GetClientWorldEntity();
+		if (pWorld && pWorld->GetDetailSpriteMaterial() && *(pWorld->GetDetailSpriteMaterial()))
+			pDetailSpriteMaterial = pWorld->GetDetailSpriteMaterial();
+
+		m_DetailSpriteMaterial.Init(pDetailSpriteMaterial, TEXTURE_GROUP_OTHER);
+		PrecacheMaterial(pDetailSpriteMaterial);
+		IMaterial *pMat = m_DetailSpriteMaterial;
+
+		// adjust for non-square textures (cropped)
+		float flRatio = pMat->GetMappingWidth() / pMat->GetMappingHeight();
+		if (flRatio > 1.0)
+		{
+			for (int i = 0; i<m_DetailSpriteDict.Count(); i++)
+			{
+				m_DetailSpriteDict[i].m_TexUL.y *= flRatio;
+				m_DetailSpriteDict[i].m_TexLR.y *= flRatio;
+				m_DetailSpriteDictFlipped[i].m_TexUL.y *= flRatio;
+				m_DetailSpriteDictFlipped[i].m_TexLR.y *= flRatio;
+			}
+		}
+	}
+#endif
 
 	if ( GetDetailController() )
 	{
@@ -1598,12 +1651,14 @@ void CDetailObjectSystem::UnserializeModelDict( CUtlBuffer& buf )
 		DetailModelDict_t dict;
 		dict.m_pModel = (model_t *)engine->LoadModel( lump.m_Name, true );
 
+#ifdef C17
 		// Don't allow vertex-lit models
 		if (modelinfo->IsModelVertexLit(dict.m_pModel))
 		{
 			Warning("Detail prop model %s is using vertex-lit materials!\nIt must use unlit materials!\n", lump.m_Name );
 			dict.m_pModel = (model_t *)engine->LoadModel( "models/error.mdl" );
 		}
+#endif
 
 		m_DetailObjectDict.AddToTail( dict );
 	}
@@ -1946,14 +2001,6 @@ void CDetailObjectSystem::UnserializeFastSprite( FastSpriteX4_t *pSpritex4, int 
 	pSpritex4->m_RGBColor[nSubField][3] = 255;
 
 	pSpritex4->m_pSpriteDefs[nSubField] = pSDef;
-	//3D-Grass
-	//_grassClusterInfo clusterHint;
-	//clusterHint.orig = pos;
-	//clusterHint.color.Init(color[0], color[1], color[2], 1);
-	//clusterHint.uv_min = pSDef->m_TexLR;
-	//clusterHint.uv_max = pSDef->m_TexUL;
-	//CGrassClusterManager::GetInstance()->AddClusterHint(clusterHint);
-	//
 }
 
 

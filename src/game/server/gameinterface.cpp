@@ -90,6 +90,10 @@
 #include "serverbenchmark_base.h"
 #include "querycache.h"
 
+#if FMOD
+// FMOD Ex
+#include "fmod/fmod_manager.h"
+#endif
 
 #ifdef TF_DLL
 #include "gc_clientsystem.h"
@@ -742,6 +746,11 @@ bool CServerGameDLL::DLLInit( CreateInterfaceFn appSystemFactory,
 	gamestatsuploader->InitConnection();
 #endif
 
+#if FMOD
+	// Initialize FMOD Ex.
+	FMODManager()->InitFMOD();
+#endif
+
 	return true;
 }
 
@@ -773,6 +782,11 @@ void CServerGameDLL::DLLShutdown( void )
 	g_TextStatsMgr.WriteFile( filesystem );
 
 	IGameSystem::ShutdownAllSystems();
+
+#if FMOD
+	//City 17: Shutdown FMOD Ex
+	FMODManager()->ExitFMOD();
+#endif
 
 #ifdef CSTRIKE_DLL // BOTPORT: TODO: move these ifdefs out
 	RemoveBotControl();
@@ -969,6 +983,11 @@ bool CServerGameDLL::LevelInit( const char *pMapName, char const *pMapEntities, 
 		// Single player games tell xbox live what game & chapter the user is playing
 		UpdateRichPresence();
 	}
+
+#ifdef C17
+	//Tony; parse custom manifest if exists!
+	ParseParticleEffectsMap(pMapName, false);
+#endif
 
 	//Tony; parse custom manifest if exists!
 	ParseParticleEffectsMap( pMapName, false );
@@ -1277,6 +1296,11 @@ void CServerGameDLL::GameFrame( bool simulating )
 	// Any entities that detect network state changes on a timer do it here.
 	g_NetworkPropertyEventMgr.FireEvents();
 
+#if FMOD
+	// FMOD Ex per-frame fade think.
+	FMODManager()->FadeThink();
+#endif
+
 	gpGlobals->frametime = oldframetime;
 }
 
@@ -1362,7 +1386,6 @@ void CServerGameDLL::OnQueryCvarValueFinished( QueryCvarCookie_t iCookie, edict_
 {
 }
 
-
 // Called when a level is shutdown (including changing levels)
 void CServerGameDLL::LevelShutdown( void )
 {
@@ -1391,6 +1414,11 @@ void CServerGameDLL::LevelShutdown( void )
 	CBaseEntity::SetAllowPrecache( false );
 
 	g_nCurrentChapterIndex = -1;
+
+#if FMOD
+	// Stop FMOD when we exit the game.
+	FMODManager()->StopAmbientSound(false);
+#endif
 
 #ifndef _XBOX
 #ifdef USE_NAV_MESH
@@ -1718,6 +1746,16 @@ static TITLECOMMENT gTitleComments[] =
 	
 	{ "ep2_outland_12a", "#ep2_Chapter7_Title" },
 	{ "ep2_outland_12", "#ep2_Chapter6_Title" },
+#ifdef C17
+	{ "C17_City_day_01a", "#City17_Chapter1_Title" },
+	{ "C17_City_day_02b", "#City17_Chapter2_Title" },
+	{ "C17_City_day_02c", "#City17_Chapter2_Title" },
+	{ "C17_City_day_03", "#City17_Chapter3_Title" },
+	{ "C17_City_day_04", "#City17_Chapter4_Title" },
+	{ "C17_City_day_05", "#City17_Chapter4_Title" },
+	{ "C17_City_day_06", "#City17_Chapter5_Title" },
+	{ "C17_City_day_07", "#City17_Chapter5_Title" },
+#endif
 #endif
 };
 
@@ -2077,7 +2115,14 @@ void UpdateChapterRestrictions( const char *mapname )
 		return;
 
 	char chapterNumberPrefix[64];
+#ifdef C17
+	//City17: There's a hack here. Normally this is #%s_chapter, but Steam breaks this functionality in mods. It has instead been hardcoded to always be
+	//#city17_chapter, and while this fixes our problem, if anyone were to ever rename the mod folder (Which breaks english files too, so who would?)
+	//it would also break chapter unlocking.
+	Q_snprintf(chapterNumberPrefix, sizeof(chapterNumberPrefix), "#c17ep1_chapter", modDir);
+#else
 	Q_snprintf(chapterNumberPrefix, sizeof(chapterNumberPrefix), "#%s_chapter", modDir);
+#endif
 
 	const char *newChapterNumber = strstr( chapterTitle, chapterNumberPrefix );
 	if ( newChapterNumber )

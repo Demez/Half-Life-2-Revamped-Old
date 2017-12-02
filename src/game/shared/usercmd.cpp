@@ -10,6 +10,16 @@
 #include "bitbuf.h"
 #include "checksum_md5.h"
 
+#ifdef C17_HAPTICS
+// Haptics to check connectivity
+#include "../haptics/client_haptics.h"
+
+// Haptics if you want to send the 3d input position to the server set this to 1.
+// note: this will just send currently. it is not handled on the server side.
+#define HAP_NETWORK_POSITION 0
+#endif
+
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -169,6 +179,14 @@ void WriteUsercmd( bf_write *buf, const CUserCmd *to, const CUserCmd *from )
 		buf->WriteOneBit( 0 );
 	}
 
+#ifdef C17_HAPTICS
+#if defined( CLIENT_DLL )
+	// Haptics write whether the haptics device is on or not. ( do not let the server write back )
+	buf->WriteOneBit(haptics->IsConnected() ? 1 : 0);
+#endif
+#endif
+
+
 #if defined( HL2_CLIENT_DLL )
 	if ( to->entitygroundcontact.Count() != 0 )
 	{
@@ -288,6 +306,14 @@ void ReadUsercmd( bf_read *buf, CUserCmd *move, CUserCmd *from )
 	{
 		move->mousedy = buf->ReadShort();
 	}
+
+#ifdef C17_HAPTICS
+#if !defined( CLIENT_DLL )
+	// Haptics read the cmd for whether the user is using a haptic device.
+	// ( client should not read this data ).
+	move->haptics = bool(buf->ReadOneBit() == 1);
+#endif
+#endif
 
 #if defined( HL2_DLL )
 	if ( buf->ReadOneBit() )

@@ -22,6 +22,9 @@
 #include "collisionutils.h"
 #include "tier0/vprof.h"
 #include "viewrender.h"
+#ifdef C17
+#include "c_effects.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -118,6 +121,9 @@ public:
 	
 	CClient_Precipitation();
 	virtual ~CClient_Precipitation();
+#ifdef C17
+	bool m_bOn;
+#endif
 
 	// Inherited from C_BaseEntity
 	virtual void Precache( );
@@ -204,7 +210,10 @@ private:
 
 // Just receive the normal data table stuff
 IMPLEMENT_CLIENTCLASS_DT(CClient_Precipitation, DT_Precipitation, CPrecipitation)
-	RecvPropInt( RECVINFO( m_nPrecipType ) )
+#ifdef C17
+	RecvPropBool(RECVINFO(m_bOn)),
+#endif
+	RecvPropInt( RECVINFO( m_nPrecipType ) ),
 END_RECV_TABLE()
 
 static ConVar r_SnowEnable( "r_SnowEnable", "1", FCVAR_CHEAT, "Snow Enable" );
@@ -432,7 +441,12 @@ void CClient_Precipitation::Simulate( float dt )
 	timer.Start();
 
 	// Emit new particles
-	EmitParticles( dt );
+#ifdef C17
+	if (m_bOn)
+#endif
+	{
+		EmitParticles(dt);
+	}
 
 	// Simulate all the particles.
 	int iNext;
@@ -563,10 +577,17 @@ void CClient_Precipitation::Render()
 		return;
 
 	// Don't render in monitors or in reflections or refractions.
+#ifndef C17
 	if ( CurrentViewID() == VIEW_MONITOR )
 		return;
+#endif
 
+#ifdef C17
+	//City17: Draw rain in water reflections.
+	if (view->GetDrawFlags() & /*(DF_RENDER_REFLECTION |*/ DF_RENDER_REFRACTION/*)*/)
+#else
 	if ( view->GetDrawFlags() & (DF_RENDER_REFLECTION | DF_RENDER_REFRACTION) )
+#endif
 		return;
 
 	if ( m_nPrecipType == PRECIPITATION_TYPE_ASH )
@@ -1169,6 +1190,7 @@ void DrawPrecipitation()
 
 #endif	// _XBOX
 
+#ifndef C17
 //-----------------------------------------------------------------------------
 // EnvWind - global wind info
 //-----------------------------------------------------------------------------
@@ -1190,6 +1212,7 @@ private:
 
 	CEnvWindShared m_EnvWindShared;
 };
+#endif
 
 // Receive datatables
 BEGIN_RECV_TABLE_NOBASE(CEnvWindShared, DT_EnvWindShared)

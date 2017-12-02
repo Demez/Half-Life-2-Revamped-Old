@@ -885,11 +885,24 @@ void CAmbientGeneric::SendSound( SoundFlags_t flags)
 		{
 			UTIL_EmitAmbientSound(pSoundSource->GetSoundSourceIndex(), pSoundSource->GetAbsOrigin(), szSoundFile, 
 						0, SNDLVL_NONE, flags, 0);
+#ifdef C17
+			m_fActive = false;
+#endif
 		}
 		else
 		{
 			UTIL_EmitAmbientSound(pSoundSource->GetSoundSourceIndex(), pSoundSource->GetAbsOrigin(), szSoundFile, 
 				(m_dpv.vol * 0.01), m_iSoundLevel, flags, m_dpv.pitch);
+
+#ifdef C17
+			// Only mark active if this is a looping sound.  If not looping, each
+			// trigger will cause the sound to play.  If the sound is still
+			// playing from a previous trigger press, it will be shut off
+			// and then restarted.
+
+			if (m_fLooping)
+				m_fActive = true;
+#endif
 		}
 	}	
 	else
@@ -899,6 +912,10 @@ void CAmbientGeneric::SendSound( SoundFlags_t flags)
 		{
 			UTIL_EmitAmbientSound(m_nSoundSourceEntIndex, GetAbsOrigin(), szSoundFile, 
 					0, SNDLVL_NONE, flags, 0);
+
+#ifdef C17
+			m_fActive = false;
+#endif
 		}
 	}
 }
@@ -1370,6 +1387,11 @@ void UTIL_RestartAmbientSounds( void )
 
 void UTIL_EmitSoundSuit(edict_t *entity, const char *sample)
 {
+#ifdef C17
+	//City 17:
+	return;
+#endif
+
 	float fvol;
 	int pitch = PITCH_NORM;
 
@@ -1403,6 +1425,11 @@ void UTIL_EmitSoundSuit(edict_t *entity, const char *sample)
 
 int UTIL_EmitGroupIDSuit(edict_t *entity, int isentenceg)
 {
+#ifdef C17
+	//City 17:
+	return -1;
+#endif
+
 	float fvol;
 	int pitch = PITCH_NORM;
 	int sentenceIndex = -1;
@@ -1427,6 +1454,11 @@ int UTIL_EmitGroupIDSuit(edict_t *entity, int isentenceg)
 
 int UTIL_EmitGroupnameSuit(edict_t *entity, const char *groupname)
 {
+#ifdef C17
+	//City 17:
+	return -1;
+#endif
+
 	float fvol;
 	int pitch = PITCH_NORM;
 	int sentenceIndex = -1;

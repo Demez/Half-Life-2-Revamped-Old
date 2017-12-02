@@ -781,8 +781,10 @@ void UTIL_BloodDrips( const Vector &origin, const Vector &direction, int color, 
 	if ( color == DONT_BLEED || amount == 0 )
 		return;
 
+#ifndef C17
 	if ( g_Language.GetInt() == LANGUAGE_GERMAN && color == BLOOD_COLOR_RED )
 		color = 0;
+#endif
 
 	if ( g_pGameRules->IsMultiplayer() )
 	{

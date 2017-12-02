@@ -16,6 +16,9 @@
 #include "engine/IStaticPropMgr.h"
 #include "c_impact_effects.h"
 #include "tier0/vprof.h"
+#ifdef C17
+#include "engine/IEngineSound.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -94,6 +97,23 @@ void RagdollImpactCallback( const CEffectData &data )
 }
 
 DECLARE_CLIENT_EFFECT( "RagdollImpact", RagdollImpactCallback );
+
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : &data - 
+//-----------------------------------------------------------------------------
+void BulletRicochetCallback(const CEffectData &data)
+{
+	QAngle vecAngles;
+	VectorAngles(data.m_vNormal, vecAngles);
+	DispatchParticleEffect("impact_ricochet", data.m_vOrigin, vecAngles);
+
+	FX_RicochetSound(data.m_vOrigin);
+}
+
+DECLARE_CLIENT_EFFECT("BulletRicochet", BulletRicochetCallback);
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -207,7 +227,12 @@ char const *GetImpactDecal( C_BaseEntity *pEntity, int iMaterial, int iDamageTyp
 //-----------------------------------------------------------------------------
 // Purpose: Perform custom effects based on the Decal index
 //-----------------------------------------------------------------------------
+#ifdef C17
+static ConVar cl_new_impact_effects("cl_new_impact_effects", "1", FCVAR_ARCHIVE);
+static ConVar cl_new_impact_effects_cheap("cl_new_impact_effects_cheap", "0", FCVAR_ARCHIVE);
+#else
 static ConVar cl_new_impact_effects( "cl_new_impact_effects", "0" );
+#endif
 
 struct ImpactEffect_t
 {
@@ -215,6 +240,37 @@ struct ImpactEffect_t
 	const char *m_pNameNoFlecks;
 };
 
+#ifdef C17
+static ImpactEffect_t s_pImpactEffect[26] =
+{
+	{ "impact_antlion",		NULL },							// CHAR_TEX_ANTLION
+	{ NULL,					NULL },							// CHAR_TEX_BLOODYFLESH	
+	{ "impact_concrete",	"impact_concrete_cheap" },		// CHAR_TEX_CONCRETE		
+	{ "impact_dirt",		"impact_dirt_cheap" },			// CHAR_TEX_DIRT			
+	{ NULL,					NULL },							// CHAR_TEX_EGGSHELL		
+	{ NULL,					NULL },							// CHAR_TEX_FLESH			
+	{ NULL,					NULL },							// CHAR_TEX_GRATE			
+	{ NULL,					NULL },							// CHAR_TEX_ALIENFLESH		
+	{ NULL,					NULL },							// CHAR_TEX_CLIP			
+	{ "impact_explosive",	"impact_explosive_cheap" }, 	// CHAR_TEX_EXPLOSIVE - City17
+	{ "impact_plaster",		"impact_plaster_cheap" },		// CHAR_TEX_PLASTER - City17		
+	{ NULL,					NULL },							// CHAR_TEX_PLASTIC		
+	{ "impact_metal",		"impact_metal_cheap" },			// CHAR_TEX_METAL			
+	{ "impact_sand",		"impact_sand_cheap" },			// CHAR_TEX_SAND			
+	{ NULL,					NULL },							// CHAR_TEX_FOLIAGE		
+	{ "impact_computer",	"impact_computer_cheap" },		// CHAR_TEX_COMPUTER		
+	{ "impact_brick",		"impact_brick_cheap" },			// CHAR_TEX_BRICK - City17		
+	{ NULL,					NULL },							// CHAR_TEX_UNUSED		
+	{ "impact_slosh",		"impact_slosh_cheap" },			// CHAR_TEX_SLOSH			
+	{ "impact_tile",		"impact_tile_cheap" },			// CHAR_TEX_TILE			
+	{ NULL,					NULL },							// CHAR_TEX_UNUSED		
+	{ "impact_metal",		"impact_metal_cheap" },			// CHAR_TEX_VENT			
+	{ "impact_wood",		"impact_wood_cheap" },			// CHAR_TEX_WOOD			
+	{ NULL,					NULL },							// CHAR_TEX_UNUSED		
+	{ "impact_glass",		"impact_glass_cheap" },			// CHAR_TEX_GLASS			
+	{ "warp_shield_impact", NULL },							// CHAR_TEX_WARPSHIELD		
+};
+#else
 static ImpactEffect_t s_pImpactEffect[26] = 
 {
 	{ "impact_antlion",		NULL },							// CHAR_TEX_ANTLION
@@ -244,6 +300,7 @@ static ImpactEffect_t s_pImpactEffect[26] =
 	{ "impact_glass",		NULL },							// CHAR_TEX_GLASS			
 	{ "warp_shield_impact", NULL },							// CHAR_TEX_WARPSHIELD		
 };
+#endif
 
 static void SetImpactControlPoint( CNewParticleEffect *pEffect, int nPoint, const Vector &vecImpactPoint, const Vector &vecForward, C_BaseEntity *pEntity )
 {
@@ -258,19 +315,28 @@ static void SetImpactControlPoint( CNewParticleEffect *pEffect, int nPoint, cons
 
 static void PerformNewCustomEffects( const Vector &vecOrigin, trace_t &tr, const Vector &shotDir, int iMaterial, int iScale, int nFlags )
 {
+#ifndef C17
 	bool bNoFlecks = !r_drawflecks.GetBool();
 	if ( !bNoFlecks )
 	{
 		bNoFlecks = ( ( nFlags & FLAGS_CUSTIOM_EFFECTS_NOFLECKS ) != 0  );
 	}
+#endif
 
 	// Compute the impact effect name
 	const ImpactEffect_t &effect = s_pImpactEffect[ iMaterial - 'A' ];
 	const char *pImpactName = effect.m_pName;
+
+#ifdef C17
+	if ( /*bNoFlecks*/cl_new_impact_effects_cheap.GetBool() && effect.m_pNameNoFlecks)
+#else
 	if ( bNoFlecks && effect.m_pNameNoFlecks )
+#endif
 	{
 		pImpactName = effect.m_pNameNoFlecks;
 	}
+
+	//If we don't have a working name for our impact, back out of here.
 	if ( !pImpactName )
 		return;
 
@@ -306,7 +372,11 @@ void PerformCustomEffects( const Vector &vecOrigin, trace_t &tr, const Vector &s
 	if ( tr.surface.flags & (SURF_SKY|SURF_NODRAW|SURF_HINT|SURF_SKIP) )
 		return;
 
+#ifdef C17
+	if (cl_new_impact_effects.GetBool())
+#else
 	if ( cl_new_impact_effects.GetInt() )
+#endif
 	{
 		PerformNewCustomEffects( vecOrigin, tr, shotDir, iMaterial, iScale, nFlags );
 		return;
@@ -319,7 +389,11 @@ void PerformCustomEffects( const Vector &vecOrigin, trace_t &tr, const Vector &s
 	}
 
 	// Cement and wood have dust and flecks
+#ifdef C17
+	if ((iMaterial == CHAR_TEX_CONCRETE) || (iMaterial == CHAR_TEX_TILE) || (iMaterial == CHAR_TEX_BRICK))
+#else
 	if ( ( iMaterial == CHAR_TEX_CONCRETE ) || ( iMaterial == CHAR_TEX_TILE ) )
+#endif
 	{
 		FX_DebrisFlecks( vecOrigin, &tr, iMaterial, iScale, bNoFlecks );
 	}
@@ -327,7 +401,11 @@ void PerformCustomEffects( const Vector &vecOrigin, trace_t &tr, const Vector &s
 	{
 		FX_DebrisFlecks( vecOrigin, &tr, iMaterial, iScale, bNoFlecks );
 	}
+#ifdef C17
+	else if ((iMaterial == CHAR_TEX_DIRT) || (iMaterial == CHAR_TEX_SAND) || (iMaterial == CHAR_TEX_PLASTER))
+#else
 	else if ( ( iMaterial == CHAR_TEX_DIRT ) || ( iMaterial == CHAR_TEX_SAND ) )
+#endif
 	{
 		FX_DustImpact( vecOrigin, &tr, iScale );
 	}
@@ -335,7 +413,11 @@ void PerformCustomEffects( const Vector &vecOrigin, trace_t &tr, const Vector &s
 	{
 		FX_AntlionImpact( vecOrigin, &tr );
 	}
+#ifdef C17
+	else if ((iMaterial == CHAR_TEX_METAL) || (iMaterial == CHAR_TEX_VENT) || (iMaterial == CHAR_TEX_EXPLOSIVE))
+#else
 	else if ( ( iMaterial == CHAR_TEX_METAL ) || ( iMaterial == CHAR_TEX_VENT ) )
+#endif
 	{
 		Vector	reflect;
 		float	dot = shotDir.Dot( tr.plane.normal );

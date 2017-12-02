@@ -67,7 +67,11 @@ void CStunEffect::SetParameters( KeyValues *params )
 void CStunEffect::Render( int x, int y, int w, int h )
 {
 	// Make sure we're ready to play this effect
+#ifdef C17
+	if ((m_flFinishTime < gpGlobals->curtime) || (IsEnabled() == false))
+#else
 	if ( m_flFinishTime < gpGlobals->curtime )
+#endif
 		return;
 
 	CMatRenderContextPtr pRenderContext( materials );

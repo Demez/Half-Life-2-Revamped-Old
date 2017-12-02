@@ -324,7 +324,11 @@ void CDecalEmitterSystem::Clear()
 //-----------------------------------------------------------------------------
 char const *CDecalEmitterSystem::TranslateDecalForGameMaterial( char const *decalName, unsigned char gamematerial )
 {
+#ifdef C17
+	if (gamematerial == CHAR_TEX_CONCRETE || gamematerial == CHAR_TEX_BRICK)
+#else
 	if ( gamematerial == CHAR_TEX_CONCRETE )
+#endif
 		return decalName;
 
 	if ( !Q_stricmp( decalName, "Impact.Concrete" ) )

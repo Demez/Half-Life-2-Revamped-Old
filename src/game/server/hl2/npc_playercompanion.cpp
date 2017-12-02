@@ -3694,6 +3694,44 @@ bool CNPC_PlayerCompanion::IsNavigationUrgent( void )
 	return bBase;
 }
 
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Alert schedule selection
+//-----------------------------------------------------------------------------
+int CNPC_PlayerCompanion::SelectAlertSchedule()
+{
+	if (m_hForcedInteractionPartner)
+		return BaseClass::SelectInteractionSchedule();
+
+	int nSched = SelectFlinchSchedule();
+	if (nSched != SCHED_NONE)
+		return nSched;
+
+	// Scan around for new enemies
+	if (HasCondition(COND_ENEMY_DEAD) && SelectWeightedSequence(ACT_VICTORY_DANCE) != ACTIVITY_NOT_AVAILABLE)
+		return SCHED_ALERT_SCAN;
+
+	if (IsPlayerAlly() && HasCondition(COND_HEAR_COMBAT))
+	{
+		return SCHED_ALERT_REACT_TO_COMBAT_SOUND;
+	}
+
+	if (HasCondition(COND_HEAR_DANGER) ||
+		HasCondition(COND_HEAR_PLAYER) ||
+		HasCondition(COND_HEAR_WORLD) ||
+		HasCondition(COND_HEAR_BULLET_IMPACT) ||
+		HasCondition(COND_HEAR_COMBAT))
+	{
+		return SCHED_ALERT_FACE_BESTSOUND;
+	}
+
+	if (gpGlobals->curtime - GetEnemies()->LastTimeSeen(AI_UNKNOWN_ENEMY) < TIME_CARE_ABOUT_DAMAGE)
+		return SCHED_ALERT_FACE;
+
+	return SCHED_ALERT_STAND;
+}
+#endif
+
 //-----------------------------------------------------------------------------
 //
 // Schedules

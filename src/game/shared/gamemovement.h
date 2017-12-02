@@ -18,9 +18,10 @@
 
 #define CTEXTURESMAX		512			// max number of textures loaded
 #define CBTEXTURENAMEMAX	13			// only load first n chars of name
+
 #define GAMEMOVEMENT_DUCK_TIME				1000.0f		// ms
 #define GAMEMOVEMENT_JUMP_TIME				510.0f		// ms approx - based on the 21 unit height jump
-#define GAMEMOVEMENT_JUMP_HEIGHT			21.0f		// units //21
+#define GAMEMOVEMENT_JUMP_HEIGHT			21.0f		// units
 #define GAMEMOVEMENT_TIME_TO_UNDUCK			( TIME_TO_UNDUCK * 1000.0f )		// ms
 #define GAMEMOVEMENT_TIME_TO_UNDUCK_INV		( GAMEMOVEMENT_DUCK_TIME - GAMEMOVEMENT_TIME_TO_UNDUCK )
 
@@ -104,6 +105,10 @@ protected:
 	
 	virtual bool	CanAccelerate();
 	virtual void	Accelerate( Vector& wishdir, float wishspeed, float accel);
+
+#ifdef C17
+	virtual float	ViewBobAmount(void);
+#endif
 
 	// Only used by players.  Moves along the ground when player is a MOVETYPE_WALK.
 	virtual void	WalkMove( void );

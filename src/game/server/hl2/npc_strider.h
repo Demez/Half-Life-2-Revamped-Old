@@ -152,6 +152,10 @@ public:
 	void			InputSetMinigunTarget( inputdata_t &inputdata );
 	void			InputDisableMinigun( inputdata_t &inputdata );
 	void			InputEnableMinigun( inputdata_t &inputdata );
+#ifdef C17
+	void			InputDisableLowPowerCannon(inputdata_t &inputdata);
+	void			InputEnableLowPowerCannon(inputdata_t &inputdata);
+#endif
 	void			InputSetCannonTarget( inputdata_t &inputdata );
 	void			InputFlickRagdoll( inputdata_t &inputdata );
 	void			InputDisableCollisionWith( inputdata_t &inputdata ); 
@@ -472,6 +476,9 @@ private:
 	bool			m_bNoMoveToLOS;
 	bool			m_bFastCrouch;
 	bool			m_bMinigunEnabled;	// If false, minigun disabled by level designer until further notice.
+#ifdef C17
+	bool			m_bLowPowerCannon;
+#endif
 
 	float			m_idealHeight;
 	float			m_HeightVelocity;

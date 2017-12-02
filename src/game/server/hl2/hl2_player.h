@@ -165,6 +165,9 @@ public:
 	// Sprint Device
 	void StartAutoSprint( void );
 	void StartSprinting( void );
+#ifdef C17
+	void DisableIronsights(void);
+#endif
 	void StopSprinting( void );
 	void InitSprinting( void );
 	bool IsSprinting( void ) { return m_fIsSprinting; }
@@ -222,6 +225,11 @@ public:
 
 	void FirePlayerProxyOutput( const char *pszOutputName, variant_t variant, CBaseEntity *pActivator, CBaseEntity *pCaller );
 
+#ifdef C17
+	void SetSmokeStatus(bool status);
+	bool HasLowStamina(void) { return m_HL2Local.m_bLowStamina; }
+#endif
+
 	CLogicPlayerProxy	*GetPlayerProxy( void );
 
 	// Flashlight Device
@@ -241,6 +249,9 @@ public:
 	virtual	bool		IsHoldingEntity( CBaseEntity *pEnt );
 	virtual void		ForceDropOfCarriedPhysObjects( CBaseEntity *pOnlyIfHoldindThis );
 	virtual float		GetHeldObjectMass( IPhysicsObject *pHeldObject );
+#ifdef C17
+	virtual CBaseEntity	*CHL2_Player::GetHeldObject(void);
+#endif
 
 	virtual bool		IsFollowingPhysics( void ) { return (m_afPhysicsFlags & PFLAG_ONBARNACLE) > 0; }
 	void				InputForceDropPhysObjects( inputdata_t &data );
@@ -317,6 +328,10 @@ protected:	// Jeep: Portal_Player needs access to this variable to overload Play
 	bool				m_bPlayUseDenySound;		// Signaled by PlayerUse, but can be unset by HL2 ladder code...
 
 private:
+
+#ifdef C17
+	float				fRebreathTime;
+#endif
 
 	CAI_Squad *			m_pPlayerAISquad;
 	CSimpleSimTimer		m_CommanderUpdateTimer;

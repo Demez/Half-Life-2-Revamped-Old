@@ -15,6 +15,9 @@
 #include "iviewrender.h"
 #include "view_shared.h"
 #include "replay/ireplayscreenshotsystem.h"
+#ifdef C17
+#include "city17/c17_screeneffects.h"
+#endif
 
 
 //-----------------------------------------------------------------------------
@@ -365,6 +368,9 @@ public:
 	virtual void	Render2DEffectsPreHUD( const CViewSetup &view );
 	virtual void	Render2DEffectsPostHUD( const CViewSetup &view );
 
+#ifdef C17
+	void			PerformPreViewmodelPostProcessEffects(int x, int y, int width, int height);
+#endif
 
 	void			DisableFog( void );
 
@@ -419,28 +425,19 @@ public:
 
 	void			FreezeFrame( float flFreezeTime );
 
+#ifndef C17
 	void SetWaterOverlayMaterial( IMaterial *pMaterial )
 	{
 		m_UnderWaterOverlayMaterial.Init( pMaterial );
 	}
+#else
+	//City 17: We want to be able to use this outside of viewrender!
+	bool			ShouldDrawViewModel(bool drawViewmodel);
+	void			DrawViewModels(const CViewSetup &view, bool drawViewmodel);
+#endif
 private:
 	int				m_BuildWorldListsNumber;
 
-	//CSM
-	/*
-	enum CascadedConfigMode
-	{
-		CASCADEDCONFIG_NONE = 0,
-		CASCADEDCONFIG_NORMAL,
-		CASCADEDCONFIG_SPACE
-		//CASCADEDCONFIG_FAR
-	};
-
-	// General draw methods
-	// baseDrawFlags is a combination of DF_ defines. DF_MONITOR is passed into here while drawing a monitor.
-	void			ViewDrawScene(CascadedConfigMode cascadedMode, bool bDrew3dSkybox, SkyboxVisibility_t nSkyboxVisible, const CViewSetup &view, int nClearFlags, view_id_t viewID, bool bDrawViewModel = false, int baseDrawFlags = 0, ViewCustomVisibility_t *pCustomVisibility = NULL);
-	//
-	*/
 
 	// General draw methods
 	// baseDrawFlags is a combination of DF_ defines. DF_MONITOR is passed into here while drawing a monitor.
@@ -452,8 +449,10 @@ private:
 						int x, int y, int width, int height );
 
 	// Drawing primitives
+#ifndef C17
 	bool			ShouldDrawViewModel( bool drawViewmodel );
 	void			DrawViewModels( const CViewSetup &view, bool drawViewmodel );
+#endif
 
 	void			PerformScreenSpaceEffects( int x, int y, int w, int h );
 
@@ -485,9 +484,6 @@ private:
 	void			SetupMain3DView( const CViewSetup &view, int &nClearFlags );
 	void			CleanupMain3DView( const CViewSetup &view );
 
-	//CSM
-	//void			UpdateCascadedShadow(const CViewSetup &view, CascadedConfigMode mode);
-	//
 
 	// This stores the current view
  	CViewSetup		m_CurrentView;
@@ -504,11 +500,16 @@ private:
 	CMaterialReference	m_TranslucentSingleColor;
 	CMaterialReference	m_ModulateSingleColor;
 	CMaterialReference	m_ScreenOverlayMaterial;
+#ifndef C17
 	CMaterialReference m_UnderWaterOverlayMaterial;
+#endif
 
 	Vector			m_vecLastFacing;
 	float			m_flCheapWaterStartDistance;
 	float			m_flCheapWaterEndDistance;
+#ifdef C17
+	float			m_flViewModelBlurAmount;
+#endif
 
 	CViewSetup			m_OverlayViewSetup;
 	int					m_OverlayClearFlags;

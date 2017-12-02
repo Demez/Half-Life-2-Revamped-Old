@@ -172,6 +172,42 @@ public:
 LINK_ENTITY_TO_CLASS(item_large_box_mrounds, CItem_LargeBoxMRounds);
 LINK_ENTITY_TO_CLASS(item_ammo_smg1_large, CItem_LargeBoxMRounds);
 
+#ifdef C17
+// ========================================================================
+//	>> BoxLRounds
+// ========================================================================
+class CItem_BoxLURounds : public CItem
+{
+public:
+	DECLARE_CLASS(CItem_BoxLURounds, CItem);
+
+	void Spawn(void)
+	{
+		Precache();
+		SetModel("models/items/combine_rifle_cartridge01.mdl");
+		BaseClass::Spawn();
+	}
+	void Precache(void)
+	{
+		PrecacheModel("models/items/combine_rifle_cartridge01.mdl");
+	}
+	bool MyTouch(CBasePlayer *pPlayer)
+	{
+		if (ITEM_GiveAmmo(pPlayer, SIZE_AMMO_AR3, "AR3"))
+		{
+			if (g_pGameRules->ItemShouldRespawn(this) == GR_ITEM_RESPAWN_NO)
+			{
+				UTIL_Remove(this);
+			}
+			return true;
+		}
+		return false;
+	}
+};
+LINK_ENTITY_TO_CLASS(item_box_lurounds, CItem_BoxLURounds);
+LINK_ENTITY_TO_CLASS(item_ammo_ar3, CItem_BoxLURounds);
+#endif
+
 // ========================================================================
 //	>> BoxLRounds
 // ========================================================================

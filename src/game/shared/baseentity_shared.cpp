@@ -332,6 +332,9 @@ bool CBaseEntity::KeyValue( const char *szKeyName, const char *szValue )
 		color32 tmp;
 		UTIL_StringToColor32( &tmp, szValue );
 		SetRenderColor( tmp.r, tmp.g, tmp.b );
+#ifdef C17
+		SetRenderColorA(tmp.a);
+#endif
 		// don't copy alpha, legacy support uses renderamt
 		return true;
 	}
@@ -1670,6 +1673,10 @@ void CBaseEntity::FireBullets( const FireBulletsInfo_t &info )
 
 	bool bUnderwaterBullets = ShouldDrawUnderwaterBulletBubbles();
 	bool bStartedInWater = false;
+#ifdef C17
+	bool bRicochetBullet = false;
+	Vector vecTempDir;
+#endif
 	if ( bUnderwaterBullets )
 	{
 		bStartedInWater = ( enginetrace->GetPointContents( info.m_vecSrc ) & (CONTENTS_WATER|CONTENTS_SLIME) ) != 0;
@@ -1718,7 +1725,11 @@ void CBaseEntity::FireBullets( const FireBulletsInfo_t &info )
 			vecDir = Manipulator.ApplySpread( info.m_vecSpread );
 		}
 
+#ifdef C17
+		vecEnd = (((!bRicochetBullet) ? info.m_vecSrc : tr.endpos)) + ((!bRicochetBullet) ? vecDir : vecTempDir) * info.m_flDistance;
+#else
 		vecEnd = info.m_vecSrc + vecDir * info.m_flDistance;
+#endif
 
 #ifdef PORTAL
 		CProp_Portal *pShootThroughPortal = NULL;
@@ -1738,7 +1749,11 @@ void CBaseEntity::FireBullets( const FireBulletsInfo_t &info )
 				pShootThroughPortal = NULL;
 			}
 #else
+#ifdef C17
+			AI_TraceHull(((!bRicochetBullet) ? info.m_vecSrc : tr.endpos), vecEnd, Vector(-3, -3, -3), Vector(3, 3, 3), MASK_SHOT, &traceFilter, &tr);
+#else
 			AI_TraceHull( info.m_vecSrc, vecEnd, Vector( -3, -3, -3 ), Vector( 3, 3, 3 ), MASK_SHOT, &traceFilter, &tr );
+#endif
 #endif //#ifdef PORTAL
 		}
 		else
@@ -1763,7 +1778,11 @@ void CBaseEntity::FireBullets( const FireBulletsInfo_t &info )
 				AI_TraceLine(info.m_vecSrc, vecEnd, MASK_SHOT, &traceFilter, &tr);
 			}
 #else
+#ifdef C17
+			AI_TraceLine(((!bRicochetBullet) ? info.m_vecSrc : tr.endpos), vecEnd, MASK_SHOT, &traceFilter, &tr);
+#else
 			AI_TraceLine(info.m_vecSrc, vecEnd, MASK_SHOT, &traceFilter, &tr);
+#endif
 #endif //#ifdef PORTAL
 		}
 
@@ -1789,7 +1808,11 @@ void CBaseEntity::FireBullets( const FireBulletsInfo_t &info )
 
 #ifdef GAME_DLL
 		if ( ai_debug_shoot_positions.GetBool() )
+#ifdef C17
+			NDebugOverlay::Line(((!bRicochetBullet) ? info.m_vecSrc : tr.endpos), vecEnd, 255, 255, 255, false, .1);
+#else
 			NDebugOverlay::Line(info.m_vecSrc, vecEnd, 255, 255, 255, false, .1 );
+#endif
 #endif
 
 		if ( bStartedInWater )
@@ -1805,7 +1828,11 @@ void CBaseEntity::FireBullets( const FireBulletsInfo_t &info )
 			}
 #endif //#ifdef PORTAL
 
+#ifdef C17
+			CreateBubbleTrailTracer(((!bRicochetBullet) ? info.m_vecSrc : tr.endpos), tr.endpos, vecDir);
+#else
 			CreateBubbleTrailTracer( vBubbleStart, vBubbleEnd, vecDir );
+#endif
 			
 #ifdef PORTAL
 			if ( pShootThroughPortal )
@@ -1952,7 +1979,11 @@ void CBaseEntity::FireBullets( const FireBulletsInfo_t &info )
 #endif
 		}
 
+#ifdef C17
+		if ((info.m_iTracerFreq != 0) && (tracerCount++ % info.m_iTracerFreq) == 0 && (bHitGlass == false) && !bRicochetBullet)
+#else
 		if ( ( info.m_iTracerFreq != 0 ) && ( tracerCount++ % info.m_iTracerFreq ) == 0 && ( bHitGlass == false ) )
+#endif
 		{
 			if ( bDoServerEffects == true )
 			{
@@ -2008,6 +2039,50 @@ void CBaseEntity::FireBullets( const FireBulletsInfo_t &info )
 		if ( bHitGlass )
 		{
 			HandleShotImpactingGlass( info, tr, vecDir, &traceFilter );
+		}
+#endif
+
+#ifdef C17
+		int iRandom;
+		surfacedata_t *psurf = physprops->GetSurfaceData(tr.surface.surfaceProps);
+		if (psurf->game.material == (CHAR_TEX_METAL | CHAR_TEX_EXPLOSIVE | CHAR_TEX_VENT | CHAR_TEX_CLIP | CHAR_TEX_GRATE))
+		{
+			iRandom = RandomInt(1, 2);
+		}
+		else
+		{
+			iRandom = RandomInt(1, 5);
+		}
+
+		bool bShouldRicochet = !(tr.surface.flags & (SURF_SKY | SURF_NODRAW | SURF_HINT | SURF_SKIP));
+		if (!bRicochetBullet && bShouldRicochet && !bHitWater && !bHitGlass && !bStartedInWater && iRandom == 1)
+		{
+			Vector vecBulletDir = (tr.endpos - tr.startpos);
+			QAngle angTemp;
+			VectorAngles(vecBulletDir, angTemp);
+			// See if we should reflect off this surface
+			AngleVectors(angTemp, &vecBulletDir);
+			float hitDot = DotProduct(tr.plane.normal, -vecBulletDir);
+
+			surfacedata_t *pSurf = physprops->GetSurfaceData(tr.surface.surfaceProps);
+
+			if (hitDot < (((pSurf->physics.density / 3000) + pSurf->physics.elasticity) / 2))
+			{
+				vecTempDir = 2.0f * tr.plane.normal * hitDot + vecBulletDir + RandomVector(-0.04362, 0.04362);
+				iShot--;
+				bRicochetBullet = true;
+
+				//Spawn a ricochet particle.
+				CEffectData data;
+				data.m_vOrigin = tr.endpos;
+				data.m_vNormal = tr.plane.normal;
+				DispatchEffect("BulletRicochet", data);
+			}
+
+		}
+		else
+		{
+			bRicochetBullet = false;
 		}
 #endif
 

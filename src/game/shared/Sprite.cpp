@@ -15,9 +15,13 @@
 	#include "enginesprite.h"
 	#include "iclientmode.h"
 	#include "c_baseviewmodel.h"
-#	ifdef PORTAL
+#ifdef C17
+#include "viewrender.h"
+#include "view.h"
+#endif
+#ifdef PORTAL
 		#include "c_prop_portal.h"
-#	endif //ifdef PORTAL
+#endif //ifdef PORTAL
 #else
 	#include "baseviewmodel.h"
 #endif
@@ -32,6 +36,10 @@ LINK_ENTITY_TO_CLASS( env_sprite, CSprite );
 LINK_ENTITY_TO_CLASS( env_sprite_oriented, CSpriteOriented );
 #if !defined( CLIENT_DLL )
 LINK_ENTITY_TO_CLASS( env_glow, CSprite ); // For backwards compatibility, remove when no longer needed.
+#else
+#ifdef C17
+extern ConVar r_post_sunshaft;
+#endif
 #endif
 
 #if !defined( CLIENT_DLL )
@@ -49,6 +57,11 @@ BEGIN_DATADESC( CSprite )
 	DEFINE_KEYFIELD( m_flSpriteScale, FIELD_FLOAT, "scale" ),
 	DEFINE_KEYFIELD( m_flSpriteFramerate, FIELD_FLOAT, "framerate" ),
 	DEFINE_KEYFIELD( m_flFrame, FIELD_FLOAT, "frame" ),
+
+#ifdef C17
+	DEFINE_KEYFIELD(m_bDrawWithSunShafts, FIELD_BOOLEAN, "DrawWithSunShafts"),
+#endif
+
 #ifdef PORTAL
 	DEFINE_FIELD( m_bDrawInMainRender, FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_bDrawInPortalRender, FIELD_BOOLEAN ),
@@ -94,6 +107,11 @@ BEGIN_PREDICTION_DATA( CSprite )
 	DEFINE_PRED_FIELD( m_flSpriteScale, FIELD_FLOAT, FTYPEDESC_INSENDTABLE ),
 	DEFINE_PRED_FIELD( m_flSpriteFramerate, FIELD_FLOAT, FTYPEDESC_INSENDTABLE ),
 	DEFINE_PRED_FIELD( m_flFrame, FIELD_FLOAT, FTYPEDESC_INSENDTABLE ),
+
+#ifdef C17
+	DEFINE_FIELD(m_bDrawWithSunShafts, FIELD_BOOLEAN),
+#endif
+
 #ifdef PORTAL
 	DEFINE_PRED_FIELD( m_bDrawInMainRender, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
 	DEFINE_PRED_FIELD( m_bDrawInPortalRender, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
@@ -149,6 +167,11 @@ BEGIN_NETWORK_TABLE( CSprite, DT_Sprite )
 	SendPropBool( SENDINFO(m_bDrawInMainRender) ),
 	SendPropBool( SENDINFO(m_bDrawInPortalRender) ),
 #endif //#ifdef PORTAL
+
+#ifdef C17
+	SendPropBool(SENDINFO(m_bDrawWithSunShafts)),
+#endif
+
 	SendPropFloat( SENDINFO(m_flBrightnessTime ), 0,	SPROP_NOSCALE ),
 	SendPropInt( SENDINFO(m_nBrightness), 8, SPROP_UNSIGNED ),
 	SendPropBool( SENDINFO(m_bWorldSpaceScale) ),
@@ -167,6 +190,11 @@ BEGIN_NETWORK_TABLE( CSprite, DT_Sprite )
 	RecvPropBool( RECVINFO(m_bDrawInMainRender) ),
 	RecvPropBool( RECVINFO(m_bDrawInPortalRender) ),
 #endif //#ifdef PORTAL
+
+#ifdef C17
+	RecvPropBool(RECVINFO(m_bDrawWithSunShafts)),
+#endif
+
 	RecvPropFloat(RECVINFO(m_flBrightnessTime)),
 	RecvPropInt(RECVINFO(m_nBrightness)),
 	RecvPropBool( RECVINFO(m_bWorldSpaceScale) ),
@@ -182,6 +210,10 @@ CSprite::CSprite()
 #ifdef PORTAL
 	m_bDrawInMainRender = true;
 	m_bDrawInPortalRender = true;
+#endif
+
+#ifdef C17
+	m_bDrawWithSunShafts = true;
 #endif
 }
 //-----------------------------------------------------------------------------
@@ -753,6 +785,11 @@ int CSprite::DrawModel( int flags )
 	//See if we should draw
 	if ( !IsVisible() || ( m_bReadyToDraw == false ) )
 		return 0;
+
+#ifdef C17
+	if (!m_bDrawWithSunShafts && r_post_sunshaft.GetBool())
+		return 0;
+#endif
 
 #ifdef PORTAL
 	if ( ( !g_pPortalRender->IsRenderingPortal() && !m_bDrawInMainRender ) || 

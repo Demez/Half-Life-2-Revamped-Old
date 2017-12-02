@@ -194,8 +194,11 @@ void PhysicsReset()
 	physenv->ResetSimulationClock();
 }
 
-
+#ifdef C17
+ConVar cl_ragdoll_collide("cl_ragdoll_collide", "0", FCVAR_ARCHIVE);
+#else
 ConVar cl_ragdoll_collide( "cl_ragdoll_collide", "0" );
+#endif
 
 int CCollisionEvent::ShouldCollide( IPhysicsObject *pObj0, IPhysicsObject *pObj1, void *pGameData0, void *pGameData1 )
 #if _DEBUG
@@ -862,12 +865,20 @@ void PhysicsSplash( IPhysicsFluidController *pFluid, IPhysicsObject *pObject, CB
 		}
 		else
 		{
+#ifdef C17
+			FX_GunshotSplash(centerPoint, normal, random->RandomFloat(8, 10), false, true);
+#else
 			FX_GunshotSplash( centerPoint, normal, random->RandomFloat( 8, 10 ) );
+#endif
 		}
 	}
 	else if ( !bInSlime )
 	{
+#ifdef C17
+		FX_WaterRipple(centerPoint, 1.5f, &color, 1.5f, luminosity, true);
+#else
 		FX_WaterRipple( centerPoint, 1.5f, &color, 1.5f, luminosity );
+#endif
 	}
 	
 	int		splashes = 4;
@@ -888,12 +899,20 @@ void PhysicsSplash( IPhysicsFluidController *pFluid, IPhysicsObject *pObject, CB
 			}
 			else
 			{
+#ifdef C17
+				FX_GunshotSplash(centerPoint, normal, random->RandomFloat(4, 6), false, true);
+#else
 				FX_GunshotSplash( centerPoint, normal, random->RandomFloat( 4, 6 ) );
+#endif
 			}
 		}
 		else if ( !bInSlime )
 		{
+#ifdef C17
+			FX_WaterRipple(point, random->RandomFloat(0.25f, 0.5f), &color, luminosity, random->RandomFloat(0.5f, 1.0f), true);
+#else
 			FX_WaterRipple( point, random->RandomFloat( 0.25f, 0.5f ), &color, luminosity, random->RandomFloat( 0.5f, 1.0f ) );
+#endif
 		}
 	}
 }

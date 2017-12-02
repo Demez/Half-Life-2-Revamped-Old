@@ -54,6 +54,13 @@
 #include "econ_wearable.h"
 #endif
 
+#ifdef C17_HAPTICS
+// Haptics for usermessage lookup
+#include "usermessages.h"
+// Haptics grabbing vehicle access
+#include "c_prop_vehicle.h"
+#endif
+
 // NVNT haptics system interface
 #include "haptics/ihaptics.h"
 
@@ -70,6 +77,9 @@ int g_nKillCamTarget1 = 0;
 int g_nKillCamTarget2 = 0;
 
 extern ConVar mp_forcecamera; // in gamevars_shared.h
+#ifdef C17
+extern void	FormatViewModelAttachment(Vector &vOrigin, bool bInverse);
+#endif
 
 #define FLASHLIGHT_DISTANCE		1000
 #define MAX_VGUI_INPUT_MODE_SPEED 30
@@ -109,6 +119,16 @@ ConVar	spec_freeze_time( "spec_freeze_time", "4.0", FCVAR_CHEAT | FCVAR_REPLICAT
 ConVar	spec_freeze_traveltime( "spec_freeze_traveltime", "0.4", FCVAR_CHEAT | FCVAR_REPLICATED, "Time taken to zoom in to frame a target in observer freeze cam.", true, 0.01, false, 0 );
 ConVar	spec_freeze_distance_min( "spec_freeze_distance_min", "96", FCVAR_CHEAT, "Minimum random distance from the target to stop when framing them in observer freeze cam." );
 ConVar	spec_freeze_distance_max( "spec_freeze_distance_max", "200", FCVAR_CHEAT, "Maximum random distance from the target to stop when framing them in observer freeze cam." );
+#endif
+
+#ifdef C17
+//City17:
+ConVar	c17_enable_muzzle_flash_light("c17_enable_muzzle_flash_light", "1", FCVAR_ARCHIVE, "Enables or disables the dynamic lighting based muzzleflash.");
+
+ConVar r_radiosity_desired("r_radiosity_desired_city17", "4", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "Sets r_radiosity to your desired value. 0 is not an accepted value, use 4 for off instead.", true, 1, true, 4);
+ConVar r_queued_decals_desired("r_queued_decals_desired_city17", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "Sets r_queued_decals to your desired true or false value.");
+ConVar c17_multithreading("c17_multithreading", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "Sets host_thread_mode to your desired true or false value. False = 0, True = 2.");
+ConVar c17_muzzle_flash_time("c17_muzzle_flash_time", "0.04", FCVAR_REPLICATED | FCVAR_CHEAT, "Amount of time the muzzle flash stays visible.", true, 0.001, true, 0.1); //0.052
 #endif
 
 static ConVar	cl_first_person_uses_world_model ( "cl_first_person_uses_world_model", "0", FCVAR_ARCHIVE, "Causes the third person model to be drawn instead of the view model" );
@@ -203,6 +223,16 @@ BEGIN_RECV_TABLE_NOBASE( CPlayerLocalData, DT_Local )
 	RecvPropInt( RECVINFO( m_audio.soundscapeIndex ) ),
 	RecvPropInt( RECVINFO( m_audio.localBits ) ),
 	RecvPropEHandle( RECVINFO( m_audio.ent ) ),
+
+#ifdef C17
+	//Tony; tonemap stuff! -- TODO! Optimize this with bit sizes from env_tonemap_controller.
+	RecvPropFloat(RECVINFO(m_TonemapParams.m_flTonemapScale)),
+	RecvPropFloat(RECVINFO(m_TonemapParams.m_flTonemapRate)),
+	RecvPropFloat(RECVINFO(m_TonemapParams.m_flBloomScale)),
+
+	RecvPropFloat(RECVINFO(m_TonemapParams.m_flAutoExposureMin)),
+	RecvPropFloat(RECVINFO(m_TonemapParams.m_flAutoExposureMax)),
+#endif
 END_RECV_TABLE()
 
 // -------------------------------------------------------------------------------- //
@@ -244,6 +274,10 @@ END_RECV_TABLE()
 
 		RecvPropInt			( RECVINFO( m_nWaterLevel ) ),
 		RecvPropFloat		( RECVINFO( m_flLaggedMovementValue )),
+
+#ifdef C17
+		RecvPropEHandle(RECVINFO(m_hViewEntity)),
+#endif
 
 	END_RECV_TABLE()
 
@@ -396,7 +430,9 @@ BEGIN_PREDICTION_DATA( C_BasePlayer )
 
 END_PREDICTION_DATA()
 
+#ifndef C17 // link this in each derived player class, like the server!!
 LINK_ENTITY_TO_CLASS( player, C_BasePlayer );
+#endif
 
 // -------------------------------------------------------------------------------- //
 // Functions.
@@ -438,6 +474,10 @@ C_BasePlayer::C_BasePlayer() : m_iv_vecViewOffset( "C_BasePlayer::m_iv_vecViewOf
 	m_nForceVisionFilterFlags = 0;
 
 	ListenForGameEvent( "base_player_teleported" );
+
+#ifdef C17
+	m_flMuzzleFlashTime = 0;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -469,7 +509,11 @@ void C_BasePlayer::Spawn( void )
 
 	m_iFOV	= 0;	// init field of view.
 
+#ifdef C17
+	SetModel("models/humans/group03/male_09.mdl");
+#else
     SetModel( "models/player.mdl" );
+#endif
 
 	Precache();
 
@@ -737,6 +781,21 @@ bool C_BasePlayer::IsPlayerDead()
 {
 	return pl.deadflag == true;
 }
+
+#ifdef C17
+bool C_BasePlayer::ShouldDisplayMuzzleLight()
+{
+	if (c17_enable_muzzle_flash_light.GetBool() && m_flMuzzleFlashTime > gpGlobals->curtime)
+		return true;
+
+	return false;
+}
+
+void C_BasePlayer::DisplayMuzzleLight()
+{
+	m_flMuzzleFlashTime = gpGlobals->curtime + c17_muzzle_flash_time.GetFloat();
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose:
@@ -1129,7 +1188,11 @@ void C_BasePlayer::DetermineVguiInputMode( CUserCmd *pCmd )
 //-----------------------------------------------------------------------------
 // Purpose: Input handling
 //-----------------------------------------------------------------------------
+#ifdef C17
+bool C_BasePlayer::CreateMove(float flInputSampleTime, CUserCmd *pCmd, bool bVguiUpdate)
+#else
 bool C_BasePlayer::CreateMove( float flInputSampleTime, CUserCmd *pCmd )
+#endif
 {
 	// Allow the vehicle to clamp the view angles
 	if ( IsInAVehicle() )
@@ -1183,7 +1246,28 @@ bool C_BasePlayer::CreateMove( float flInputSampleTime, CUserCmd *pCmd )
 	m_vecOldViewAngles = pCmd->viewangles;
 	
 	// Check to see if we're in vgui input mode...
+#ifdef C17
+	if (bVguiUpdate)
+	{
+		bool tempvguimode = IsInVGuiInputMode();
+		// Check to see if we're in vgui input mode...
+		DetermineVguiInputMode(pCmd);
+
+		if (tempvguimode == !IsInVGuiInputMode())
+		{
+			if (IsInVGuiInputMode())
+			{
+				engine->ClientCmd("vguimode_true");
+			}
+			else
+			{
+				engine->ClientCmd("vguimode_false");
+			}
+		}
+	}
+#else
 	DetermineVguiInputMode( pCmd );
+#endif
 
 	return true;
 }
@@ -1203,8 +1287,93 @@ void C_BasePlayer::TeamChange( int iNewTeam )
 //-----------------------------------------------------------------------------
 void C_BasePlayer::UpdateFlashlight()
 {
+#ifdef C17
+	ConVarRef radiosity("r_radiosity");
+	ConVarRef radset1("r_ambientfraction");
+	ConVarRef radset2("r_ambientmin");
+	ConVarRef scissor("r_flashlightscissor");
+	ConVarRef queued_decals("r_queued_decals");
+	ConVarRef threading("host_thread_mode");
+	ConVarRef avglight("r_avglight");
+	ConVarRef depthscale("mat_slopescaledepthbias_shadowmap");
+	ConVarRef depthbias("mat_depthbias_shadowmap");
+	ConVarRef procedural("r_glint_procedural");
+	ConVarRef skybox("r_skybox");
+	ConVarRef drawskybox("r_drawskybox");
+
+	if (radset1.GetFloat() != 0.9)
+	{
+		radset1.SetValue(0.9f);
+	}
+
+	if (radset2.GetFloat() != 0.4)
+	{
+		radset2.SetValue(0.4f);
+	}
+
+	if (radiosity.GetFloat() != r_radiosity_desired.GetFloat())
+	{
+		radiosity.SetValue(r_radiosity_desired.GetFloat());
+		if (avglight.GetInt() == 1 && (r_radiosity_desired.GetInt() == 2 || r_radiosity_desired.GetInt() == 3))
+		{
+			avglight.SetValue(0);
+		}
+		else if (avglight.GetInt() == 0)
+		{
+			avglight.SetValue(1);
+		}
+	}
+
+	if (scissor.GetBool())
+	{
+		scissor.SetValue("0");
+	}
+
+	if (queued_decals.GetBool() != r_queued_decals_desired.GetBool())
+	{
+		queued_decals.SetValue(r_queued_decals_desired.GetBool());
+	}
+
+	if (c17_multithreading.GetBool() && threading.GetInt() != 2)
+	{
+		threading.SetValue("2");
+	}
+	else if (!c17_multithreading.GetBool() && threading.GetInt() == 2)
+	{
+		threading.SetValue("0");
+	}
+
+	if (depthscale.GetFloat() != 3.0)
+	{
+		depthscale.SetValue("3.0");
+	}
+
+	if (depthbias.GetFloat() != 0.00001)
+	{
+		depthbias.SetValue("0.00001");
+	}
+
+	if (procedural.GetInt() != 1)
+	{
+		procedural.SetValue(1);
+	}
+
+	//Don't render the normal skybox on 2.0b or up hardware. Instead the skydome shader produces our sky.
+	if ((skybox.GetInt() == 1 || drawskybox.GetInt() == 1) && g_pMaterialSystemHardwareConfig->SupportsPixelShaders_2_b())
+	{
+		skybox.SetValue(0);
+		drawskybox.SetValue(0);
+	}
+
+	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
+#endif
+
 	// The dim light is the flashlight.
+#ifdef C17
+	if ((IsEffectActive(EF_DIMLIGHT) || ShouldDisplayMuzzleLight()) && (pPlayer))
+#else
 	if ( IsEffectActive( EF_DIMLIGHT ) )
+#endif
 	{
 		if (!m_pFlashlight)
 		{
@@ -1217,11 +1386,54 @@ void C_BasePlayer::UpdateFlashlight()
 			m_pFlashlight->TurnOn();
 		}
 
+#ifdef C17
+		QAngle angLightDir;
+		Vector vecLightOrigin, vecForward, vecRight, vecUp;
+
+		CBaseCombatWeapon *pWeapon = GetActiveWeapon();
+		if (pWeapon)
+		{
+			if (pWeapon->HasFlashlight())
+			{
+				C_BaseViewModel  *pVM = pPlayer->GetViewModel();
+				if (pVM)
+				{
+					if (ShouldDisplayMuzzleLight())
+					{
+						pVM->GetAttachment(1, vecLightOrigin, angLightDir);
+					}
+					else
+					{
+						//If we have a flashlight attachment, use that.
+						if (pVM->LookupAttachment(pWeapon->GetFlashlightAttachment()) != 0)
+						{
+							pVM->GetAttachment(pVM->LookupAttachment(pWeapon->GetFlashlightAttachment()), vecLightOrigin, angLightDir);
+						}
+						else
+						{
+							//Looks like we don't have a flashlight attachment. Let's settle with the muzzle.
+							pVM->GetAttachment(1, vecLightOrigin, angLightDir);
+						}
+					}
+					::FormatViewModelAttachment(vecLightOrigin, true);
+				}
+				AngleVectors(angLightDir, &vecForward, &vecRight, &vecUp);
+			}
+			else
+			{
+				EyeVectors(&vecForward, &vecRight, &vecUp);
+				vecLightOrigin = EyePosition();
+			}
+		}
+
+		m_pFlashlight->UpdateLight(vecLightOrigin, vecForward, vecRight, vecUp, FLASHLIGHT_DISTANCE, ShouldDisplayMuzzleLight());
+#else
 		Vector vecForward, vecRight, vecUp;
 		EyeVectors( &vecForward, &vecRight, &vecUp );
 
 		// Update the light with the new position and direction.		
 		m_pFlashlight->UpdateLight( EyePosition(), vecForward, vecRight, vecUp, FLASHLIGHT_DISTANCE );
+#endif
 	}
 	else if (m_pFlashlight)
 	{
@@ -1753,6 +1965,7 @@ void C_BasePlayer::CalcDeathCamView(Vector& eyeOrigin, QAngle& eyeAngles, float&
 	interpolation = clamp( interpolation, 0.0f, 1.0f );
 
 	m_flObserverChaseDistance += gpGlobals->frametime*48.0f;
+
 	m_flObserverChaseDistance = clamp( m_flObserverChaseDistance, ( CHASE_CAM_DISTANCE_MIN * 2 ), CHASE_CAM_DISTANCE_MAX );
 
 	QAngle aForward = eyeAngles;

@@ -30,6 +30,20 @@
 
 class CTakeDamageInfo;
 
+#ifdef C17
+//Tony; Compromise! in episodic single player, inherit CBaseCombatCharacter for the barnacle interaction, otherwise this will never get called.
+class CBaseGrenade :
+#if defined( HL2_EPISODIC )
+	public CBaseCombatCharacter
+#else
+	public CBaseAnimating
+#endif
+#if defined( GAME_DLL )
+	, public CDefaultPlayerPickupVPhysics
+#endif
+{		//Tony; the ugliest class definition ever, but it saves characters, or something. Should I be shot for this?
+	DECLARE_CLASS(CBaseGrenade, CBaseAnimating);
+#else
 #if !defined( CLIENT_DLL )
 class CBaseGrenade : public CBaseProjectile, public CDefaultPlayerPickupVPhysics
 #else
@@ -37,6 +51,7 @@ class CBaseGrenade : public CBaseProjectile
 #endif
 {
 	DECLARE_CLASS( CBaseGrenade, CBaseProjectile );
+#endif
 public:
 
 	CBaseGrenade(void);
@@ -102,6 +117,14 @@ public:
 	CBaseCombatCharacter *GetThrower( void );
 	void				  SetThrower( CBaseCombatCharacter *pThrower );
 	CBaseEntity *GetOriginalThrower() { return m_hOriginalThrower; }
+
+#ifdef C17
+	// added for entity info so that certain classes can override this, without screwing up the normal GetOwnerEntity()
+	virtual CBaseEntity	*GetTrueOwnerEntity()
+	{
+		return dynamic_cast<CBaseEntity *>(GetThrower());
+	}
+#endif
 
 #if !defined( CLIENT_DLL )
 	// Allow +USE pickup

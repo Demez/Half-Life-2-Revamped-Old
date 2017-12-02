@@ -15,6 +15,9 @@
 #include "utllinkedlist.h"
 #include "glow_overlay.h"
 #include "sun_shared.h"
+#ifdef C17
+#include "city17/c17_screeneffects.h"
+#endif
 
 //
 // Special glow overlay
@@ -43,12 +46,21 @@ class C_SunGlowOverlay : public CGlowOverlay
 
 public:
 
+#ifdef C17
+	void			Activate();
+	void			Deactivate();
+#endif
+
 	void SetModulateByDot( bool state = true )
 	{
 		m_bModulateByDot = state;
 	}
 
 protected:
+
+#ifdef C17
+	virtual void Draw(bool bCacheFullSceneState);
+#endif
 
 	bool m_bModulateByDot;
 };
@@ -64,7 +76,9 @@ public:
 	DECLARE_CLIENTCLASS();
 
 					C_Sun();
+#ifndef C17
 					~C_Sun();
+#endif
 
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
 

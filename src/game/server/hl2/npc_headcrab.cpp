@@ -2381,7 +2381,11 @@ void CBaseHeadcrab::CreateDust( bool placeDecal )
 	{
 		const surfacedata_t *pdata = physprops->GetSurfaceData( tr.surface.surfaceProps );
 
+#ifdef C17
+		if (((char)pdata->game.material == CHAR_TEX_CONCRETE) || ((char)pdata->game.material == CHAR_TEX_DIRT) || ((char)pdata->game.material == CHAR_TEX_PLASTER) || ((char)pdata->game.material == CHAR_TEX_BRICK))
+#else
 		if ( ( (char) pdata->game.material == CHAR_TEX_CONCRETE ) || ( (char) pdata->game.material == CHAR_TEX_DIRT ) )
+#endif
 		{
 			UTIL_CreateAntlionDust( tr.endpos + Vector(0, 0, 24), GetLocalAngles() );
 

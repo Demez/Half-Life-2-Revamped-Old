@@ -365,6 +365,9 @@ BEGIN_DATADESC( CNPC_Strider )
 
 	DEFINE_FIELD( m_bFastCrouch, FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_bMinigunEnabled, FIELD_BOOLEAN ),
+#ifdef C17
+	DEFINE_FIELD(m_bLowPowerCannon, FIELD_BOOLEAN),
+#endif
 	DEFINE_FIELD( m_bExploding, FIELD_BOOLEAN ),
 
 	// inputs
@@ -384,6 +387,10 @@ BEGIN_DATADESC( CNPC_Strider )
 	DEFINE_INPUTFUNC( FIELD_VOID, "DisableAggressiveBehavior", InputDisableAggressiveBehavior ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "DisableMinigun", InputDisableMinigun ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "EnableMinigun", InputEnableMinigun ),
+#ifdef C17
+	DEFINE_INPUTFUNC(FIELD_VOID, "EnableLowPowerCannon", InputEnableLowPowerCannon),
+	DEFINE_INPUTFUNC(FIELD_VOID, "DisableLowPowerCannon", InputDisableLowPowerCannon),
+#endif
 	DEFINE_INPUTFUNC( FIELD_FLOAT, "StopShootingMinigunForSeconds", InputStopShootingMinigunForSeconds ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "DisableCrouch", InputDisableCrouch ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "DisableMoveToLOS", InputDisableMoveToLOS ),
@@ -423,6 +430,9 @@ CNPC_Strider::CNPC_Strider()
 	m_hSmoke = NULL;
 	m_PlayerFreePass.SetOuter( this );
 	m_bExploding = false;
+#ifdef C17
+	m_bLowPowerCannon = false;
+#endif
 }
 
 //---------------------------------------------------------
@@ -2033,6 +2043,17 @@ void CNPC_Strider::InputDisableMinigun( inputdata_t &inputdata )
 	m_pMinigun->Enable( this, false );
 }
 
+#ifdef C17
+void CNPC_Strider::InputEnableLowPowerCannon(inputdata_t &inputdata)
+{
+	m_bLowPowerCannon = true;
+}
+
+void CNPC_Strider::InputDisableLowPowerCannon(inputdata_t &inputdata)
+{
+	m_bLowPowerCannon = false;;
+}
+#endif
 
 //---------------------------------------------------------
 // Enables the minigun.
@@ -4092,19 +4113,40 @@ void CNPC_Strider::CannonHitThink()
 	{
 		bool fAlive = pCannonTarget->IsAlive();
 
-		CreateConcussiveBlast( m_blastHit, m_blastNormal, this, 2.5 );
+#ifdef C17
+		if (!m_bLowPowerCannon)
+#endif
+		{
+			CreateConcussiveBlast(m_blastHit, m_blastNormal, this, 2.5);
+		}
 
 		// If the target was alive, check to make sure it is now dead. If not,
 		// Kill it and warn the designer.
 		if( fAlive && pCannonTarget->IsAlive() )
 		{
-			DevWarning("* * * * * * * * * * * * * * *\n");
-			DevWarning("NASTYGRAM: STRIDER failed to kill its cannon target. Killing directly...\n");
-			DevWarning("* * * * * * * * * * * * * * *\n");
+#ifdef C17
+			if (!m_bLowPowerCannon)
+#endif
+			{
+				DevWarning("* * * * * * * * * * * * * * *\n");
+				DevWarning("NASTYGRAM: STRIDER failed to kill its cannon target. Killing directly...\n");
+				DevWarning("* * * * * * * * * * * * * * *\n");
+			}
 
 			CTakeDamageInfo info;
 
-			info.SetDamage( pCannonTarget->GetHealth() );
+#ifdef C17
+			if (!m_bLowPowerCannon)
+#endif
+			{
+				info.SetDamage(pCannonTarget->GetHealth());
+			}
+#ifdef C17
+			else
+			{
+				info.SetDamage(1.0f);
+			}
+#endif
 			info.SetDamageType( DMG_GENERIC );
 			info.SetAttacker( this );
 			info.SetInflictor( this );

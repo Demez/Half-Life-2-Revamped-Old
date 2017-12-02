@@ -19,6 +19,7 @@
 #define		SF_BRUSH_ACCDCC	16// brush should accelerate and decelerate when toggled
 #define		SF_BRUSH_HURT		32// rotating brush that inflicts pain based on rotation speed
 #define		SF_ROTATING_NOT_SOLID	64	// some special rotating objects are not solid.
+//Tony; moved the spawnflags to util.h to prevent more mistakes in the future.
 
 // =================== FUNC_WALL ==============================================
 class CFuncWall : public CBaseEntity
@@ -1394,7 +1395,7 @@ BEGIN_DATADESC( CFuncVPhysicsClip )
 	// Keyfields
 	DEFINE_KEYFIELD( m_iFilterName,	FIELD_STRING,	"filtername" ),
 	DEFINE_FIELD( m_hFilter,	FIELD_EHANDLE ),
-	DEFINE_FIELD( m_bDisabled,	FIELD_BOOLEAN ),
+	DEFINE_KEYFIELD(m_bDisabled, FIELD_BOOLEAN, "startdisabled"),
 
 	DEFINE_INPUTFUNC( FIELD_VOID, "Enable", InputEnable ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "Disable", InputDisable ),

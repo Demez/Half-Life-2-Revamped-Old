@@ -1,6 +1,11 @@
 [vpc crc file version 2]
+<<<<<<< HEAD
 8209bbc3 D:\sourceengine\personal-projects\Half-Life-2-Revamped\src\devtools\bin\vpc.exe
 _Nc_VS2013/vpcgame:valve_
+=======
+8209bbc3 D:\GitHub\Half-Life-2-Revamped\src\devtools\bin\vpc.exe
+_Nc_VS2013/vpcgame:hl2_
+>>>>>>> master
 407e2c20 raytrace.vpc
 30577f77 ..\vpc_scripts\source_lib_base.vpc
 d752cf80 ..\vpc_scripts\platform_dirs.vpc

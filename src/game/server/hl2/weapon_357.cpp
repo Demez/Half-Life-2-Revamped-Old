@@ -39,6 +39,10 @@ public:
 
 	float	WeaponAutoAimScale()	{ return 0.6f; }
 
+#ifdef C17
+	const char *GetTracerType(void) { return "gunfire_pistol_beams"; }
+#endif
+
 	DECLARE_SERVERCLASS();
 	DECLARE_DATADESC();
 };
@@ -152,9 +156,11 @@ void CWeapon357::PrimaryAttack( void )
 
 	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), 600, 0.2, GetOwner() );
 
+#ifndef C17
 	if ( !m_iClip1 && pPlayer->GetAmmoCount( m_iPrimaryAmmoType ) <= 0 )
 	{
 		// HEV suit - indicate out of ammo condition
 		pPlayer->SetSuitUpdate( "!HEV_AMO0", FALSE, 0 ); 
 	}
+#endif
 }

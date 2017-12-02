@@ -12,11 +12,19 @@
 #include "player.h"
 #include "world.h"
 #include "ndebugoverlay.h"
+#ifdef C17
+#include "KeyValues.h"
+#include "filesystem.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
 CFogSystem s_FogSystem( "FogSystem" );
+
+#ifdef C17
+ConVar debug_fog_lerping("debug_fog_lerping", "0", FCVAR_CHEAT);
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose:
@@ -44,11 +52,21 @@ BEGIN_DATADESC( CFogController )
 	DEFINE_INPUTFUNC( FIELD_COLOR32,	"SetColorSecondaryLerpTo",	InputSetColorSecondaryLerpTo ),
 	DEFINE_INPUTFUNC( FIELD_FLOAT,		"SetStartDistLerpTo",	InputSetStartDistLerpTo ),
 	DEFINE_INPUTFUNC( FIELD_FLOAT,		"SetEndDistLerpTo",	InputSetEndDistLerpTo ),
+#ifdef C17
+	DEFINE_INPUTFUNC(FIELD_FLOAT, "SetMaxDensLerpTo", InputSetMaxDensLerpTo),
+	DEFINE_INPUTFUNC(FIELD_FLOAT, "SetFarZLerpTo", InputSetFarZLerpTo),
+	//DEFINE_INPUTFUNC( FIELD_VOID,		"StartFogTransition", InputStartFogTransition ),
+	DEFINE_INPUTFUNC(FIELD_BOOLEAN, "SetUseBlending", InputSetUseBlending),
+#else
 	DEFINE_INPUTFUNC( FIELD_VOID,		"StartFogTransition", InputStartFogTransition ),
+#endif
 
 	// Quiet classcheck
 	//DEFINE_EMBEDDED( m_fog ),
 
+#ifdef C17
+	DEFINE_KEYFIELD(m_iszFogSet, FIELD_STRING, "FogScript"),
+#endif
 	DEFINE_KEYFIELD( m_bUseAngles,			FIELD_BOOLEAN,	"use_angles" ),
 	DEFINE_KEYFIELD( m_fog.colorPrimary,	FIELD_COLOR32,	"fogcolor" ),
 	DEFINE_KEYFIELD( m_fog.colorSecondary,	FIELD_COLOR32,	"fogcolor2" ),
@@ -65,11 +83,20 @@ BEGIN_DATADESC( CFogController )
 
 	DEFINE_FIELD( m_iChangedVariables, FIELD_INTEGER ),
 
+#ifdef C17
+	DEFINE_KEYFIELD(m_fog.colorPrimaryLerpTo, FIELD_COLOR32, "fogcolorlerpto"),
+	DEFINE_KEYFIELD(m_fog.colorSecondaryLerpTo, FIELD_COLOR32, "fogcolor2lerpto"),
+	DEFINE_KEYFIELD(m_fog.startLerpTo, FIELD_FLOAT, "fogstartlerpto"),
+	DEFINE_KEYFIELD(m_fog.endLerpTo, FIELD_FLOAT, "fogendlerpto"),
+	DEFINE_KEYFIELD(m_fog.maxdensityLerpTo, FIELD_FLOAT, "fogmaxdensitylerpto"),
+	DEFINE_KEYFIELD(m_fog.farzLerpTo, FIELD_FLOAT, "fogfarzlerpto"),
+#else
 	DEFINE_FIELD( m_fog.lerptime, FIELD_TIME ),
 	DEFINE_FIELD( m_fog.colorPrimaryLerpTo, FIELD_COLOR32 ),
 	DEFINE_FIELD( m_fog.colorSecondaryLerpTo, FIELD_COLOR32 ),
 	DEFINE_FIELD( m_fog.startLerpTo, FIELD_FLOAT ),
 	DEFINE_FIELD( m_fog.endLerpTo, FIELD_FLOAT ),
+#endif
 
 END_DATADESC()
 
@@ -89,15 +116,34 @@ IMPLEMENT_SERVERCLASS_ST_NOBASE( CFogController, DT_FogController )
 	SendPropInt( SENDINFO_STRUCTELEM( m_fog.colorSecondaryLerpTo ), 32, SPROP_UNSIGNED ),
 	SendPropFloat( SENDINFO_STRUCTELEM( m_fog.startLerpTo ), 0, SPROP_NOSCALE ),
 	SendPropFloat( SENDINFO_STRUCTELEM( m_fog.endLerpTo ), 0, SPROP_NOSCALE ),
+#ifndef C17
 	SendPropFloat( SENDINFO_STRUCTELEM( m_fog.lerptime ), 0, SPROP_NOSCALE ),
 	SendPropFloat( SENDINFO_STRUCTELEM( m_fog.duration ), 0, SPROP_NOSCALE ),
+#endif
 END_SEND_TABLE()
+
+#ifdef C17
+#define FOG_FILE "scripts/fog_parameters.txt"
+#endif
 
 CFogController::CFogController()
 {
 	// Make sure that old maps without fog fields don't get wacked out fog values.
 	m_fog.enable = false;
 	m_fog.maxdensity = 1.0f;
+
+#ifdef C17
+	m_iszFogSet = NULL_STRING;
+
+	m_fog.colorPrimaryLerpTo.GetForModify() = m_fog.colorPrimary.Get();
+	m_fog.colorSecondaryLerpTo.GetForModify() = m_fog.colorSecondary.Get();
+
+	m_fog.startLerpTo.GetForModify() = m_fog.start.Get();
+	m_fog.endLerpTo.GetForModify() = m_fog.end.Get();
+	m_fog.maxdensityLerpTo = m_fog.maxdensity.Get();
+	m_fog.farzLerpTo = m_fog.farz.Get();
+	m_flLerpSpeed = 0.01;
+#endif
 }
 
 
@@ -105,9 +151,79 @@ CFogController::~CFogController()
 {
 }
 
+#ifdef C17
+void CFogController::ReadParams(KeyValues *pKeyValue)
+{
+	if (pKeyValue == NULL)
+	{
+		Assert(!"Fog controller couldn't be initialized!");
+		return;
+	}
+
+	int r, g, b, a;
+	Color Savecolor = pKeyValue->GetColor("primarycolor");
+
+	Savecolor.GetColor(r, g, b, a);
+	m_fog.colorPrimary.GetForModify().r = (float)r;
+	m_fog.colorPrimary.GetForModify().g = (float)g;
+	m_fog.colorPrimary.GetForModify().b = (float)b;
+	m_fog.colorPrimaryLerpTo.GetForModify() = m_fog.colorPrimary.Get();
+
+	Savecolor = pKeyValue->GetColor("secondarycolor");
+
+	Savecolor.GetColor(r, g, b, a);
+	m_fog.colorSecondary.GetForModify().r = (float)r;
+	m_fog.colorSecondary.GetForModify().g = (float)g;
+	m_fog.colorSecondary.GetForModify().b = (float)b;
+	m_fog.colorSecondaryLerpTo.GetForModify() = m_fog.colorSecondary.Get();
+
+	m_fog.start.GetForModify() = pKeyValue->GetFloat("start");
+	m_fog.startLerpTo.GetForModify() = m_fog.start.Get();
+
+	m_fog.end.GetForModify() = pKeyValue->GetFloat("end");
+	m_fog.endLerpTo.GetForModify() = m_fog.end.Get();
+
+	m_fog.maxdensity.GetForModify() = pKeyValue->GetFloat("density");
+	m_fog.maxdensityLerpTo = m_fog.maxdensity.Get();
+
+	m_fog.farz.GetForModify() = pKeyValue->GetFloat("farz");
+	m_fog.farzLerpTo = m_fog.farz.Get();
+
+	m_flLerpSpeed = pKeyValue->GetFloat("lerpspeed");
+}
+
+void CFogController::PrepareFogParams(const char *pKeyName)
+{
+	KeyValues *pKV = new KeyValues("FogFile");
+	if (!pKV->LoadFromFile(filesystem, FOG_FILE, "MOD"))
+	{
+		pKV->deleteThis();
+
+		Assert(!"Couldn't find fog paramater file! Fog value load aborted!");
+		return;
+	}
+
+	KeyValues *pKVSubkey;
+	if (pKeyName)
+	{
+		pKVSubkey = pKV->FindKey(pKeyName);
+		ReadParams(pKVSubkey);
+	}
+
+	pKV->deleteThis();
+}
+#endif
+
 void CFogController::Spawn( void )
 {
 	BaseClass::Spawn();
+
+#ifdef C17
+	if (m_iszFogSet != NULL_STRING)
+	{
+		PrepareFogParams((char *)STRING(m_iszFogSet));
+	}
+#endif
 
 	m_fog.colorPrimaryLerpTo = m_fog.colorPrimary;
 	m_fog.colorSecondaryLerpTo = m_fog.colorSecondary;
@@ -126,6 +242,35 @@ void CFogController::Activate( )
 		m_fog.dirPrimary.GetForModify() *= -1.0f; 
 	}	    
 }
+
+#ifdef C17
+void CFogController::StartTransition(void)
+{
+	SetThink(&CFogController::SetLerpValues);
+	SetNextThink(gpGlobals->curtime + 0.01);
+}
+
+void CFogController::SetLerpValuesTo(Color primary, Color secondary, float start, float end, float density, float farz)
+{
+	int r, g, b, a;
+	primary.GetColor(r, g, b, a);
+	m_fog.colorPrimaryLerpTo.GetForModify().r = (float)r;
+	m_fog.colorPrimaryLerpTo.GetForModify().g = (float)g;
+	m_fog.colorPrimaryLerpTo.GetForModify().b = (float)b;
+
+	secondary.GetColor(r, g, b, a);
+	m_fog.colorSecondaryLerpTo.GetForModify().r = (float)r;
+	m_fog.colorSecondaryLerpTo.GetForModify().g = (float)g;
+	m_fog.colorSecondaryLerpTo.GetForModify().b = (float)b;
+
+	m_fog.startLerpTo.GetForModify() = start;
+	m_fog.endLerpTo.GetForModify() = end;
+	m_fog.maxdensityLerpTo = density;
+	m_fog.farzLerpTo = farz;
+
+	StartTransition();
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -306,6 +451,105 @@ void CFogController::InputSetEndDistLerpTo(inputdata_t &data)
 	m_fog.endLerpTo = data.value.Float();
 }
 
+#ifdef C17
+void CFogController::InputSetMaxDensLerpTo(inputdata_t &data)
+{
+	m_fog.maxdensityLerpTo = data.value.Float();
+}
+
+void CFogController::InputSetFarZLerpTo(inputdata_t &data)
+{
+	m_fog.farzLerpTo = data.value.Float();
+}
+
+/*void CFogController::InputStartFogTransition(inputdata_t &data)
+{
+DevMsg( "Fog Lerp starting.\n" );
+StartTransition();
+}*/
+
+void CFogController::InputSetUseBlending(inputdata_t &data)
+{
+	m_fog.blend = data.value.Bool();
+}
+
+/*void CFogController::LerpFog( color32 *changefog, color32 *lerpfog )
+{
+float flLerpColor[3] = { lerpfog->r, lerpfog->g, lerpfog->b };
+changefog->r = Lerp( 0.01, (float)changefog->r, flLerpColor[1] );
+changefog->g = Lerp( 0.01, (float)changefog->g, flLerpColor[2] );
+changefog->b = Lerp( 0.01, (float)changefog->b, flLerpColor[3] );
+}*/
+
+void CFogController::SetLerpValues(void)
+{
+	color32 colorPrimary = m_fog.colorPrimary;
+	color32 colorSecondary = m_fog.colorSecondary;
+	color32 colorPrimaryLerpTo = m_fog.colorPrimaryLerpTo;
+	color32 colorSecondaryLerpTo = m_fog.colorSecondaryLerpTo;
+
+	if (!(colorPrimary.r == colorPrimaryLerpTo.r))
+	{
+		colorPrimary.r = Lerp(m_flLerpSpeed, colorPrimary.r, colorPrimaryLerpTo.r);
+		m_fog.colorPrimary.GetForModify().r = colorPrimary.r;
+	}
+	if (!(colorPrimary.g == colorPrimaryLerpTo.g))
+	{
+		colorPrimary.g = Lerp(m_flLerpSpeed, colorPrimary.g, colorPrimaryLerpTo.g);
+		m_fog.colorPrimary.GetForModify().g = colorPrimary.g;
+	}
+	if (!(colorPrimary.b == colorPrimaryLerpTo.b))
+	{
+		colorPrimary.b = Lerp(m_flLerpSpeed, colorPrimary.b, colorPrimaryLerpTo.b);
+		m_fog.colorPrimary.GetForModify().b = colorPrimary.b;
+	}
+
+	if (!(colorSecondary.r == colorSecondaryLerpTo.r))
+	{
+		colorSecondary.r = Lerp(m_flLerpSpeed, colorSecondary.r, colorSecondaryLerpTo.r);
+		m_fog.colorSecondary.GetForModify().r = colorSecondary.r;
+	}
+	if (!(colorSecondary.g == colorSecondaryLerpTo.g))
+	{
+		colorSecondary.g = Lerp(m_flLerpSpeed, colorSecondary.g, colorSecondaryLerpTo.g);
+		m_fog.colorSecondary.GetForModify().g = colorSecondary.g;
+	}
+	if (!(colorSecondary.b == colorSecondaryLerpTo.b))
+	{
+		colorSecondary.b = Lerp(m_flLerpSpeed, colorSecondary.b, colorSecondaryLerpTo.b);
+		m_fog.colorSecondary.GetForModify().b = colorSecondary.b;
+	}
+
+	if (!(m_fog.start.Get() == m_fog.startLerpTo.Get()))
+	{
+		m_fog.start.GetForModify() = Lerp(m_flLerpSpeed, m_fog.start.Get(), m_fog.startLerpTo.Get());
+	}
+	if (!(m_fog.end.Get() == m_fog.endLerpTo.Get()))
+	{
+		m_fog.end.GetForModify() = Lerp(m_flLerpSpeed, m_fog.end.Get(), m_fog.endLerpTo.Get());
+	}
+	if (!(m_fog.maxdensity.Get() == m_fog.maxdensityLerpTo))
+	{
+		m_fog.maxdensity.GetForModify() = Lerp(m_flLerpSpeed, m_fog.maxdensity.Get(), m_fog.maxdensityLerpTo);
+	}
+	if (!(m_fog.farz.Get() == m_fog.farzLerpTo))
+	{
+		m_fog.farz.GetForModify() = Lerp(m_flLerpSpeed, m_fog.farz.Get(), m_fog.farzLerpTo);
+	}
+
+	if (debug_fog_lerping.GetBool())
+	{
+		DevMsg("Color Primary R:%.2f G:%.2f B:%.2f\n", (float)m_fog.colorPrimary.Get().r, (float)m_fog.colorPrimary.Get().g, (float)m_fog.colorPrimary.Get().b);
+		DevMsg("Color Secondary R:%.2f G:%.2f B:%.2f\n", (float)m_fog.colorSecondary.Get().r, (float)m_fog.colorSecondary.Get().g, (float)m_fog.colorSecondary.Get().b);
+		DevMsg("Start: %.2f\n", m_fog.start.Get());
+		DevMsg("End: %.2f\n", m_fog.end.Get());
+		DevMsg("Density: %.2f\n", m_fog.maxdensity.Get());
+		DevMsg("FarZ: %.2f\n", m_fog.farz.Get());
+	}
+
+	SetNextThink(gpGlobals->curtime + 0.01);
+}
+#else
 void CFogController::InputStartFogTransition(inputdata_t &data)
 {
 	SetThink( &CFogController::SetLerpValues );
@@ -339,6 +583,7 @@ void CFogController::SetLerpValues( void )
 	m_iChangedVariables = 0;
 	m_fog.lerptime = gpGlobals->curtime;
 }
+#endif
 
 
 //-----------------------------------------------------------------------------

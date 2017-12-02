@@ -5,7 +5,9 @@
 #include "cdll_client_int.h"
 #include "view_scene.h"
 #include "viewrender.h"
+#ifndef C17
 #include "tier0/icommandline.h"
+#endif
 #include "materialsystem/imesh.h"
 #include "materialsystem/imaterial.h"
 #include "materialsystem/imaterialsystemhardwareconfig.h"
@@ -65,10 +67,12 @@ IScreenSpaceEffectManager *g_pScreenSpaceEffects = &g_ScreenSpaceEffectManager;
 //---------------------------------------------------------------------------------------
 void CScreenSpaceEffectManager::InitScreenSpaceEffects( )
 {
+#ifndef C17
 	if ( CommandLine()->FindParm( "-filmgrain" ) )
 	{
 		GetScreenSpaceEffect( "filmgrain" )->Enable( true );
 	}
+#endif
 
 	for( CScreenSpaceEffectRegistration *pReg=CScreenSpaceEffectRegistration::s_pHead; pReg!=NULL; pReg=pReg->m_pNext )
 	{
@@ -206,6 +210,7 @@ void CScreenSpaceEffectManager::RenderEffects( int x, int y, int w, int h )
 	}
 }
 
+#ifndef C17
 //------------------------------------------------------------------------------
 // Example post-processing effect
 //------------------------------------------------------------------------------
@@ -315,3 +320,4 @@ void CExampleEffect::Render( int x, int y, int w, int h )
 											actualRect.x, actualRect.y, actualRect.x+actualRect.width-1, actualRect.y+actualRect.height-1, 
 											pTexture->GetActualWidth(), pTexture->GetActualHeight() );
 }
+#endif

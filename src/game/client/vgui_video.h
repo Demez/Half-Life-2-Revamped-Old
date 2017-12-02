@@ -44,7 +44,11 @@ public:
 		}
 	}
 
+#ifdef C17
+	virtual bool BeginPlayback(const char *pFilename); //Tony; allow overriding
+#else
 	bool BeginPlayback( const char *pFilename );
+#endif
 
 	void SetBlackBackground( bool bBlack ){ m_bBlackBackground = bBlack; }
 

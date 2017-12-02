@@ -46,7 +46,9 @@ CLIENTEFFECT_REGISTER_END()
 // ----------------------------------------------------------------------------- //
 // This is a cache of preloaded keyvalues.
 // ----------------------------------------------------------------------------- // 
-
+#ifdef C17
+CUtlVector<C_VGuiScreen*> g_pVGUIScreens;
+#endif
 CUtlDict<KeyValues*, int> g_KeyValuesCache;
 
 KeyValues* CacheKeyValuesForFile( const char *pFilename )
@@ -102,11 +104,19 @@ C_VGuiScreen::C_VGuiScreen()
 
 	m_WriteZMaterial.Init( "engine/writez", TEXTURE_GROUP_VGUI );
 	m_OverlayMaterial.Init( m_WriteZMaterial );
+
+#ifdef C17
+	g_pVGUIScreens.AddToTail(this);
+#endif
 }
 
 C_VGuiScreen::~C_VGuiScreen()
 {
 	DestroyVguiScreen();
+
+#ifdef C17
+	g_pVGUIScreens.FindAndRemove(this);
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -344,8 +354,16 @@ void ScreenToWorld( int mousex, int mousey, float fov,
 	// Invert Y
 	dy = c_y - (float)mousey;
 
+#ifdef C17
+	//Tony; fix for 2008 express. why this is an issue, is unbeknownst to me. - http://developer.valvesoftware.com/cgi-bin/bugzilla/show_bug.cgi?id=214
+	// Convert view plane distance
+	//dist = c_x / tan( M_PI * scaled_fov / 360.0 );
+	float dist_denom = tan(M_PI * scaled_fov / 360.0f);
+	dist = c_x / dist_denom;
+#else
 	// Convert view plane distance
 	dist = c_x / tan( M_PI * scaled_fov / 360.0 );
+#endif
 
 	// Decompose view angles
 	AngleVectors( vecRenderAngles, &vpn, &vright, &vup );
@@ -704,26 +722,36 @@ C_BaseEntity *FindNearbyVguiScreen( const Vector &viewPosition, const QAngle &vi
 	Ray_t lookRay;
 	lookRay.Init( viewPosition, lookEnd );
 
+#ifndef C17
 	// Look for vgui screens that are close to the player
 	CVGuiScreenEnumerator localScreens;
 	partition->EnumerateElementsInSphere( PARTITION_CLIENT_NON_STATIC_EDICTS, viewPosition, VGUI_SCREEN_MODE_RADIUS, false, &localScreens );
+#endif
 
 	Vector vecOut, vecViewDelta;
 
 	float flBestDist = 2.0f;
 	C_VGuiScreen *pBestScreen = NULL;
+#ifdef C17
+	for (int i = 0; i < g_pVGUIScreens.Count(); i++)
+	{
+		if (g_pVGUIScreens.IsValidIndex(i))
+		{
+			C_VGuiScreen *pScreen = g_pVGUIScreens[i];
+#else
 	for (int i = localScreens.GetScreenCount(); --i >= 0; )
 	{
 		C_VGuiScreen *pScreen = localScreens.GetVGuiScreen(i);
+#endif
 
-		if ( pScreen->IsAttachedToViewModel() )
+		if (pScreen->IsAttachedToViewModel())
 			continue;
 
 		// Don't bother with screens I'm behind...
 		// Hax - don't cancel backfacing with viewmodel attached screens.
 		// we can get prediction bugs that make us backfacing for one frame and
 		// it resets the mouse position if we lose focus.
-		if ( pScreen->IsBackfacing(viewPosition) )
+		if (pScreen->IsBackfacing(viewPosition))
 			continue;
 
 		// Don't bother with screens that are turned off
@@ -735,35 +763,38 @@ C_BaseEntity *FindNearbyVguiScreen( const Vector &viewPosition, const QAngle &vi
 		if (!pScreen->IsVisibleToTeam(nTeam))
 			continue;
 
-		if ( !pScreen->AcceptsInput() )
+		if (!pScreen->AcceptsInput())
 			continue;
 
-		if ( pScreen->IsInputOnlyToOwner() && pScreen->GetPlayerOwner() != pLocalPlayer )
+		if (pScreen->IsInputOnlyToOwner() && pScreen->GetPlayerOwner() != pLocalPlayer)
 			continue;
 
 		// Test perpendicular distance from the screen...
-		pScreen->GetVectors( NULL, NULL, &vecOut );
-		VectorSubtract( viewPosition, pScreen->GetAbsOrigin(), vecViewDelta );
+		pScreen->GetVectors(NULL, NULL, &vecOut);
+		VectorSubtract(viewPosition, pScreen->GetAbsOrigin(), vecViewDelta);
 		float flPerpDist = DotProduct(vecViewDelta, vecOut);
-		if ( (flPerpDist < 0) || (flPerpDist > VGUI_SCREEN_MODE_RADIUS) )
+		if ((flPerpDist < 0) || (flPerpDist > VGUI_SCREEN_MODE_RADIUS))
 			continue;
 
 		// Perform a raycast to see where in barycentric coordinates the ray hits
 		// the viewscreen; if it doesn't hit it, you're not in the mode
 		float u, v, t;
-		if (!pScreen->IntersectWithRay( lookRay, &u, &v, &t ))
+		if (!pScreen->IntersectWithRay(lookRay, &u, &v, &t))
 			continue;
 
 		// Barycentric test
 		if ((u < 0) || (v < 0) || (u > 1) || (v > 1))
 			continue;
 
-		if ( t < flBestDist )
+		if (t < flBestDist)
 		{
 			flBestDist = t;
 			pBestScreen = pScreen;
 		}
+		}
+#ifdef C17
 	}
+#endif
 	
 	return pBestScreen;
 }

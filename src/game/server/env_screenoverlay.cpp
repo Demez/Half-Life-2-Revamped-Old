@@ -203,34 +203,74 @@ public:
 	// We always want to be sent to the client
 	CEnvScreenEffect( void ) { 	AddEFlags( EFL_FORCE_CHECK_TRANSMIT ); }
 	virtual int UpdateTransmitState( void )	{ return SetTransmitState( FL_EDICT_ALWAYS ); }
+#ifndef C17
 	virtual void Spawn( void );
 	virtual void Precache( void );
+#endif
 
 private:
 
 	void InputStartEffect( inputdata_t &inputdata );
 	void InputStopEffect( inputdata_t &inputdata );
 
+#ifndef C17
 	CNetworkVar( float, m_flDuration );
 	CNetworkVar( int, m_nType );
+#else
+	void InputSetEffectName(inputdata_t &inputdata);
+	void InputSetEffectValueName(inputdata_t &inputdata);
+	void InputSendIntValue(inputdata_t &inputdata);
+	void InputSendFloatValue(inputdata_t &inputdata);
+	void InputSendColorValue(inputdata_t &inputdata);
+
+	CNetworkVar(int, m_iValue);
+	CNetworkVar(float, m_flValue);
+	CNetworkVar(color32, m_ColorValue);
+	CNetworkString(m_iszEffectName, MAX_PATH);
+	CNetworkString(m_iszEffectValue, MAX_PATH);
+
+	COutputEvent			m_OnStartEffect;
+	COutputEvent			m_OnStopEffect;
+#endif
 };
 
 LINK_ENTITY_TO_CLASS( env_screeneffect, CEnvScreenEffect );
 
 // CEnvScreenEffect
 BEGIN_DATADESC( CEnvScreenEffect )
+#ifdef C17
+	DEFINE_INPUTFUNC(FIELD_VOID, "StartEffect", InputStartEffect),
+	DEFINE_INPUTFUNC(FIELD_VOID, "StopEffect", InputStopEffect),
+	DEFINE_INPUTFUNC(FIELD_STRING, "SetEffectName", InputSetEffectName),
+	DEFINE_INPUTFUNC(FIELD_STRING, "SetEffectValue", InputSetEffectValueName),
+	DEFINE_INPUTFUNC(FIELD_INTEGER, "SendIntValue", InputSendIntValue),
+	DEFINE_INPUTFUNC(FIELD_FLOAT, "SendFloatValue", InputSendFloatValue),
+	DEFINE_INPUTFUNC(FIELD_COLOR32, "SendColorValue", InputSendColorValue),
+	DEFINE_OUTPUT(m_OnStartEffect, "OnStartEffect"),
+	DEFINE_OUTPUT(m_OnStopEffect, "OnStopEffect"),
+#else
 	DEFINE_FIELD( m_flDuration, FIELD_FLOAT ),
 	DEFINE_KEYFIELD( m_nType, FIELD_INTEGER, "type" ),
 	DEFINE_FIELD( m_flDuration, FIELD_FLOAT ),
 	DEFINE_INPUTFUNC( FIELD_FLOAT, "StartEffect", InputStartEffect ),
 	DEFINE_INPUTFUNC( FIELD_FLOAT, "StopEffect", InputStopEffect ),
+#endif
 END_DATADESC()
 
 IMPLEMENT_SERVERCLASS_ST( CEnvScreenEffect, DT_EnvScreenEffect )
+#ifdef C17
+	SendPropString( SENDINFO( m_iszEffectName ) ),
+	SendPropString( SENDINFO( m_iszEffectValue ) ),
+	SendPropInt( SENDINFO( m_iValue ) ),
+	SendPropFloat( SENDINFO( m_flValue ), 0, SPROP_NOSCALE ),
+	SendPropInt( SENDINFO(m_ColorValue), 32, SPROP_UNSIGNED, SendProxy_Color32ToInt ),
+#else
 	SendPropFloat( SENDINFO( m_flDuration ), 0, SPROP_NOSCALE ),
 	SendPropInt( SENDINFO( m_nType ), 32, SPROP_UNSIGNED ),
+#endif
 END_SEND_TABLE()
 
+#ifndef C17
 void CEnvScreenEffect::Spawn( void )
 {
 	Precache();
@@ -241,14 +281,19 @@ void CEnvScreenEffect::Precache( void )
 	PrecacheMaterial( "effects/stun" );
 	PrecacheMaterial( "effects/introblur" );
 }
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 void CEnvScreenEffect::InputStartEffect( inputdata_t &inputdata )
 {
+#ifdef C17
+	m_OnStartEffect.FireOutput(this, this);
+#else
 	// Take the duration as our value
 	m_flDuration = inputdata.value.Float();
+#endif
 
 	EntityMessageBegin( this );
 		WRITE_BYTE( 0 );
@@ -260,10 +305,56 @@ void CEnvScreenEffect::InputStartEffect( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CEnvScreenEffect::InputStopEffect( inputdata_t &inputdata )
 {
+#ifdef C17
+	m_OnStopEffect.FireOutput(this, this);
+#else
 	m_flDuration = inputdata.value.Float();
+#endif
 
 	// Send the stop notification
 	EntityMessageBegin( this );
 		WRITE_BYTE( 1 );
 	MessageEnd();
 }
+
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CEnvScreenEffect::InputSetEffectName(inputdata_t &inputdata)
+{
+	Q_strcpy(m_iszEffectName.GetForModify(), inputdata.value.String());
+}
+
+void CEnvScreenEffect::InputSetEffectValueName(inputdata_t &inputdata)
+{
+	Q_strcpy(m_iszEffectValue.GetForModify(), inputdata.value.String());
+}
+
+void CEnvScreenEffect::InputSendIntValue(inputdata_t &inputdata)
+{
+	m_iValue = inputdata.value.Int();
+
+	EntityMessageBegin(this);
+	WRITE_BYTE(2);
+	MessageEnd();
+}
+
+void CEnvScreenEffect::InputSendFloatValue(inputdata_t &inputdata)
+{
+	m_flValue = inputdata.value.Float();
+
+	EntityMessageBegin(this);
+	WRITE_BYTE(3);
+	MessageEnd();
+}
+
+void CEnvScreenEffect::InputSendColorValue(inputdata_t &inputdata)
+{
+	m_ColorValue = inputdata.value.Color32();
+
+	EntityMessageBegin(this);
+	WRITE_BYTE(4);
+	MessageEnd();
+}
+#endif

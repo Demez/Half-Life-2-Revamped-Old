@@ -331,6 +331,9 @@ private:
 	bool	m_fJustJumped;
 	float	m_flJumpStartAltitude;
 	float	m_flTimeUpdateSound;
+#ifdef C17
+	int		FliesChance(void);
+#endif
 
 	CSoundPatch	*m_pLayer2; // used for climbing ladders, and when jumping (pre apex)
 
@@ -437,6 +440,18 @@ void CFastZombie::OnScheduleChange( void )
 
 	BaseClass::OnScheduleChange();
 }
+
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: Defines the chances of spawning with the fly particle.
+// Input  :
+// Output :
+//-----------------------------------------------------------------------------
+int CFastZombie::FliesChance(void)
+{
+	return random->RandomInt(1, 3);
+}
+#endif
 
 //---------------------------------------------------------
 //---------------------------------------------------------

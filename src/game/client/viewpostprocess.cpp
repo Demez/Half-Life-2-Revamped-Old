@@ -21,6 +21,11 @@
 
 #include "proxyentity.h"
 
+#ifdef C17
+//Tony; new
+#include "c_baseplayer.h"
+#endif
+
 //-----------------------------------------------------------------------------
 // Globals
 //-----------------------------------------------------------------------------
@@ -37,7 +42,11 @@ float g_flCustomBloomScaleMinimum = 0.0f;
 bool g_bFlashlightIsOn = false;
 
 // hdr parameters
+#ifdef C17
+ConVar mat_bloomscale("mat_bloomscale", "1.5");
+#else
 ConVar mat_bloomscale( "mat_bloomscale", "1" );
+#endif
 ConVar mat_hdr_level( "mat_hdr_level", "2", FCVAR_ARCHIVE );
 
 ConVar mat_bloomamount_rate( "mat_bloomamount_rate", "0.05f", FCVAR_CHEAT );
@@ -46,7 +55,11 @@ static ConVar split_postproc( "mat_debug_process_halfscreen", "0", FCVAR_CHEAT )
 static ConVar mat_postprocessing_combine( "mat_postprocessing_combine", "1", FCVAR_NONE, "Combine bloom, software anti-aliasing and color correction into one post-processing pass" );
 static ConVar mat_dynamic_tonemapping( "mat_dynamic_tonemapping", "1", FCVAR_CHEAT );
 static ConVar mat_show_ab_hdr( "mat_show_ab_hdr", "0" );
+#ifdef C17
+static ConVar mat_tonemapping_occlusion_use_stencil("mat_tonemapping_occlusion_use_stencil", "0");
+#else
 static ConVar mat_tonemapping_occlusion_use_stencil( "mat_tonemapping_occlusion_use_stencil", "0" );
+#endif
 ConVar mat_debug_autoexposure("mat_debug_autoexposure","0", FCVAR_CHEAT);
 static ConVar mat_autoexposure_max( "mat_autoexposure_max", "2" );
 static ConVar mat_autoexposure_min( "mat_autoexposure_min", "0.5" );
@@ -86,6 +99,10 @@ ConVar mat_tonemap_min_avglum( "mat_tonemap_min_avglum", "3.0", FCVAR_CHEAT );
 ConVar mat_fullbright( "mat_fullbright", "0", FCVAR_CHEAT );
 
 extern ConVar localplayer_visionflags;
+
+#ifdef C17
+extern ConVar r_post_fxaa;
+#endif
 
 enum PostProcessingCondition {
 	PPP_ALWAYS,
@@ -765,7 +782,21 @@ static float GetCurrentBloomScale( void )
 {
 	// Use the appropriate bloom scale settings.  Mapmakers's overrides the convar settings.
 	float flCurrentBloomScale = 1.0f;
+#ifdef C17
+	C_BasePlayer *pLocalPlayer = NULL;
+
+	if ((gpGlobals->maxClients > 1))
+		pLocalPlayer = (C_BasePlayer*)C_BasePlayer::GetLocalPlayer();
+
+	//Tony; in multiplayer, get the local player etc.
+	if ((pLocalPlayer != NULL && pLocalPlayer->m_Local.m_TonemapParams.m_flAutoExposureMin > 0.0f))
+	{
+		flCurrentBloomScale = pLocalPlayer->m_Local.m_TonemapParams.m_flAutoExposureMin;
+	}
+	else if (g_bUseCustomBloomScale)
+#else
 	if ( g_bUseCustomBloomScale )
+#endif
 	{
 		flCurrentBloomScale = g_flCustomBloomScale;
 	}
@@ -778,8 +809,24 @@ static float GetCurrentBloomScale( void )
 
 static void GetExposureRange( float *flAutoExposureMin, float *flAutoExposureMax )
 {
+#ifdef C17
+	//Tony; get the local player first..
+	C_BasePlayer *pLocalPlayer = NULL;
+
+	if ((gpGlobals->maxClients > 1))
+		pLocalPlayer = (C_BasePlayer*)C_BasePlayer::GetLocalPlayer();
+
+	//Tony; in multiplayer, get the local player etc.
+	if ((pLocalPlayer != NULL && pLocalPlayer->m_Local.m_TonemapParams.m_flAutoExposureMin > 0.0f))
+	{
+		*flAutoExposureMin = pLocalPlayer->m_Local.m_TonemapParams.m_flAutoExposureMin;
+	}
+#endif
 	// Get min
+//#ifdef C17
 	if ( ( g_bUseCustomAutoExposureMin ) && ( g_flCustomAutoExposureMin > 0.0f ) )
+	//i ( ( g_bUseCustomAutoExposureMin ) && ( g_flCustomAutoExposureMin > 0.0f ) )
+//#endif
 	{
 		*flAutoExposureMin = g_flCustomAutoExposureMin;
 	}
@@ -788,8 +835,19 @@ static void GetExposureRange( float *flAutoExposureMin, float *flAutoExposureMax
 		*flAutoExposureMin = mat_autoexposure_min.GetFloat();
 	}
 
+#ifdef C17
+	//Tony; in multiplayer, get the value from the local player, if it's set.
+	if ((pLocalPlayer != NULL && pLocalPlayer->m_Local.m_TonemapParams.m_flAutoExposureMax > 0.0f))
+	{
+		*flAutoExposureMax = pLocalPlayer->m_Local.m_TonemapParams.m_flAutoExposureMax;
+	}
+#endif
 	// Get max
+#ifdef C17
+	else if ((g_bUseCustomAutoExposureMax) && (g_flCustomAutoExposureMax > 0.0f))
+#else
 	if ( ( g_bUseCustomAutoExposureMax ) && ( g_flCustomAutoExposureMax > 0.0f ) )
+#endif
 	{
 		*flAutoExposureMax = g_flCustomAutoExposureMax;
 	}
@@ -1520,6 +1578,11 @@ void DumpTGAofRenderTarget( const int width, const int height, const char *pFile
 
 static bool s_bScreenEffectTextureIsUpdated = false;
 
+#ifdef C17
+extern ConVar r_post_anamorphic_bloom;
+ConVar r_post_anamorphic_bloom_strength("r_post_anamorphic_bloom_strength", "1.15", FCVAR_CHEAT);
+#endif
+
 static void Generate8BitBloomTexture( IMatRenderContext *pRenderContext, float flBloomScale,
 										int x, int y, int w, int h )
 {
@@ -1541,6 +1604,17 @@ static void Generate8BitBloomTexture( IMatRenderContext *pRenderContext, float f
 	IMaterial *yblur_mat = materials->FindMaterial( "dev/blurfiltery_nohdr", TEXTURE_GROUP_OTHER, true );
 	ITexture *dest_rt0 = materials->FindTexture( "_rt_SmallFB0", TEXTURE_GROUP_RENDER_TARGET );
 	ITexture *dest_rt1 = materials->FindTexture( "_rt_SmallFB1", TEXTURE_GROUP_RENDER_TARGET );
+
+#if 0
+#ifdef C17
+	//City17: Anamorphic Bloom
+	IMaterial *anamorphic_bloom = materials->FindMaterial("effects/shaders/anamorphic_bloom", TEXTURE_GROUP_PIXEL_SHADERS, true);
+	IMaterial *anamorphic_final = materials->FindMaterial("effects/shaders/anamorphic_bloom_final", TEXTURE_GROUP_CLIENT_EFFECTS, true);
+
+	//City17: VMT Options
+	IMaterialVar *var;
+#endif
+#endif
 
 	// *Everything* in here relies on the small RTs being exactly 1/4 the full FB res
 	Assert( dest_rt0->GetActualWidth()  == pSrc->GetActualWidth()  / 4 );
@@ -2205,8 +2279,11 @@ static void DrawPyroPost( IMaterial *pMaterial,
 	pRenderContext->PopMatrix();
 }
 
-
+#ifdef C17
+static ConVar r_queued_post_processing("r_queued_post_processing", "0", FCVAR_ARCHIVE);
+#else
 static ConVar r_queued_post_processing( "r_queued_post_processing", "0" );
+#endif
 
 // How much to dice up the screen during post-processing on 360
 // This has really marginal effects, but 4x1 does seem vaguely better for post-processing
@@ -2314,7 +2391,15 @@ void DoEnginePostProcessing( int x, int y, int w, int h, bool bFlashlightIsOn, b
 			float flAAStrength;
 
 			// We do a second AA blur pass over the TF intro menus. use mat_software_aa_strength_vgui there instead
+#ifdef C17
+			if (r_post_fxaa.GetBool())
+			{
+				flAAStrength = 0.0f;
+			}
+			else if (IsX360() && bPostVGui)
+#else
 			if ( IsX360() && bPostVGui )
+#endif
 			{
 				flAAStrength = mat_software_aa_strength_vgui.GetFloat();
 			}
@@ -2399,7 +2484,11 @@ void DoEnginePostProcessing( int x, int y, int w, int h, bool bFlashlightIsOn, b
 				{
 					bool bFBUpdated = false;
 
+#ifdef C17
+					if (mat_postprocessing_combine.GetBool())
+#else
 					if ( mat_postprocessing_combine.GetInt() )
+#endif
 					{
 						// Perform post-processing in one combined pass
 
@@ -2691,13 +2780,45 @@ EXPOSE_INTERFACE( CMotionBlurMaterialProxy, IMaterialProxy, "MotionBlur" IMATERI
 // Image-space Motion Blur ============================================================================================
 //=====================================================================================================================
 ConVar mat_motion_blur_enabled( "mat_motion_blur_enabled", "1", FCVAR_ARCHIVE );
+#ifdef C17
+ConVar mat_motion_blur_forward_enabled("mat_motion_blur_forward_enabled", "1", FCVAR_ARCHIVE);
+ConVar mat_motion_blur_running_intensity("mat_motion_blur_running_intensity", "3.5");
+ConVar mat_motion_blur_vehicle_intensity("mat_motion_blur_vehicle_intensity", "0.3");
+ConVar mat_motion_blur_roll_intensity("mat_motion_blur_roll_intensity", "0.3");
+ConVar mat_motion_blur_strength("mat_motion_blur_strength", "3.0", FCVAR_ARCHIVE);
+#else
 ConVar mat_motion_blur_forward_enabled( "mat_motion_blur_forward_enabled", "0" );
+ConVar mat_motion_blur_strength("mat_motion_blur_strength", "1.0");
+#endif
 ConVar mat_motion_blur_falling_min( "mat_motion_blur_falling_min", "10.0" );
 ConVar mat_motion_blur_falling_max( "mat_motion_blur_falling_max", "20.0" );
 ConVar mat_motion_blur_falling_intensity( "mat_motion_blur_falling_intensity", "1.0" );
 //ConVar mat_motion_blur_roll_intensity( "mat_motion_blur_roll_intensity", "1.0" );
 ConVar mat_motion_blur_rotation_intensity( "mat_motion_blur_rotation_intensity", "1.0" );
-ConVar mat_motion_blur_strength( "mat_motion_blur_strength", "1.0" );
+
+#ifdef C17
+float ForwardIntensity(void)
+{
+	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
+
+	if (pPlayer && mat_motion_blur_forward_enabled.GetBool())
+	{
+		if (pPlayer->IsAlive())
+		{
+			if (pPlayer->IsInAVehicle())
+				return mat_motion_blur_vehicle_intensity.GetFloat();
+
+			float speed;
+			speed = pPlayer->GetAbsVelocity().Length2D();
+
+			if ((speed > 190) && (pPlayer->GetFlags() & FL_ONGROUND))
+				return mat_motion_blur_running_intensity.GetFloat();
+		}
+	}
+
+	return mat_motion_blur_falling_intensity.GetFloat();
+}
+#endif
 
 void DoImageSpaceMotionBlur( const CViewSetup &view, int x, int y, int w, int h )
 {
@@ -2713,8 +2834,14 @@ void DoImageSpaceMotionBlur( const CViewSetup &view, int x, int y, int w, int h 
 	// Get these convars here to make it easier to remove them later and to default each client differently //
 	//======================================================================================================//
 	float flMotionBlurRotationIntensity = mat_motion_blur_rotation_intensity.GetFloat() * 0.15f; // The default is to not blur past 15% of the range
+#ifdef C17
+	float flMotionBlurRollIntensity = mat_motion_blur_roll_intensity.GetFloat();
+	//float flMotionBlurFallingIntensity = mat_motion_blur_falling_intensity.GetFloat();
+	float flMotionBlurFallingIntensity = ForwardIntensity();
+#else
 	float flMotionBlurRollIntensity = 0.3f; // * mat_motion_blur_roll_intensity.GetFloat(); // The default is to not blur past 30% of the range
 	float flMotionBlurFallingIntensity = mat_motion_blur_falling_intensity.GetFloat();
+#endif
 	float flMotionBlurFallingMin = mat_motion_blur_falling_min.GetFloat();
 	float flMotionBlurFallingMax = mat_motion_blur_falling_max.GetFloat();
 	float flMotionBlurGlobalStrength = mat_motion_blur_strength.GetFloat();

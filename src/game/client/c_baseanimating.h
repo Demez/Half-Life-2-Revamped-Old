@@ -26,6 +26,9 @@
 #include "ragdoll_shared.h"
 #include "tier0/threadtools.h"
 #include "datacache/idatacache.h"
+#ifdef C17
+#include "city17/c17_screeneffects.h"
+#endif
 
 #define LIPSYNC_POSEPARAM_NAME "mouth"
 #define NUM_HITBOX_FIRES	10
@@ -146,6 +149,9 @@ public:
 	virtual bool SetupBones( matrix3x4_t *pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime );
 	virtual void UpdateIKLocks( float currentTime );
 	virtual void CalculateIKLocks( float currentTime );
+#ifdef C17
+	virtual bool ShouldReceiveProjectedTextures(int flags);
+#endif
 	virtual bool ShouldDraw();
 	virtual int DrawModel( int flags );
 	virtual int	InternalDrawModel( int flags );
@@ -633,6 +639,18 @@ private:
 	mutable CStudioHdr				*m_pStudioHdr;
 	mutable MDLHandle_t				m_hStudioHdr;
 	CThreadFastMutex				m_StudioHdrInitLock;
+
+#ifdef C17
+	CEntGlowEffect *m_pEntGlowEffect;
+	bool m_bClientGlow;
+	CNetworkVar(bool, m_bEnableGlow);
+	CNetworkVar(color32, m_GlowColor);
+
+	CNetworkVar(bool, m_bReceiveProjected);
+	CNetworkVar(bool, m_bRenderInSunShafts);
+	CNetworkVar(bool, m_bRenderInReflections);
+	CNetworkVar(bool, m_bRenderInRefractions);
+#endif
 };
 
 enum 
@@ -691,6 +709,12 @@ private:
 	float m_flScaleEnd[NUM_HITBOX_FIRES];
 	float m_flScaleTimeStart[NUM_HITBOX_FIRES];
 	float m_flScaleTimeEnd[NUM_HITBOX_FIRES];
+
+#ifdef C17
+	virtual int BloodColor() { return BLOOD_COLOR_RED; };
+
+	float m_flFadeOutDelay;
+#endif
 };
 
 //-----------------------------------------------------------------------------

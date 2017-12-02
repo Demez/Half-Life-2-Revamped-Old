@@ -2506,6 +2506,9 @@ bool CNPC_AttackHelicopter::IsValidZapTarget( CBaseEntity *pTarget )
 
 		// Is flesh or metal? Go for it!
 		if ( pSurfaceData->game.material == CHAR_TEX_METAL || 
+#ifdef C17
+			pSurfaceData->game.material == CHAR_TEX_EXPLOSIVE ||
+#endif
 			pSurfaceData->game.material == CHAR_TEX_FLESH || 
 			pSurfaceData->game.material == CHAR_TEX_VENT || 
 			pSurfaceData->game.material == CHAR_TEX_GRATE || 

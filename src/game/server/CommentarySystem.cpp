@@ -657,6 +657,9 @@ public:
 			{
 				m_hSpawnedEntities[i]->Activate();
 			}
+#ifdef C17
+			pkvFile->deleteThis();
+#endif
 		}
 		else
 		{

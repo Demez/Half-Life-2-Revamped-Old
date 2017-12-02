@@ -412,6 +412,10 @@ CBaseEntity::CBaseEntity( bool bServerOnly )
 #ifndef _XBOX
 	AddEFlags( EFL_USE_PARTITION_WHEN_NOT_SOLID );
 #endif
+
+#ifdef C17
+	m_OnSpawned.FireOutput(this, this);
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1612,6 +1616,10 @@ void CBaseEntity::Event_Killed( const CTakeDamageInfo &info )
 		info.GetAttacker()->Event_KilledOther(this, info);
 	}
 
+#ifdef C17
+	m_OnKilled.FireOutput(this, this);
+#endif
+
 	m_takedamage = DAMAGE_NO;
 	m_lifeState = LIFE_DEAD;
 	UTIL_Remove( this );
@@ -1933,6 +1941,11 @@ BEGIN_DATADESC_NO_BASE( CBaseEntity )
 	DEFINE_OUTPUT( m_OnUser2, "OnUser2" ),
 	DEFINE_OUTPUT( m_OnUser3, "OnUser3" ),
 	DEFINE_OUTPUT( m_OnUser4, "OnUser4" ),
+
+#ifdef C17
+	DEFINE_OUTPUT(m_OnKilled, "OnKilled"),
+	DEFINE_OUTPUT(m_OnSpawned, "OnSpawned"),
+#endif
 
 	// Function Pointers
 	DEFINE_FUNCTION( SUB_Remove ),

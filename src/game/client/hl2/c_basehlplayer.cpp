@@ -66,9 +66,6 @@ C_BaseHLPlayer::C_BaseHLPlayer()
 	m_flZoomRate		= 0.0f;
 	m_flZoomStartTime	= 0.0f;
 	m_flSpeedMod		= cl_forwardspeed.GetFloat();
-	
-	ConVarRef scissor( "r_flashlightscissor" );
-	scissor.SetValue( "0" );
 }
 
 //-----------------------------------------------------------------------------
@@ -627,9 +624,17 @@ void C_BaseHLPlayer::PerformClientSideNPCSpeedModifiers( float flFrameTime, CUse
 //-----------------------------------------------------------------------------
 // Purpose: Input handling
 //-----------------------------------------------------------------------------
+#ifdef C17
+bool C_BaseHLPlayer::CreateMove(float flInputSampleTime, CUserCmd *pCmd, bool bVguiUpdate)
+#else
 bool C_BaseHLPlayer::CreateMove( float flInputSampleTime, CUserCmd *pCmd )
+#endif
 {
+#ifdef C17
+	bool bResult = BaseClass::CreateMove(flInputSampleTime, pCmd, bVguiUpdate);
+#else
 	bool bResult = BaseClass::CreateMove( flInputSampleTime, pCmd );
+#endif
 
 	if ( !IsInAVehicle() )
 	{

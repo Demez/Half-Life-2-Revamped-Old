@@ -87,7 +87,11 @@ public:
 
 protected:
 
+#ifdef C17
+	void			UpdateGlowObstruction(const Vector &vToGlow, bool bCacheFullSceneState, bool bIsSun = false);
+#else
 	void			UpdateGlowObstruction( const Vector &vToGlow, bool bCacheFullSceneState );
+#endif
 	void			UpdateSkyGlowObstruction( float zFar, bool bCacheFullSceneState );
 
 	virtual void	CalcSpriteColorAndSize( 

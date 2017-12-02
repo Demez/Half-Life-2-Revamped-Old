@@ -23,12 +23,21 @@ public:
 	virtual void Init( void );
 	virtual void Shutdown( void );
 	virtual void SetParameters( KeyValues *params );
+#ifdef C17
+	virtual void Enable(bool bEnable) { m_bEnabled = bEnable; }
+	virtual bool IsEnabled() { return m_bEnabled; }
+#else
 	virtual void Enable( bool bEnable ) {};
 	virtual bool IsEnabled( ) { return true; }
+#endif
 
 	virtual void Render( int x, int y, int w, int h );
 
 private:
+#ifdef C17
+	bool		m_bEnabled;
+#endif
+
 	CTextureReference m_StunTexture;
 	CMaterialReference m_EffectMaterial;
 	float		m_flDuration;
@@ -36,7 +45,9 @@ private:
 	bool		m_bUpdateView;
 };
 
+#ifndef C17
 ADD_SCREENSPACE_EFFECT( CStunEffect, episodic_stun );
+#endif
 
 //
 //  EP1 Intro Blur
@@ -73,7 +84,9 @@ private:
 	bool		m_bFadeOut;
 };
 
+#ifndef C17
 ADD_SCREENSPACE_EFFECT( CEP1IntroEffect, episodic_intro );
+#endif
 
 //
 //  EP2 Player Stunned Effect
@@ -114,6 +127,8 @@ private:
 	bool		m_bFadeOut;
 };
 
+#ifndef C17
 ADD_SCREENSPACE_EFFECT( CEP2StunEffect, ep2_groggy );
+#endif
 
 #endif // EPISODIC_SCREENSPACEEFFECTS_H

@@ -31,10 +31,18 @@ public:
 
 	float	m_flSuitPower;
 	bool	m_bZooming;
+#ifdef C17
+	bool	m_bInSmokeVolume;
+	bool	m_bLowStamina;
+#endif
 	int		m_bitsActiveDevices;
 	int		m_iSquadMemberCount;
 	int		m_iSquadMedicCount;
 	bool	m_fSquadInFollowMode;
+#ifdef C17
+	bool	m_bWeaponLowered_Sprint;
+	bool	m_bWeaponLowered_Bob;
+#endif
 	bool	m_bWeaponLowered;
 	EHANDLE m_hAutoAimTarget;
 	Vector	m_vecAutoAimPoint;

@@ -918,7 +918,11 @@ bool CAntlionTemplateMaker::ValidateSpawnPosition( Vector &vOrigin, CBaseEntity 
 
 						if ( psurf )
 						{
+#ifdef C17
+							if (psurf->game.material == CHAR_TEX_DIRT || psurf->game.material == CHAR_TEX_PLASTER)
+#else
 							if ( psurf->game.material == CHAR_TEX_DIRT )
+#endif
 							{
 								if ( g_debug_antlionmaker.GetInt() == 1 )
 								{

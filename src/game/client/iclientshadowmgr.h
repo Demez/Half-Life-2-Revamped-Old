@@ -94,19 +94,15 @@ public:
 	// Set and clear flashlight target renderable
 	virtual void SetFlashlightTarget( ClientShadowHandle_t shadowHandle, EHANDLE targetEntity ) = 0;
 
-	//sunlightshadowctrl
-	// Toggle shadow casting from world light sources
-	virtual void SetShadowFromWorldLightsEnabled(bool bEnable) = 0;
-
 	// Set flashlight light world flag
 	virtual void SetFlashlightLightWorld( ClientShadowHandle_t shadowHandle, bool bLightWorld ) = 0;
 
-	//city17ep1 projtex
-	//virtual void GetFrustumExtents(ClientShadowHandle_t handle, Vector &vecMin, Vector &vecMax) = 0;
+	virtual void GetFrustumExtents(ClientShadowHandle_t handle, Vector &vecMin, Vector &vecMax) = 0;
 
 	virtual void SetShadowsDisabled( bool bDisabled ) = 0;
 
 	virtual void ComputeShadowDepthTextures( const CViewSetup &pView ) = 0;
+
 };
 
 

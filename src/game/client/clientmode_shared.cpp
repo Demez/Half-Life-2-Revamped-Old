@@ -65,6 +65,16 @@ extern ConVar replay_rendersetting_renderglow;
 #include "econ_item_description.h"
 #endif
 
+#ifdef C17_HAPTICS
+// Haptics External Access
+#include "../haptics/client_haptics.h"
+// handles reading the messages.
+// If you want to add anything more server to client wise
+// Look at this header for more information
+// ( haptic_messages.h )
+#include "../haptics/haptic_messages.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -76,7 +86,11 @@ class CHudVote;
 
 static vgui::HContext s_hVGuiContext = DEFAULT_VGUI_CONTEXT;
 
+#ifdef C17
+ConVar cl_drawhud("cl_drawhud", "1", FCVAR_ARCHIVE, "Enable the rendering of the hud"); //City17: Was a cheat!
+#else
 ConVar cl_drawhud( "cl_drawhud", "1", FCVAR_CHEAT, "Enable the rendering of the hud" );
+#endif
 ConVar hud_takesshots( "hud_takesshots", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "Auto-save a scoreboard screenshot at the end of a map." );
 ConVar hud_freezecamhide( "hud_freezecamhide", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "Hide the HUD during freeze-cam" );
 ConVar cl_show_num_particle_systems( "cl_show_num_particle_systems", "0", FCVAR_CLIENTDLL, "Display the number of active particle systems." );
@@ -366,6 +380,10 @@ void ClientModeShared::Init()
 
 	HOOK_MESSAGE( VGUIMenu );
 	HOOK_MESSAGE( Rumble );
+
+#ifdef C17_HAPTICS
+	HookHapticMessages();
+#endif
 }
 
 
@@ -393,7 +411,11 @@ void ClientModeShared::Shutdown()
 // Input  : frametime - 
 //			*cmd - 
 //-----------------------------------------------------------------------------
+#ifdef C17
+bool ClientModeShared::CreateMove(float flInputSampleTime, CUserCmd *cmd, bool bVguiUpdate)
+#else
 bool ClientModeShared::CreateMove( float flInputSampleTime, CUserCmd *cmd )
+#endif
 {
 	// Let the player override the view.
 	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
@@ -401,8 +423,19 @@ bool ClientModeShared::CreateMove( float flInputSampleTime, CUserCmd *cmd )
 		return true;
 
 	// Let the player at it
+#ifndef C17
 	return pPlayer->CreateMove( flInputSampleTime, cmd );
+#else
+	return pPlayer->CreateMove(flInputSampleTime, cmd, bVguiUpdate);
+#endif
 }
+
+#ifdef C17
+bool ClientModeShared::CreateMove(float flInputSampleTime, CUserCmd *cmd)
+{
+	return CreateMove(flInputSampleTime, cmd, false);
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 

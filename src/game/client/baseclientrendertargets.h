@@ -55,8 +55,13 @@ protected:
 	CTextureReference		m_UITexture;
 
 	// Init functions for the common render targets
+#ifdef C17
+	ITexture* CreateWaterReflectionTexture(IMaterialSystem* pMaterialSystem, /*int iSize = 1024*/int iSize = 512);
+	ITexture* CreateWaterRefractionTexture(IMaterialSystem* pMaterialSystem, /*int iSize = 1024*/int iSize = 256);
+#else
 	ITexture* CreateWaterReflectionTexture( IMaterialSystem* pMaterialSystem, int iSize = 1024 );
 	ITexture* CreateWaterRefractionTexture( IMaterialSystem* pMaterialSystem, int iSize = 1024 );
+#endif
 	ITexture* CreateCameraTexture( IMaterialSystem* pMaterialSystem, int iSize = 256 );
 
 };

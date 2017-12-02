@@ -14,6 +14,10 @@
 BEGIN_RECV_TABLE_NOBASE( C_HL2PlayerLocalData, DT_HL2Local )
 	RecvPropFloat( RECVINFO(m_flSuitPower) ),
 	RecvPropInt( RECVINFO(m_bZooming) ),
+#ifdef C17
+	RecvPropBool(RECVINFO(m_bInSmokeVolume)),
+	RecvPropBool(RECVINFO(m_bLowStamina)),
+#endif
 	RecvPropInt( RECVINFO(m_bitsActiveDevices) ),
 	RecvPropInt( RECVINFO(m_iSquadMemberCount) ),
 	RecvPropInt( RECVINFO(m_iSquadMedicCount) ),
@@ -43,6 +47,10 @@ C_HL2PlayerLocalData::C_HL2PlayerLocalData()
 	m_iSquadMedicCount = 0;
 	m_fSquadInFollowMode = false;
 	m_bWeaponLowered = false;
+#ifdef C17
+	m_bInSmokeVolume = false;
+	m_bLowStamina = false;
+#endif
 	m_hLadder = NULL;
 #ifdef HL2_EPISODIC
 	m_flFlashBattery = 0.0f;

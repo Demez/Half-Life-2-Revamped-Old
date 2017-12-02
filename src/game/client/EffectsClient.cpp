@@ -188,7 +188,19 @@ void CEffectsClient::MetalSparks( const Vector &position, const Vector &directio
 	CPVSFilter filter( position );
 	if ( !SuppressTE( filter ) )
 	{
-		FX_MetalSpark( position, direction, direction );
+#ifdef C17
+		ConVarRef cl_new_impact_effects("cl_new_impact_effects");
+		if (cl_new_impact_effects.IsValid() && cl_new_impact_effects.GetBool())
+		{
+			QAngle QDirection;
+			VectorAngles(direction, QDirection);
+			DispatchParticleEffect("scrape_metal", position, QDirection);
+		}
+		else
+#endif
+		{
+			FX_MetalSpark(position, direction, direction);
+		}
 	}
 }
 

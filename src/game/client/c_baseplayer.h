@@ -130,7 +130,11 @@ public:
 	void					SetSuitUpdate(const char *name, int fgroup, int iNoRepeat);
 
 	// Input handling
+#ifdef C17
+	virtual bool	CreateMove(float flInputSampleTime, CUserCmd *pCmd, bool bVguiUpdate);
+#else
 	virtual bool	CreateMove( float flInputSampleTime, CUserCmd *pCmd );
+#endif
 	virtual void	AvoidPhysicsProps( CUserCmd *pCmd );
 	
 	virtual void	PlayerUse( void );
@@ -183,7 +187,11 @@ public:
 
 	// Flashlight
 	void	Flashlight( void );
+#ifdef C17
+	virtual void	UpdateFlashlight(void);
+#else
 	void	UpdateFlashlight( void );
+#endif
 
 	// Weapon selection code
 	virtual bool				IsAllowedToSwitchWeapons( void ) { return !IsObserver(); }
@@ -214,7 +222,11 @@ public:
 	bool						IsLocalPlayer( void ) const;
 
 	// Global/static methods
+#ifdef C17
+	virtual void				ThirdPersonSwitch(bool bThirdperson);
+#else
 	virtual void				ThirdPersonSwitch( bool bThirdperson );
+#endif
 	static bool					LocalPlayerInFirstPersonView();
 	static bool					ShouldDrawLocalPlayer();
 	static C_BasePlayer			*GetLocalPlayer( void );
@@ -272,7 +284,43 @@ public:
 
 	float						GetFOVDistanceAdjustFactor();
 
-	virtual void				ViewPunch( const QAngle &angleOffset );
+	colorVec					GetCurrentLightmap(void) { return currentlightcolor; }
+
+#ifdef C17_HAPTICS
+	// Haptics Adding Haptics StrengthScaler overload ( setting fHapticsStrength to zero will not trigger a haptics punch. )
+	// fHapticStrength is defaulted to 1.0 to reduce the number of cpp files needed to be edited but if you are planning
+	// on doing a full scale haptics project you would probably want to set the strenght defaulted to 0.
+	// if not removing the overload all-together and calling HapticsPunch() instead.
+	virtual void				ViewPunch(const QAngle &angleOffset, float fHapticsStrength = 1.0);
+
+	// Haptics returns true if a haptics device is connected.
+	bool						HapticsHasDevice();
+
+	// Haptics These are shared functions between server and client. 
+	// When the server gets called with haptic data the client will receieve
+	// the data and call back the client side function.
+
+	// Please also note that these functions will only be sent from the server
+	// if a haptic device is connected!
+
+	// Haptics sends a small bump to the haptics.
+	void						HapticsStep(int type, float strength);
+
+	// Send the haptics device a force punch. Will not be triggered from server unless fStrength
+	// is not zero to reduce network stress. So be warned if you are relying on that here.
+	void						HapticsPunch(const QAngle &angleOffset, float fStrength = 1.0);
+
+	// Haptics sets the haptics mass simulation to desired mass.
+	void						HapticsMass(float mass);
+
+	// Haptics makes a new entry to the velocity history for calculations on the haptics
+	void						HapticsVelocityUpdate(Vector velocity);
+
+	// Haptics sends haptics into velocity mode with the vehicle type.
+	void						HapticsVehicleStart(int type);
+#else
+	virtual void				ViewPunch(const QAngle &angleOffset);
+#endif
 	void						ViewPunchReset( float tolerance = 0 );
 
 	void						UpdateButtonState( int nUserCmdButtonMask );
@@ -295,6 +343,10 @@ public:
 
 	// Is the player dead?
 	bool				IsPlayerDead();
+#ifdef C17
+	bool				ShouldDisplayMuzzleLight();
+	void				DisplayMuzzleLight();
+#endif
 	bool				IsPoisoned( void ) { return m_Local.m_bPoisoned; }
 
 	C_BaseEntity				*GetUseEntity();
@@ -317,6 +369,10 @@ public:
 	bool					IsInViewModelVGuiInputMode() const;
 
 	C_CommandContext		*GetCommandContext();
+
+#ifdef C17
+	CBaseEntity *GetViewEntity(void) { return m_hViewEntity; }
+#endif
 
 	// Get the command number associated with the current usercmd we're running (if in predicted code).
 	int CurrentCommandNumber() const;
@@ -445,19 +501,35 @@ public:
 
 protected:
 
-	void				CalcPlayerView( Vector& eyeOrigin, QAngle& eyeAngles, float& fov );
+#ifdef C17
+	//Tony; made all of these virtual so mods can override.
+	virtual void		CalcPlayerView(Vector& eyeOrigin, QAngle& eyeAngles, float& fov);
+	virtual void		CalcVehicleView(IClientVehicle *pVehicle, Vector& eyeOrigin, QAngle& eyeAngles,
+#else
+	void				CalcPlayerView(Vector& eyeOrigin, QAngle& eyeAngles, float& fov);
 	void				CalcVehicleView(IClientVehicle *pVehicle, Vector& eyeOrigin, QAngle& eyeAngles,
+#endif
 							float& zNear, float& zFar, float& fov );
 	virtual void		CalcObserverView( Vector& eyeOrigin, QAngle& eyeAngles, float& fov );
 	virtual Vector		GetChaseCamViewOffset( CBaseEntity *target );
+#ifdef C17
+	virtual void		CalcChaseCamView(Vector& eyeOrigin, QAngle& eyeAngles, float& fov);
+	virtual void		CalcInEyeCamView(Vector& eyeOrigin, QAngle& eyeAngles, float& fov);
+#else
 	void				CalcChaseCamView( Vector& eyeOrigin, QAngle& eyeAngles, float& fov );
 	virtual void		CalcInEyeCamView( Vector& eyeOrigin, QAngle& eyeAngles, float& fov );
+#endif
 
 	virtual float		GetDeathCamInterpolationTime();
 
 	virtual void		CalcDeathCamView( Vector& eyeOrigin, QAngle& eyeAngles, float& fov );
+#ifdef C17
 	void				CalcRoamingView(Vector& eyeOrigin, QAngle& eyeAngles, float& fov);
 	virtual void		CalcFreezeCamView( Vector& eyeOrigin, QAngle& eyeAngles, float& fov );
+#else
+	virtual void		CalcRoamingView(Vector& eyeOrigin, QAngle& eyeAngles, float& fov);
+	virtual void		CalcFreezeCamView(Vector& eyeOrigin, QAngle& eyeAngles, float& fov);
+#endif
 
 	// Check to see if we're in vgui input mode...
 	void DetermineVguiInputMode( CUserCmd *pCmd );
@@ -497,8 +569,15 @@ private:
 	EHANDLE			m_hVehicle;
 	EHANDLE			m_hOldVehicle;
 	EHANDLE			m_hUseEntity;
+
+#ifdef C17
+	EHANDLE			m_hViewEntity;
+#endif
 	
 	float			m_flMaxspeed;
+#ifdef C17
+	float			m_flMuzzleFlashTime;
+#endif
 
 	int				m_iBonusProgress;
 	int				m_iBonusChallenge;
@@ -522,6 +601,10 @@ private:
 	int				m_nFinalPredictedTick;
 
 	EHANDLE			m_pCurrentVguiScreen;
+
+//#ifdef C17
+	colorVec		currentlightcolor;
+//#endif
 
 	bool			m_bFiredWeapon;
 

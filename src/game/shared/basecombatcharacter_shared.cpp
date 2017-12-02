@@ -59,7 +59,9 @@ bool CBaseCombatCharacter::Weapon_Switch( CBaseCombatWeapon *pWeapon, int viewmo
 			return false;
 	}
 
-	m_hActiveWeapon = pWeapon;
+#ifdef C17
+	m_hActieWeapon = pWeapon;
+#endif
 
 	return pWeapon->Deploy( );
 }

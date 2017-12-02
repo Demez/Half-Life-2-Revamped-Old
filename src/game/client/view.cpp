@@ -46,6 +46,17 @@
 #include "sourcevr/isourcevirtualreality.h"
 #include "client_virtualreality.h"
 
+#ifdef C17
+#include <vector>
+#include <limits>
+#include "city17/c17_screeneffects.h"
+
+#include <stdio.h>
+#include <time.h>
+#include <iostream>
+#include <fstream>
+#endif
+
 #if defined( REPLAY_ENABLED )
 #include "replay/ireplaysystem.h"
 #include "replay/ienginereplay.h"
@@ -111,6 +122,8 @@ static ConVar v_centerspeed( "v_centerspeed","500" );
 // 54 degrees approximates a 35mm camera - we determined that this makes the viewmodels
 // and motions look the most natural.
 ConVar v_viewmodel_fov( "viewmodel_fov", "54", FCVAR_ARCHIVE );
+#elif C17
+ConVar v_viewmodel_fov("viewmodel_fov", "54", FCVAR_ARCHIVE, "Sets the field of view of the viewmodel.", true, 50, true, 110);
 #else
 ConVar v_viewmodel_fov( "viewmodel_fov", "54", FCVAR_CHEAT );
 #endif
@@ -344,6 +357,18 @@ void CViewRender::LevelInit( void )
 
 	// Init all IScreenSpaceEffects
 	g_pScreenSpaceEffects->InitScreenSpaceEffects( );
+
+#ifdef C17
+	//City 17: Enable our ScreenSpaceEffects
+	g_pScreenSpaceEffects->EnableScreenSpaceEffect("c17_healthfx");
+	g_pScreenSpaceEffects->EnableScreenSpaceEffect("c17_waterfx");
+	g_pScreenSpaceEffects->EnableScreenSpaceEffect("c17_l4dglow");
+	g_pScreenSpaceEffects->EnableScreenSpaceEffect("c17_unsharp");
+	g_pScreenSpaceEffects->EnableScreenSpaceEffect("c17_sunshaft");
+	g_pScreenSpaceEffects->EnableScreenSpaceEffect("c17_ssao");
+	g_pScreenSpaceEffects->EnableScreenSpaceEffect("c17_colorcorrection");
+	g_pScreenSpaceEffects->EnableScreenSpaceEffect("c17_fxaa");
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -351,6 +376,19 @@ void CViewRender::LevelInit( void )
 //-----------------------------------------------------------------------------
 void CViewRender::LevelShutdown( void )
 {
+#ifdef C17
+	//City 17: Disable our ScreenSpaceEffects,
+	g_pScreenSpaceEffects->DisableScreenSpaceEffect("c17_colorcorrection");
+	g_pScreenSpaceEffects->DisableScreenSpaceEffect("c17_ssao");
+	g_pScreenSpaceEffects->DisableScreenSpaceEffect("c17_sunshaft");
+	g_pScreenSpaceEffects->DisableScreenSpaceEffect("c17_unsharp");
+	g_pScreenSpaceEffects->DisableScreenSpaceEffect("c17_l4dglow");
+	g_pScreenSpaceEffects->DisableScreenSpaceEffect("c17_waterfx");
+	g_pScreenSpaceEffects->DisableScreenSpaceEffect("c17_healthfx");
+	g_pScreenSpaceEffects->DisableScreenSpaceEffect("c17_fxaa");
+
+	// Shutdown all IScreenSpaceEffects
+#endif
 	g_pScreenSpaceEffects->ShutdownScreenSpaceEffects( );
 }
 
@@ -362,7 +400,9 @@ void CViewRender::Shutdown( void )
 	m_TranslucentSingleColor.Shutdown( );
 	m_ModulateSingleColor.Shutdown( );
 	m_ScreenOverlayMaterial.Shutdown();
+#ifndef C17
 	m_UnderWaterOverlayMaterial.Shutdown();
+#endif
 	beams->ShutdownBeams();
 	tempents->Shutdown();
 }
@@ -719,6 +759,14 @@ void CViewRender::SetUpViews()
 
 	if ( engine->IsPlayingDemo() )
 	{
+#ifdef C17
+		if (pPlayer->GetViewEntity())
+		{
+			VectorCopy(pPlayer->GetViewEntity()->GetAbsOrigin(), m_View.origin);
+			VectorCopy(pPlayer->GetViewEntity()->GetAbsAngles(), m_View.angles);
+		}
+#endif
+
 		if ( cl_demoviewoverride.GetFloat() > 0.0f )
 		{
 			// Retreive view angles from engine ( could have been set in IN_AdjustAngles above )
@@ -736,9 +784,7 @@ void CViewRender::SetUpViews()
 	float flFOVOffset = fDefaultFov - view.fov;
 
 	//Adjust the viewmodel's FOV to move with any FOV offsets on the viewer's end
-	//Viewmodel rotation fix
-	//view.fovViewmodel = g_pClientMode->GetViewModelFOV() - flFOVOffset;
-	view.fovViewmodel = abs(g_pClientMode->GetViewModelFOV() - flFOVOffset);
+	view.fovViewmodel = g_pClientMode->GetViewModelFOV() - flFOVOffset;
 
 	if ( UseVR() )
 	{

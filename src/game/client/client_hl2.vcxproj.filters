@@ -1769,9 +1769,6 @@
     <ClInclude Include="..\..\game\shared\baseprojectile.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="c_env_projectedtexture.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="c_props.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -1799,9 +1796,6 @@
     <ClInclude Include="commentary_modelviewer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="flashlight_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\game\shared\particle_parse.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -1821,9 +1815,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="viewpostprocess.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="worldlight.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="game_controls\basemodel_panel.h">
@@ -2173,9 +2164,6 @@
     <ClCompile Include="c_sun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="c_sunlightshadowcontrol.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="c_team.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -2339,9 +2327,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\public\filesystem_helpers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="flashlight_shared.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="flashlighteffect.cpp">
@@ -2930,9 +2915,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WorldDimsProxy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="worldlight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="game_controls\basemodel_panel.cpp">

@@ -12,6 +12,9 @@
 #include "physics_saverestore.h"
 #include "datacache/imdlcache.h"
 #include "activitylist.h"
+#ifdef C17
+#include "particle_parse.h"
+#endif
 
 // NVNT start extra includes
 #include "haptics/haptic_utils.h"
@@ -25,6 +28,11 @@
 #endif
 
 #if !defined( CLIENT_DLL )
+#ifdef C17
+#include "rumble_shared.h"
+#include "mathlib/mathlib.h"
+#include "te_effect_dispatch.h"
+#endif
 
 // Game DLL Headers
 #include "soundent.h"
@@ -35,7 +43,6 @@
 #ifdef HL2MP
 	#include "hl2mp_gamerules.h"
 #endif
-
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -60,6 +67,314 @@ ConVar tf_weapon_criticals_bucket_bottom( "tf_weapon_criticals_bucket_bottom", "
 ConVar tf_weapon_criticals_bucket_default( "tf_weapon_criticals_bucket_default", "300.0", FCVAR_REPLICATED | FCVAR_CHEAT );
 #endif // TF
 
+#ifdef C17
+void vm_adjust_enable_callback(IConVar *pConVar, char const *pOldString, float flOldValue);
+void vm_adjust_fov_callback(IConVar *pConVar, const char *pOldString, float flOldValue);
+
+ConVar viewmodel_adjust_forward("viewmodel_adjust_forward", "0", FCVAR_REPLICATED);
+ConVar viewmodel_adjust_right("viewmodel_adjust_right", "0", FCVAR_REPLICATED);
+ConVar viewmodel_adjust_up("viewmodel_adjust_up", "0", FCVAR_REPLICATED);
+ConVar viewmodel_adjust_pitch("viewmodel_adjust_pitch", "0", FCVAR_REPLICATED);
+ConVar viewmodel_adjust_yaw("viewmodel_adjust_yaw", "0", FCVAR_REPLICATED);
+ConVar viewmodel_adjust_roll("viewmodel_adjust_roll", "0", FCVAR_REPLICATED);
+ConVar viewmodel_adjust_fov("viewmodel_adjust_fov", "0", FCVAR_REPLICATED, "Note: this feature is not available during any kind of zoom", vm_adjust_fov_callback);
+ConVar viewmodel_adjust_enabled("viewmodel_adjust_enabled", "0", FCVAR_REPLICATED | FCVAR_CHEAT, "enabled viewmodel adjusting", vm_adjust_enable_callback);
+ConVar viewmodel_adjust_time_enabled("viewmodel_adjust_time_enabled", "0", FCVAR_REPLICATED | FCVAR_CHEAT, "enables viewmodel transition time adjusting", vm_adjust_enable_callback);
+ConVar viewmodel_adjust_time("viewmodel_adjust_time", "0.35", FCVAR_REPLICATED);
+ConVar ironsight_mode("ironsight_mode", "0", FCVAR_REPLICATED | FCVAR_ARCHIVE, "Determines ironsight mode. 0 = Toggle, 1 = Hold.");
+
+bool CBaseCombatWeapon::IsIronsighted(void)
+{
+	return (m_bIsIronsighted || viewmodel_adjust_enabled.GetBool());
+}
+
+bool CBaseCombatWeapon::IsIronsighted_ViewModel(void)
+{
+	return (m_bIsIronsighted || viewmodel_adjust_enabled.GetBool() || m_flIronsightedTime + 0.4 > gpGlobals->curtime);
+}
+
+void CBaseCombatWeapon::EnableIronsights(void)
+{
+	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+
+	float speed;
+	speed = pOwner->GetAbsVelocity().Length2D();
+
+	if (!pOwner || !CanSight() || m_bIsIronsighted || (speed >= 320) || (!(pOwner->GetFlags() & FL_ONGROUND)) || m_bInReload)
+		return;
+
+#ifndef CLIENT_DLL
+	if (pOwner->GetVGUIMode())
+		return;
+#endif
+
+	SendWeaponAnim(ACT_VM_IRONSIGHT_RAISE);
+
+#if !defined( CLIENT_DLL )
+	CPASAttenuationFilter filter(pOwner);
+	filter.UsePredictionRules();
+	pOwner->EmitSound(filter, pOwner->entindex(), "C17Player.ToggleIronsightsOn");
+#endif
+
+	if (pOwner->SetFOV(this, pOwner->GetDefaultFOV() + GetIronsightFOVOffset(), 0.6f)) //modify the last value to adjust how fast the fov is applied
+	{
+		m_bIsIronsighted = true;
+		m_flIronsightedTime = gpGlobals->curtime;
+	}
+}
+
+void CBaseCombatWeapon::DisableIronsights(void)
+{
+	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+
+	if (!pOwner)
+		return;
+
+	if (!CanSight() || !m_bIsIronsighted)
+		return;
+
+	SendWeaponAnim(ACT_VM_IRONSIGHT_LOWER);
+
+#if !defined( CLIENT_DLL )
+	CPASAttenuationFilter filter(pOwner);
+	filter.UsePredictionRules();
+	pOwner->EmitSound(filter, pOwner->entindex(), "C17Player.ToggleIronsightsOff_Sling");
+	pOwner->EmitSound(filter, pOwner->entindex(), "C17Player.ToggleIronsightsOff_Cloth");
+#endif
+
+	if (pOwner->SetFOV(this, 0, 0.4f)) //modify the last value to adjust how fast the fov is applied
+	{
+		m_bIsIronsighted = false;
+		m_flIronsightedTime = gpGlobals->curtime;
+	}
+}
+
+#ifdef CLIENT_DLL
+#if 0
+bool CBaseCombatWeapon::ShouldDrawCrosshair(void)
+{
+
+	if (m_bIsIronsighted && !ShouldKeepCrosshair() && !::input->CAM_IsThirdPerson())
+		return false;
+
+	return true;
+}
+#endif
+#endif
+
+void vm_adjust_enable_callback(IConVar *pConVar, char const *pOldString, float flOldValue)
+{
+	ConVarRef sv_cheats("sv_cheats");
+	if (!sv_cheats.IsValid() || sv_cheats.GetBool())
+		return;
+
+	ConVarRef var(pConVar);
+
+	if (var.GetBool())
+		var.SetValue("0");
+}
+
+void vm_adjust_fov_callback(IConVar *pConVar, char const *pOldString, float flOldValue)
+{
+	if (!viewmodel_adjust_enabled.GetBool())
+		return;
+
+	ConVarRef var(pConVar);
+
+	CBasePlayer *pPlayer =
+#ifdef GAME_DLL
+		UTIL_GetLocalPlayer();
+#else
+		C_BasePlayer::GetLocalPlayer();
+#endif
+	if (!pPlayer)
+		return;
+
+	if (!pPlayer->SetFOV(pPlayer, pPlayer->GetDefaultFOV() + var.GetFloat(), 0.1f))
+	{
+		Warning("Could not set FOV\n");
+		var.SetValue("0");
+	}
+}
+
+Vector CBaseCombatWeapon::GetIronsightPositionOffset(void) const
+{
+	if (viewmodel_adjust_enabled.GetBool())
+		return Vector(viewmodel_adjust_forward.GetFloat(), viewmodel_adjust_right.GetFloat(), viewmodel_adjust_up.GetFloat());
+	return GetWpnData().vecIronsightPosOffset;
+}
+
+QAngle CBaseCombatWeapon::GetIronsightAngleOffset(void) const
+{
+	if (viewmodel_adjust_enabled.GetBool())
+		return QAngle(viewmodel_adjust_pitch.GetFloat(), viewmodel_adjust_yaw.GetFloat(), viewmodel_adjust_roll.GetFloat());
+	return GetWpnData().angIronsightAngOffset;
+}
+
+float CBaseCombatWeapon::GetIronsightFOVOffset(void) const
+{
+	if (viewmodel_adjust_enabled.GetBool())
+		return viewmodel_adjust_fov.GetFloat();
+	return GetWpnData().flIronsightFOVOffset;
+}
+
+float CBaseCombatWeapon::GetIronsightTime(void) const
+{
+	if (viewmodel_adjust_time_enabled.GetBool())
+		return viewmodel_adjust_time.GetFloat();
+	return GetWpnData().flIronsightTime;
+}
+
+bool CBaseCombatWeapon::CanSight(void) const
+{
+	if (viewmodel_adjust_enabled.GetBool())
+		return true;
+	return GetWpnData().m_bCanSight;
+}
+
+bool CBaseCombatWeapon::ShouldKeepCrosshair(void) const
+{
+	if (viewmodel_adjust_enabled.GetBool())
+		return true;
+
+	return GetWpnData().m_bKeepCrosshair;
+}
+
+#ifdef CLIENT_DLL
+
+bool CBaseCombatWeapon::HasFlashlight(void) const
+{
+	return GetWpnData().m_bHasFlashlight;
+}
+
+char *CBaseCombatWeapon::GetFlashlightAttachment(void)
+{
+	return (char*)GetWpnData().szFlashlightAttachmentName;
+}
+
+int CBaseCombatWeapon::GetMuzzleFlashFOV(void) const
+{
+	return GetWpnData().iMuzzleFlashFOV;
+}
+
+float CBaseCombatWeapon::GetMuzzleFlashColorMax(void) const
+{
+	return GetWpnData().flMuzzleFlashColorMax;
+}
+
+float CBaseCombatWeapon::GetMuzzleFlashColorMin(void) const
+{
+	return GetWpnData().flMuzzleFlashColorMin;
+}
+
+int CBaseCombatWeapon::GetTexIndex(void) const
+{
+	return GetWpnData().iTexIndex;
+}
+
+int CBaseCombatWeapon::GetMuzzleFlashFarZ(void) const
+{
+	return GetWpnData().iMuzzleFlashFarZ;
+}
+
+bool CBaseCombatWeapon::HasMuzzleFlash(void) const
+{
+	return GetWpnData().m_bHasMuzzle;
+}
+
+float CBaseCombatWeapon::GetChromaticAmount(void) const
+{
+	return GetWpnData().flChromaticAmount;
+}
+
+float CBaseCombatWeapon::GetBlurAmount(void) const
+{
+	return GetWpnData().flBlurAmount;
+}
+
+#define CShowWeapon C_ShowWeapon
+#endif
+class CShowWeapon : public CAutoGameSystemPerFrame
+{
+public:
+	bool Init()
+	{
+		ClearShowWeapon();
+		return true;
+	}
+	void FrameUpdatePreEntityThink()
+	{
+		if (m_pWeapon&&m_flTime<gpGlobals->curtime)
+		{
+			ShowWeapon();
+		}
+	}
+	void Update(float frametime)
+	{
+		FrameUpdatePreEntityThink(); // This adds compatibility to this gamesystem on the client
+	}
+	void SetShowWeapon(CBaseCombatWeapon *pWeapon, int iActivity, float delta)
+	{
+		m_pWeapon = pWeapon;
+		m_iActivity = iActivity;
+		if (delta == 0)
+		{
+			ShowWeapon();
+		}
+		else
+		{
+			m_flTime = gpGlobals->curtime + delta;
+		}
+	}
+	void ClearShowWeapon()
+	{
+		m_pWeapon = NULL;
+	}
+private:
+	void ShowWeapon()
+	{
+		Assert(m_pWeapon);
+		if (m_pWeapon)
+		{
+			m_pWeapon->SetWeaponVisible(true);
+			if (m_pWeapon->GetOwner())
+			{
+				CBaseCombatWeapon *pLastWeapon = m_pWeapon->GetOwner()->GetActiveWeapon();
+				m_pWeapon->GetOwner()->m_hActiveWeapon = m_pWeapon;
+				CBasePlayer *pOwner = ToBasePlayer(m_pWeapon->GetOwner());
+				if (pOwner)
+				{
+					m_pWeapon->SetViewModel();
+					m_pWeapon->SendWeaponAnim(m_iActivity);
+
+					pOwner->SetNextAttack(gpGlobals->curtime + m_pWeapon->SequenceDuration());
+
+					if (pLastWeapon && pOwner->Weapon_ShouldSetLast(pLastWeapon, m_pWeapon))
+					{
+						pOwner->Weapon_SetLast(pLastWeapon->GetLastWeapon());
+					}
+
+					CBaseViewModel *pViewModel = pOwner->GetViewModel();
+					Assert(pViewModel);
+					if (pViewModel)
+						pViewModel->RemoveEffects(EF_NODRAW);
+					pOwner->ResetAutoaim();
+				}
+			}
+
+			// Can't shoot again until we've finished deploying
+			m_pWeapon->m_flNextSecondaryAttack = m_pWeapon->m_flNextPrimaryAttack = gpGlobals->curtime + m_pWeapon->SequenceDuration();
+		}
+
+		ClearShowWeapon();
+	}
+	CBaseCombatWeapon *m_pWeapon;
+	int m_iActivity;
+	float m_flTime;
+};
+static CShowWeapon g_ShowWeapon;
+#endif
+
 CBaseCombatWeapon::CBaseCombatWeapon()
 {
 	// Constructor must call this
@@ -70,6 +385,12 @@ CBaseCombatWeapon::CBaseCombatWeapon()
 	m_fMinRange2		= 65;
 	m_fMaxRange1		= 1024;
 	m_fMaxRange2		= 1024;
+
+#ifdef C17
+	m_bIsIronsighted = false;
+	m_bIronsightToggle = false;
+	m_flIronsightedTime = 0.0f;
+#endif
 
 	m_bReloadsSingly	= false;
 
@@ -86,9 +407,17 @@ CBaseCombatWeapon::CBaseCombatWeapon()
 	m_iSecondaryAmmoType = -1;
 #endif
 
+#ifdef C17
+	m_bReloadBlur = false;
+#endif
+
 #if !defined( CLIENT_DLL )
 	m_pConstraint = NULL;
 	OnBaseCombatWeaponCreated( this );
+#endif
+
+#ifdef C17
+	m_flReIronsightTime = gpGlobals->curtime;
 #endif
 
 	m_hWeaponFileInfo = GetInvalidWeaponInfoHandle();
@@ -235,6 +564,12 @@ void CBaseCombatWeapon::Precache( void )
 	// Msg( "Client got %s\n", GetClassname() );
 #endif
 	m_iPrimaryAmmoType = m_iSecondaryAmmoType = -1;
+
+#ifdef C17
+	PrecacheScriptSound("C17Player.ToggleIronsightsOff_Sling");
+	PrecacheScriptSound("C17Player.ToggleIronsightsOff_Cloth");
+	PrecacheScriptSound("C17Player.ToggleIronsightsOn");
+#endif
 
 	// Add this weapon to the weapon registry, and get our index into it
 	// Get weapon data from script file
@@ -656,6 +991,10 @@ float CBaseCombatWeapon::GetWeaponIdleTime( void )
 //-----------------------------------------------------------------------------
 void CBaseCombatWeapon::Drop( const Vector &vecVelocity )
 {
+#ifdef C17
+	DisableIronsights();
+#endif
+
 #if !defined( CLIENT_DLL )
 
 	// Once somebody drops a gun, it's fair game for removal when/if
@@ -781,6 +1120,7 @@ void CBaseCombatWeapon::MakeTracer( const Vector &vecTracerSrc, const trace_t &t
 	const char *pszTracerName = GetTracerType();
 
 	Vector vNewSrc = vecTracerSrc;
+#ifndef C17
 	int iEntIndex = pOwner->entindex();
 
 	if ( g_pGameRules->IsMultiplayer() )
@@ -789,15 +1129,27 @@ void CBaseCombatWeapon::MakeTracer( const Vector &vecTracerSrc, const trace_t &t
 	}
 
 	int iAttachment = GetTracerAttachment();
+#else
+	QAngle angDestination;
+	VectorAngles(tr.endpos - vNewSrc, angDestination);
+#endif
 
 	switch ( iTracerType )
 	{
 	case TRACER_LINE:
+#ifdef C17
+		DispatchParticleEffect(pszTracerName, vNewSrc, angDestination, pOwner);
+#else
 		UTIL_Tracer( vNewSrc, tr.endpos, iEntIndex, iAttachment, 0.0f, true, pszTracerName );
+#endif
 		break;
 
 	case TRACER_LINE_AND_WHIZ:
+#ifdef C17
+		DispatchParticleEffect(pszTracerName, vNewSrc, angDestination, pOwner);
+#else
 		UTIL_Tracer( vNewSrc, tr.endpos, iEntIndex, iAttachment, 0.0f, true, pszTracerName );
+#endif
 		break;
 	}
 }
@@ -986,6 +1338,14 @@ void CBaseCombatWeapon::Equip( CBaseCombatCharacter *pOwner )
 
 	m_flNextPrimaryAttack		= gpGlobals->curtime;
 	m_flNextSecondaryAttack		= gpGlobals->curtime;
+
+#ifdef C17
+#ifndef CLIENT_DLL
+	m_flReloadTime = gpGlobals->curtime;
+#endif
+	m_bReloadBlur = false;
+#endif
+
 	SetTouch( NULL );
 	SetThink( NULL );
 #if !defined( CLIENT_DLL )
@@ -999,8 +1359,10 @@ void CBaseCombatWeapon::Equip( CBaseCombatCharacter *pOwner )
 	else
 	{
 		// Make the weapon ready as soon as any NPC picks it up.
+#ifndef C17
 		m_flNextPrimaryAttack = gpGlobals->curtime;
 		m_flNextSecondaryAttack = gpGlobals->curtime;
+#endif
 		SetModel( GetWorldModel() );
 	}
 }
@@ -1391,7 +1753,44 @@ bool CBaseCombatWeapon::DefaultDeploy( char *szViewModel, char *szWeaponModel, i
 	// can still be deployed when they have no ammo.
 	if ( !HasAnyAmmo() && AllowsAutoSwitchFrom() )
 		return false;
+#ifdef C17
+	float flSequenceDuration = 0.0f;
+	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+	if (pOwner)
+	{
+		if (!GetOwner()->IsAlive())
+			return false;
 
+		pOwner->SetAnimationExtension(szAnimExt);
+
+		CBaseCombatWeapon *pActive = pOwner->GetActiveWeapon();
+		if (pActive && pActive->GetActivity() == ACT_VM_HOLSTER)
+		{
+			flSequenceDuration = pActive->SequenceDuration();
+		}
+
+		pOwner->SetNextAttack(gpGlobals->curtime + SequenceDuration());
+	}
+	g_ShowWeapon.SetShowWeapon(this, iActivity, flSequenceDuration);
+
+	// Can't shoot again until we've finished deploying
+	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
+	m_flHudHintMinDisplayTime = 0;
+#ifndef CLIENT_DLL
+	m_flReloadTime = gpGlobals->curtime;
+#endif
+	m_bReloadBlur = false;
+
+	m_bAltFireHudHintDisplayed = false;
+	m_bReloadHudHintDisplayed = false;
+	m_flHudHintPollTime = gpGlobals->curtime + 5.0f;
+
+#ifndef CLIENT_DLL
+	// Cancel any pending hide events
+	g_EventQueue.CancelEventOn(this, "HideWeapon");
+#endif
+#else
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 	if ( pOwner )
 	{
@@ -1428,6 +1827,7 @@ selects and deploys each weapon as you pass it. (sjb)
 */
 
 	SetContextThink( NULL, 0, HIDEWEAPON_THINK_CONTEXT );
+#endif
 
 	return true;
 }
@@ -1496,6 +1896,22 @@ bool CBaseCombatWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
 		if( m_bReloadHudHintDisplayed )
 			RescindReloadHudHint();
 	}
+
+#ifdef C17
+	// turn off ironsights
+	DisableIronsights();
+
+	// Disable any particle effects applied to the viewmodel
+	CBasePlayer *pPlayer = ToBasePlayer(GetOwner());
+	if (pPlayer)
+	{
+		CBaseViewModel *pVM = pPlayer->GetViewModel();
+		if (pVM)
+		{
+			StopParticleEffects(pVM);
+		}
+	}
+#endif
 
 	return true;
 }
@@ -1666,6 +2082,40 @@ void CBaseCombatWeapon::ItemPostFrame( void )
 
 	bool bFired = false;
 
+#ifdef C17
+	if (ironsight_mode.GetBool())
+	{
+		if (pOwner->m_nButtons & IN_IRONSIGHT && !m_bIronsightToggle && m_flReIronsightTime < gpGlobals->curtime)
+		{
+			m_bIronsightToggle = true;
+
+			m_flReIronsightTime = gpGlobals->curtime + 0.4f;
+			EnableIronsights();
+		}
+		else if (!(pOwner->m_nButtons & IN_IRONSIGHT) && m_bIronsightToggle && m_flReIronsightTime < gpGlobals->curtime)
+		{
+			m_bIronsightToggle = false;
+
+			m_flReIronsightTime = gpGlobals->curtime + 0.4f;
+			DisableIronsights();
+		}
+	}
+	else
+	{
+		if (pOwner->m_nButtons & IN_IRONSIGHT && !m_bIronsightToggle && m_flReIronsightTime < gpGlobals->curtime)
+		{
+			m_bIronsightToggle = true;
+
+			m_flReIronsightTime = gpGlobals->curtime + 0.4f;
+			ToggleIronsights();
+		}
+		else if (!(pOwner->m_nButtons & IN_IRONSIGHT) && m_bIronsightToggle)
+		{
+			m_bIronsightToggle = false;
+		}
+	}
+#endif
+
 	// Secondary attack has priority
 	if ((pOwner->m_nButtons & IN_ATTACK2) && (m_flNextSecondaryAttack <= gpGlobals->curtime))
 	{
@@ -1775,6 +2225,19 @@ void CBaseCombatWeapon::ItemPostFrame( void )
 			WeaponIdle();
 		}
 	}
+
+#ifdef C17
+#ifndef CLIENT_DLL
+	if (m_flReloadTime > gpGlobals->curtime)
+	{
+		m_bReloadBlur = true;
+	}
+	else
+	{
+		m_bReloadBlur = false;
+	}
+#endif
+#endif
 }
 
 void CBaseCombatWeapon::HandleFireOnEmpty()
@@ -1992,6 +2455,11 @@ bool CBaseCombatWeapon::DefaultReload( int iClipSize1, int iClipSize2, int iActi
 	if ( !bReload )
 		return false;
 
+#ifdef C17
+	// turn off ironsights
+	DisableIronsights();
+#endif
+
 #ifdef CLIENT_DLL
 	// Play reload
 	WeaponSound( RELOAD );
@@ -2008,6 +2476,11 @@ bool CBaseCombatWeapon::DefaultReload( int iClipSize1, int iClipSize2, int iActi
 	float flSequenceEndTime = gpGlobals->curtime + SequenceDuration();
 	pOwner->SetNextAttack( flSequenceEndTime );
 	m_flNextPrimaryAttack = m_flNextSecondaryAttack = flSequenceEndTime;
+#ifdef C17
+#ifndef CLIENT_DLL
+	m_flReloadTime = m_flNextPrimaryAttack;
+#endif
+#endif
 
 	m_bInReload = true;
 
@@ -2295,7 +2768,13 @@ void CBaseCombatWeapon::PrimaryAttack( void )
 
 	info.m_flDistance = MAX_TRACE_LENGTH;
 	info.m_iAmmoType = m_iPrimaryAmmoType;
+#ifdef C17
+	//info.m_iTracerFreq = 2;
+	//City17:
+	info.m_iTracerFreq = 1;
+#else
 	info.m_iTracerFreq = 2;
+#endif
 
 #if !defined( CLIENT_DLL )
 	// Fire the bullets
@@ -2557,6 +3036,13 @@ BEGIN_PREDICTION_DATA( CBaseCombatWeapon )
 	DEFINE_FIELD( m_iPrimaryAmmoCount, FIELD_INTEGER ),
 	DEFINE_FIELD( m_iSecondaryAmmoCount, FIELD_INTEGER ),
 
+#ifdef C17
+	DEFINE_PRED_FIELD(m_bIsIronsighted, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE),
+	DEFINE_PRED_FIELD(m_flIronsightedTime, FIELD_FLOAT, FTYPEDESC_INSENDTABLE),
+
+	DEFINE_FIELD(m_bReloadBlur, FIELD_BOOLEAN),
+#endif
+
 	//DEFINE_PHYSPTR( m_pConstraint ),
 
 	// DEFINE_FIELD( m_iOldState, FIELD_INTEGER ),
@@ -2602,6 +3088,10 @@ BEGIN_DATADESC( CBaseCombatWeapon )
 	DEFINE_FIELD( m_iPrimaryAmmoCount, FIELD_INTEGER ),
 	DEFINE_FIELD( m_iSecondaryAmmoCount, FIELD_INTEGER ),
 
+#ifdef C17
+	DEFINE_FIELD(m_bReloadBlur, FIELD_BOOLEAN),
+#endif
+
 	DEFINE_FIELD( m_nViewModelIndex, FIELD_INTEGER ),
 
 // don't save these, init to 0 and regenerate
@@ -2631,6 +3121,12 @@ BEGIN_DATADESC( CBaseCombatWeapon )
 	DEFINE_FIELD( m_bAltFireHudHintDisplayed, FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_flHudHintPollTime, FIELD_TIME ),
 	DEFINE_FIELD( m_flHudHintMinDisplayTime, FIELD_TIME ),
+
+#ifdef C17
+	DEFINE_FIELD(m_bIsIronsighted, FIELD_BOOLEAN),
+	DEFINE_FIELD(m_bIronsightToggle, FIELD_BOOLEAN),
+	DEFINE_FIELD(m_flIronsightedTime, FIELD_FLOAT),
+#endif
 
 	// Just to quiet classcheck.. this field exists only on the client
 //	DEFINE_FIELD( m_iOldState, FIELD_INTEGER ),
@@ -2725,7 +3221,12 @@ void* SendProxy_SendNonLocalWeaponDataTable( const SendProp *pProp, const void *
 	return NULL;
 }
 REGISTER_SEND_PROXY_NON_MODIFIED_POINTER( SendProxy_SendNonLocalWeaponDataTable );
-
+#elif C17
+void RecvProxy_ToggleSights(const CRecvProxyData* pData, void* pStruct, void* pOut)
+{
+	CBaseCombatWeapon *pWeapon = (CBaseCombatWeapon*)pStruct;
+	pData->m_Value.m_Int ? pWeapon->EnableIronsights() : pWeapon->DisableIronsights();
+}
 #endif
 
 #if PREDICTION_ERROR_CHECK_LEVEL > 1
@@ -2743,6 +3244,10 @@ BEGIN_NETWORK_TABLE_NOBASE( CBaseCombatWeapon, DT_LocalActiveWeaponData )
 	SendPropInt( SENDINFO( m_nNextThinkTick ) ),
 	SendPropTime( SENDINFO( m_flTimeWeaponIdle ) ),
 
+#ifdef C17
+	SendPropBool(SENDINFO(m_bReloadBlur)),
+#endif
+
 #if defined( TF_DLL )
 	SendPropExclude( "DT_AnimTimeMustBeFirst" , "m_flAnimTime" ),
 #endif
@@ -2752,6 +3257,10 @@ BEGIN_NETWORK_TABLE_NOBASE( CBaseCombatWeapon, DT_LocalActiveWeaponData )
 	RecvPropTime( RECVINFO( m_flNextSecondaryAttack ) ),
 	RecvPropInt( RECVINFO( m_nNextThinkTick ) ),
 	RecvPropTime( RECVINFO( m_flTimeWeaponIdle ) ),
+
+#ifdef C17
+	RecvPropBool(RECVINFO(m_bReloadBlur)),
+#endif
 #endif
 END_NETWORK_TABLE()
 
@@ -2767,6 +3276,12 @@ BEGIN_NETWORK_TABLE_NOBASE( CBaseCombatWeapon, DT_LocalWeaponData )
 
 	SendPropInt( SENDINFO( m_nViewModelIndex ), VIEWMODEL_INDEX_BITS, SPROP_UNSIGNED ),
 
+#ifdef C17
+	SendPropBool(SENDINFO(m_bIsIronsighted)),
+	SendPropBool(SENDINFO(m_bIronsightToggle)),
+	SendPropFloat(SENDINFO(m_flIronsightedTime)),
+#endif
+
 	SendPropInt( SENDINFO( m_bFlipViewModel ) ),
 
 #if defined( TF_DLL )
@@ -2780,6 +3295,12 @@ BEGIN_NETWORK_TABLE_NOBASE( CBaseCombatWeapon, DT_LocalWeaponData )
 	RecvPropInt( RECVINFO(m_iSecondaryAmmoType )),
 
 	RecvPropInt( RECVINFO( m_nViewModelIndex ) ),
+
+#ifdef C17
+	RecvPropInt(RECVINFO(m_bIsIronsighted), 0, RecvProxy_ToggleSights), //note: RecvPropBool is actually RecvPropInt (see its implementation), but we need a proxy
+	RecvPropBool(RECVINFO(m_bIronsightToggle)),
+	RecvPropFloat(RECVINFO(m_flIronsightedTime)),
+#endif
 
 	RecvPropBool( RECVINFO( m_bFlipViewModel ) ),
 

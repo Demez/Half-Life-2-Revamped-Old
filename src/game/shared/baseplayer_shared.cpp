@@ -24,6 +24,16 @@
 	#define CRecipientFilter C_RecipientFilter
 	#include "sourcevr/isourcevirtualreality.h"
 
+#ifdef C17_HAPTICS
+#include "input.h"
+
+//Haptics external access (client side)
+#include "..\haptics\client_haptics.h"
+#include "..\haptics\in_haptics.h"
+//Haptics for vehicle lookup
+#include "c_prop_vehicle.h"
+#endif
+
 #else
 
 	#include "iservervehicle.h"
@@ -32,6 +42,9 @@
 	#include "doors.h"
 	#include "ai_basenpc.h"
 	#include "env_zoom.h"
+#ifdef C17
+#include "particle_parse.h"
+#endif
 
 	extern int TrainSpeed(int iSpeed, int iMax);
 	
@@ -135,6 +148,13 @@ void CopySoundNameWithModifierToken( char *pchDest, const char *pchSource, int n
 
 	pchDest[ nDest ] = '\0';
 }
+
+#ifdef C17_HAPTICS
+//Haptics for world to screen.
+#if defined CLIENT_DLL
+bool GetVectorInScreenSpace(Vector pos, int& iX, int& iY, Vector *vecOffset);
+#endif
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -300,10 +320,22 @@ void CBasePlayer::ItemPostFrame()
 //-----------------------------------------------------------------------------
 // Eye angles
 //-----------------------------------------------------------------------------
+#ifdef C17_HAPTICS
+static float s_pitchValue = 0;
+#endif
 const QAngle &CBasePlayer::EyeAngles( )
 {
 	// NOTE: Viewangles are measured *relative* to the parent's coordinate system
 	CBaseEntity *pMoveParent = const_cast<CBasePlayer*>(this)->GetMoveParent();
+
+#ifdef C17_HAPTICS
+#if defined( CLIENT_DLL )
+	if (IsInAVehicle() && s_pitchValue == 0)
+	{
+		pl.v_angle = QAngle(0, 90, 0);
+	}
+#endif
+#endif
 
 	if ( !pMoveParent )
 	{
@@ -623,13 +655,31 @@ void CBasePlayer::UpdateStepSound( surfacedata_t *psurface, const Vector &vecOri
 			fvol = bWalking ? 0.2 : 0.5;
 			break;
 
+#ifdef C17
+		case CHAR_TEX_BRICK:
+			fvol = bWalking ? 0.2 : 0.5;
+			break;
+#endif
+
 		case CHAR_TEX_METAL:	
 			fvol = bWalking ? 0.2 : 0.5;
 			break;
 
+#ifdef C17
+		case CHAR_TEX_EXPLOSIVE:
+			fvol = bWalking ? 0.2 : 0.5;
+			break;
+#endif
+
 		case CHAR_TEX_DIRT:
 			fvol = bWalking ? 0.25 : 0.55;
 			break;
+
+#if C17
+		case CHAR_TEX_PLASTER:
+			fvol = bWalking ? 0.25 : 0.55;
+			break;
+#endif
 
 		case CHAR_TEX_VENT:	
 			fvol = bWalking ? 0.4 : 0.7;
@@ -722,6 +772,38 @@ void CBasePlayer::PlayStepSound( Vector &vecOrigin, surfacedata_t *psurface, flo
 	{
 		filter.RemoveRecipientsByPVS( vecOrigin );
 	}
+	if (GetWaterLevel() == WL_Feet)
+	{
+		WaterSplash("movement_splash", "movement_splash");
+	}
+	else if (GetWaterLevel() == WL_Waist)
+	{
+		WaterSplash("prop_splash_small", "slime_ripple");
+	}
+
+#endif
+#ifdef C17
+#ifdef C17_HAPTICS
+#ifndef CLIENT_DLL // server only
+	// Haptics addition
+	if (HapticsHasDevice())
+	{
+		// no need to calculate this unless we have a device.
+		if (GetGroundEntity() != NULL)
+		{
+			int surface = 0;
+
+			if (psurface == physprops->GetSurfaceData(physprops->GetSurfaceIndex("water")))
+				surface = 1;//STEPTYPE_SPLASHING
+			else if (psurface == physprops->GetSurfaceData(physprops->GetSurfaceIndex("wade")))
+				surface = 2;//STEPTYPE_WADING;
+			else
+				surface = 0;//STEPTYPE_SOLID;
+			HapticsStep(surface, fvol);
+		}
+	}
+#endif
+#endif
 #endif
 
 	EmitSound_t ep;
@@ -749,6 +831,41 @@ void CBasePlayer::PlayStepSound( Vector &vecOrigin, surfacedata_t *psurface, flo
 	// Kyle says: ugggh. This function may as well be called "PerformPileOfDesperateGameSpecificFootstepHacks".
 	OnEmitFootstepSound( params, vecOrigin, fvol );
 }
+
+#ifndef CLIENT_DLL
+void CBasePlayer::WaterSplash(const char *ParticleName, const char *SlimeParticleName)
+{
+	Vector start = EyePosition();
+	Vector end = GetAbsOrigin();
+
+	// Straight down
+	end.z -= 64;
+
+	// Fill in default values, just in case.
+
+	Ray_t ray;
+	ray.Init(start, end, GetPlayerMins(), GetPlayerMaxs());
+
+	trace_t	tr;
+	UTIL_TraceRay(ray, MASK_WATER, this, COLLISION_GROUP_NONE, &tr);
+
+	if ((tr.fraction == 1.0f) || (GetWaterLevel() == WL_Eyes))
+		return;
+
+	//If we're here, we've hit water!
+	Vector vecImpactOrigin = tr.endpos;
+
+	if (GetWaterType() & CONTENTS_SLIME)
+	{
+		WaterSplash("c17_waterfx_splash_main", "c17_waterfx_splash_main");
+	}
+	//yo dog i herd you like crashes
+	/*else if( GetWaterLevel() == WL_Waist )
+	{
+	WaterSplash( "c17_waterfx_movement_splash", "slime_ripple" );
+	}*/
+}
+#endif
 
 void CBasePlayer::UpdateButtonState( int nUserCmdButtonMask )
 {
@@ -1065,69 +1182,44 @@ float IntervalDistance( float x, float x0, float x1 )
 	return 0;
 }
 
-//Fixed several +use bugs
-//CBaseEntity *CBasePlayer::FindUseEntity()
-static float EstimatedDistanceSquared(const Vector &point, const CBaseEntity *pEntity)
+CBaseEntity *CBasePlayer::FindUseEntity()
 {
-	//Vector forward, up;
-	//EyeVectors( &forward, NULL, &up );
-	Vector nearestPoint;
- 	pEntity->CollisionProp()->CalcNearestPoint( point, &nearestPoint );
- 	return (nearestPoint - point).LengthSqr();
- }
+	Vector forward, up;
+	EyeVectors( &forward, NULL, &up );
 
-	//trace_t tr;
+	trace_t tr;
 	// Search for objects in a sphere (tests for entities that are not solid, yet still useable)
-	CBaseEntity *CBasePlayer::FindUseEntity()
- {
- 	Vector forward;
- 	EyeVectors( &forward, NULL, NULL );
 	Vector searchCenter = EyePosition();
 
 	// NOTE: Some debris objects are useable too, so hit those as well
 	// A button, etc. can be made out of clip brushes, make sure it's +useable via a traceline, too.
-	//int useableContents = MASK_SOLID | CONTENTS_DEBRIS | CONTENTS_PLAYERCLIP;
-	// Some debris objects are +usable, and clip brushes can be made into
- 	// +usable entities.
- 	int usableContents = MASK_SOLID | CONTENTS_DEBRIS | CONTENTS_PLAYERCLIP;
- 
- 	// However, we occasionally need to ignore clip brushes so that objects
- 	// inside of or beyond them can be +used.
- 	const int usableContentsIgnoreClip = usableContents & ~CONTENTS_PLAYERCLIP;
+	int useableContents = MASK_SOLID | CONTENTS_DEBRIS | CONTENTS_PLAYERCLIP;
 
 #ifdef CSTRIKE_DLL
-	//useableContents = MASK_NPCSOLID_BRUSHONLY | MASK_OPAQUE_AND_NPCS;
-	usableContents = MASK_NPCSOLID_BRUSHONLY | MASK_OPAQUE_AND_NPCS;
+	useableContents = MASK_NPCSOLID_BRUSHONLY | MASK_OPAQUE_AND_NPCS;
 #endif
 
 #ifdef HL1_DLL
-//	useableContents = MASK_SOLID;
-//#endif
-//#ifndef CLIENT_DLL
-	//CBaseEntity *pFoundByTrace = NULL;
-	usableContents = MASK_SOLID;
+	useableContents = MASK_SOLID;
+#endif
+#ifndef CLIENT_DLL
+	CBaseEntity *pFoundByTrace = NULL;
 #endif
 
 	// UNDONE: Might be faster to just fold this range into the sphere query
-	//CBaseEntity *pObject = NULL;
-	// First, try to hit an entity directly in front of the player.
- 	trace_t directTrace;
- 	UTIL_TraceLine( searchCenter, searchCenter + PLAYER_USE_RADIUS * forward, usableContents, this, COLLISION_GROUP_NONE, &directTrace );
+	CBaseEntity *pObject = NULL;
 
-	//float nearestDist = FLT_MAX;
+	float nearestDist = FLT_MAX;
 	// try the hit entity if there is one, or the ground entity if there isn't.
 	CBaseEntity *pNearest = NULL;
-	CBaseEntity *pObject = directTrace.m_pEnt;
- 	bool bUsable = IsUseableEntity( pObject, 0 );
 
-	//const int NUM_TANGENTS = 8;
+	const int NUM_TANGENTS = 8;
 	// trace a box at successive angles down
 	//							forward, 45 deg, 30 deg, 20 deg, 15 deg, 10 deg, -10, -15
-	//const float tangents[NUM_TANGENTS] = { 0, 1, 0.57735026919f, 0.3639702342f, 0.267949192431f, 0.1763269807f, -0.1763269807f, -0.267949192431f };
-	//for ( int i = 0; i < NUM_TANGENTS; i++ )
-	if ( !bUsable && (directTrace.contents & CONTENTS_PLAYERCLIP) )
+	const float tangents[NUM_TANGENTS] = { 0, 1, 0.57735026919f, 0.3639702342f, 0.267949192431f, 0.1763269807f, -0.1763269807f, -0.267949192431f };
+	for ( int i = 0; i < NUM_TANGENTS; i++ )
 	{
-		/*if ( i == 0 )
+		if ( i == 0 )
 		{
 			UTIL_TraceLine( searchCenter, searchCenter + forward * 1024, useableContents, this, COLLISION_GROUP_NONE, &tr );
 		}
@@ -1147,10 +1239,9 @@ static float EstimatedDistanceSquared(const Vector &point, const CBaseEntity *pE
 		{
 			pObject = pObject->GetMoveParent();
 			bUsable = IsUseableEntity(pObject, 0);
-		}*/
-		// We hit a non-usable clip brush. Try tracing again, ignoring clip
-		// brushes, so that objects inside of or beyond them can be +used.
-		/*if ( bUsable )
+		}
+
+		if ( bUsable )
 		{
 			Vector delta = tr.endpos - tr.startpos;
 			float centerZ = CollisionProp()->WorldSpaceCenter().z;
@@ -1176,149 +1267,74 @@ static float EstimatedDistanceSquared(const Vector &point, const CBaseEntity *pE
 				if ( sv_debug_player_use.GetBool() )
 				{
 					Msg( "Trace using: %s\n", pObject ? pObject->GetDebugName() : "no usable entity found" );
-				}*/
-		// NOTE: If a usable clip brush is behind a non-usable clip brush,
- 		// then we won't be able to +use it, unfortunately. This is difficult
- 		// to workaround. For example, the non-usable clip brush cannot be added
-		// to a list of ignored entities, because it is part of the worldspawn,
-		// and we cannot ignore that.
-		UTIL_TraceLine( searchCenter, searchCenter + PLAYER_USE_RADIUS * forward, usableContentsIgnoreClip, this, COLLISION_GROUP_NONE, &directTrace );
+				}
 
-				/*pNearest = pObject;
+				pNearest = pObject;
 				
 				// if this is directly under the cursor just return it now
 				if ( i == 0 )
 					return pObject;
 			}
-		}*/
-		pObject = directTrace.m_pEnt;
- 		bUsable = IsUseableEntity( pObject, 0 );
+		}
 	}
 
 	// check ground entity first
 	// if you've got a useable ground entity, then shrink the cone of this search to 45 degrees
 	// otherwise, search out in a 90 degree cone (hemisphere)
-	//if ( GetGroundEntity() && IsUseableEntity(GetGroundEntity(), FCAP_USE_ONGROUND) )
-	// If the object is not usable, determine if a move ancestor is.
- 	while ( pObject && !bUsable && pObject->GetMoveParent() )
+	if ( GetGroundEntity() && IsUseableEntity(GetGroundEntity(), FCAP_USE_ONGROUND) )
 	{
-		//pNearest = GetGroundEntity();
-		pObject = pObject->GetMoveParent();
- 		bUsable = IsUseableEntity( pObject, 0 );
+		pNearest = GetGroundEntity();
 	}
-	//if ( pNearest )
-	if ( bUsable )
+	if ( pNearest )
 	{
 		// estimate nearest object by distance from the view vector
-		//Vector point;
-		//pNearest->CollisionProp()->CalcNearestPoint( searchCenter, &point );
-		//nearestDist = CalcDistanceToLine( point, searchCenter, forward );
-		pNearest = pObject;
+		Vector point;
+		pNearest->CollisionProp()->CalcNearestPoint( searchCenter, &point );
+		nearestDist = CalcDistanceToLine( point, searchCenter, forward );
 		if ( sv_debug_player_use.GetBool() )
 		{
-			//Msg("Trace found %s, dist %.2f\n", pNearest->GetClassname(), nearestDist );
-			const float distSquared = EstimatedDistanceSquared( searchCenter, pNearest );
- 			Msg( "Line trace found usable entity: %s, distance: %.2f\n", pNearest->GetDebugName(), sqrt( distSquared ) );
+			Msg("Trace found %s, dist %.2f\n", pNearest->GetClassname(), nearestDist );
 		}
 	}
 
-	//for ( CEntitySphereQuery sphere( searchCenter, PLAYER_USE_RADIUS ); ( pObject = sphere.GetCurrentEntity() ) != NULL; sphere.NextEntity() )
-	else	
+	for ( CEntitySphereQuery sphere( searchCenter, PLAYER_USE_RADIUS ); ( pObject = sphere.GetCurrentEntity() ) != NULL; sphere.NextEntity() )
 	{
-		//if ( !pObject )
-		//	continue;
-		// Any objects directly in front of us weren't usable and close enough.
- 		// Next, determine if the ground entity is usable.
-		float nearestDistSquared = FLT_MAX;
+		if ( !pObject )
+			continue;
 
-		//if ( !IsUseableEntity( pObject, FCAP_USE_IN_RADIUS ) )
-		//	continue;
-		if ( GetGroundEntity() && IsUseableEntity( GetGroundEntity(), FCAP_USE_ONGROUND ) )
- 		{
- 			pNearest = GetGroundEntity();
- 			nearestDistSquared = EstimatedDistanceSquared( searchCenter, pNearest );
+		if ( !IsUseableEntity( pObject, FCAP_USE_IN_RADIUS ) )
+			continue;
 
 		// see if it's more roughly in front of the player than previous guess
-		//Vector point;
-		//pObject->CollisionProp()->CalcNearestPoint( searchCenter, &point );
-			if ( sv_debug_player_use.GetBool() )
- 			{
- 				Msg( "Ground query found usable entity: %s, distance: %.2f\n", pNearest->GetDebugName(), sqrt( nearestDistSquared ) );
- 			}
- 		}
+		Vector point;
+		pObject->CollisionProp()->CalcNearestPoint( searchCenter, &point );
 
-		//Vector dir = point - searchCenter;
-		//VectorNormalize(dir);
-		//float dot = DotProduct( dir, forward );
-		// Next, determine which of the reachable and usable objects in the cone
- 		// volume directly in front of player is closest, and whether or not any
- 		// is closer than the ground entity.
- 		for ( CEntitySphereQuery sphere( searchCenter, PLAYER_USE_RADIUS ); ( pObject = sphere.GetCurrentEntity() ) != NULL; sphere.NextEntity() )
- 		{
- 			if ( !IsUseableEntity( pObject, 0 ) )
- 				continue;
+		Vector dir = point - searchCenter;
+		VectorNormalize(dir);
+		float dot = DotProduct( dir, forward );
 
 		// Need to be looking at the object more or less
-		//if ( dot < 0.8 )
-			//continue;
-		// Determine if the object is nearer than the previous nearest object.
- 			Vector nearestPoint;
- 			pObject->CollisionProp()->CalcNearestPoint( searchCenter, &nearestPoint );
+		if ( dot < 0.8 )
+			continue;
 
-		//float dist = CalcDistanceToLine( point, searchCenter, forward );
-			Vector dir = nearestPoint - searchCenter;
- 			VectorNormalize(dir);
+		float dist = CalcDistanceToLine( point, searchCenter, forward );
 
-		//if ( sv_debug_player_use.GetBool() )
-		//{
-		//	Msg("Radius found %s, dist %.2f\n", pObject->GetClassname(), dist );
-		//}
-			// Need to be looking at the object more or less.
- 			// NOTE: If the closest point on the object happens to be off to the
- 			// side, even though the object is predominantly if front of the player,
- 			// then it will be rejected, unfortunately.
- 			if ( DotProduct( dir, forward ) < 0.8 )
- 				continue;
+		if ( sv_debug_player_use.GetBool() )
+		{
+			Msg("Radius found %s, dist %.2f\n", pObject->GetClassname(), dist );
+		}
 
-		/*if ( dist < nearestDist )
+		if ( dist < nearestDist )
 		{
 			// Since this has purely been a radius search to this point, we now
 			// make sure the object isn't behind glass or a grate.
 			trace_t trCheckOccluded;
-			UTIL_TraceLine( searchCenter, point, useableContents, this, COLLISION_GROUP_NONE, &trCheckOccluded );*/
-			const float distSquared = (nearestPoint - searchCenter).LengthSqr();
+			UTIL_TraceLine( searchCenter, point, useableContents, this, COLLISION_GROUP_NONE, &trCheckOccluded );
 
-			//if ( trCheckOccluded.fraction == 1.0 || trCheckOccluded.m_pEnt == pObject )
-			if ( sv_debug_player_use.GetBool() )
+			if ( trCheckOccluded.fraction == 1.0 || trCheckOccluded.m_pEnt == pObject )
 			{
-				//pNearest = pObject;
-				//nearestDist = dist;
-				Msg( "Cone query found usable entity: %s, distance: %.2f\n", pObject->GetDebugName(), sqrt( distSquared ) );
- 			}
- 
- 			if ( distSquared < nearestDistSquared )
- 			{
- 				// The object is inside the cone, but it may be blocked by another
- 				// object. Verify that we can trace to the object directly.
- 
- 				// NOTE: this traces to a particular point on the object's collision
- 				// prop. If the trace to that point happens to be blocked by another
- 				// object, even though other nearby visible points aren't, then we
- 				// won't be able to +use the object, unfortunately.
- 
- 				// We ignore clip brushes here so that objects in or behind clip
- 				// brushes can be +used. If the current object itself is a usable
- 				// clip brush, this trace will fail to hit it, but unless it is
- 				// blocked, the trace fraction will typically be 1.0 anyway, and
- 				// pNearest will be set to the usable clip brush object.
- 				trace_t tr;
- 				UTIL_TraceLine( searchCenter, nearestPoint, usableContentsIgnoreClip, this, COLLISION_GROUP_NONE, &tr );
- 
- 				if ( tr.fraction == 1.0 || tr.m_pEnt == pObject )
- 				{
- 					pNearest = pObject;
- 					nearestDistSquared = distSquared;
- 				}
+				pNearest = pObject;
+				nearestDist = dist;
 			}
 		}
 	}
@@ -1328,89 +1344,44 @@ static float EstimatedDistanceSquared(const Vector &point, const CBaseEntity *pE
 	{
 		// Haven't found anything near the player to use, nor any NPC's at distance.
 		// Check to see if the player is trying to select an NPC through a rail, fence, or other 'see-though' volume.
-		//trace_t trAllies;
-		//UTIL_TraceLine( searchCenter, searchCenter + forward * PLAYER_USE_RADIUS, MASK_OPAQUE_AND_NPCS, this, COLLISION_GROUP_NONE, &trAllies );
-		// If we haven't found an object that the player can use yet,
- 		// allow a player to use an NPC through 'see-through' volumes
- 		// (rails, fenches, windows, grates, etc.).
- 		UTIL_TraceLine( searchCenter, searchCenter + PLAYER_USE_RADIUS * forward, MASK_OPAQUE_AND_NPCS, this, COLLISION_GROUP_NONE, &directTrace );
- 		pObject = directTrace.m_pEnt;
+		trace_t trAllies;
+		UTIL_TraceLine( searchCenter, searchCenter + forward * PLAYER_USE_RADIUS, MASK_OPAQUE_AND_NPCS, this, COLLISION_GROUP_NONE, &trAllies );
 
-		//if ( trAllies.m_pEnt && IsUseableEntity( trAllies.m_pEnt, 0 ) && trAllies.m_pEnt->MyNPCPointer() && trAllies.m_pEnt->MyNPCPointer()->IsPlayerAlly( this ) )
-		if ( pObject && IsUseableEntity( pObject, 0 ) && pObject->MyNPCPointer() && pObject->MyNPCPointer()->IsPlayerAlly( this ) )
+		if ( trAllies.m_pEnt && IsUseableEntity( trAllies.m_pEnt, 0 ) && trAllies.m_pEnt->MyNPCPointer() && trAllies.m_pEnt->MyNPCPointer()->IsPlayerAlly( this ) )
 		{
 			// This is an NPC, take it!
-			//pNearest = trAllies.m_pEnt;
-			pNearest = pObject;
-
-			if ( sv_debug_player_use.GetBool() )
-			{
-				const float distSquared = EstimatedDistanceSquared( searchCenter, pNearest );
-				Msg( "Line trace found usable entity: %s, distance: %.2f\n", pNearest->GetDebugName(), sqrt( distSquared ) );
-			}
+			pNearest = trAllies.m_pEnt;
 		}
 	}
 
-	//if ( pNearest && pNearest->MyNPCPointer() && pNearest->MyNPCPointer()->IsPlayerAlly( this ) )
-	if ( pNearest == directTrace.m_pEnt && pNearest && pNearest->MyNPCPointer() && pNearest->MyNPCPointer()->IsPlayerAlly( this ) )
+	if ( pNearest && pNearest->MyNPCPointer() && pNearest->MyNPCPointer()->IsPlayerAlly( this ) )
 	{
-		//pNearest = DoubleCheckUseNPC( pNearest, searchCenter, forward );
-		// If about to select an NPC with a line trace, do a more thorough
-		// check to ensure that we're selecting the right one from a group.
-		// Lengthen trace slightly to account for the fact that we're
-		// tracing for hitboxes, which are usually farther away than OBBs.
-		trace_t tr;
-		UTIL_TraceLine( searchCenter, searchCenter + 1.1 * PLAYER_USE_RADIUS * forward, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr );
-		pObject = tr.m_pEnt;
-
-		if ( pObject != pNearest && pObject && pObject->MyNPCPointer() && pObject->MyNPCPointer()->IsPlayerAlly( this ) )
-		{
-			// Player is selecting a different NPC through some negative space
-			// in the first NPC's hitboxes (between legs, over shoulder, etc).
-			pNearest = tr.m_pEnt;
-			directTrace = tr;
-
-			if ( sv_debug_player_use.GetBool() )
-			{
-				const float distSquared = EstimatedDistanceSquared( searchCenter, pNearest );
-				Msg( "Hitbox line trace found usable entity: %s, distance: %.2f\n", pNearest->GetDebugName(), sqrt( distSquared ) );
-			}
-		}
+		pNearest = DoubleCheckUseNPC( pNearest, searchCenter, forward );
 	}
-#endif
-		
-	// Draw debug overlays and print debug messages.
+
 	if ( sv_debug_player_use.GetBool() )
 	{
-#ifndef CLIENT_DLL
 		if ( !pNearest )
 		{
-			//NDebugOverlay::Line( searchCenter, tr.endpos, 255, 0, 0, true, 30 );
-			//NDebugOverlay::Cross3D( tr.endpos, 16, 255, 0, 0, true, 30 );
-			NDebugOverlay::Line( searchCenter, directTrace.endpos, 255, 0, 0, true, 30 );
-			NDebugOverlay::Cross3D( directTrace.endpos, 16, 255, 0, 0, true, 30 );
+			NDebugOverlay::Line( searchCenter, tr.endpos, 255, 0, 0, true, 30 );
+			NDebugOverlay::Cross3D( tr.endpos, 16, 255, 0, 0, true, 30 );
 		}
-		//else if ( pNearest == pFoundByTrace )
-		else if ( pNearest == directTrace.m_pEnt )
+		else if ( pNearest == pFoundByTrace )
 		{
-			//NDebugOverlay::Line( searchCenter, tr.endpos, 0, 255, 0, true, 30 );
-			//NDebugOverlay::Cross3D( tr.endpos, 16, 0, 255, 0, true, 30 );
-			NDebugOverlay::Line( searchCenter, directTrace.endpos, 0, 255, 0, true, 30 );
-			NDebugOverlay::Cross3D( directTrace.endpos, 16, 0, 255, 0, true, 30 );
+			NDebugOverlay::Line( searchCenter, tr.endpos, 0, 255, 0, true, 30 );
+			NDebugOverlay::Cross3D( tr.endpos, 16, 0, 255, 0, true, 30 );
 		}
 		else
 		{
 			NDebugOverlay::Box( pNearest->WorldSpaceCenter(), Vector(-8, -8, -8), Vector(8, 8, 8), 0, 255, 0, true, 30 );
 		}
-	//}
+	}
 #endif
 
-	//if ( sv_debug_player_use.GetBool() )
-	//{
-		//Msg( "Radial using: %s\n", pNearest ? pNearest->GetDebugName() : "no usable entity found" );
-		Msg( "Using: %s\n", pNearest ? pNearest->GetDebugName() : "no usable entity found" );
+	if ( sv_debug_player_use.GetBool() )
+	{
+		Msg( "Radial using: %s\n", pNearest ? pNearest->GetDebugName() : "no usable entity found" );
 	}
-//and now all these changes are done. hopefully i didnt miss anything when adding this in.
 
 	return pNearest;
 }
@@ -1444,7 +1415,7 @@ void CBasePlayer::PlayerUse ( void )
 		EyeVectors( &forward, NULL, &up );
 
 		trace_t tr;
-		// Search for objects in a sphere (tests for entities that are not solid, yet still usable)
+		// Search for objects in a sphere (tests for entities that are not solid, yet still useable)
 		Vector searchCenter = EyePosition();
 
 		CUsePushFilter filter;
@@ -1549,8 +1520,24 @@ ConVar	sv_suppress_viewpunch( "sv_suppress_viewpunch", "0", FCVAR_REPLICATED | F
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+#ifdef C17_HAPTICS
+// Haptics suppresses calls to recoil effects triggered within viewpunch.
+ConVar	hap_sv_suppress_recoil("hap_sv_suppress_recoil", "0", FCVAR_REPLICATED);
+
+
+//-----------------------------------------------------------------------------
+// Purpose: // Haptics: added fHapticsStrength for scaling the power of the haptics resolved by the punch.
+//-----------------------------------------------------------------------------
+void CBasePlayer::ViewPunch(const QAngle &angleOffset, float fHapticsStrength)
+{
+	// Haptics: Send our recoil force by our strength to the client. (placed above view punch suppression and only if haptics recoil suppress is off)
+	if (!hap_sv_suppress_recoil.GetBool())
+		HapticsPunch(angleOffset, fHapticsStrength);
+
+#else
 void CBasePlayer::ViewPunch( const QAngle &angleOffset )
 {
+#endif
 	//See if we're suppressing the view punching
 	if ( sv_suppress_viewpunch.GetBool() )
 		return;
@@ -1561,6 +1548,302 @@ void CBasePlayer::ViewPunch( const QAngle &angleOffset )
 
 	m_Local.m_vecPunchAngleVel += angleOffset * 20;
 }
+
+#ifdef C17
+#ifdef C17_HAPTICS
+// Haptics --------------------------------------------------------------------
+// Purpose: Returns true if client is using a haptics device
+// Client tells server if we are using haptics device. Client checks haptics
+// interface.
+//-----------------------------------------------------------------------------
+bool CBasePlayer::HapticsHasDevice()
+{
+#ifdef CLIENT_DLL
+	//check the haptics interface if we have a device connected.
+	return haptics->IsConnected();
+#else
+	//check our variable ( processed by the usercmd )
+	return m_bHaptics;
+#endif
+};
+
+// Haptics --------------------------------------------------------------------
+// Purpose: Send a haptic punch to the client.
+// Server sends data to client. Client calls back on message received.
+//-----------------------------------------------------------------------------
+void CBasePlayer::HapticsPunch(const QAngle &angleOffset, float fStrength)
+{
+	if (!HapticsHasDevice())
+		return;
+#ifndef CLIENT_DLL
+	if (fStrength == 0)
+	{
+		// no need to send zeros.
+		return;
+	}
+	CSingleUserRecipientFilter user(this);
+	user.MakeReliable();
+	UserMessageBegin(user, "HapPunch");
+#ifdef HAP_NETWORK_OPTIMIZE
+	WRITE_FLOAT(fStrength);//Strength
+	WRITE_ANGLES(angleOffset);
+#else
+	WRITE_FLOAT(fStrength);//Strength
+	WRITE_FLOAT(angleOffset[PITCH]);//Pitch of angleOffset
+	WRITE_FLOAT(angleOffset[YAW]);//Yaw of angleOffset
+	WRITE_FLOAT(angleOffset[ROLL]);//Roll of angleOffset
+#endif // HAP_NETWORK_OPTIMIZE
+	MessageEnd();
+
+#else
+	// Haptics: send the punch to our haptic device
+	haptics->TriggerPunchEffect(angleOffset, fStrength);
+#endif //CLIENT_DLL
+
+}
+
+#ifndef CLIENT_DLL
+// Haptics Damage scalers
+ConVar hap_debug_damage_types("hap_debug_damage_types", "0", FCVAR_ARCHIVE);
+ConVar hap_damage_scale_crush("hap_damage_scale_crush", "1", FCVAR_ARCHIVE);
+ConVar hap_damage_scale_bullet("hap_damage_scale_bullet", "1", FCVAR_ARCHIVE);
+ConVar hap_damage_scale_gib("hap_damage_scale_gib", "1", FCVAR_ARCHIVE);
+ConVar hap_damage_scale_energy("hap_damage_scale_energy", "1", FCVAR_ARCHIVE);
+ConVar hap_damage_scale_slash("hap_damage_scale_slash", "1", FCVAR_ARCHIVE);
+ConVar hap_damage_scale_blast("hap_damage_scale_blast", "1", FCVAR_ARCHIVE);
+ConVar hap_damage_scale_club("hap_damage_scale_club", "1", FCVAR_ARCHIVE);
+ConVar hap_damage_scale_shock("hap_damage_scale_shock", "1", FCVAR_ARCHIVE);
+ConVar hap_damage_scale_poison("hap_damage_scale_poison", "1", FCVAR_ARCHIVE);
+ConVar hap_damage_scale_buckshot("hap_damage_scale_buckshot", "1", FCVAR_ARCHIVE);
+
+// Haptics --------------------------------------------------------------------
+// Purpose: Damage calculation and message processing (Server Side Only)
+// Server sends data to client. Client processes data without callback.
+//-----------------------------------------------------------------------------
+void CBasePlayer::HapticsDamage(CBaseEntity *eInflictor, float fDamage, int bitDamageType)
+{
+	if (!HapticsHasDevice())
+		return;
+	// Player Data
+	Vector playerPosition = GetLocalOrigin();
+	QAngle playerAngles = GetLocalAngles();
+	Vector inflictorPosition = eInflictor->GetLocalOrigin();
+	QAngle inflictorAngles = eInflictor->GetLocalAngles();
+
+	// Calculate Yaw Angle
+	float yawAngle = playerAngles.y - inflictorAngles.y - 180.0;
+
+	// Calculate Pitch Angle
+	Vector diffVector = playerPosition - inflictorPosition;
+	float triHypoteneus = (float)(playerPosition.DistTo(inflictorPosition));
+	float triAdjacent = sqrt((float)(
+		pow((float)(diffVector.x), (int)2) +
+		pow((float)(diffVector.y), (int)2)));
+	float pitchAngle = acos(triAdjacent / triHypoteneus);
+	pitchAngle *= 180.0 / M_PI; // convert to degrees
+	if (diffVector.z > 0)
+		pitchAngle *= -1.0;
+
+	if (bitDamageType & DMG_FALL)
+		pitchAngle = ((float)-90.0); // coming from beneath
+	float hScale = 1;
+	bool Untouched = true;
+	//check each damage type 
+	for (int i = 0; i != 30; i++)//buckshot is last checked. ( i<<29 )
+	{
+		int curbit = 1 << i;
+		if (bitDamageType & curbit)
+		{
+			bool BreakLoop = false;
+			switch (curbit)
+			{
+			case DMG_BLAST:
+			case DMG_BLAST_SURFACE:
+				hScale *= hap_damage_scale_blast.GetFloat();
+				Untouched = false;
+				break;
+			case DMG_BULLET:
+				hScale *= hap_damage_scale_bullet.GetFloat();
+				Untouched = false;
+				break;
+			case DMG_BUCKSHOT:
+				hScale *= hap_damage_scale_buckshot.GetFloat();
+				Untouched = false;
+				break;
+			case DMG_CLUB:
+				hScale *= hap_damage_scale_club.GetFloat();
+				Untouched = false;
+				break;
+			case DMG_CRUSH:
+				hScale *= hap_damage_scale_crush.GetFloat();
+				Untouched = false;
+				break;
+			case DMG_SHOCK:
+				hScale *= hap_damage_scale_shock.GetFloat();
+				Untouched = false;
+				break;
+			case DMG_ENERGYBEAM:
+				hScale *= hap_damage_scale_energy.GetFloat();
+				Untouched = false;
+				break;
+			case DMG_SLASH:
+				hScale *= hap_damage_scale_slash.GetFloat();
+				Untouched = false;
+				break;
+			case DMG_POISON:
+				hScale *= hap_damage_scale_poison.GetFloat();
+				Untouched = false;
+				break;
+			case DMG_ALWAYSGIB://note: this is only used by the barnicle. so i am just using this one scaler.
+				hScale = hap_damage_scale_gib.GetFloat();
+				BreakLoop = true;
+				Untouched = false;
+				break;
+
+			default:
+				if (hap_debug_damage_types.GetInt() != 0)
+				{
+					Msg("Haptics Unknown damage bit %i\n", curbit);
+				}
+				break;
+			};
+			if (BreakLoop)
+				break;
+		}
+	}
+	float sendDamage;
+	if (Untouched)
+	{
+		sendDamage = (bitDamageType & (DMG_CRUSH | DMG_BULLET | DMG_SLASH | DMG_VEHICLE |
+			DMG_FALL | DMG_BLAST | DMG_CLUB | DMG_SONIC | DMG_ENERGYBEAM | DMG_PHYSGUN |
+			DMG_AIRBOAT | DMG_BLAST_SURFACE | DMG_BUCKSHOT)) ? fDamage : (float)0.0;
+	}
+	else {
+		sendDamage = fDamage*hScale;
+	}
+	if (sendDamage>0.0f)
+	{
+		CSingleUserRecipientFilter user(this);
+		user.MakeReliable();
+		UserMessageBegin(user, "HapDmg");
+#ifdef HAP_NETWORK_OPTIMIZE
+		WRITE_BYTE((byte)clamp(sendDamage, 0, 255));
+		WRITE_ANGLES(QAngle(pitchAngle, yawAngle, 0));// untill better method is in. (0 for roll is uncessisary)
+#else
+		WRITE_FLOAT(pitchAngle);
+		WRITE_FLOAT(-yawAngle);
+		WRITE_FLOAT(sendDamage);
+#endif // HAP_NETWORK_OPTIMIZE
+		MessageEnd();
+	}
+}
+#endif // CLIENT_DLL
+// Haptics --------------------------------------------------------------------
+// Purpose: sends footstep force to client.
+// Server sends data to client. Client calls back on message received.
+//-----------------------------------------------------------------------------
+void CBasePlayer::HapticsStep(int type, float strength)
+{
+	if (!HapticsHasDevice())
+		return;
+
+#ifdef CLIENT_DLL
+	haptics->TriggerFootStepEffect(type, strength);
+#else
+	CSingleUserRecipientFilter user(this);
+	user.MakeReliable();
+
+	UserMessageBegin(user, "HapStep");
+#ifdef HAP_NETWORK_OPTIMIZE
+	WRITE_BYTE((byte)(strength * 128));
+	WRITE_BYTE((byte)type);
+#else
+	WRITE_FLOAT(strength);//volume
+	WRITE_BYTE((byte)type);
+#endif // HAP_NETWORK_OPTIMIZE
+	MessageEnd();
+#endif // CLIENT_DLL
+
+}
+
+// Haptics --------------------------------------------------------------------
+// Purpose: sends constant mass to client.
+// Server sends data to client. Client calls back on message received.
+//-----------------------------------------------------------------------------
+void CBasePlayer::HapticsMass(float mass)
+{
+	if (!HapticsHasDevice())
+		return;
+
+#ifdef CLIENT_DLL
+	haptics->TriggerMassEffect(mass);
+#else
+	CSingleUserRecipientFilter user(this);
+	user.MakeReliable();
+
+	// Now that our filter is set find out what message we need to send.
+	if (mass != 0)
+	{
+		// We are holding something, so lets send the client its mass.
+		UserMessageBegin(user, "HapMassOn");
+		WRITE_FLOAT(mass);
+		MessageEnd();
+	}
+	else {
+		// We are not holding anything so send a very fast message to the client.
+		UserMessageBegin(user, "HapMassOff");
+		MessageEnd();
+	}
+#endif // CLIENT_DLL
+
+}
+
+// Haptics --------------------------------------------------------------------
+// Purpose: updates velocity sample to client's haptics device.
+// Server sends data to client. Client calls back on message received.
+//-----------------------------------------------------------------------------
+void CBasePlayer::HapticsVelocityUpdate(Vector velocity)
+{
+	if (!HapticsHasDevice())
+		return;
+#ifdef CLIENT_DLL
+	haptics->ProcessVelocitySample(velocity);
+#else
+	CSingleUserRecipientFilter user(this);
+	user.MakeReliable();
+	UserMessageBegin(user, "HapVelocityUpdate");
+
+#ifdef HAP_NETWORK_OPTIMIZE
+	WRITE_VEC3COORD(velocity);
+#else
+	WRITE_FLOAT(velocity.x);
+	WRITE_FLOAT(velocity.y);
+	WRITE_FLOAT(velocity.z);
+#endif // HAP_NETWORK_OPTIMIZE
+	MessageEnd();
+#endif // CLIENT_DLL
+}
+
+// Haptics --------------------------------------------------------------------
+// Purpose: Same as HapVeloctyStart but also sends the type of vehicle.
+// Server sends data to client. Client calls back on message received.
+//-----------------------------------------------------------------------------
+void CBasePlayer::HapticsVehicleStart(int type)
+{
+	if (!HapticsHasDevice())
+		return;
+#ifdef CLIENT_DLL
+	haptics->SetVehicleMode((byte)type);
+#else
+	CSingleUserRecipientFilter user(this);
+	user.MakeReliable();
+	UserMessageBegin(user, "HapVehicleEnter");
+	WRITE_BYTE((byte)type);
+	MessageEnd();
+#endif // CLIENT_DLL
+}
+#endif
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -1705,6 +1988,27 @@ void CBasePlayer::CalcView( Vector &eyeOrigin, QAngle &eyeAngles, float &zNear, 
 	else
 	{
 		CalcVehicleView( pVehicle, eyeOrigin, eyeAngles, zNear, zFar, fov );
+#ifdef C17_HAPTICS
+#if defined( CLIENT_DLL )
+		// Haptics do a double check if we are in vehicle mode or not.
+		if (!cliHaptics->GetCurrentMode() == HAP_MODE_VEHICLE)
+		{
+			// if we are not in vehicle mode in the haptics we will attempt to get the vehicle type. (ushualy this is done server side)
+			if (pVehicle->GetVehicleEnt())
+			{
+				if (V_stricmp(pVehicle->GetVehicleEnt()->GetClassname(), "C_PropAirboat"))
+				{
+					HapticsVehicleStart(1 << 3);//VEHICLE_TYPE_AIRBOAT_RAYCAST
+				}
+				else
+				{
+					//default to jeep
+					HapticsVehicleStart(1 << 0);//VEHICLE_TYPE_CAR_WHEELS
+				}
+			}
+	}
+#endif
+#endif
 	}
 	// NVNT update fov on the haptics dll for input scaling.
 #if defined( CLIENT_DLL )
@@ -1725,6 +2029,15 @@ void CBasePlayer::CalcViewModelView( const Vector& eyeOrigin, const QAngle& eyeA
 		vm->CalcViewModelView( this, eyeOrigin, eyeAngles );
 	}
 }
+
+#ifdef C17_HAPTICS
+// Haptics, broken crosshair things
+#if defined( CLIENT_DLL )
+static bool bUsingHead = false;
+extern ConVar hap_view_broken;
+#endif
+#endif
+
 
 void CBasePlayer::CalcPlayerView( Vector& eyeOrigin, QAngle& eyeAngles, float& fov )
 {
@@ -1784,11 +2097,64 @@ void CBasePlayer::CalcPlayerView( Vector& eyeOrigin, QAngle& eyeAngles, float& f
 
 	// calc current FOV
 	fov = GetFOV();
+
+#ifdef C17_HAPTICS
+	// Haptics calculate headangle.
+#if defined( CLIENT_DLL )
+	// only use headangle if we have a weapon.
+	if (GetActiveWeapon() && hap_view_broken.GetInt() == 1 && !engine->IsPaused())
+	{
+		if (!bUsingHead)
+		{
+			//m_aHeadAngle = eyeAngles;
+			bUsingHead = true;
+		}
+		Vector forward, right, up;
+		AngleVectors(eyeAngles, &forward);
+		eyeAngles -= cliHaptics->GetPointAngle(fov);
+		//eyeAngles  +=cliHaptics->GetPointAngle(fov);
+		AngleVectors(eyeAngles, NULL, &right, &up);
+		Vector p = eyeOrigin + (forward * 50);
+		int x, y;
+		GetVectorInScreenSpace(p, x, y);
+#define CROSSHAIRSEGMENTS 2
+		for (int i = 0; i != CROSSHAIRSEGMENTS; i++)
+		{
+			float fS = sin(gpGlobals->curtime * 3 + M_PI*(i / (float)CROSSHAIRSEGMENTS));
+			float fC = cos(gpGlobals->curtime * 3 + M_PI*(i / (float)CROSSHAIRSEGMENTS));
+			Vector off;
+			off = (right*fS) + (up*fC);
+			DebugDrawLine(p + off, p - off,
+				abs(sin(gpGlobals->curtime)) * 255,
+				abs(sin(gpGlobals->curtime + M_PI / 3)) * 255,
+				abs(sin(gpGlobals->curtime + M_PI / 3 * 2)) * 255,
+				false, 0.0f);
+		}
+	}
+	else {
+		if (bUsingHead)
+		{
+			bUsingHead = false;
+		}
+	}
+#endif
+#endif
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: The main view setup function for vehicles
 //-----------------------------------------------------------------------------
+#ifdef C17_HAPTICS
+// Haptics: adding in variable to controll view pitch devicance while in vehicle for turret aiming (client only)
+#if defined( CLIENT_DLL)
+ConVar hap_vehicle_pitch_viewscale("hap_vehicle_pitch_viewscale", "0.5", FCVAR_ARCHIVE);
+ConVar hap_vehicle_pitch_view_transition_in("hap_vehicle_pitch_view_transition_in", "0.1", FCVAR_ARCHIVE);
+ConVar hap_vehicle_pitch_view_transition_out("hap_vehicle_pitch_view_transition_out", "0.1", FCVAR_ARCHIVE);
+static float s_flVPitchTime = 0;
+static bool s_bVPitchLast = false;
+#endif
+#endif
+
 void CBasePlayer::CalcVehicleView( 
 #if defined( CLIENT_DLL )
 	IClientVehicle *pVehicle, 

@@ -15,7 +15,9 @@
 // FIXME: Move out
 extern void DrawSpriteTangentSpace( const Vector &vecOrigin, float flWidth, float flHeight, color32 color );
 
+#ifndef C17
 #define	EXPLOSION_DURATION	3.0f
+#endif
 
 //-----------------------------------------------------------------------------
 // Explosion effect for hopwire
@@ -260,6 +262,7 @@ int C_HopwireExplosion::DrawModel( int flags )
 {
 	AddParticles();
 
+#ifndef C17
 	CMatRenderContextPtr pRenderContext( materials );
 	pRenderContext->Flush();
 	UpdateRefractTexture();
@@ -283,6 +286,7 @@ int C_HopwireExplosion::DrawModel( int flags )
 	// FIXME: The ball needs to sort properly at all times
 	static color32 white = {255,255,255,255};
 	DrawSpriteTangentSpace( GetRenderOrigin() + ( CurrentViewForward() * 128.0f ), scale+scaleX, scale+scaleY, white );
+#endif
 
 	return 1;
 }
@@ -342,6 +346,17 @@ public:
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
 	virtual void	ReceiveMessage( int classID, bf_read &msg );
 
+#ifdef C17
+	virtual ShadowType_t	ShadowCastType() { return SHADOWS_NONE; }
+
+	virtual bool			ShouldReceiveProjectedTextures(int flags)
+	{
+		return false;
+	}
+
+	virtual void	Precache(void);
+#endif
+
 private:
 
 	C_HopwireExplosion	m_ExplosionEffect;	// Explosion effect information and drawing
@@ -361,6 +376,17 @@ C_GrenadeHopwire::C_GrenadeHopwire( void )
 {
 	m_ExplosionEffect.SetActive( false );
 }
+
+#ifdef C17
+void C_GrenadeHopwire::Precache(void)
+{
+	PrecacheScriptSound("Weapon_AR3.BlackHole");
+	//PrecacheScriptSound( "Weapon_AR3.Geiger" );
+	PrecacheMaterial("effects/strider_pinch_dudv");
+
+	BaseClass::Precache();
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Receive messages from the server
@@ -383,6 +409,24 @@ void C_GrenadeHopwire::ReceiveMessage( int classID, bf_read &msg )
 		{
 			m_ExplosionEffect.SetActive();
 			m_ExplosionEffect.SetOwner( this );
+
+#ifdef C17
+			C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
+
+			if (pPlayer)
+			{
+				//pPlayer->EmitSound( "Weapon_AR3.Geiger" );
+				pPlayer->EmitSound("Weapon_AR3.BlackHole");
+			}
+			else
+			{
+				//No player?
+				//Emit from the blackhole instead.
+				//EmitSound( "Weapon_AR3.Geiger" );
+				EmitSound("Weapon_AR3.BlackHole");
+			}
+#endif
+
 			m_ExplosionEffect.StartExplosion();
 		}
 		break;
@@ -413,9 +457,12 @@ void C_GrenadeHopwire::OnDataChanged( DataUpdateType_t updateType )
 //-----------------------------------------------------------------------------
 int	C_GrenadeHopwire::DrawModel( int flags )
 {
+#ifndef C17
 	if ( m_ExplosionEffect.IsActive() )
 		return 1;
 
 	return BaseClass::DrawModel( flags );
+#else
+	return 0;
+#endif
 }
-

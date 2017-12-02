@@ -99,6 +99,34 @@ public:
 	char					szAmmo1[MAX_WEAPON_AMMO_NAME];			// "primary" ammo type
 	char					szAmmo2[MAX_WEAPON_AMMO_NAME];			// "secondary" ammo type
 
+#ifdef C17
+																	// Flashlight blocks
+	char					szFlashlightAttachmentName[MAX_WEAPON_STRING];
+
+	bool					m_bHasFlashlight;
+
+	// Ironsight blocks
+	Vector					vecIronsightPosOffset;
+	QAngle					angIronsightAngOffset;
+	float					flIronsightFOVOffset;
+	float					flIronsightTime;
+
+	bool					m_bCanSight;
+	bool					m_bKeepCrosshair;
+
+	float					flChromaticAmount;
+	float					flBlurAmount;
+
+	// MuzzleFlash blocks
+	int						iMuzzleFlashFOV;
+	float					flMuzzleFlashColorMax;
+	float					flMuzzleFlashColorMin;
+	int						iTexIndex;
+	int						iMuzzleFlashFarZ;
+
+	bool					m_bHasMuzzle;
+#endif
+
 	// Sound blocks
 	char					aShootSounds[NUM_SHOOT_SOUND_TYPES][MAX_WEAPON_STRING];	
 

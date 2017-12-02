@@ -33,8 +33,17 @@ public:
 	void				Zoom( float FOVOffset, float time );
 	float				GetZoom( void );
 	bool				IsZoomed( void )	{ return m_HL2Local.m_bZooming; }
+#ifdef C17
+	bool				InSmokeVolume(void) { return m_HL2Local.m_bInSmokeVolume; }
+	bool				HasLowStamina(void) { return m_HL2Local.m_bLowStamina; }
+#endif
 
+#ifdef C17
+	//Tony; minor cosmetic really, fix confusion by simply renaming this one; everything calls IsSprinting(), and this isn't really even used.
+	bool				IsSprintActive(void) { return m_HL2Local.m_bitsActiveDevices & bits_SUIT_DEVICE_SPRINT; }
+#else
 	bool				IsSprinting( void ) { return m_HL2Local.m_bitsActiveDevices & bits_SUIT_DEVICE_SPRINT; }
+#endif
 	bool				IsFlashlightActive( void ) { return m_HL2Local.m_bitsActiveDevices & bits_SUIT_DEVICE_FLASHLIGHT; }
 	bool				IsBreatherActive( void ) { return m_HL2Local.m_bitsActiveDevices & bits_SUIT_DEVICE_BREATHER; }
 
@@ -46,7 +55,11 @@ public:
 	bool				IsSprinting() const { return m_fIsSprinting; }
 	
 	// Input handling
+#ifdef C17
+	virtual bool	CreateMove(float flInputSampleTime, CUserCmd *pCmd, bool bVguiUpdate);
+#else
 	virtual bool	CreateMove( float flInputSampleTime, CUserCmd *pCmd );
+#endif
 	void			PerformClientSideObstacleAvoidance( float flFrameTime, CUserCmd *pCmd );
 	void			PerformClientSideNPCSpeedModifiers( float flFrameTime, CUserCmd *pCmd );
 

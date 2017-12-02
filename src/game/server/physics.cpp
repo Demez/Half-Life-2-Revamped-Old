@@ -2655,6 +2655,9 @@ void PhysCollisionDust( gamevcollisionevent_t *pEvent, surfacedata_t *phit )
 		break;
 
 	case CHAR_TEX_CONCRETE:
+#ifdef C17
+	case CHAR_TEX_BRICK:
+#endif
 
 		if ( pEvent->collisionSpeed < 340.0f )
 			return;

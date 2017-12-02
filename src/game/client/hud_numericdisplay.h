@@ -38,7 +38,11 @@ public:
 
 protected:
 	// vgui overrides
+#ifdef C17
+	virtual void Paint(bool bMedium = false);
+#else
 	virtual void Paint();
+#endif
 	virtual void PaintLabel();
 
 	virtual void PaintNumbers(vgui::HFont font, int xpos, int ypos, int value);
@@ -60,6 +64,10 @@ protected:
 	CPanelAnimationVar( vgui::HFont, m_hNumberGlowFont, "NumberGlowFont", "HudNumbersGlow" );
 	CPanelAnimationVar( vgui::HFont, m_hSmallNumberFont, "SmallNumberFont", "HudNumbersSmall" );
 	CPanelAnimationVar( vgui::HFont, m_hTextFont, "TextFont", "Default" );
+#ifdef C17
+	CPanelAnimationVar(vgui::HFont, m_hMediumNumberGlowFont, "MediumNumberGlowFont", "HudNumbersMediumGlow");
+	CPanelAnimationVar(vgui::HFont, m_hMediumNumberFont, "MediumNumberFont", "HudNumbersMedium");
+#endif
 
 	CPanelAnimationVarAliasType( float, text_xpos, "text_xpos", "8", "proportional_float" );
 	CPanelAnimationVarAliasType( float, text_ypos, "text_ypos", "20", "proportional_float" );

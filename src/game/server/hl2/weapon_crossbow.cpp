@@ -35,11 +35,19 @@
 //#define BOLT_MODEL			"models/crossbow_bolt.mdl"
 #define BOLT_MODEL	"models/weapons/w_missile_closed.mdl"
 
+#ifdef C17
+#define BOLT_AIR_VELOCITY	3500
+#define BOLT_WATER_VELOCITY	1300
+#else
 #define BOLT_AIR_VELOCITY	2500
 #define BOLT_WATER_VELOCITY	1500
+#endif
 
 extern ConVar sk_plr_dmg_crossbow;
 extern ConVar sk_npc_dmg_crossbow;
+#ifdef C17
+extern ConVar ironsight_mode;
+#endif
 
 void TE_StickyBolt( IRecipientFilter& filter, float delay,	Vector vecDirection, const Vector *origin );
 
@@ -251,9 +259,9 @@ void CCrossbowBolt::BoltTouch( CBaseEntity *pOther )
 
 		ApplyMultiDamage();
 
-		//Adrian: keep going through the glass. //Demez: no that would break immersion
+		//Adrian: keep going through the glass.
 		if ( pOther->GetCollisionGroup() == COLLISION_GROUP_BREAKABLE_GLASS )
-			return;
+			 return;
 
 		if ( !pOther->IsAlive() )
 		{
@@ -428,6 +436,10 @@ public:
 	CWeaponCrossbow( void );
 	
 	virtual void	Precache( void );
+#ifdef C17
+	virtual bool	DefaultReload(int iClipSize1, int iClipSize2, int iActivity);
+	virtual bool	CrossbowReload(void);
+#endif
 	virtual void	PrimaryAttack( void );
 	virtual void	SecondaryAttack( void );
 	virtual bool	Deploy( void );
@@ -438,7 +450,9 @@ public:
 	virtual void	ItemBusyFrame( void );
 	virtual void	Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator );
 	virtual bool	SendWeaponAnim( int iActivity );
+#ifndef C17
 	virtual bool	IsWeaponZoomed() { return m_bInZoom; }
+#endif
 	
 	bool	ShouldDisplayHUDHint() { return true; }
 
@@ -450,9 +464,13 @@ private:
 	
 	void	StopEffects( void );
 	void	SetSkin( int skinNum );
+#ifndef C17
 	void	CheckZoomToggle( void );
+#endif
 	void	FireBolt( void );
+#ifndef C17
 	void	ToggleZoom( void );
+#endif
 	
 	// Various states for the crossbow's charger
 	enum ChargerState_t
@@ -526,17 +544,84 @@ void CWeaponCrossbow::Precache( void )
 	BaseClass::Precache();
 }
 
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool CWeaponCrossbow::DefaultReload(int iClipSize1, int iClipSize2, int iActivity)
+{
+	CBaseCombatCharacter *pOwner = GetOwner();
+	if (!pOwner)
+		return false;
+
+	// If I don't have any spare ammo, I can't reload
+	if (pOwner->GetAmmoCount(m_iPrimaryAmmoType) <= 0)
+		return false;
+
+	bool bReload = false;
+
+	// If you don't have clips, then don't try to reload them.
+	if (UsesClipsForAmmo1())
+	{
+		// need to reload primary clip?
+		int primary = min(iClipSize1 - m_iClip1, pOwner->GetAmmoCount(m_iPrimaryAmmoType));
+		if (primary != 0)
+		{
+			bReload = true;
+		}
+	}
+
+	if (UsesClipsForAmmo2())
+	{
+		// need to reload secondary clip?
+		int secondary = min(iClipSize2 - m_iClip2, pOwner->GetAmmoCount(m_iSecondaryAmmoType));
+		if (secondary != 0)
+		{
+			bReload = true;
+		}
+	}
+
+	if (!bReload)
+		return false;
+
+#ifdef CLIENT_DLL
+	// Play reload
+	WeaponSound(RELOAD);
+#endif
+	SendWeaponAnim(iActivity);
+
+	// Play the player's reload animation
+	if (pOwner->IsPlayer())
+	{
+		((CBasePlayer *)pOwner)->SetAnimation(PLAYER_RELOAD);
+	}
+
+	MDLCACHE_CRITICAL_SECTION();
+	float flSequenceEndTime = gpGlobals->curtime + SequenceDuration();
+	pOwner->SetNextAttack(flSequenceEndTime);
+	m_flNextPrimaryAttack = m_flNextSecondaryAttack = flSequenceEndTime;
+	if (!IsIronsighted())
+		m_flReloadTime = flSequenceEndTime;
+
+	m_bInReload = true;
+
+	return true;
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose:
 //-----------------------------------------------------------------------------
 void CWeaponCrossbow::PrimaryAttack( void )
 {
+#ifndef C17
 	if ( m_bInZoom && g_pGameRules->IsMultiplayer() )
 	{
 //		FireSniperBolt();
 		FireBolt();
 	}
 	else
+#endif
 	{
 		FireBolt();
 	}
@@ -554,6 +639,16 @@ void CWeaponCrossbow::PrimaryAttack( void )
 	}
 }
 
+#ifdef C17
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool CWeaponCrossbow::CrossbowReload(void)
+{
+	return DefaultReload(GetMaxClip1(), GetMaxClip2(), ACT_VM_RELOAD);
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose:
 //-----------------------------------------------------------------------------
@@ -568,7 +663,11 @@ void CWeaponCrossbow::SecondaryAttack( void )
 //-----------------------------------------------------------------------------
 bool CWeaponCrossbow::Reload( void )
 {
+#ifdef C17
+	if (CrossbowReload())
+#else
 	if ( BaseClass::Reload() )
+#endif
 	{
 		m_bMustReload = false;
 		return true;
@@ -577,6 +676,7 @@ bool CWeaponCrossbow::Reload( void )
 	return false;
 }
 
+#ifndef C17
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -589,14 +689,17 @@ void CWeaponCrossbow::CheckZoomToggle( void )
 			ToggleZoom();
 	}
 }
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 void CWeaponCrossbow::ItemBusyFrame( void )
 {
+#ifndef C17
 	// Allow zoom toggling even when we're reloading
 	CheckZoomToggle();
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -604,8 +707,46 @@ void CWeaponCrossbow::ItemBusyFrame( void )
 //-----------------------------------------------------------------------------
 void CWeaponCrossbow::ItemPostFrame( void )
 {
+#ifndef C17
 	// Allow zoom toggling
 	CheckZoomToggle();
+#else
+	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+	if (!pOwner)
+		return;
+
+	if (ironsight_mode.GetBool())
+	{
+		if (pOwner->m_nButtons & IN_ATTACK2 && !m_bIronsightToggle && m_flReIronsightTime < gpGlobals->curtime)
+		{
+			m_bIronsightToggle = true;
+
+			m_flReIronsightTime = gpGlobals->curtime + 0.4f;
+			EnableIronsights();
+		}
+		else if (!(pOwner->m_nButtons & IN_ATTACK2) && m_bIronsightToggle && m_flReIronsightTime < gpGlobals->curtime)
+		{
+			m_bIronsightToggle = false;
+
+			m_flReIronsightTime = gpGlobals->curtime + 0.4f;
+			DisableIronsights();
+		}
+	}
+	else
+	{
+		if (pOwner->m_nButtons & IN_ATTACK2 && !m_bIronsightToggle && m_flReIronsightTime < gpGlobals->curtime)
+		{
+			m_bIronsightToggle = true;
+
+			m_flReIronsightTime = gpGlobals->curtime + 0.4f;
+			ToggleIronsights();
+		}
+		else if (!(pOwner->m_nButtons & IN_ATTACK2) && m_bIronsightToggle)
+		{
+			m_bIronsightToggle = false;
+		}
+	}
+#endif
 
 	if ( m_bMustReload && HasWeaponIdleTimeElapsed() )
 	{
@@ -687,11 +828,13 @@ void CWeaponCrossbow::FireBolt( void )
 
 	SendWeaponAnim( ACT_VM_PRIMARYATTACK );
 
+#ifndef C17
 	if ( !m_iClip1 && pOwner->GetAmmoCount( m_iPrimaryAmmoType ) <= 0 )
 	{
 		// HEV suit - indicate out of ammo condition
 		pOwner->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
 	}
+#endif
 
 	m_flNextPrimaryAttack = m_flNextSecondaryAttack	= gpGlobals->curtime + 0.75;
 
@@ -726,6 +869,7 @@ bool CWeaponCrossbow::Holster( CBaseCombatWeapon *pSwitchingTo )
 	return BaseClass::Holster( pSwitchingTo );
 }
 
+#ifndef C17
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -751,6 +895,7 @@ void CWeaponCrossbow::ToggleZoom( void )
 		}
 	}
 }
+#endif
 
 #define	BOLT_TIP_ATTACHMENT	2
 
@@ -962,11 +1107,13 @@ bool CWeaponCrossbow::SendWeaponAnim( int iActivity )
 //-----------------------------------------------------------------------------
 void CWeaponCrossbow::StopEffects( void )
 {
+#ifndef C17
 	// Stop zooming
 	if ( m_bInZoom )
 	{
 		ToggleZoom();
 	}
+#endif
 
 	// Turn off our sprites
 	SetChargerState( CHARGER_STATE_OFF );
@@ -977,6 +1124,9 @@ void CWeaponCrossbow::StopEffects( void )
 //-----------------------------------------------------------------------------
 void CWeaponCrossbow::Drop( const Vector &vecVelocity )
 {
+#ifdef C17
+	DisableIronsights();
+#endif
 	StopEffects();
 	BaseClass::Drop( vecVelocity );
 }

@@ -80,7 +80,11 @@ const char *GetGameDescription()
 	if ( g_pGameRules ) // this function may be called before the world has spawned, and the game rules initialized
 		return g_pGameRules->GetGameDescription();
 	else
+#ifdef C17
+		return "City 17: Episode One";
+#else
 		return "Half-Life 2";
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -105,7 +109,11 @@ CBaseEntity* FindEntity( edict_t *pEdict, char *classname)
 //-----------------------------------------------------------------------------
 void ClientGamePrecache( void )
 {
+#ifdef C17
+	CBaseEntity::PrecacheModel("models/humans/group03/male_09.mdl");
+#else
 	CBaseEntity::PrecacheModel("models/player.mdl");
+#endif
 	CBaseEntity::PrecacheModel( "models/gibs/agibs.mdl" );
 	CBaseEntity::PrecacheModel ("models/weapons/v_hands.mdl");
 

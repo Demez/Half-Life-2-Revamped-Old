@@ -9,6 +9,11 @@
 
 #include "cbase.h"
 #include "triggers.h"
+#ifdef C17
+#include "KeyValues.h"
+#include "filesystem.h"
+#include "fogcontroller.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -31,6 +36,10 @@ public:
 	CColorCorrectionVolume();
 
 	void Spawn( void );
+#ifdef C17
+	void ReadParams(KeyValues *pKeyValue);
+	void PrepareFogParams(const char *pKeyName);
+#endif
 	bool KeyValue( const char *szKeyName, const char *szValue );
 	int  UpdateTransmitState();
 
@@ -45,6 +54,11 @@ public:
 	// Inputs
 	void	InputEnable( inputdata_t &inputdata );
 	void	InputDisable( inputdata_t &inputdata );
+
+#ifdef C17
+	void	InputSetEnterFogScriptTo(inputdata_t &inputdata);
+	void	InputSetExitFogScriptTo(inputdata_t &inputdata);
+#endif
 
 private:
 
@@ -62,13 +76,33 @@ private:
 	float		m_LastExitTime;
 
 	float		m_FadeDuration;
+
+#ifdef C17
+	Color		colorPrimary;
+	Color		colorSecondary;
+	float		flStart;
+	float		flEnd;
+	float		flDensity;
+	float		flFarZ;
+
+	string_t		m_iszEnterFogName;
+	string_t		m_iszExitFogName;
+#endif
 };
 
 LINK_ENTITY_TO_CLASS(color_correction_volume, CColorCorrectionVolume);
+#ifdef C17
+LINK_ENTITY_TO_CLASS(environment_volume, CColorCorrectionVolume);
+#endif
 
 BEGIN_DATADESC( CColorCorrectionVolume )
 
 	DEFINE_THINKFUNC( ThinkFunc ),
+
+#ifdef C17
+	DEFINE_KEYFIELD(m_iszEnterFogName, FIELD_STRING, "EnterFogScript"),
+	DEFINE_KEYFIELD(m_iszExitFogName, FIELD_STRING, "ExitFogScript"),
+#endif
 
 	DEFINE_KEYFIELD( m_FadeDuration, FIELD_FLOAT, "fadeDuration" ),
 	DEFINE_KEYFIELD( m_MaxWeight,         FIELD_FLOAT,   "maxweight" ),
@@ -76,6 +110,10 @@ BEGIN_DATADESC( CColorCorrectionVolume )
 
 	DEFINE_KEYFIELD( m_bEnabled,		  FIELD_BOOLEAN, "enabled" ),
 	DEFINE_KEYFIELD( m_bStartDisabled,    FIELD_BOOLEAN, "StartDisabled" ),
+#ifdef C17
+	DEFINE_INPUTFUNC(FIELD_STRING, "SetEnterFogScriptTo", InputSetEnterFogScriptTo),
+	DEFINE_INPUTFUNC(FIELD_STRING, "SetExitFogScriptTo", InputSetExitFogScriptTo),
+#endif
 
 	DEFINE_FIELD( m_Weight,          FIELD_FLOAT ),
 	DEFINE_FIELD( m_LastEnterWeight, FIELD_FLOAT ),
@@ -94,12 +132,21 @@ IMPLEMENT_SERVERCLASS_ST_NOBASE(CColorCorrectionVolume, DT_ColorCorrectionVolume
 	SendPropString( SENDINFO(m_lookupFilename) ),
 END_SEND_TABLE()
 
+#ifdef C17
+#define FOG_FILE "scripts/fog/fog_parameters.txt"
+#endif
+
 
 CColorCorrectionVolume::CColorCorrectionVolume() : BaseClass()
 {
 	m_bEnabled = true;
 	m_MaxWeight = 1.0f;
 	m_lookupFilename.GetForModify()[0] = 0;
+
+#ifdef C17
+	m_iszEnterFogName = NULL_STRING;
+	m_iszExitFogName = NULL_STRING;
+#endif
 }
 
 
@@ -111,6 +158,68 @@ int CColorCorrectionVolume::UpdateTransmitState()
 	// ALWAYS transmit to all clients.
 	return SetTransmitState( FL_EDICT_ALWAYS );
 }
+
+#ifdef C17
+void CColorCorrectionVolume::ReadParams(KeyValues *pKeyValue)
+{
+	if (pKeyValue == NULL)
+	{
+		Assert(!"Environment Volume couldn't be initialized!");
+		return;
+	}
+
+	colorPrimary = pKeyValue->GetColor("primarycolor");
+	colorSecondary = pKeyValue->GetColor("secondarycolor");
+	flStart = pKeyValue->GetFloat("start");
+	flEnd = pKeyValue->GetFloat("end");
+	flDensity = pKeyValue->GetFloat("density");
+	flFarZ = pKeyValue->GetFloat("farz");
+
+	int r, g, b, a;
+	colorPrimary.GetColor(r, g, b, a);
+	DevMsg("Fog color primary set to: R: %i G: %i B: %i\n", r, g, b);
+
+	colorSecondary.GetColor(r, g, b, a);
+	DevMsg("Fog color secondary set to: R: %i G: %i B: %i\n", r, g, b);
+
+	DevMsg("Fog start set to: %.2f\n", flStart);
+	DevMsg("Fog end set to: %.2f\n", flEnd);
+	DevMsg("Fog density set to: %.2f\n", flDensity);
+	DevMsg("Fog farz set to: %.2f\n", flFarZ);
+
+	CFogController *pFogController = NULL;
+	pFogController = static_cast<CFogController*>(gEntList.FindEntityByClassname(pFogController, "env_fog_controller"));
+	if (pFogController && pFogController->IsMaster())
+	{
+		pFogController->SetLerpValuesTo(colorPrimary, colorSecondary, flStart, flEnd, flDensity, flFarZ);
+	}
+	else
+	{
+		DevMsg("Failed to find a valid master fog controller.\n");
+	}
+}
+
+void CColorCorrectionVolume::PrepareFogParams(const char *pKeyName)
+{
+	KeyValues *pKV = new KeyValues("FogFile");
+	if (!pKV->LoadFromFile(filesystem, FOG_FILE, "MOD"))
+	{
+		pKV->deleteThis();
+
+		Assert(!"Couldn't find fog paramater file! Fog lerp aborted!");
+		return;
+	}
+
+	KeyValues *pKVSubkey;
+	if (pKeyName)
+	{
+		pKVSubkey = pKV->FindKey(pKeyName);
+		ReadParams(pKVSubkey);
+	}
+
+	pKV->deleteThis();
+}
+#endif
 
 
 bool CColorCorrectionVolume::KeyValue( const char *szKeyName, const char *szValue )
@@ -172,12 +281,26 @@ void CColorCorrectionVolume::StartTouch( CBaseEntity *pEntity )
 {
 	m_LastEnterTime = gpGlobals->curtime;
 	m_LastEnterWeight = m_Weight;
+
+#ifdef C17
+	if (FClassnameIs(this, "environment_volume") && m_bEnabled && m_iszEnterFogName != NULL_STRING)
+	{
+		PrepareFogParams((char *)STRING(m_iszEnterFogName));
+	}
+#endif
 }
 
 void CColorCorrectionVolume::EndTouch( CBaseEntity *pEntity )
 {
 	m_LastExitTime = gpGlobals->curtime;
 	m_LastExitWeight = m_Weight;
+
+#ifdef C17
+	if (FClassnameIs(this, "environment_volume") && m_bEnabled && m_iszExitFogName != NULL_STRING)
+	{
+		PrepareFogParams((char *)STRING(m_iszExitFogName));
+	}
+#endif
 }
 
 void CColorCorrectionVolume::ThinkFunc( )
@@ -234,3 +357,21 @@ void CColorCorrectionVolume::InputDisable( inputdata_t &inputdata )
 {
 	m_bEnabled = false;
 }
+
+#ifdef C17
+//------------------------------------------------------------------------------
+// Purpose: Sets the value of the function string via I/O input.
+//------------------------------------------------------------------------------
+void CColorCorrectionVolume::InputSetEnterFogScriptTo(inputdata_t &inputdata)
+{
+	m_iszEnterFogName = MAKE_STRING(inputdata.value.String());
+}
+
+//------------------------------------------------------------------------------
+// Purpose: Sets the value of the value string via I/O input.
+//------------------------------------------------------------------------------
+void CColorCorrectionVolume::InputSetExitFogScriptTo(inputdata_t &inputdata)
+{
+	m_iszExitFogName = MAKE_STRING(inputdata.value.String());
+}
+#endif

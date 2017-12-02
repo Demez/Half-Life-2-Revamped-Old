@@ -93,3 +93,8 @@ bool C_PhysicsProp::OnInternalDrawModel( ClientModelRenderInfo_t *pInfo )
 
 	return true;
 }
+
+#ifdef C17
+IMPLEMENT_CLIENTCLASS_DT(C_PlugProp, DT_PlugProp, CPlugProp)
+END_RECV_TABLE()
+#endif

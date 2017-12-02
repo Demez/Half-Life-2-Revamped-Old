@@ -66,6 +66,11 @@ CHudAmmo::CHudAmmo( const char *pElementName ) : BaseClass(NULL, "HudAmmo"), CHu
 	hudlcd->SetGlobalStat( "(ammo_secondary)", "0" );
 	hudlcd->SetGlobalStat( "(weapon_print_name)", "" );
 	hudlcd->SetGlobalStat( "(weapon_name)", "" );
+
+#ifdef C17
+	SetPaintBackgroundEnabled(false);
+	SetPaintBorderEnabled(false);
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -124,18 +129,38 @@ void CHudAmmo::UpdatePlayerAmmo( C_BasePlayer *player )
 	hudlcd->SetGlobalStat( "(weapon_print_name)", wpn ? wpn->GetPrintName() : " " );
 	hudlcd->SetGlobalStat( "(weapon_name)", wpn ? wpn->GetName() : " " );
 
+#ifdef C17
+	bool ShouldDisplayAmmo = true;
+
+	if (player && wpn)
+	{
+		if (FClassnameIs(wpn, "weapon_ar3"))
+		{
+			ShouldDisplayAmmo = false;
+		}
+	}
+#endif
+
+#ifdef C17
+	if (!wpn || !player || !wpn->UsesPrimaryAmmo() || !ShouldDisplayAmmo)
+#else
 	if ( !wpn || !player || !wpn->UsesPrimaryAmmo() )
+#endif
 	{
 		hudlcd->SetGlobalStat( "(ammo_primary)", "n/a" );
         hudlcd->SetGlobalStat( "(ammo_secondary)", "n/a" );
 
 		SetPaintEnabled(false);
+#ifndef C17
 		SetPaintBackgroundEnabled(false);
+#endif
 		return;
 	}
 
 	SetPaintEnabled(true);
+#ifndef C17
 	SetPaintBackgroundEnabled(true);
+#endif
 
 	// Get our icons for the ammo types
 	m_iconPrimaryAmmo = gWR.GetAmmoIconFromWeapon( wpn->GetPrimaryAmmoType() );
@@ -195,12 +220,16 @@ void CHudAmmo::UpdateVehicleAmmo( C_BasePlayer *player, IClientVehicle *pVehicle
 	if ( !pVehicleEnt || pVehicle->GetPrimaryAmmoType() < 0 )
 	{
 		SetPaintEnabled(false);
+#ifndef C17
 		SetPaintBackgroundEnabled(false);
+#endif
 		return;
 	}
 
 	SetPaintEnabled(true);
+#ifndef C17
 	SetPaintBackgroundEnabled(true);
+#endif
 
 	// get the ammo in our clip
 	int ammo1 = pVehicle->GetPrimaryAmmoClip();
@@ -364,6 +393,11 @@ public:
 		m_iAmmo = -1;
 
 		SetHiddenBits( HIDEHUD_HEALTH | HIDEHUD_WEAPONSELECTION | HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT );
+
+#ifdef C17
+		SetPaintBackgroundEnabled(false);
+		SetPaintBorderEnabled(false);
+#endif
 	}
 
 	void Init( void )
@@ -451,13 +485,17 @@ protected:
 		{
 			m_hCurrentActiveWeapon = NULL;
 			SetPaintEnabled(false);
+#ifndef C17
 			SetPaintBackgroundEnabled(false);
+#endif
 			return;
 		}
 		else
 		{
 			SetPaintEnabled(true);
+#ifndef C17
 			SetPaintBackgroundEnabled(true);
+#endif
 		}
 
 		UpdateAmmoState();

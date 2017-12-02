@@ -16,6 +16,11 @@
 #include "tier0/vprof.h"
 #include "fx.h"
 #include "fx_water.h"
+#ifdef C17
+#include "particle_parse.h"
+#include "city17/c17_screeneffects.h"
+#include "ScreenSpaceEffects.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -32,6 +37,20 @@ CLIENTEFFECT_REGISTER_END()
 #define	SPLASH_MAX_SPEED	100.0f
 
 ConVar	cl_show_splashes( "cl_show_splashes", "1" );
+#ifdef C17
+ConVar	cl_particle_water("cl_particle_water", "1", FCVAR_ARCHIVE);
+
+//City 17: Screen Effect Values
+ConVar	cl_water_splash_amount("cl_water_splash_amount", "0.1", FCVAR_CHEAT);
+ConVar	cl_water_splash_viscosity("cl_water_splash_viscosity", "0.15", FCVAR_CHEAT);
+ConVar	cl_water_splash_amount_ragdoll("cl_water_splash_amount_ragdoll", "0.1", FCVAR_CHEAT);
+ConVar	cl_water_splash_viscosity_ragdoll("cl_water_splash_viscosity_ragdoll", "0.1", FCVAR_CHEAT);
+ConVar	cl_water_splash_amount_gunshot("cl_water_splash_amount_gunshot", "0.1", FCVAR_CHEAT);
+ConVar	cl_water_splash_viscosity_gunshot("cl_water_splash_viscosity_gunshot", "0.15", FCVAR_CHEAT);
+ConVar	cl_water_splash_distance("cl_water_splash_distance", "50", FCVAR_CHEAT);
+ConVar	cl_water_splash_distance_ragdoll("cl_water_splash_distance_ragdoll", "30", FCVAR_CHEAT);
+ConVar	cl_water_splash_distance_gunshot("cl_water_splash_distance_gunshot", "75", FCVAR_CHEAT);
+#endif
 
 static Vector s_vecSlimeColor( 46.0f/255.0f, 90.0f/255.0f, 36.0f/255.0f );
 
@@ -80,35 +99,59 @@ void UTIL_GetNormalizedColorTintAndLuminosity( const Vector &color, Vector *tint
 //			&normal - 
 //			scale - 
 //-----------------------------------------------------------------------------
+#ifdef C17
+void FX_WaterRipple(const Vector &origin, float scale, Vector *pColor, float flLifetime, float flAlpha, bool ragdoll)
+#else
 void FX_WaterRipple( const Vector &origin, float scale, Vector *pColor, float flLifetime, float flAlpha )
+#endif
 {
 	VPROF_BUDGET( "FX_WaterRipple", VPROF_BUDGETGROUP_PARTICLE_RENDERING );
-	trace_t	tr;
 
-	Vector	color = pColor ? *pColor : Vector( 0.8f, 0.8f, 0.75f );
-
-	Vector startPos = origin + Vector(0,0,8);
-	Vector endPos = origin + Vector(0,0,-64);
-
-	UTIL_TraceLine( startPos, endPos, MASK_WATER, NULL, COLLISION_GROUP_NONE, &tr );
-	
-	if ( tr.fraction < 1.0f )
+#ifdef C17
+	if (cl_particle_water.GetBool())
 	{
-		//Add a ripple quad to the surface
-		FX_AddQuad( tr.endpos + ( tr.plane.normal * 0.5f ), 
-					tr.plane.normal, 
-					16.0f*scale, 
-					128.0f*scale, 
-					0.7f,
-					flAlpha,	// start alpha
-					0.0f,		// end alpha
-					0.25f,
-					random->RandomFloat( 0, 360 ),
-					random->RandomFloat( -16.0f, 16.0f ),
-					color, 
-					flLifetime, 
-					"effects/splashwake1", 
-					(FXQUAD_BIAS_SCALE|FXQUAD_BIAS_ALPHA) );
+		QAngle vecAngles;
+		VectorAngles(Vector(0, 0, 1), vecAngles);
+
+		if (ragdoll)
+		{
+			DispatchParticleEffect("c17_waterfx_splash_ragdoll_cheap", origin, vecAngles);
+		}
+		else
+		{
+			DispatchParticleEffect("c17_waterfx_splash_cheap", origin, vecAngles);
+		}
+	}
+	else
+#endif
+	{
+		trace_t	tr;
+
+		Vector	color = pColor ? *pColor : Vector(0.8f, 0.8f, 0.75f);
+
+		Vector startPos = origin + Vector(0, 0, 8);
+		Vector endPos = origin + Vector(0, 0, -64);
+
+		UTIL_TraceLine(startPos, endPos, MASK_WATER, NULL, COLLISION_GROUP_NONE, &tr);
+
+		if (tr.fraction < 1.0f)
+		{
+			//Add a ripple quad to the surface
+			FX_AddQuad(tr.endpos + (tr.plane.normal * 0.5f),
+				tr.plane.normal,
+				16.0f*scale,
+				128.0f*scale,
+				0.7f,
+				flAlpha,	// start alpha
+				0.0f,		// end alpha
+				0.25f,
+				random->RandomFloat(0, 360),
+				random->RandomFloat(-16.0f, 16.0f),
+				color,
+				flLifetime,
+				"effects/splashwake1",
+				(FXQUAD_BIAS_SCALE | FXQUAD_BIAS_ALPHA));
+		}
 	}
 }
 
@@ -117,135 +160,207 @@ void FX_WaterRipple( const Vector &origin, float scale, Vector *pColor, float fl
 // Input  : &origin - 
 //			&normal - 
 //-----------------------------------------------------------------------------
-void FX_GunshotSplash( const Vector &origin, const Vector &normal, float scale )
+#ifdef C17
+void FX_GunshotSplash(const Vector &origin, const Vector &normal, float scale, bool gunshot, bool ragdoll)
+#else
+void FX_GunshotSplash(const Vector &origin, const Vector &normal, float scale)
+#endif
 {
-	VPROF_BUDGET( "FX_GunshotSplash", VPROF_BUDGETGROUP_PARTICLE_RENDERING );
-	
-	if ( cl_show_splashes.GetBool() == false )
+	VPROF_BUDGET("FX_GunshotSplash", VPROF_BUDGETGROUP_PARTICLE_RENDERING);
+
+	if (cl_show_splashes.GetBool() == false)
 		return;
 
-	Vector	color;
-	float	luminosity;
-	
-	// Get our lighting information
-	FX_GetSplashLighting( origin + ( normal * scale ), &color, &luminosity );
+#ifdef C17
+	//City 17: Splash screeneffect params.
+	KeyValues *pKeys = new KeyValues("keys");
+	float maxdist;
 
-	float flScale = scale / 8.0f;
-
-	if ( flScale > 4.0f )
+	if (cl_particle_water.GetBool())
 	{
-		flScale = 4.0f;
+		QAngle vecAngles;
+		VectorAngles(normal, vecAngles);
+		if (ragdoll)
+		{
+			DispatchParticleEffect("c17_waterfx_splash_ragdoll", origin, vecAngles);
+
+			//City 17: Splash params.
+			pKeys->SetFloat("amount", cl_water_splash_amount_ragdoll.GetFloat());
+			pKeys->SetFloat("viscosity", cl_water_splash_viscosity_ragdoll.GetFloat());
+			maxdist = cl_water_splash_distance_ragdoll.GetFloat();
+		}
+		else
+		{
+			if (gunshot)
+			{
+				DispatchParticleEffect("c17_waterfx_splash_gunshot", origin, vecAngles);
+
+				//City 17: Splash params.
+				pKeys->SetFloat("amount", cl_water_splash_amount_gunshot.GetFloat());
+				pKeys->SetFloat("viscosity", cl_water_splash_viscosity_gunshot.GetFloat());
+				maxdist = cl_water_splash_distance_gunshot.GetFloat();
+			}
+			else
+			{
+				DispatchParticleEffect("c17_waterfx_splash_main", origin, vecAngles);
+
+				//City 17: Splash params.
+				pKeys->SetFloat("amount", cl_water_splash_amount.GetFloat());
+				pKeys->SetFloat("viscosity", cl_water_splash_viscosity.GetFloat());
+				maxdist = cl_water_splash_distance.GetFloat();
+			}
+		}
+	}
+	else
+#endif
+	{
+		Vector	color;
+		float	luminosity;
+
+		// Get our lighting information
+		FX_GetSplashLighting(origin + (normal * scale), &color, &luminosity);
+
+		float flScale = scale / 8.0f;
+
+		if (flScale > 4.0f)
+		{
+			flScale = 4.0f;
+		}
+
+		// Setup our trail emitter
+		CSmartPtr<CTrailParticles> sparkEmitter = CTrailParticles::Create("splash");
+
+		if (!sparkEmitter)
+			return;
+
+		sparkEmitter->SetSortOrigin(origin);
+		sparkEmitter->m_ParticleCollision.SetGravity(800.0f);
+		sparkEmitter->SetFlag(bitsPARTICLE_TRAIL_VELOCITY_DAMPEN);
+		sparkEmitter->SetVelocityDampen(2.0f);
+		sparkEmitter->GetBinding().SetBBox(origin - Vector(32, 32, 32), origin + Vector(32, 32, 32));
+
+		PMaterialHandle	hMaterial = ParticleMgr()->GetPMaterial("effects/splash2");
+
+		TrailParticle	*tParticle;
+
+		Vector	offDir;
+		Vector	offset;
+		float	colorRamp;
+
+		//Dump out drops
+		for (int i = 0; i < 16; i++)
+		{
+			offset = origin;
+			offset[0] += random->RandomFloat(-8.0f, 8.0f) * flScale;
+			offset[1] += random->RandomFloat(-8.0f, 8.0f) * flScale;
+
+			tParticle = (TrailParticle *)sparkEmitter->AddParticle(sizeof(TrailParticle), hMaterial, offset);
+
+			if (tParticle == NULL)
+				break;
+
+			tParticle->m_flLifetime = 0.0f;
+			tParticle->m_flDieTime = random->RandomFloat(0.25f, 0.5f);
+
+			offDir = normal + RandomVector(-0.8f, 0.8f);
+
+			tParticle->m_vecVelocity = offDir * random->RandomFloat(SPLASH_MIN_SPEED * flScale * 3.0f, SPLASH_MAX_SPEED * flScale * 3.0f);
+			tParticle->m_vecVelocity[2] += random->RandomFloat(32.0f, 64.0f) * flScale;
+
+			tParticle->m_flWidth = random->RandomFloat(1.0f, 3.0f);
+			tParticle->m_flLength = random->RandomFloat(0.025f, 0.05f);
+
+			colorRamp = random->RandomFloat(0.75f, 1.25f);
+
+			tParticle->m_color.r = MIN(1.0f, color[0] * colorRamp) * 255;
+			tParticle->m_color.g = MIN(1.0f, color[1] * colorRamp) * 255;
+			tParticle->m_color.b = MIN(1.0f, color[2] * colorRamp) * 255;
+			tParticle->m_color.a = luminosity * 255;
+		}
+
+		// Setup the particle emitter
+		CSmartPtr<CSplashParticle> pSimple = CSplashParticle::Create("splish");
+		pSimple->SetSortOrigin(origin);
+		pSimple->SetClipHeight(origin.z);
+		pSimple->SetParticleCullRadius(scale * 2.0f);
+		pSimple->GetBinding().SetBBox(origin - Vector(32, 32, 32), origin + Vector(32, 32, 32));
+
+		SimpleParticle	*pParticle;
+
+		//Main gout
+		for (int i = 0; i < 8; i++)
+		{
+			pParticle = (SimpleParticle *)pSimple->AddParticle(sizeof(SimpleParticle), hMaterial, origin);
+
+			if (pParticle == NULL)
+				break;
+
+			pParticle->m_flLifetime = 0.0f;
+			pParticle->m_flDieTime = 2.0f;	//NOTENOTE: We use a clip plane to realistically control our lifespan
+
+			pParticle->m_vecVelocity.Random(-0.2f, 0.2f);
+			pParticle->m_vecVelocity += (normal * random->RandomFloat(4.0f, 6.0f));
+
+			VectorNormalize(pParticle->m_vecVelocity);
+
+			pParticle->m_vecVelocity *= 50 * flScale * (8 - i);
+
+			colorRamp = random->RandomFloat(0.75f, 1.25f);
+
+			pParticle->m_uchColor[0] = MIN(1.0f, color[0] * colorRamp) * 255.0f;
+			pParticle->m_uchColor[1] = MIN(1.0f, color[1] * colorRamp) * 255.0f;
+			pParticle->m_uchColor[2] = MIN(1.0f, color[2] * colorRamp) * 255.0f;
+
+			pParticle->m_uchStartSize = 24 * flScale * RemapValClamped(i, 7, 0, 1, 0.5f);
+			pParticle->m_uchEndSize = MIN(255, pParticle->m_uchStartSize * 2);
+
+			pParticle->m_uchStartAlpha = RemapValClamped(i, 7, 0, 255, 32) * luminosity;
+			pParticle->m_uchEndAlpha = 0;
+
+			pParticle->m_flRoll = random->RandomInt(0, 360);
+			pParticle->m_flRollDelta = random->RandomFloat(-4.0f, 4.0f);
+		}
+
+#ifdef C17
+		//City 17: Splash params.
+		pKeys->SetFloat("amount", cl_water_splash_amount.GetFloat());
+		pKeys->SetFloat("viscosity", cl_water_splash_viscosity.GetFloat());
+		maxdist = cl_water_splash_distance.GetFloat();
+#endif
+
+		// Do a ripple
+		FX_WaterRipple(origin, flScale, &color, 1.5f, luminosity);
 	}
 
-	// Setup our trail emitter
-	CSmartPtr<CTrailParticles> sparkEmitter = CTrailParticles::Create( "splash" );
-
-	if ( !sparkEmitter )
-		return;
-
-	sparkEmitter->SetSortOrigin( origin );
-	sparkEmitter->m_ParticleCollision.SetGravity( 800.0f );
-	sparkEmitter->SetFlag( bitsPARTICLE_TRAIL_VELOCITY_DAMPEN );
-	sparkEmitter->SetVelocityDampen( 2.0f );
-	sparkEmitter->GetBinding().SetBBox( origin - Vector( 32, 32, 32 ), origin + Vector( 32, 32, 32 ) );
-
-	PMaterialHandle	hMaterial = ParticleMgr()->GetPMaterial( "effects/splash2" );
-
-	TrailParticle	*tParticle;
-
-	Vector	offDir;
-	Vector	offset;
-	float	colorRamp;
-
-	//Dump out drops
-	for ( int i = 0; i < 16; i++ )
+#ifdef C17
+	//City 17: Dispatch the water screen effect.
+	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
+	if (pPlayer)
 	{
-		offset = origin;
-		offset[0] += random->RandomFloat( -8.0f, 8.0f ) * flScale;
-		offset[1] += random->RandomFloat( -8.0f, 8.0f ) * flScale;
-
-		tParticle = (TrailParticle *) sparkEmitter->AddParticle( sizeof(TrailParticle), hMaterial, offset );
-
-		if ( tParticle == NULL )
-			break;
-
-		tParticle->m_flLifetime	= 0.0f;
-		tParticle->m_flDieTime	= random->RandomFloat( 0.25f, 0.5f );
-
-		offDir = normal + RandomVector( -0.8f, 0.8f );
-
-		tParticle->m_vecVelocity = offDir * random->RandomFloat( SPLASH_MIN_SPEED * flScale * 3.0f, SPLASH_MAX_SPEED * flScale * 3.0f );
-		tParticle->m_vecVelocity[2] += random->RandomFloat( 32.0f, 64.0f ) * flScale;
-
-		tParticle->m_flWidth		= random->RandomFloat( 1.0f, 3.0f );
-		tParticle->m_flLength		= random->RandomFloat( 0.025f, 0.05f );
-
-		colorRamp = random->RandomFloat( 0.75f, 1.25f );
-
-		tParticle->m_color.r = MIN( 1.0f, color[0] * colorRamp ) * 255;
-		tParticle->m_color.g = MIN( 1.0f, color[1] * colorRamp ) * 255;
-		tParticle->m_color.b = MIN( 1.0f, color[2] * colorRamp ) * 255;
-		tParticle->m_color.a = luminosity * 255;
+		//Check our distance.
+		Vector delta = origin - pPlayer->GetAbsOrigin();
+		if (delta.Length() <= maxdist)
+		{
+			//Dispatch
+			g_pScreenSpaceEffects->SetScreenSpaceEffectParams("c17_waterfx", pKeys);
+			pKeys->deleteThis();
+		}
 	}
-
-	// Setup the particle emitter
-	CSmartPtr<CSplashParticle> pSimple = CSplashParticle::Create( "splish" );
-	pSimple->SetSortOrigin( origin );
-	pSimple->SetClipHeight( origin.z );
-	pSimple->SetParticleCullRadius( scale * 2.0f );
-	pSimple->GetBinding().SetBBox( origin - Vector( 32, 32, 32 ), origin + Vector( 32, 32, 32 ) );
-
-	SimpleParticle	*pParticle;
-
-	//Main gout
-	for ( int i = 0; i < 8; i++ )
-	{
-		pParticle = (SimpleParticle *) pSimple->AddParticle( sizeof( SimpleParticle ), hMaterial, origin );
-
-		if ( pParticle == NULL )
-			break;
-
-		pParticle->m_flLifetime = 0.0f;
-		pParticle->m_flDieTime	= 2.0f;	//NOTENOTE: We use a clip plane to realistically control our lifespan
-
-		pParticle->m_vecVelocity.Random( -0.2f, 0.2f );
-		pParticle->m_vecVelocity += ( normal * random->RandomFloat( 4.0f, 6.0f ) );
-		
-		VectorNormalize( pParticle->m_vecVelocity );
-
-		pParticle->m_vecVelocity *= 50 * flScale * (8-i);
-		
-		colorRamp = random->RandomFloat( 0.75f, 1.25f );
-
-		pParticle->m_uchColor[0]	= MIN( 1.0f, color[0] * colorRamp ) * 255.0f;
-		pParticle->m_uchColor[1]	= MIN( 1.0f, color[1] * colorRamp ) * 255.0f;
-		pParticle->m_uchColor[2]	= MIN( 1.0f, color[2] * colorRamp ) * 255.0f;
-		
-		pParticle->m_uchStartSize	= 24 * flScale * RemapValClamped( i, 7, 0, 1, 0.5f );
-		pParticle->m_uchEndSize		= MIN( 255, pParticle->m_uchStartSize * 2 );
-		
-		pParticle->m_uchStartAlpha	= RemapValClamped( i, 7, 0, 255, 32 ) * luminosity;
-		pParticle->m_uchEndAlpha	= 0;
-		
-		pParticle->m_flRoll			= random->RandomInt( 0, 360 );
-		pParticle->m_flRollDelta	= random->RandomFloat( -4.0f, 4.0f );
-	}
-
-	// Do a ripple
-	FX_WaterRipple( origin, flScale, &color, 1.5f, luminosity );
+#endif
 
 	//Play a sound
 	CLocalPlayerFilter filter;
 
 	EmitSound_t ep;
 	ep.m_nChannel = CHAN_VOICE;
-	ep.m_pSoundName =  "Physics.WaterSplash";
+	ep.m_pSoundName = "Physics.WaterSplash";
 	ep.m_flVolume = 1.0f;
 	ep.m_SoundLevel = SNDLVL_NORM;
 	ep.m_pOrigin = &origin;
 
 
-	C_BaseEntity::EmitSound( filter, SOUND_FROM_WORLD, ep );
+	C_BaseEntity::EmitSound(filter, SOUND_FROM_WORLD, ep);
+
 }
 
 //-----------------------------------------------------------------------------
@@ -414,9 +529,11 @@ void FX_GunshotSlimeSplash( const Vector &origin, const Vector &normal, float sc
 //-----------------------------------------------------------------------------
 void SplashCallback( const CEffectData &data )
 {
+#ifndef C17
 	Vector	normal;
 
 	AngleVectors( data.m_vAngles, &normal );
+#endif
 
 	if ( data.m_fFlags & FX_WATER_IN_SLIME )
 	{
@@ -443,7 +560,11 @@ void GunshotSplashCallback( const CEffectData &data )
 	}
 	else
 	{
+#ifdef C17
+		FX_GunshotSplash(data.m_vOrigin, Vector(0, 0, 1), data.m_flScale, true);
+#else
 		FX_GunshotSplash( data.m_vOrigin, Vector(0,0,1), data.m_flScale );
+#endif
 	}
 }
 

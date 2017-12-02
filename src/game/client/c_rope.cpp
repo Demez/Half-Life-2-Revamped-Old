@@ -80,7 +80,11 @@ static ConVar rope_smooth_maxalpha( "rope_smooth_maxalpha", "0.5", 0, "Alpha for
 
 static ConVar mat_fullbright( "mat_fullbright", "0", FCVAR_CHEAT ); // get it from the engine
 static ConVar r_drawropes( "r_drawropes", "1", FCVAR_CHEAT );
+#ifdef C17
+ConVar r_queued_ropes("r_queued_ropes", "0", FCVAR_ARCHIVE);
+#else
 static ConVar r_queued_ropes( "r_queued_ropes", "1" );
+#endif
 static ConVar r_ropetranslucent( "r_ropetranslucent", "1");
 static ConVar r_rope_holiday_light_scale( "r_rope_holiday_light_scale", "0.055", FCVAR_DEVELOPMENTONLY );
 static ConVar r_ropes_holiday_lights_allowed( "r_ropes_holiday_lights_allowed", "1", FCVAR_DEVELOPMENTONLY );

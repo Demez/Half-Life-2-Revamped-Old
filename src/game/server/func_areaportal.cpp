@@ -47,6 +47,9 @@ public:
 private:
 	bool	UpdateState( void );
 
+#ifdef C17
+protected:
+#endif
 	int		m_state;
 };
 
@@ -189,3 +192,167 @@ int CAreaPortal::UpdateTransmitState()
 	return SetTransmitState( FL_EDICT_DONTSEND );
 }
 
+#ifdef C17
+class CAreaPortalOneWay : public CAreaPortal
+{
+	DECLARE_CLASS(CAreaPortalOneWay, CAreaPortal);
+	DECLARE_DATADESC();
+
+public:
+	Vector	 m_vecOpenVector;
+	bool	 m_bAvoidPop;
+	bool	 m_bOneWayActive;
+
+	void Spawn();
+	void Activate();
+	int  Restore(IRestore &restore);
+	bool UpdateVisibility(const Vector &vOrigin, float fovDistanceAdjustFactor, bool &bIsOpenOnClient);
+
+	void InputDisableOneWay(inputdata_t &inputdata);
+	void InputEnableOneWay(inputdata_t &inputdata);
+	void InputToggleOneWay(inputdata_t &inputdata);
+	void InputInvertOneWay(inputdata_t &inputdata);
+
+protected:
+	void RemoteUpdate(bool IsOpen);
+
+	bool m_bRemotelyUpdated;
+	bool m_bRemoteCalcWasOpen;
+	CHandle<CAreaPortalOneWay> m_hNextPortal;
+	CAreaPortalOneWay* m_pNextPortal;
+
+private:
+	void UpdateNextPortal(bool IsOpen);
+
+	string_t m_strGroupName;
+	Vector	 m_vecOrigin_;
+};
+
+LINK_ENTITY_TO_CLASS(func_areaportal_oneway, CAreaPortalOneWay);
+
+BEGIN_DATADESC(CAreaPortalOneWay)
+DEFINE_KEYFIELD(m_vecOpenVector, FIELD_VECTOR, "onewayfacing"),
+DEFINE_KEYFIELD(m_bAvoidPop, FIELD_BOOLEAN, "avoidpop"),
+DEFINE_KEYFIELD_NOT_SAVED(m_vecOrigin_, FIELD_VECTOR, "origin_"),
+DEFINE_KEYFIELD_NOT_SAVED(m_strGroupName, FIELD_STRING, "group"),
+DEFINE_FIELD(m_bOneWayActive, FIELD_BOOLEAN),
+DEFINE_FIELD(m_hNextPortal, FIELD_EHANDLE),
+DEFINE_INPUTFUNC(FIELD_VOID, "DisableOneWay", InputDisableOneWay),
+DEFINE_INPUTFUNC(FIELD_VOID, "EnableOneWay", InputEnableOneWay),
+DEFINE_INPUTFUNC(FIELD_VOID, "ToggleOneWay", InputToggleOneWay),
+DEFINE_INPUTFUNC(FIELD_VOID, "InvertOneWay", InputInvertOneWay),
+END_DATADESC()
+
+void CAreaPortalOneWay::Spawn()
+{
+	QAngle angOpenDir = QAngle(m_vecOpenVector.x, m_vecOpenVector.y, m_vecOpenVector.z);
+	AngleVectors(angOpenDir, &m_vecOpenVector);
+
+	SetLocalOrigin(m_vecOrigin_);
+	m_bOneWayActive = true;
+	m_bRemotelyUpdated = false;
+
+	BaseClass::Spawn();
+}
+
+void CAreaPortalOneWay::Activate()
+{
+	if (m_strGroupName != NULL_STRING)
+		for (unsigned short i = m_AreaPortalsElement; i != g_AreaPortals.InvalidIndex(); i = g_AreaPortals.Next(i))
+		{
+			CAreaPortalOneWay* pCur = dynamic_cast<CAreaPortalOneWay*>(g_AreaPortals[i]);
+
+			if (pCur && pCur != this && strcmp(STRING(m_strGroupName), STRING(pCur->m_strGroupName)) == 0)
+			{
+				m_pNextPortal = pCur;
+				m_hNextPortal = pCur;
+				break;
+			}
+		}
+
+	BaseClass::Activate();
+}
+
+int CAreaPortalOneWay::Restore(IRestore &restore)
+{
+	if (m_hNextPortal.IsValid())
+		m_pNextPortal = m_hNextPortal.Get();
+
+	return BaseClass::Restore(restore);
+}
+
+void CAreaPortalOneWay::InputDisableOneWay(inputdata_t &inputdata)
+{
+	m_bOneWayActive = false;
+}
+
+void CAreaPortalOneWay::InputEnableOneWay(inputdata_t &inputdata)
+{
+	m_bOneWayActive = true;
+}
+
+void CAreaPortalOneWay::InputToggleOneWay(inputdata_t &inputdata)
+{
+	m_bOneWayActive = !m_bOneWayActive;
+}
+
+void CAreaPortalOneWay::InputInvertOneWay(inputdata_t &inputdata)
+{
+	m_vecOpenVector.Negate();
+}
+
+void CAreaPortalOneWay::RemoteUpdate(bool IsOpen)
+{
+	m_bRemotelyUpdated = true;
+	m_bRemoteCalcWasOpen = IsOpen;
+	UpdateNextPortal(IsOpen);
+}
+
+inline void CAreaPortalOneWay::UpdateNextPortal(bool IsOpen)
+{
+	if (m_pNextPortal)
+		m_pNextPortal->RemoteUpdate(IsOpen);
+}
+
+#define VIEWER_PADDING 80
+
+bool CAreaPortalOneWay::UpdateVisibility(const Vector &vOrigin, float fovDistanceAdjustFactor, bool &bIsOpenOnClient)
+{
+	if (!m_bOneWayActive)
+		return BaseClass::UpdateVisibility(vOrigin, fovDistanceAdjustFactor, bIsOpenOnClient);
+
+	if (m_portalNumber == -1 || m_state == AREAPORTAL_CLOSED)
+	{
+		bIsOpenOnClient = false;
+		return false;
+	}
+
+	if (m_bRemotelyUpdated)
+	{
+		m_bRemotelyUpdated = false;
+		return m_bRemoteCalcWasOpen ? BaseClass::UpdateVisibility(vOrigin, fovDistanceAdjustFactor, bIsOpenOnClient) : false;
+	}
+
+	float dist = VIEWER_PADDING;
+	VPlane plane;
+	if (engine->GetAreaPortalPlane(vOrigin, m_portalNumber, &plane))
+		dist = plane.DistTo(vOrigin);
+
+	float dot = DotProduct(m_vecOpenVector, vOrigin - GetLocalOrigin());
+
+	if (dot > 0)
+	{
+		UpdateNextPortal(true);
+
+		return dist < -VIEWER_PADDING ? false : true;
+	}
+	else
+	{
+		if (!m_bAvoidPop || (m_bAvoidPop && dist > VIEWER_PADDING))
+			bIsOpenOnClient = false;
+
+		UpdateNextPortal(false);
+		return false;
+	}
+}
+#endif

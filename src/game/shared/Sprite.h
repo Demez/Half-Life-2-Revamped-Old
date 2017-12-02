@@ -245,6 +245,11 @@ public:
 	CNetworkVar( int, m_nAttachment );
 	CNetworkVar( float, m_flSpriteFramerate );
 	CNetworkVar( float, m_flFrame );
+
+#ifdef C17
+	CNetworkVar(bool, m_bDrawWithSunShafts);
+#endif
+
 #ifdef PORTAL
 	CNetworkVar( bool, m_bDrawInMainRender );
 	CNetworkVar( bool, m_bDrawInPortalRender );

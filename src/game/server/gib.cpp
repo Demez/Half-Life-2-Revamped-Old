@@ -66,11 +66,13 @@ void CGib::SpawnStickyGibs( CBaseEntity *pVictim, Vector vecOrigin, int cGibs )
 {
 	int i;
 
+#ifndef C17
 	if ( g_Language.GetInt() == LANGUAGE_GERMAN )
 	{
 		// no sticky gibs in germany right now!
 		return; 
 	}
+#endif
 
 	for ( i = 0 ; i < cGibs ; i++ )
 	{
@@ -119,12 +121,14 @@ void CGib::SpawnHeadGib( CBaseEntity *pVictim )
 {
 	CGib *pGib = CREATE_ENTITY( CGib, "gib" );
 
+#ifndef C17
 	if ( g_Language.GetInt() == LANGUAGE_GERMAN )
 	{
 		pGib->Spawn( "models/germangibs.mdl" );// throw one head
 		pGib->m_nBody = 0;
 	}
 	else
+#endif
 	{
 		pGib->Spawn( "models/gibs/hgibs.mdl" );// throw one head
 		pGib->m_nBody = 0;
@@ -276,7 +280,11 @@ void CGib::SpawnSpecificGibs(	CBaseEntity*	pVictim,
 	for (int i=0;i<nNumGibs;i++)
 	{
 		CGib *pGib = CREATE_ENTITY( CGib, "gib" );
+#ifdef C17
+		pGib->Spawn(cModelName, flLifetime);
+#else
 		pGib->Spawn( cModelName );
+#endif
 		pGib->m_nBody = i;
 		pGib->InitGib( pVictim, vMinVelocity, vMaxVelocity );
 		pGib->m_lifeTime = flLifetime;
@@ -285,6 +293,14 @@ void CGib::SpawnSpecificGibs(	CBaseEntity*	pVictim,
 		{
 			pGib->SetOwnerEntity( pVictim );
 		}
+
+#ifdef C17
+		//If pVictim is on fire, ignite pVictim's gibs as well.
+		if (pVictim->GetFlags() & FL_ONFIRE)
+		{
+			pGib->Ignite((flLifetime - 1), false);
+		}
+#endif
 	}
 }
 
@@ -301,12 +317,14 @@ void CGib::SpawnRandomGibs( CBaseEntity *pVictim, int cGibs, GibType_e eGibType 
 	{
 		CGib *pGib = CREATE_ENTITY( CGib, "gib" );
 
+#ifndef C17
 		if ( g_Language.GetInt() == LANGUAGE_GERMAN )
 		{
 			pGib->Spawn( "models/germangibs.mdl" );
 			pGib->m_nBody = random->RandomInt(0,GERMAN_GIB_COUNT-1);
 		}
 		else
+#endif
 		{
 			switch (eGibType)
 			{
@@ -525,7 +543,12 @@ void CGib::BounceGibTouch ( CBaseEntity *pOther )
 	}
 	else
 	{
+#ifdef C17
+		//City17: Germany Violence Fix.
+		if ( /*g_Language.GetInt() != LANGUAGE_GERMAN &&*/ m_cBloodDecals > 0 && m_bloodColor != DONT_BLEED)
+#else
 		if ( g_Language.GetInt() != LANGUAGE_GERMAN && m_cBloodDecals > 0 && m_bloodColor != DONT_BLEED )
+#endif
 		{
 			vecSpot = GetAbsOrigin() + Vector ( 0 , 0 , 8 );//move up a bit, and trace down.
 			UTIL_TraceLine ( vecSpot, vecSpot + Vector ( 0, 0, -24 ),  MASK_SOLID_BRUSHONLY, this, COLLISION_GROUP_NONE, &tr);

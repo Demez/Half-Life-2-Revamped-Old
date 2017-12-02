@@ -15,7 +15,6 @@ $MacroRequired "GAMENAME"
 
 $Include "$SRCDIR\vpc_scripts\source_dll_base.vpc"
 $include "$SRCDIR\vpc_scripts\protobuf_builder.vpc"
-$include "$SRCDIR\vpc_scripts\protobuf_builder.vpc"
 $Include "$SRCDIR\vpc_scripts\source_replay.vpc"	[$TF]
 $Include "$SRCDIR\game\protobuf_include.vpc"
 
@@ -53,7 +52,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	".\;$BASE;$SRCDIR\vgui2\include;$SRCDIR\vgui2\controls;$SRCDIR\game\shared;.\game_controls;$SRCDIR\thirdparty\sixensesdk\include"
-		$PreprocessorDefinitions		"$BASE;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead;" 
+		$PreprocessorDefinitions		"$BASE;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead" 
 		$PreprocessorDefinitions		"$BASE;ENABLE_CHROMEHTMLWINDOW;fopen=dont_use_fopen" [$WIN32]
 		$PreprocessorDefinitions		"$BASE;ENABLE_CHROMEHTMLWINDOW;" [$OSXALL]
 		$PreprocessorDefinitions		"$BASE;ENABLE_CHROMEHTMLWINDOW;USE_WEBM_FOR_REPLAY;" [$LINUXALL]
@@ -502,19 +501,9 @@ $Project
 		$File	"$SRCDIR\game\shared\mp_shareddefs.cpp"
 		$File	"$SRCDIR\game\client\c_vote_controller.h"
 		$File	"$SRCDIR\game\client\c_vote_controller.cpp"
-		
 		//Haptics
 		$File	"$SRCDIR\public\haptics\haptic_msgs.cpp"	[!$X360]
 		$File	"$SRCDIR\public\haptics\haptic_utils.cpp"	[$WIN32&&!$X360]
-		
-		//new stuff
-		$File	"c_sunlightshadowcontrol.cpp" //Real Time World Lighting
-		$File	"worldlight.cpp" //Dynamic RTT shadows
-		$File	"worldlight.h" //Dynamic RTT shadows
-		$File 	"c_env_projectedtexture.h"
-		$File	"flashlight_shared.cpp"
-		$File	"flashlight_shared.h"
-		
 
 		$Folder	"Sixense"
 		{

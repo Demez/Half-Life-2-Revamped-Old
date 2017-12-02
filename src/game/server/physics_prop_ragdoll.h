@@ -50,6 +50,10 @@ public:
 	virtual void VPhysicsUpdate( IPhysicsObject *pPhysics );
 	virtual int VPhysicsGetObjectList( IPhysicsObject **pList, int listMax );
 
+#ifdef C17
+	//virtual int BloodColor() { return BLOOD_COLOR_RED; };
+#endif
+
 	virtual int DrawDebugTextOverlays(void);
 
 	// Response system stuff
@@ -104,6 +108,10 @@ public:
 	void			InputTurnOn( inputdata_t &inputdata );
 	void			InputTurnOff( inputdata_t &inputdata );
 	void			InputFadeAndRemove( inputdata_t &inputdata );
+#ifdef C17
+	void			InputEnableBleeding(inputdata_t &inputdata);
+	void			InputDisableBleeding(inputdata_t &inputdata);
+#endif
 
 	DECLARE_DATADESC();
 
@@ -129,6 +137,9 @@ private:
 	unsigned int		m_lastUpdateTickCount;
 	bool				m_allAsleep;
 	bool				m_bFirstCollisionAfterLaunch;
+#ifdef C17
+	bool				m_bShouldBleed;
+#endif
 	EHANDLE				m_hDamageEntity;
 	EHANDLE				m_hKiller;	// Who killed me?
 	CHandle<CBasePlayer>	m_hPhysicsAttacker;

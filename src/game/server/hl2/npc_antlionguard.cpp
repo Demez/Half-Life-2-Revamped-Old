@@ -3175,7 +3175,11 @@ void CNPC_AntlionGuard::SummonAntlions( void )
 
 		// Ensure it's dirt or sand
 		const surfacedata_t *pdata = physprops->GetSurfaceData( tr.surface.surfaceProps );
+#ifdef C17
+		if ((pdata->game.material != CHAR_TEX_DIRT) && (pdata->game.material != CHAR_TEX_SAND) && (pdata->game.material != CHAR_TEX_PLASTER))
+#else
 		if ( ( pdata->game.material != CHAR_TEX_DIRT ) && ( pdata->game.material != CHAR_TEX_SAND ) )
+#endif
 		{
 			if ( g_debug_antlionguard.GetInt() == 2 )
 			{

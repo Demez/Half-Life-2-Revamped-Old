@@ -15,6 +15,11 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+#ifdef C17_HAPTICS
+// Haptics addition (haptic scaler convar)
+ConVar hap_weapon_scale_machinegun("hap_weapon_scale_machinegun", "0.5", FCVAR_ARCHIVE);
+#endif
+
 IMPLEMENT_SERVERCLASS_ST( CHLMachineGun, DT_HLMachineGun )
 END_SEND_TABLE()
 
@@ -102,11 +107,13 @@ void CHLMachineGun::PrimaryAttack( void )
 
 	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), SOUNDENT_VOLUME_MACHINEGUN, 0.2, pPlayer );
 	
+#ifndef C17
 	if (!m_iClip1 && pPlayer->GetAmmoCount(m_iPrimaryAmmoType) <= 0)
 	{
 		// HEV suit - indicate out of ammo condition
 		pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0); 
 	}
+#endif
 
 	SendWeaponAnim( GetPrimaryAttackActivity() );
 	pPlayer->SetAnimation( PLAYER_ATTACK1 );
@@ -197,7 +204,12 @@ void CHLMachineGun::DoMachineGunKick( CBasePlayer *pPlayer, float dampEasy, floa
 
 	//Add it to the view punch
 	// NOTE: 0.5 is just tuned to match the old effect before the punch became simulated
-	pPlayer->ViewPunch( vecScratch * 0.5 );
+#ifdef C17_HAPTICS
+	// Haptics addition (haptic scaler convar)
+	pPlayer->ViewPunch(vecScratch * 0.5, hap_weapon_scale_machinegun.GetFloat());
+#else
+	pPlayer->ViewPunch(vecScratch * 0.5);
+#endif
 }
 
 //-----------------------------------------------------------------------------

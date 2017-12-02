@@ -152,6 +152,9 @@ public:
 	int		m_nFlags;
 	int		m_nFlameModelIndex;
 	int		m_nFlameFromAboveModelIndex;
+#ifdef C17
+	int		m_nParticleScale;
+#endif
 
 //Client-side only
 public:
@@ -185,6 +188,9 @@ protected:
 
 	// New Particle Fire Effect
 	CNewParticleEffect *m_hEffect;
+#ifdef C17
+	CNewParticleEffect *m_hRefractEffect;
+#endif
 private:
 	C_FireSmoke( const C_FireSmoke & );
 };

@@ -697,7 +697,11 @@ void CBaseDoor::UpdateAreaPortals( bool isOpen )
 		return;
 	
 	CBaseEntity *pPortal = NULL;
+#ifndef C17
 	while ( ( pPortal = gEntList.FindEntityByClassname( pPortal, "func_areaportal" ) ) != NULL )
+#else
+	while ((pPortal = gEntList.FindEntityByClassname(pPortal, "func_areaportal*")) != NULL)
+#endif
 	{
 		if ( pPortal->HasTarget( name ) )
 		{

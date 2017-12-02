@@ -28,6 +28,9 @@
 #include "tier1/convar_serverbounded.h"
 #include "cam_thirdperson.h"
 #include "inputsystem/iinputsystem.h"
+#ifdef C17
+#include "view.h"
+#endif
 
 #if defined( _X360 )
 #include "xbox/xbox_win32stubs.h"
@@ -481,7 +484,13 @@ void CInput::ApplyMouse( QAngle& viewangles, CUserCmd *cmd, float mouse_x, float
 			else
 			{
 				// Otherwize, use mouse to spin around vertical axis
+#if defined C17 && defined COMMENTED
+				viewangles[YAW] -= m_yaw.GetFloat() * mouse_x - rotate_x;
+				rotate_x = 0.0f;
+				//viewangles[YAW] -= m_yaw.GetFloat() * mouse_x;
+#else
 				viewangles[YAW] -= CAM_CapYaw( m_yaw.GetFloat() * mouse_x );
+#endif
 			}
 		}
 	}
@@ -522,7 +531,13 @@ void CInput::ApplyMouse( QAngle& viewangles, CUserCmd *cmd, float mouse_x, float
 			}
 			else
 			{
+#if defined C17 && defined COMMENTED
+				//viewangles[PITCH] += m_pitch->GetFloat() * mouse_y;
+				viewangles[PITCH] += m_pitch->GetFloat() * mouse_y - rotate_y;
+				rotate_y = 0.0f;
+#else
 				viewangles[PITCH] += m_pitch->GetFloat() * mouse_y;
+#endif
 			}
 
 			// Check pitch bounds
