@@ -19,6 +19,11 @@ ipch
 *.idb
 *.vcxproj
 *.sln
+*.sentinel
+*.vpc.sentinel
+*.vcxproj.filters
+*.filters
+*.vpc_crc
 
 # OSX/Linux build products
 *.mak
@@ -85,6 +90,12 @@ mp/*
 *.jpg
 src/game/client/Release_episodic/*
 src/game/client/Release_hl2/*
-*.vpc_crc
 *.lib
 *.pdb
+*.sentinel
+*.vpc.sentinel
+*.vcxproj.filters
+*.filters
+*.vpc_crc
+*.vpc_crc
+*.filters

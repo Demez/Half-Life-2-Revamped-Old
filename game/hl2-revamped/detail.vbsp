@@ -529,7 +529,7 @@ detail
 	//reduced size to 0.75
 	// density was 600 until 7/7/04. Reduced for global coast perf reasons - Sawyer
 	{
-		"density" "300.0"
+		"density" "3200.0" //300
 
 		Group1
 		{
@@ -537,15 +537,15 @@ detail
 			Model1
 			{
 				"sprite" "288 0 128 128 512" 
-				"spritesize" "0.5 0.0 19 25"
+				"spritesize" "0.5 0.0 25 33" //19 25
 				"spriterandomscale" "0.2"
-				"amount" "0.3"
+				"amount" "10.0" //0.3
 				"detailOrientation" "2"
 			}
 			Model2
 			{
 				"sprite" "0 0 128 128 512" 
-				"spritesize" "0.5 0.0 30 38"
+				"spritesize" "0.5 0.0 40 50" //30 38
 				"spriterandomscale" "0.2"
 				"amount" "0.1"
 				"detailOrientation" "2"
@@ -553,7 +553,7 @@ detail
 			Model3
 			{
 				"sprite" "144 0 128 128 512" 
-				"spritesize" "0.5 0.0 15 15"
+				"spritesize" "0.5 0.0 20 20" //15 15
 				"spriterandomscale" "0.2"
 				"amount" "0.3"
 				"detailOrientation" "2"
@@ -561,7 +561,7 @@ detail
 			Model4
 			{
 				"sprite" "144 144 128 128 512" 
-				"spritesize" "0.5 0.0 18 18"
+				"spritesize" "0.5 0.0 23 28" //18 18
 				"spriterandomscale" "0.2"
 				"amount" "0.2"
 				"detailOrientation" "2"
@@ -570,7 +570,7 @@ detail
 			Model4
 			{
 				"sprite" "288 144 128 128 512" 
-				"spritesize" "0.5 0.0 38 38"
+				"spritesize" "0.5 0.0 50 50" //38 38
 				"spriterandomscale" "0.2"
 				"amount" "0.1"
 				"detailOrientation" "2"
@@ -588,7 +588,7 @@ detail
 	// Should be the same as coastline_grass01, but with less density for large areas.
 	//reduced size by 0.75
 	{
-		"density" "50.0"
+		"density" "300.0" //50
 
 		Group1
 		{
