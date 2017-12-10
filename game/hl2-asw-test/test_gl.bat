@@ -1,1 +1,0 @@
-@"D:\SteamLibrary\steamapps\common\Alien Swarm Reactive Drop\reactivedrop.exe" -threads 4 -novid -windowed -noborder -game D:\sourceengine\community-projects\Half-Life-2-Revamped\game\hl2-asw-test +map d1_trainstation_02_globallight +sv_cheats 1 +god +impulse 101
