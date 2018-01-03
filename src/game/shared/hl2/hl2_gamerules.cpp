@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ====
 //
 // Purpose: The Half-Life 2 game rules, such as the relationship tables and ammo
 //			damage cvars.
@@ -206,7 +206,7 @@ bool CHalfLife2::Damage_IsTimeBased( int iDmgType )
 	// Damage types that are time-based.
 #ifdef HL2_EPISODIC
 	// This makes me think EP2 should have its own rules, but they are #ifdef all over in here.
-	return ( ( iDmgType & ( DMG_PARALYZE | DMG_NERVEGAS | DMG_POISON | DMG_RADIATION | DMG_DROWNRECOVER | DMG_ACID | DMG_SLOWBURN ) ) != 0 ); //Added a missing DMG type
+	return ( ( iDmgType & ( DMG_PARALYZE | DMG_NERVEGAS | DMG_POISON | DMG_RADIATION | DMG_DROWNRECOVER | DMG_SLOWBURN ) ) != 0 );
 #else
 	return BaseClass::Damage_IsTimeBased( iDmgType );
 #endif
@@ -221,11 +221,71 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 
 #endif // CLIENT_DLL
 
+//-----------------------------------------------------------------------------
+// Purpose: called each time a player uses a "cmd" command
+// Input  : *pEdict - the player who issued the command
+//			Use engine.Cmd_Argv,  engine.Cmd_Argv, and engine.Cmd_Argc to get 
+//			pointers the character string command.
+//-----------------------------------------------------------------------------
+bool CHalfLife2::ClientCommand( CBaseEntity *pEdict, const CCommand &args )
+{
+#ifndef CLIENT_DLL
+	if( BaseClass::ClientCommand( pEdict, args ) )
+		return true;
 
-#ifdef CLIENT_DLL //{
+	CHL2_Player *pPlayer = (CHL2_Player *) pEdict;
 
+	if ( pPlayer->ClientCommand( args ) )
+		return true;
+#endif
 
-#else //}{
+	return false;
+}
+
+void CHalfLife2::Think( void )
+{
+#ifndef CLIENT_DLL
+	BaseClass::Think();
+
+	if( physcannon_mega_enabled.GetBool() == true )
+	{
+		m_bMegaPhysgun = true;
+	}
+	else
+	{
+		// FIXME: Is there a better place for this?
+		m_bMegaPhysgun = ( GlobalEntity_GetState("super_phys_gun") == GLOBAL_ON );
+	}
+#endif
+}
+
+void CHalfLife2::CreateStandardEntities( void )
+{
+#ifndef CLIENT_DLL
+	// Create the entity that will send our data to the client.
+	BaseClass::CreateStandardEntities();
+
+#ifdef _DEBUG
+	CBaseEntity *pEnt = 
+#endif
+	CBaseEntity::Create( "hl2_gamerules", vec3_origin, vec3_angle );
+	Assert( pEnt );
+#endif
+}
+
+#ifdef CLIENT_DLL 
+
+CHalfLife2::CHalfLife2()
+{
+	Msg("C_HalfLife2 created\n");
+}
+
+CHalfLife2::~CHalfLife2()
+{
+	Msg("C_HalfLife2 destroyed\n");
+}
+
+#else
 
 	extern bool		g_fGameOver;
 
@@ -249,29 +309,17 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 	//-----------------------------------------------------------------------------
 	CHalfLife2::CHalfLife2()
 	{
+		Msg("CHalfLife2 created\n");
+
 		m_bMegaPhysgun = false;
 		
 		m_flLastHealthDropTime = 0.0f;
 		m_flLastGrenadeDropTime = 0.0f;
 	}
 
-	//-----------------------------------------------------------------------------
-	// Purpose: called each time a player uses a "cmd" command
-	// Input  : *pEdict - the player who issued the command
-	//			Use engine.Cmd_Argv,  engine.Cmd_Argv, and engine.Cmd_Argc to get 
-	//			pointers the character string command.
-	//-----------------------------------------------------------------------------
-	bool CHalfLife2::ClientCommand( CBaseEntity *pEdict, const CCommand &args )
+	CHalfLife2::~CHalfLife2()
 	{
-		if( BaseClass::ClientCommand( pEdict, args ) )
-			return true;
-
-		CHL2_Player *pPlayer = (CHL2_Player *) pEdict;
-
-		if ( pPlayer->ClientCommand( args ) )
-			return true;
-
-		return false;
+		Msg("CHalfLife2 destroyed\n");
 	}
 
 	//-----------------------------------------------------------------------------
@@ -364,9 +412,9 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 		// --------------------------------------------------------------
 		// First initialize table so we can report missing relationships
 		// --------------------------------------------------------------
-		for (i=0;i<NUM_AI_CLASSES;i++)
+		for (i=0;i<LAST_SHARED_ENTITY_CLASS;i++)
 		{
-			for (j=0;j<NUM_AI_CLASSES;j++)
+			for (j=0;j<LAST_SHARED_ENTITY_CLASS;j++)
 			{
 				// By default all relationships are neutral of priority zero
 				CBaseCombatCharacter::SetDefaultRelationship( (Class_T)i, (Class_T)j, D_NU, 0 );
@@ -1323,21 +1371,6 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 	{
 	}
 
-	void CHalfLife2::Think( void )
-	{
-		BaseClass::Think();
-
-		if( physcannon_mega_enabled.GetBool() == true )
-		{
-			m_bMegaPhysgun = true;
-		}
-		else
-		{
-			// FIXME: Is there a better place for this?
-			m_bMegaPhysgun = ( GlobalEntity_GetState("super_phys_gun") == GLOBAL_ON );
-		}
-	}
-
 	//-----------------------------------------------------------------------------
 	// Purpose: Returns how much damage the given ammo type should do to the victim
 	//			when fired by the attacker.
@@ -1459,7 +1492,7 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 		int numGrenades = pRecipient->GetAmmoCount( grenadeIndex );
 
 		// If we're not maxed out on grenades and we've randomly okay'd it
-		if ( ( numGrenades < GetAmmoDef()->MaxCarry( grenadeIndex ) ) && ( random->RandomInt( 0, 2 ) == 0 ) )
+		if ( ( numGrenades < GetAmmoDef()->MaxCarry( grenadeIndex, pRecipient ) ) && ( random->RandomInt( 0, 2 ) == 0 ) )
 			return true;
 
 		return false;

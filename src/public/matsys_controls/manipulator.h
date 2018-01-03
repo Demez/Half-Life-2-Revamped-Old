@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2004, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -11,7 +11,7 @@
 #endif
 
 #include "vgui_controls/Panel.h"
-#include "mathlib/vector.h"
+#include "mathlib/Vector.h"
 
 //-----------------------------------------------------------------------------
 // Manipulator interface

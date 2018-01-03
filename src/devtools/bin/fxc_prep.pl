@@ -45,6 +45,8 @@ $startTime = time;
 $g_produceCppClasses = 1;
 $g_produceCompiledVcs = 1;
 
+$g_sfm = 1;
+
 while( 1 )
 {
 	$fxc_filename = shift;
@@ -269,17 +271,28 @@ sub WriteDynamicHelperClasses
 	}
 	push @outputHeader, "public:\n";
 #	push @outputHeader, "void SetPixelShaderIndex( IShaderAPI *pShaderAPI ) { pShaderAPI->SetPixelShaderIndex( GetIndex() ); }\n";
-	push @outputHeader, "\t$classname()\n";
+	# CONSTRUCTOR
+	push @outputHeader, "\t// CONSTRUCTOR\n\t$classname( IShaderDynamicAPI *pShaderAPI )\n";
 	push @outputHeader, "\t{\n";
 	for( $i = 0; $i < scalar( @dynamicDefineNames ); $i++ )
 	{
 		local( $name ) = @dynamicDefineNames[$i];
 		local( $boolname ) = "m_b" . $name;
 		local( $varname ) = "m_n" . $name;
-		push @outputHeader, "#ifdef _DEBUG\n";
-		push @outputHeader, "\t\t$boolname = false;\n";
-		push @outputHeader, "#endif // _DEBUG\n";
-		push @outputHeader, "\t\t$varname = 0;\n";
+		if ( length( $dynamicDefineInit{$name} ) )
+		{
+			push @outputHeader, "#ifdef _DEBUG\n";
+			push @outputHeader, "\t\t$boolname = true;\n";
+			push @outputHeader, "#endif // _DEBUG\n";
+			push @outputHeader, "\t\t$varname = $dynamicDefineInit{$name};\n";
+		}
+		else
+		{
+			push @outputHeader, "#ifdef _DEBUG\n";
+			push @outputHeader, "\t\t$boolname = false;\n";
+			push @outputHeader, "#endif // _DEBUG\n";
+			push @outputHeader, "\t\t$varname = 0;\n";
+		}
 	}
 	push @outputHeader, "\t}\n";
 	push @outputHeader, "\tint GetIndex()\n";
@@ -337,9 +350,24 @@ sub WriteDynamicHelperClasses
 	for( $i = 0; $i < scalar( @dynamicDefineNames ); $i++ )
 	{
 		local( $name ) = @dynamicDefineNames[$i];
-		push @outputHeader, $prefix . "forgot_to_set_dynamic_" . $name . " + ";
+		if ( !length( $dynamicDefineInit{$name} ) )
+		{
+			push @outputHeader, $prefix . "forgot_to_set_dynamic_" . $name . " + ";
+		}
 	}
 	push @outputHeader, "0\n";
+}
+
+sub WriteSkips
+{
+	my $skip;
+
+	push @outputHeader, "// ALL SKIP STATEMENTS THAT AFFECT THIS SHADER!!!\n";
+	foreach $skip (@perlskipcodeindividual)
+	{
+#		$skip =~ s/\$/m_n/g;
+		push @outputHeader, "// $skip\n";
+	}
 }
 
 sub WriteStaticHelperClasses
@@ -359,7 +387,8 @@ sub WriteStaticHelperClasses
 	}
 	push @outputHeader, "public:\n";
 #	push @outputHeader, "void SetShaderIndex( IShaderShadow *pShaderShadow ) { pShaderShadow->SetPixelShaderIndex( GetIndex() ); }\n";
-	push @outputHeader, "\t$classname( )\n";
+	# WRITE THE CONSTRUCTOR
+	push @outputHeader, "\t// CONSTRUCTOR\n\t$classname( IShaderShadow *pShaderShadow, IMaterialVar **params )\n";
 	push @outputHeader, "\t{\n";
 	for( $i = 0; $i < scalar( @staticDefineNames ); $i++ )
 	{
@@ -367,19 +396,19 @@ sub WriteStaticHelperClasses
 		local( $boolname ) = "m_b" . $name;
 		local( $varname ) = "m_n" . $name;
 		if ( length( $staticDefineInit{$name} ) )
-		  {
+		{
 			push @outputHeader, "#ifdef _DEBUG\n";
 			push @outputHeader, "\t\t$boolname = true;\n";
 			push @outputHeader, "#endif // _DEBUG\n";
 			push @outputHeader, "\t\t$varname = $staticDefineInit{$name};\n";
-		  }
+		}
 		else
-		  {
+		{
 			push @outputHeader, "#ifdef _DEBUG\n";
 			push @outputHeader, "\t\t$boolname = false;\n";
 			push @outputHeader, "#endif // _DEBUG\n";
 			push @outputHeader, "\t\t$varname = 0;\n";
-		  }
+		}
 	}
 	push @outputHeader, "\t}\n";
 	push @outputHeader, "\tint GetIndex()\n";
@@ -423,6 +452,11 @@ sub WriteStaticHelperClasses
 		$scale *= $staticDefineMax[$i] - $staticDefineMin[$i] + 1;
 	}
 	push @outputHeader, "0;\n";
+	if( $scale > 0x7fffffff )
+	{
+		$g_toomanycombos = 1;
+		$g_totalcombos = $scale;
+	}
 	push @outputHeader, "\t}\n";
 	push @outputHeader, "};\n";
 	push @outputHeader, "\#define shaderStaticTest_" . $basename . " ";
@@ -439,7 +473,10 @@ sub WriteStaticHelperClasses
 	for( $i = 0; $i < scalar( @staticDefineNames ); $i++ )
 	{
 		local( $name ) = @staticDefineNames[$i];
-		push @outputHeader, $prefix . "forgot_to_set_static_" . $name . " + " unless (length($staticDefineInit{$name} ));
+		if ( !length( $staticDefineInit{$name} ) )
+		{
+			push @outputHeader, $prefix . "forgot_to_set_static_" . $name . " + ";
+		}
 	}
 	push @outputHeader, "0\n";
 }
@@ -744,6 +781,9 @@ foreach $line ( @fxc )
 	$line="" if ($g_x360 && ($line=~/\[PC\]/));										# line marked as [PC] when building for x360
 	$line="" if (($g_x360 == 0)  && ($line=~/\[XBOX\]/));							# line marked as [XBOX] when building for pc
 	
+	$line="" if ( ( $g_sfm == 0 ) && ( $line =~ /\[SFM\]/ ) );						# line marked as [SFM] when not building for sfm
+	$line="" if ( ( $g_sfm ) && ( $line =~ /\[\!SFM\]/ ) );							# line marked as [!SFM] when building for sfm
+
 	if ( $fxc_basename =~ m/_ps(\d+\w?)$/i )
 	{
 		my $psver = $1;
@@ -757,7 +797,11 @@ foreach $line ( @fxc )
 	
 	my $init_expr;
 
-	$init_expr = $1 if ( $line=~/\[\=([^\]]+)\]/);	# parse default init expression for combos
+	# looks for something like [=0] after the base part of the combo definition.
+	if ( $line =~ /\[\s*\=\s*([^\]]+)\]/ )
+	{
+		$init_expr = $1;	# parse default init expression for combos
+	}
 
 	$line=~s/\[[^\[\]]*\]//;		# cut out all occurrences of
                                     # square brackets and whatever is
@@ -777,7 +821,7 @@ foreach $line ( @fxc )
 		push @staticDefineNames, $name;
 		push @staticDefineMin, $min;
 		push @staticDefineMax, $max;
-		$staticDefineInit{$name}=$init_expr;
+		$staticDefineInit{$name} = $init_expr;
 	}
 	elsif( $line =~ m/^\s*\/\/\s*DYNAMIC\s*\:\s*\"(.*)\"\s+\"(\d+)\.\.(\d+)\"/ )
 	{
@@ -789,6 +833,7 @@ foreach $line ( @fxc )
 		push @dynamicDefineNames, $name;
 		push @dynamicDefineMin, $min;
 		push @dynamicDefineMax, $max;
+		$dynamicDefineInit{$name} = $init_expr;
 	}
 }
 # READ THE WHOLE FILE AND FIND SKIP STATEMENTS
@@ -915,10 +960,19 @@ if( $g_produceCompiledVcs && !$dynamic_compile )
 if ( $g_produceCppClasses )
 {
 	# Write out the C++ helper class for picking shader combos
+	&WriteSkips();
 	&WriteStaticHelperClasses();
 	&WriteDynamicHelperClasses();
 	my $incfilename = "$fxctmp\\$fxc_basename" . ".inc";
-	&WriteFile( $incfilename, join( "", @outputHeader ) );
+	if( $g_toomanycombos )
+	{
+		unlink $incfilename;
+ 		print STDERR "ERROR: too many combos in $fxc_filename ($g_totalcombos > 4294967295)!\n";
+	}
+	else
+	{
+		&WriteFile( $incfilename, join( "", @outputHeader ) );
+	}
 }
 
 
@@ -946,4 +1000,5 @@ $endTime = time;
 #printf "Elapsed child system time: %.2f seconds!\n", $endTimes[3] - $startTimes[3];
 
 #printf "Elapsed total time: %.2f seconds!\n", $endTime - $startTime;
+
 

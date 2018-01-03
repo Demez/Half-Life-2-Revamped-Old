@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -35,7 +35,7 @@ public:
 	C_PropJeepEpisodic();
 
 	void OnEnteredVehicle( C_BasePlayer *pPlayer );
-	void Simulate( void );
+	bool Simulate( void );
 
 public:
 	int		m_iNumRadarContacts;
@@ -110,7 +110,7 @@ C_PropJeepEpisodic::C_PropJeepEpisodic()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void C_PropJeepEpisodic::Simulate( void )
+bool C_PropJeepEpisodic::Simulate( void )
 {
 	// Keep trying to hook to the radar.
 	if( GetHudRadar() != NULL )
@@ -121,7 +121,7 @@ void C_PropJeepEpisodic::Simulate( void )
 		GetHudRadar()->SetVehicle( this );
 	}
 
-	BaseClass::Simulate();
+	return BaseClass::Simulate();
 }
 
 //-----------------------------------------------------------------------------

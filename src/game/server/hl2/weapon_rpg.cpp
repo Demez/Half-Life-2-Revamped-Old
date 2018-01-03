@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -18,8 +18,8 @@
 #include "in_buttons.h"
 #include "weapon_rpg.h"
 #include "shake.h"
-#include "ai_basenpc.h"
-#include "ai_squad.h"
+#include "AI_BaseNPC.h"
+#include "AI_Squad.h"
 #include "te_effect_dispatch.h"
 #include "triggers.h"
 #include "smoke_trail.h"
@@ -91,7 +91,7 @@ public:
 
 // a list of laser dots to search quickly
 CEntityClassList<CLaserDot> g_LaserDotList;
-template <>  CLaserDot *CEntityClassList<CLaserDot>::m_pClassList = NULL;
+CLaserDot *CEntityClassList<CLaserDot>::m_pClassList = NULL;
 CLaserDot *GetLaserDotList()
 {
 	return g_LaserDotList.m_pClassList;
@@ -891,7 +891,7 @@ CBaseEntity *CInfoAPCMissileHint::FindAimTarget( CBaseEntity *pMissile, const ch
 // a list of missiles to search quickly
 //-----------------------------------------------------------------------------
 CEntityClassList<CAPCMissile> g_APCMissileList;
-template <> CAPCMissile *CEntityClassList<CAPCMissile>::m_pClassList = NULL;
+CAPCMissile *CEntityClassList<CAPCMissile>::m_pClassList = NULL;
 CAPCMissile *GetAPCMissileList()
 {
 	return g_APCMissileList.m_pClassList;
@@ -1250,7 +1250,7 @@ void CAPCMissile::ComputeActualDotPosition( CLaserDot *pLaserDot, Vector *pActua
 		m_hSpecificTarget = CInfoAPCMissileHint::FindAimTarget( this, STRING( m_strHint ), vecOrigin, vecVelocity );
 	}
 
-	CBaseEntity *pLaserTarget = m_hSpecificTarget ? m_hSpecificTarget.Get() : pLaserDot->GetTargetEntity();
+	CBaseEntity *pLaserTarget = m_hSpecificTarget ? m_hSpecificTarget : pLaserDot->GetTargetEntity();
 	if ( !pLaserTarget )
 	{
 		BaseClass::ComputeActualDotPosition( pLaserDot, pActualDotPosition, pHomingSpeed );
@@ -1496,7 +1496,7 @@ void CWeaponRPG::Activate( void )
 //-----------------------------------------------------------------------------
 void CWeaponRPG::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator )
 {
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 		case EVENT_WEAPON_SMG1:
 		{
@@ -1651,7 +1651,7 @@ void CWeaponRPG::PrimaryAttack( void )
 		}
 	}
 
-	if( hl2_episodic.GetBool() )
+	/*if( hl2_episodic.GetBool() )
 	{
 		CAI_BaseNPC **ppAIs = g_AI_Manager.AccessAIs();
 		int nAIs = g_AI_Manager.NumAIs();
@@ -1665,7 +1665,7 @@ void CWeaponRPG::PrimaryAttack( void )
 				ppAIs[ i ]->DispatchInteraction( g_interactionPlayerLaunchedRPG, NULL, m_hMissile );
 			}
 		}
-	}
+	}*/
 }
 
 //-----------------------------------------------------------------------------
@@ -2185,12 +2185,14 @@ void CWeaponRPG::StopLaserEffects( void )
 	if ( m_hLaserBeam != NULL )
 	{
 		m_hLaserBeam->SetBrightness( 0 );
+		UTIL_Remove(m_hLaserBeam);
 	}
 	
 	if ( m_hLaserMuzzleSprite != NULL )
 	{
 		m_hLaserMuzzleSprite->SetScale( 0.01f );
 		m_hLaserMuzzleSprite->SetBrightness( 0, 0.5f );
+		UTIL_Remove(m_hLaserMuzzleSprite);
 	}
 }
 

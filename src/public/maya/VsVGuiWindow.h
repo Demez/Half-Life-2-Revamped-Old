@@ -14,7 +14,7 @@
 
 #include "imayavgui.h"
 #include "vgui_controls/Frame.h"
-#include "tier1/utlmap.h"
+#include "tier1/UtlMap.h"
 #include "valveMaya.h"
 
 
@@ -139,13 +139,6 @@ public:
 
 	virtual void DestroyVguiWindow( const char *pPanelName )
 	{
-		PanelMap_t::IndexType_t nIndex = m_panelMap.Find( pPanelName );
-		if ( !m_panelMap.IsValidIndex( nIndex ) )
-			return;
-
-		PanelMap_t::ElemType_t &element = m_panelMap.Element( nIndex );
-		delete element.m_pPanel;
-
 		m_panelMap.Remove( CUtlString( pPanelName ) );
 		DestroyMayaVGuiWindow( pPanelName );
 	}

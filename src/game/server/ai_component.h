@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -46,6 +46,7 @@ public:
 	float 				GetHullHeight() const;
 	const Vector &		GetHullMins() const;
 	const Vector &		GetHullMaxs() const;
+	int					GetHullTraceMask() const;
 
 protected:
 	//

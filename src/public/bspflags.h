@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -31,7 +31,7 @@
 #define	CONTENTS_WATER			0x20
 #define	CONTENTS_BLOCKLOS		0x40	// block AI line of sight
 #define CONTENTS_OPAQUE			0x80	// things that cannot be seen through (may be non-solid though)
-#define	LAST_VISIBLE_CONTENTS	0x80
+#define	LAST_VISIBLE_CONTENTS	CONTENTS_OPAQUE
 
 #define ALL_VISIBLE_CONTENTS (LAST_VISIBLE_CONTENTS | (LAST_VISIBLE_CONTENTS-1))
 
@@ -41,7 +41,8 @@
 // unused 
 // NOTE: If it's visible, grab from the top + update LAST_VISIBLE_CONTENTS
 // if not visible, then grab from the bottom.
-#define CONTENTS_UNUSED6		0x400
+// CONTENTS_OPAQUE + SURF_NODRAW count as CONTENTS_OPAQUE (shadow-casting toolsblocklight textures)
+#define CONTENTS_BLOCKLIGHT		0x400
 
 #define CONTENTS_TEAM1			0x800	// per team contents used to differentiate collisions 
 #define CONTENTS_TEAM2			0x1000	// between players and objects on different teams
@@ -75,7 +76,6 @@
 #define	CONTENTS_LADDER			0x20000000
 #define CONTENTS_HITBOX			0x40000000	// use accurate hitboxes on trace
 
-
 // NOTE: These are stored in a short in the engine now.  Don't use more than 16 bits
 #define	SURF_LIGHT		0x0001		// value will hold the light strength
 #define	SURF_SKY2D		0x0002		// don't draw, indicates we should skylight + draw 2d sky but not draw the 3D skybox
@@ -93,6 +93,7 @@
 #define SURF_BUMPLIGHT	0x0800	// calculate three lightmaps for the surface for bumpmapping
 #define SURF_NOSHADOWS	0x1000	// Don't receive shadows
 #define SURF_NODECALS	0x2000	// Don't receive decals
+#define SURF_NOPAINT	SURF_NODECALS	// the surface can not have paint placed on it
 #define SURF_NOCHOP		0x4000	// Don't subdivide patches on this surface 
 #define SURF_HITBOX		0x8000	// surface is part of a hitbox
 
@@ -108,6 +109,8 @@
 #define	MASK_PLAYERSOLID			(CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
 // blocks npc movement
 #define	MASK_NPCSOLID				(CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_MONSTERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
+// blocks fluid movement
+#define	MASK_NPCFLUID				(CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_MONSTERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER)
 // water physics in these contents
 #define	MASK_WATER					(CONTENTS_WATER|CONTENTS_MOVEABLE|CONTENTS_SLIME)
 // everything that blocks lighting
@@ -124,6 +127,8 @@
 #define MASK_VISIBLE_AND_NPCS		(MASK_OPAQUE_AND_NPCS|CONTENTS_IGNORE_NODRAW_OPAQUE)
 // bullets see these as solid
 #define	MASK_SHOT					(CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_MONSTER|CONTENTS_WINDOW|CONTENTS_DEBRIS|CONTENTS_HITBOX)
+// bullets see these as solid, except monsters (world+brush only)
+#define MASK_SHOT_BRUSHONLY			(CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_DEBRIS)
 // non-raycasted weapons see this as solid (includes grates)
 #define MASK_SHOT_HULL				(CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_MONSTER|CONTENTS_WINDOW|CONTENTS_DEBRIS|CONTENTS_GRATE)
 // hits solids (not grates) and passes through everything else
@@ -136,6 +141,8 @@
 #define MASK_NPCSOLID_BRUSHONLY		(CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_MONSTERCLIP|CONTENTS_GRATE)
 // just the world, used for route rebuilding
 #define MASK_NPCWORLDSTATIC			(CONTENTS_SOLID|CONTENTS_WINDOW|CONTENTS_MONSTERCLIP|CONTENTS_GRATE)
+// just the world, used for route rebuilding
+#define MASK_NPCWORLDSTATIC_FLUID	(CONTENTS_SOLID|CONTENTS_WINDOW|CONTENTS_MONSTERCLIP)
 // These are things that can split areaportals
 #define MASK_SPLITAREAPORTAL		(CONTENTS_WATER|CONTENTS_SLIME)
 

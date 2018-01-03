@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Grenade used by the city scanner
 //
@@ -28,7 +28,7 @@
 #define	 HOMER_TRAIL1_LIFE		0.2
 #define	 HOMER_TRAIL2_LIFE		3.0//	1.0
 
-extern short	g_sModelIndexFireball;			// (in combatweapon.cpp) holds the index for the smoke cloud
+extern int	g_sModelIndexFireball;			// (in combatweapon.cpp) holds the index for the smoke cloud
 
 ConVar    sk_dmg_homer_grenade( "sk_dmg_homer_grenade","0" );
 ConVar	  sk_homer_grenade_radius( "sk_homer_grenade_radius","0" );
@@ -608,7 +608,7 @@ void CGrenadeHomer::AimThink( void )
 			while (flTimeToUse > 0)
 			{
 				vecNewVelocity = (flCurHomingStrength * vTargetDir) + ((1 - flCurHomingStrength) * vCurDir);
-				flTimeToUse = -0.1;
+				flTimeToUse =- 0.1;
 			}
 			VectorNormalize(vecNewVelocity);
 			vecNewVelocity *= flTargetSpeed;
@@ -628,7 +628,7 @@ void CGrenadeHomer::AimThink( void )
 	}
 
 	// Add in gravity
-	vecImpulse.z -= GetGravity() * GetCurrentGravity() * gpGlobals->frametime;
+	vecImpulse.z -= GetGravity() * sv_gravity.GetFloat() * gpGlobals->frametime;
 	ApplyAbsVelocityImpulse( vecImpulse );
 
 	QAngle angles;

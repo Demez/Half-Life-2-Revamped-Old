@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -15,7 +15,6 @@ class KeyValues;
 
 
 // This interface is actually exported by the shader API DLL.
-#define DEBUG_TEXTURE_INFO_VERSION "DebugTextureInfo001"
 
 
 abstract_class IDebugTextureInfo

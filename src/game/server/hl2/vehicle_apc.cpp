@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -50,7 +50,7 @@
 #define DEATH_VOLLEY_MIN_FIRE_TIME		0.333
 #define DEATH_VOLLEY_MAX_FIRE_TIME		0.166
 
-extern short g_sModelIndexFireball; // Echh...
+extern int g_sModelIndexFireball; // Echh...
 
 
 ConVar sk_apc_health( "sk_apc_health", "750" );
@@ -132,6 +132,10 @@ void CPropAPC::Precache( void )
 	PrecacheScriptSound( "Weapon_AR2.Single" );
 	PrecacheScriptSound( "PropAPC.FireRocket" );
 	PrecacheScriptSound( "combine.door_lock" );
+
+	PrecacheEffect( "HelicopterTracer" );
+	PrecacheEffect( "HelicopterImpact" );
+	PrecacheEffect( "ChopperMuzzleFlash" );
 }
 
 
@@ -393,11 +397,7 @@ void CPropAPC::ExplodeAndThrowChunk( const Vector &vecExplosionPos )
 		pPhysicsObject->SetVelocity(&vecVelocity, &angImpulse );
 	}
 
-	CEntityFlame *pFlame = CEntityFlame::Create( pChunk, false );
-	if ( pFlame != NULL )
-	{
-		pFlame->SetLifetime( pChunk->m_lifeTime );
-	}
+	CEntityFlame::Create( pChunk, pChunk->m_lifeTime );
 }
 
 
@@ -434,7 +434,7 @@ void CPropAPC::Event_Killed( const CTakeDamageInfo &info )
 		te->Explosion( filter, random->RandomFloat( 0.0, 1.0 ),	&vecAbsPoint, 
 			g_sModelIndexFireball, random->RandomInt( 4, 10 ), 
 			random->RandomInt( 8, 15 ), 
-			( i < 2 ) ? TE_EXPLFLAG_NODLIGHTS : TE_EXPLFLAG_NOPARTICLES | TE_EXPLFLAG_NOFIREBALLSMOKE | TE_EXPLFLAG_NODLIGHTS,
+			( i < 2 ) ? TE_EXPLFLAG_NONE : TE_EXPLFLAG_NOPARTICLES | TE_EXPLFLAG_NOFIREBALLSMOKE,
 			100, 0 );
 	}
 
@@ -481,11 +481,7 @@ void CPropAPC::Event_Killed( const CTakeDamageInfo &info )
 			pPhysicsObject->SetVelocity(&vecVelocity, &angImpulse );
 		}
 
-		CEntityFlame *pFlame = CEntityFlame::Create( pChunk, false );
-		if ( pFlame != NULL )
-		{
-			pFlame->SetLifetime( pChunk->m_lifeTime );
-		}
+		CEntityFlame::Create( pChunk, pChunk->m_lifeTime );
 	}
 
 	UTIL_ScreenShake( vecAbsPoint, 25.0, 150.0, 1.0, 750.0f, SHAKE_START );

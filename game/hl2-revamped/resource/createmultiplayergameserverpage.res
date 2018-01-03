@@ -46,7 +46,7 @@
 		"visible"		"1"
 		"enabled"		"1"
 		"tabPosition"		"0"
-		"labelText"		"#GameUI_Map"
+		"labelText"		"#asw_missionl"
 		"textAlignment"		"west"
 		"associate"		"MapList"
 		"dulltext"		"0"

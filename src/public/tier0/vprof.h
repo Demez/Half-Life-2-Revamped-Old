@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Real-Time Hierarchical Profiling
 //
@@ -12,11 +12,12 @@
 #include "tier0/fasttimer.h"
 #include "tier0/l2cache.h"
 #include "tier0/threadtools.h"
-#include "tier0/vprof_telemetry.h"
 
 // VProf is enabled by default in all configurations -except- X360 Retail.
+#ifndef _LINUX
 #if !( defined( _X360 ) && defined( _CERT ) )
 #define VPROF_ENABLED
+#endif
 #endif
 
 #if defined(_X360) && defined(VPROF_ENABLED)
@@ -125,7 +126,6 @@
 #define VPROF_BUDGETGROUP_LIGHTCACHE				_T("Light_Cache")
 #define VPROF_BUDGETGROUP_DISP_HULLTRACES			_T("Displacement_Hull_Traces")
 #define VPROF_BUDGETGROUP_TEXTURE_CACHE				_T("Texture_Cache")
-#define VPROF_BUDGETGROUP_REPLAY					_T("Replay")
 #define VPROF_BUDGETGROUP_PARTICLE_SIMULATION		_T("Particle Simulation")
 #define VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING	_T("Flashlight Shadows")
 #define VPROF_BUDGETGROUP_CLIENT_SIM				_T("Client Simulation") // think functions, tempents, etc.
@@ -133,13 +133,6 @@
 #define VPROF_BUDGETGROUP_CVAR_FIND					_T("Cvar_Find") 
 #define VPROF_BUDGETGROUP_CLIENTLEAFSYSTEM			_T("ClientLeafSystem")
 #define VPROF_BUDGETGROUP_JOBS_COROUTINES			_T("Jobs/Coroutines")
-#define VPROF_BUDGETGROUP_SLEEPING					_T("Sleeping")
-#define VPROF_BUDGETGROUP_THREADINGMAIN				_T("ThreadingMain")
-#define VPROF_BUDGETGROUP_CHROMEHTML				_T("Chromehtml")
-#define VPROF_BUDGETGROUP_VGUI						VPROF_BUDGETGROUP_CHROMEHTML
-#define VPROF_BUDGETGROUP_TENFOOT					VPROF_BUDGETGROUP_CHROMEHTML
-#define VPROF_BUDGETGROUP_STEAMUI					VPROF_BUDGETGROUP_CHROMEHTML
-#define VPROF_BUDGETGROUP_ATTRIBUTES				_T("Attributes")
 	
 #ifdef _X360
 // update flags
@@ -154,35 +147,28 @@
 #define VPROF_LEVEL 0
 #endif
 
-//these macros exist to create VProf_<line number> variables. This is important because it avoids /analyze warnings about variable aliasing when VPROF's are nested within each other, and allows
-//for multiple VPROF's to exist within the same scope. Three macros must be used to force the __LINE__ to be resolved prior to the token concatenation, but just ignore the _INTERNAL macros and use
-//the VPROF_VAR_NAME
-#define VPROF_VAR_NAME_INTERNAL_CAT(a, b)	a##b
-#define VPROF_VAR_NAME_INTERNAL( a, b )		VPROF_VAR_NAME_INTERNAL_CAT( a, b )
-#define VPROF_VAR_NAME( a )					VPROF_VAR_NAME_INTERNAL( a, __LINE__ )
-
-#define	VPROF_0(name,group,assertAccounted,budgetFlags)	TM_ZONE( TELEMETRY_LEVEL2, TMZF_NONE, "(%s)%s", group, name ); CVProfScope VPROF_VAR_NAME( VProf_ )(name, 0, group, assertAccounted, budgetFlags);
+#define	VPROF_0(name,group,assertAccounted,budgetFlags)	CVProfScope VProf_(name, 0, group, assertAccounted, budgetFlags);
 
 #if VPROF_LEVEL > 0 
-#define	VPROF_1(name,group,assertAccounted,budgetFlags)	TM_ZONE( TELEMETRY_LEVEL3, TMZF_NONE, "(%s)%s", group, name ); CVProfScope VPROF_VAR_NAME( VProf_ )(name, 1, group, assertAccounted, budgetFlags);
+#define	VPROF_1(name,group,assertAccounted,budgetFlags)	CVProfScope VProf_(name, 1, group, assertAccounted, budgetFlags);
 #else
 #define	VPROF_1(name,group,assertAccounted,budgetFlags)	((void)0)
 #endif
 
 #if VPROF_LEVEL > 1 
-#define	VPROF_2(name,group,assertAccounted,budgetFlags)	TM_ZONE( TELEMETRY_LEVEL4, TMZF_NONE, "(%s)%s", group, name ); CVProfScope VPROF_VAR_NAME( VProf_ )(name, 2, group, assertAccounted, budgetFlags);
+#define	VPROF_2(name,group,assertAccounted,budgetFlags)	CVProfScope VProf_(name, 2, group, assertAccounted, budgetFlags);
 #else
 #define	VPROF_2(name,group,assertAccounted,budgetFlags)	((void)0)
 #endif
 
 #if VPROF_LEVEL > 2 
-#define	VPROF_3(name,group,assertAccounted,budgetFlags)	TM_ZONE( TELEMETRY_LEVEL5, TMZF_NONE, "(%s)%s", group, name ); CVProfScope VPROF_VAR_NAME( VProf_ )(name, 3, group, assertAccounted, budgetFlags);
+#define	VPROF_3(name,group,assertAccounted,budgetFlags)	CVProfScope VProf_(name, 3, group, assertAccounted, budgetFlags);
 #else
 #define	VPROF_3(name,group,assertAccounted,budgetFlags)	((void)0)
 #endif
 
 #if VPROF_LEVEL > 3 
-#define	VPROF_4(name,group,assertAccounted,budgetFlags)	TM_ZONE( TELEMETRY_LEVEL6, TMZF_NONE, "(%s)%s", group, name ); CVProfScope VPROF_VAR_NAME( VProf_ )(name, 4, group, assertAccounted, budgetFlags);
+#define	VPROF_4(name,group,assertAccounted,budgetFlags)	CVProfScope VProf_(name, 4, group, assertAccounted, budgetFlags);
 #else
 #define	VPROF_4(name,group,assertAccounted,budgetFlags)	((void)0)
 #endif
@@ -249,7 +235,7 @@
 // A node in the call graph hierarchy
 //
 
-class DBG_CLASS CVProfNode 
+class PLATFORM_CLASS CVProfNode 
 {
 friend class CVProfRecorder;
 friend class CVProfile;
@@ -430,12 +416,10 @@ enum CounterGroup_t
 	COUNTER_GROUP_NO_RESET,				// The engine doesn't reset these counters. Usually, they are used 
 										// like global variables that can be accessed across modules.
 	COUNTER_GROUP_TEXTURE_GLOBAL,		// Global texture usage counters (totals for what is currently in memory).
-	COUNTER_GROUP_TEXTURE_PER_FRAME,	// Per-frame texture usage counters.
-
-	COUNTER_GROUP_TELEMETRY,
+	COUNTER_GROUP_TEXTURE_PER_FRAME		// Per-frame texture usage counters.
 }; 
 
-class DBG_CLASS CVProfile 
+class PLATFORM_CLASS CVProfile 
 {
 public:
 	CVProfile();
@@ -557,12 +541,7 @@ public:
 	
 	CVProfNode *GetRoot();
 	CVProfNode *FindNode( CVProfNode *pStartNode, const tchar *pszNode );
-	CVProfNode *GetCurrentNode();
 
-	typedef void ( __cdecl *StreamOut_t )( const char* pszFormat, ... );
-	// Set the output function used for all vprof reports. Call this with NULL
-	// to set it to the default output function.
-	void SetOutputStream( StreamOut_t outputStream );
 	void OutputReport( int type = VPRT_FULL, const tchar *pszStartNode = NULL, int budgetGroupID = -1 );
 
 	const tchar *GetBudgetGroupName( int budgetGroupID );
@@ -576,7 +555,7 @@ public:
 	int BudgetGroupNameToBudgetGroupIDNoCreate( const tchar *pBudgetGroupName ) { return FindBudgetGroupName( pBudgetGroupName ); }
 
 	void HideBudgetGroup( int budgetGroupID, bool bHide = true );
-	void HideBudgetGroup( const char *pszName, bool bHide = true ) { HideBudgetGroup( BudgetGroupNameToBudgetGroupID( pszName), bHide ); }
+	void HideBudgetGroup( const tchar *pszName, bool bHide = true ) { HideBudgetGroup( BudgetGroupNameToBudgetGroupID( pszName), bHide ); }
 
 	int *FindOrCreateCounter( const tchar *pName, CounterGroup_t eCounterGroup=COUNTER_GROUP_DEFAULT  );
 	void ResetCounters( CounterGroup_t eCounterGroup );
@@ -673,18 +652,16 @@ protected:
 #endif
 
 	unsigned m_TargetThreadId;
-
-	StreamOut_t				m_pOutputStream;
 };
 
 //-------------------------------------
 
-DBG_INTERFACE CVProfile g_VProfCurrentProfile;
+PLATFORM_INTERFACE CVProfile g_VProfCurrentProfile;
 
 
 //-----------------------------------------------------------------------------
 
-DBG_INTERFACE bool g_VProfSignalSpike;
+PLATFORM_INTERFACE bool g_VProfSignalSpike;
 
 class CVProfSpikeDetector
 {
@@ -763,9 +740,6 @@ class CVProfScope
 public:
 	CVProfScope( const tchar * pszName, int detailLevel, const tchar *pBudgetGroupName, bool bAssertAccounted, int budgetFlags );
 	~CVProfScope();
-
-private:
-	bool m_bEnabled;
 };
 
 //-----------------------------------------------------------------------------
@@ -1225,13 +1199,6 @@ inline CVProfNode *CVProfile::GetRoot()
 	return &m_Root;
 }
 
-//-------------------------------------
-
-inline CVProfNode *CVProfile::GetCurrentNode()
-{
-	return m_pCurNode;
-}
-
 
 inline const tchar *CVProfile::GetBudgetGroupName( int budgetGroupID )
 {
@@ -1281,22 +1248,15 @@ inline unsigned int CVProfile::GetMultiTraceIndex()
 //-----------------------------------------------------------------------------
 
 inline CVProfScope::CVProfScope( const tchar * pszName, int detailLevel, const tchar *pBudgetGroupName, bool bAssertAccounted, int budgetFlags )
-	: m_bEnabled( g_VProfCurrentProfile.IsEnabled() )
 { 
-	if ( m_bEnabled )
-	{
-		g_VProfCurrentProfile.EnterScope( pszName, detailLevel, pBudgetGroupName, bAssertAccounted, budgetFlags ); 
-	}
+	g_VProfCurrentProfile.EnterScope( pszName, detailLevel, pBudgetGroupName, bAssertAccounted, budgetFlags ); 
 }
 
 //-------------------------------------
 
 inline CVProfScope::~CVProfScope()					
 { 
-	if ( m_bEnabled )
-	{
-		g_VProfCurrentProfile.ExitScope(); 
-	}
+	g_VProfCurrentProfile.ExitScope(); 
 }
 
 class CVProfCounter

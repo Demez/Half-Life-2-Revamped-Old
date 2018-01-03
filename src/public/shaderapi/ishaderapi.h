@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -34,8 +34,10 @@ struct MeshDesc_t;
 enum MaterialCullMode_t;
 class IDataCache;   
 struct MorphWeight_t;
-class IVTFTexture;
-
+struct MeshInstanceData_t;
+#ifdef _X360
+enum RTMultiSampleCount360_t;
+#endif
 
 //-----------------------------------------------------------------------------
 // This must match the definition in playback.cpp!
@@ -47,13 +49,6 @@ enum ShaderRenderTarget_t
 	// GR - no RT, used to disable depth buffer
 	SHADER_RENDERTARGET_NONE = -2,
 };
-
-
-//-----------------------------------------------------------------------------
-// This must match the definition in playback.cpp!
-//-----------------------------------------------------------------------------
-typedef int ShaderAPITextureHandle_t;
-#define INVALID_SHADERAPI_TEXTURE_HANDLE 0
 
 
 //-----------------------------------------------------------------------------
@@ -73,24 +68,57 @@ typedef int ShaderDLL_t;
 //-----------------------------------------------------------------------------
 enum CreateTextureFlags_t
 {
-	TEXTURE_CREATE_CUBEMAP		       = 0x0001,
-	TEXTURE_CREATE_RENDERTARGET        = 0x0002,
-	TEXTURE_CREATE_MANAGED		       = 0x0004,
-	TEXTURE_CREATE_DEPTHBUFFER	       = 0x0008,
-	TEXTURE_CREATE_DYNAMIC		       = 0x0010,
-	TEXTURE_CREATE_AUTOMIPMAP          = 0x0020,
-	TEXTURE_CREATE_VERTEXTEXTURE       = 0x0040,	// for internal use only	
-	TEXTURE_CREATE_FALLBACK            = 0x0080,	// 360 only
-	TEXTURE_CREATE_NOD3DMEMORY         = 0x0100,	// 360 only
-	TEXTURE_CREATE_UNUSED3             = 0x0200,	// Dead
-	TEXTURE_CREATE_UNUSED4             = 0x0400,	// Dead
-	TEXTURE_CREATE_UNUSED5		       = 0x0800,	// Dead
-	TEXTURE_CREATE_UNFILTERABLE_OK     = 0x1000,
-	TEXTURE_CREATE_CANCONVERTFORMAT    = 0x2000,	// 360 only, allow format conversions at load
-	TEXTURE_CREATE_SRGB                = 0x4000,	// Posix/GL only, for textures which are SRGB-readable
-
+	TEXTURE_CREATE_CUBEMAP		       = 0x00001,
+	TEXTURE_CREATE_RENDERTARGET        = 0x00002,
+	TEXTURE_CREATE_MANAGED		       = 0x00004,
+	TEXTURE_CREATE_DEPTHBUFFER	       = 0x00008,
+	TEXTURE_CREATE_DYNAMIC		       = 0x00010,
+	TEXTURE_CREATE_AUTOMIPMAP          = 0x00020,
+	TEXTURE_CREATE_VERTEXTEXTURE       = 0x00040,
+	TEXTURE_CREATE_CACHEABLE           = 0x00080,	// 360 only, texture may be subject to streaming
+	TEXTURE_CREATE_NOD3DMEMORY         = 0x00100,	// 360 only, real allocation needs to occur later
+	TEXTURE_CREATE_REDUCED             = 0x00200,	// 360 only, true dimensions forced smaller (i.e. exclusion)
+	TEXTURE_CREATE_EXCLUDED            = 0x00400,	// 360 only, marked as excluded
+	TEXTURE_CREATE_DEFAULT_POOL	       = 0x00800,
+	TEXTURE_CREATE_UNFILTERABLE_OK     = 0x01000,
+	TEXTURE_CREATE_CANCONVERTFORMAT    = 0x02000,	// 360 only, allow format conversions at load
+	TEXTURE_CREATE_PWLCORRECTED        = 0x04000,	// 360 only, texture is pwl corrected
+	TEXTURE_CREATE_ERROR               = 0x08000,	// 360 only, texture was forced to checkerboard
+	TEXTURE_CREATE_SYSMEM              = 0x10000,
+	TEXTURE_CREATE_SRGB                = 0x20000,	// Posix/GL only, for textures which are SRGB-readable
 };
 
+
+//-----------------------------------------------------------------------------
+// Viewport structure
+//-----------------------------------------------------------------------------
+#define SHADER_VIEWPORT_VERSION 1
+struct ShaderViewport_t
+{
+	int m_nVersion;
+	int m_nTopLeftX;
+	int m_nTopLeftY;
+	int m_nWidth;
+	int m_nHeight;
+	float m_flMinZ;
+	float m_flMaxZ;
+
+	ShaderViewport_t() : m_nVersion( SHADER_VIEWPORT_VERSION ) {}
+
+	void Init()
+	{
+		memset( this, 0, sizeof(ShaderViewport_t) );
+		m_nVersion = SHADER_VIEWPORT_VERSION;
+	}
+
+	void Init( int x, int y, int nWidth, int nHeight, float flMinZ = 0.0f, float flMaxZ = 1.0f )
+	{
+		m_nVersion = SHADER_VIEWPORT_VERSION;
+		m_nTopLeftX = x; m_nTopLeftY = y; m_nWidth = nWidth; m_nHeight = nHeight;
+		m_flMinZ = flMinZ;
+		m_flMaxZ = flMaxZ;
+	}
+};
 
 
 //-----------------------------------------------------------------------------
@@ -118,6 +146,107 @@ struct ShaderRasterState_t
 
 
 //-----------------------------------------------------------------------------
+// allowed stencil operations. These match the d3d operations
+//-----------------------------------------------------------------------------
+enum ShaderStencilOp_t 
+{
+#if !defined( _X360 )
+	SHADER_STENCILOP_KEEP = 1,
+	SHADER_STENCILOP_ZERO = 2,
+	SHADER_STENCILOP_SET_TO_REFERENCE = 3,
+	SHADER_STENCILOP_INCREMENT_CLAMP = 4,
+	SHADER_STENCILOP_DECREMENT_CLAMP = 5,
+	SHADER_STENCILOP_INVERT = 6,
+	SHADER_STENCILOP_INCREMENT_WRAP = 7,
+	SHADER_STENCILOP_DECREMENT_WRAP = 8,
+#else
+	SHADER_STENCILOP_KEEP = D3DSTENCILOP_KEEP,
+	SHADER_STENCILOP_ZERO = D3DSTENCILOP_ZERO,
+	SHADER_STENCILOP_SET_TO_REFERENCE = D3DSTENCILOP_REPLACE,
+	SHADER_STENCILOP_INCREMENT_CLAMP = D3DSTENCILOP_INCRSAT,
+	SHADER_STENCILOP_DECREMENT_CLAMP = D3DSTENCILOP_DECRSAT,
+	SHADER_STENCILOP_INVERT = D3DSTENCILOP_INVERT,
+	SHADER_STENCILOP_INCREMENT_WRAP = D3DSTENCILOP_INCR,
+	SHADER_STENCILOP_DECREMENT_WRAP = D3DSTENCILOP_DECR,
+#endif
+	SHADER_STENCILOP_FORCE_DWORD = 0x7fffffff
+};
+
+enum ShaderStencilFunc_t 
+{
+#if !defined( _X360 )
+	SHADER_STENCILFUNC_NEVER = 1,
+	SHADER_STENCILFUNC_LESS = 2,
+	SHADER_STENCILFUNC_EQUAL = 3,
+	SHADER_STENCILFUNC_LEQUAL = 4,
+	SHADER_STENCILFUNC_GREATER = 5,
+	SHADER_STENCILFUNC_NOTEQUAL = 6,
+	SHADER_STENCILFUNC_GEQUAL = 7,
+	SHADER_STENCILFUNC_ALWAYS = 8,
+#else
+	SHADER_STENCILFUNC_NEVER = D3DCMP_NEVER,
+	SHADER_STENCILFUNC_LESS = D3DCMP_LESS,
+	SHADER_STENCILFUNC_EQUAL = D3DCMP_EQUAL,
+	SHADER_STENCILFUNC_LEQUAL = D3DCMP_LESSEQUAL,
+	SHADER_STENCILFUNC_GREATER = D3DCMP_GREATER,
+	SHADER_STENCILFUNC_NOTEQUAL = D3DCMP_NOTEQUAL,
+	SHADER_STENCILFUNC_GEQUAL = D3DCMP_GREATEREQUAL,
+	SHADER_STENCILFUNC_ALWAYS = D3DCMP_ALWAYS,
+#endif
+
+	SHADER_STENCILFUNC_FORCE_DWORD = 0x7fffffff
+};
+
+#if defined( _X360 )
+enum ShaderHiStencilFunc_t 
+{
+	SHADER_HI_STENCILFUNC_EQUAL = D3DHSCMP_EQUAL,
+	SHADER_HI_STENCILFUNC_NOTEQUAL = D3DHSCMP_NOTEQUAL,
+
+	SHADER_HI_STENCILFUNC_FORCE_DWORD = 0x7fffffff
+};
+#endif
+
+//-----------------------------------------------------------------------------
+// Stencil state
+//-----------------------------------------------------------------------------
+struct ShaderStencilState_t
+{
+	bool m_bEnable;
+	ShaderStencilOp_t m_FailOp;
+	ShaderStencilOp_t m_ZFailOp;
+	ShaderStencilOp_t m_PassOp;
+	ShaderStencilFunc_t m_CompareFunc;
+	int m_nReferenceValue;
+	uint32 m_nTestMask;
+	uint32 m_nWriteMask;
+
+#if defined( _X360 )
+	bool m_bHiStencilEnable;
+	bool m_bHiStencilWriteEnable;
+	ShaderHiStencilFunc_t m_HiStencilCompareFunc;
+	int m_nHiStencilReferenceValue;
+#endif
+
+	ShaderStencilState_t()
+	{
+		m_bEnable = false;
+		m_PassOp = m_FailOp = m_ZFailOp = SHADER_STENCILOP_KEEP;
+		m_CompareFunc = SHADER_STENCILFUNC_ALWAYS;
+		m_nReferenceValue = 0;
+		m_nTestMask = m_nWriteMask = 0xFFFFFFFF;
+
+#if defined( _X360 )
+		m_bHiStencilEnable = false;
+		m_bHiStencilWriteEnable = false;
+		m_HiStencilCompareFunc = SHADER_HI_STENCILFUNC_EQUAL;
+		m_nHiStencilReferenceValue = 0;
+#endif
+	}
+};
+
+
+//-----------------------------------------------------------------------------
 // Used for occlusion queries
 //-----------------------------------------------------------------------------
 DECLARE_POINTER_HANDLE( ShaderAPIOcclusionQuery_t );
@@ -134,7 +263,7 @@ enum ShaderAPIOcclusionQueryResult_t
 //-----------------------------------------------------------------------------
 // This is what the material system gets to see.
 //-----------------------------------------------------------------------------
-#define SHADERAPI_INTERFACE_VERSION		"ShaderApi030"
+#define SHADERAPI_INTERFACE_VERSION		"ShaderApi029"
 abstract_class IShaderAPI : public IShaderDynamicAPI
 {
 public:
@@ -207,18 +336,18 @@ public:
 	virtual void BeginPass( StateSnapshot_t snapshot ) = 0;
 
 	// Renders a single pass of a material
-	virtual void RenderPass( int nPass, int nPassCount ) = 0;
+	virtual void RenderPass( const unsigned char *pInstanceCommandBuffer, int nPass, int nPassCount ) = 0;
 
 	// Set the number of bone weights
 	virtual void SetNumBoneWeights( int numBones ) = 0;
 
 	// Sets the lights
-	virtual void SetLight( int lightNum, const LightDesc_t& desc ) = 0;
+	virtual void SetLights( int nCount, const LightDesc_t *pDesc ) = 0;
 
 	// Lighting origin for the current model
 	virtual void SetLightingOrigin( Vector vLightingOrigin ) = 0;
 
-	virtual void SetAmbientLight( float r, float g, float b ) = 0;
+	virtual void SetLightingState( const MaterialLightingState_t& state ) = 0;
 	virtual void SetAmbientLightCube( Vector4D cube[6] ) = 0;
 
 	// The shade mode
@@ -226,6 +355,7 @@ public:
 
 	// The cull mode
 	virtual void CullMode( MaterialCullMode_t cullMode ) = 0;
+	virtual void FlipCullMode( void ) = 0; //CW->CCW or CCW->CW, intended for mirror support where the view matrix is flipped horizontally
 
 	// Force writes only when z matches. . . useful for stenciling things out
 	// by rendering the desired Z values ahead of time.
@@ -240,11 +370,8 @@ public:
 	virtual void SetClipPlane( int index, const float *pPlane ) = 0;
 	virtual void EnableClipPlane( int index, bool bEnable ) = 0;
 	
-	// Put all the model matrices into vertex shader constants.
-	virtual void SetSkinningMatrices() = 0;
-
 	// Returns the nearest supported format
-	virtual ImageFormat GetNearestSupportedFormat( ImageFormat fmt, bool bFilteringRequired = true ) const = 0;
+	virtual ImageFormat GetNearestSupportedFormat( ImageFormat fmt ) const = 0;
 	virtual ImageFormat GetNearestRenderTargetFormat( ImageFormat fmt ) const = 0;
 
 	// When AA is enabled, render targets are not AA and require a separate
@@ -305,8 +432,6 @@ public:
 		bool bSrcIsTiled,		// NOTE: for X360 only
 		void *imageData ) = 0;
 	
-	virtual void TexImageFromVTF( IVTFTexture* pVTF, int iVTFFrame ) = 0;
-
 	// An alternate (and faster) way of writing image data
 	// (locks the current Modify Texture). Use the pixel writer to write the data
 	// after Lock is called
@@ -314,6 +439,11 @@ public:
 	virtual bool TexLock( int level, int cubeFaceID, int xOffset, int yOffset, 
 		int width, int height, CPixelWriter& writer ) = 0;
 	virtual void TexUnlock( ) = 0;
+
+	// Copy sysmem surface to default pool surface asynchronously
+	virtual void UpdateTexture( int xOffset, int yOffset, int w, int h, ShaderAPITextureHandle_t hDstTexture, ShaderAPITextureHandle_t hSrcTexture ) = 0;
+	virtual void *LockTex( ShaderAPITextureHandle_t hTexture ) = 0;
+	virtual void UnlockTex( ShaderAPITextureHandle_t hTexture ) = 0;
 
 	// These are bound to the texture
 	virtual void TexSetPriority( int priority ) = 0;
@@ -410,7 +540,7 @@ public:
 	virtual void PurgeUnusedVertexAndPixelShaders() = 0;
 
 	// Called when the dx support level has changed
-	virtual void DXSupportLevelChanged() = 0;
+	virtual void DXSupportLevelChanged( int nDXLevel ) = 0;
 
 	// By default, the material system applies the VIEW and PROJECTION matrices	to the user clip
 	// planes (which are specified in world space) to generate projection-space user clip planes
@@ -424,9 +554,6 @@ public:
 	// Everything after this point added after HL2 shipped.
 	// ----------------------------------------------------------------------------------
 
-	// What fields in the morph do we actually use?
-	virtual MorphFormat_t ComputeMorphFormat( int numSnapshots, StateSnapshot_t* pIds ) const = 0;
-
 	// Set the render target to a texID.
 	// Set to SHADER_RENDERTARGET_BACKBUFFER if you want to use the regular framebuffer.
 	// Set to SHADER_RENDERTARGET_DEPTHBUFFER if you want to use the regular z buffer.
@@ -435,7 +562,6 @@ public:
 		ShaderAPITextureHandle_t depthTextureHandle = SHADER_RENDERTARGET_DEPTHBUFFER ) = 0;
 
 	virtual void CopyRenderTargetToTextureEx( ShaderAPITextureHandle_t textureHandle, int nRenderTargetID, Rect_t *pSrcRect = NULL, Rect_t *pDstRect = NULL ) = 0;
-	virtual void CopyTextureToRenderTargetEx( int nRenderTargetID, ShaderAPITextureHandle_t textureHandle, Rect_t *pSrcRect = NULL, Rect_t *pDstRect = NULL ) = 0;
 
 	// For dealing with device lost in cases where SwapBuffers isn't called all the time (Hammer)
 	virtual void HandleDeviceLost() = 0;
@@ -444,6 +570,9 @@ public:
 
 	// Lets the shader know about the full-screen texture so it can 
 	virtual void SetFullScreenTextureHandle( ShaderAPITextureHandle_t h ) = 0;
+
+	// Sets the ambient light color
+	virtual void SetAmbientLightColor( float r, float g, float b ) = 0;
 
 	// Rendering parameters control special drawing modes withing the material system, shader
 	// system, shaders, and engine. renderparm.h has their definitions.
@@ -471,14 +600,7 @@ public:
 	virtual int GetMaxIndicesToRender( ) = 0;
 
 	// stencil methods
-	virtual void SetStencilEnable(bool onoff) = 0;
-	virtual void SetStencilFailOperation(StencilOperation_t op) = 0;
-	virtual void SetStencilZFailOperation(StencilOperation_t op) = 0;
-	virtual void SetStencilPassOperation(StencilOperation_t op) = 0;
-	virtual void SetStencilCompareFunction(StencilComparisonFunction_t cmpfn) = 0;
-	virtual void SetStencilReferenceValue(int ref) = 0;
-	virtual void SetStencilTestMask(uint32 msk) = 0;
-	virtual void SetStencilWriteMask(uint32 msk) = 0;
+	virtual void SetStencilState( const ShaderStencilState_t& state ) = 0;
 	virtual void ClearStencilBufferRectangle(int xmin, int ymin, int xmax, int ymax, int value) = 0;
 
 	// disables all local lights
@@ -494,12 +616,12 @@ public:
 #if defined( _X360 )
 	virtual HXUIFONT OpenTrueTypeFont( const char *pFontname, int tall, int style ) = 0;
 	virtual void CloseTrueTypeFont( HXUIFONT hFont ) = 0;
-	virtual bool GetTrueTypeFontMetrics( HXUIFONT hFont, XUIFontMetrics *pFontMetrics, XUICharMetrics charMetrics[256] ) = 0;
+	virtual bool GetTrueTypeFontMetrics( HXUIFONT hFont, wchar_t wchFirst, wchar_t wchLast, XUIFontMetrics *pFontMetrics, XUICharMetrics *pCharMetrics ) = 0;
 	// Render a sequence of characters and extract the data into a buffer
 	// For each character, provide the width+height of the font texture subrect,
 	// an offset to apply when rendering the glyph, and an offset into a buffer to receive the RGBA data
 	virtual bool GetTrueTypeGlyphs( HXUIFONT hFont, int numChars, wchar_t *pWch, int *pOffsetX, int *pOffsetY, int *pWidth, int *pHeight, unsigned char *pRGBA, int *pRGBAOffset ) = 0;
-	virtual ShaderAPITextureHandle_t CreateRenderTargetSurface( int width, int height, ImageFormat format, const char *pDebugName, const char *pTextureGroupName ) = 0;
+	virtual ShaderAPITextureHandle_t CreateRenderTargetSurface( int width, int height, ImageFormat format, RTMultiSampleCount360_t multiSampleCount, const char *pDebugName, const char *pTextureGroupName ) = 0;
 	virtual void PersistDisplay() = 0;
 	virtual bool PostQueuedTexture( const void *pData, int nSize, ShaderAPITextureHandle_t *pHandles, int nHandles, int nWidth, int nHeight, int nDepth, int nMips, int *pRefCount ) = 0;
 	virtual void *GetD3DDevice() = 0;
@@ -507,7 +629,15 @@ public:
 	virtual void PushVertexShaderGPRAllocation( int iVertexShaderCount = 64 ) = 0;
 	virtual void PopVertexShaderGPRAllocation( void ) = 0;
 
-	virtual void EnableVSync_360( bool bEnable ) = 0; //360 allows us to bypass vsync blocking up to 60 fps without creating a new device
+	// 360 allows us to bypass vsync blocking up to 60 fps without creating a new device
+	virtual void EnableVSync_360( bool bEnable ) = 0; 
+
+	virtual void SetCacheableTextureParams( ShaderAPITextureHandle_t *pHandles, int count, const char *pFilename, int mipSkipCount ) = 0;
+	virtual void FlushHiStencil() = 0;
+
+	virtual void Begin360ZPass( int nNumDynamicIndicesNeeded ) = 0;
+	virtual void End360ZPass() = 0;
+	virtual unsigned int Get360ZPassCounter() const  = 0;
 #endif
 	
 	virtual bool OwnGPUResources( bool bEnable ) = 0;
@@ -527,16 +657,11 @@ public:
 	// Computes the vertex buffer pointers 
 	virtual void ComputeVertexDescription( unsigned char* pBuffer, VertexFormat_t vertexFormat, MeshDesc_t& desc ) const = 0;
 
-	virtual bool SupportsShadowDepthTextures( void ) = 0;
-
 	virtual void SetDisallowAccess( bool ) = 0;
 	virtual void EnableShaderShaderMutex( bool ) = 0;
 	virtual void ShaderLock() = 0;
 	virtual void ShaderUnlock() = 0;
 
-	virtual ImageFormat GetShadowDepthTextureFormat( void ) = 0;
-
-	virtual bool SupportsFetch4( void ) = 0;
 	virtual void SetShadowDepthBiasFactors( float fShadowSlopeScaleDepthBias, float fShadowDepthBias ) = 0;
 
 // ------------ New Vertex/Index Buffer interface ----------------------------
@@ -563,8 +688,6 @@ public:
 
 	//Set's the linear->gamma conversion textures to use for this hardware for both srgb writes enabled and disabled(identity)
 	virtual void SetLinearToGammaConversionTextures( ShaderAPITextureHandle_t hSRGBWriteEnabledTexture, ShaderAPITextureHandle_t hIdentityTexture ) = 0;
-
-	virtual ImageFormat GetNullTextureFormat( void ) = 0;
 
 	virtual void BindVertexTexture( VertexTextureSampler_t nSampler, ShaderAPITextureHandle_t textureHandle ) = 0;
 
@@ -593,24 +716,51 @@ public:
 	virtual void AcquireThreadOwnership() = 0;
 	virtual void ReleaseThreadOwnership() = 0;
 
-	virtual bool SupportsNormalMapCompression() const = 0;
-
 	// Only does anything on XBox360. This is useful to eliminate stalls
 	virtual void EnableBuffer2FramesAhead( bool bEnable ) = 0;
 
-	virtual void SetDepthFeatheringPixelShaderConstant( int iConstant, float fDepthBlendScale ) = 0;
+	virtual void FlipCulling( bool bFlipCulling ) = 0;
 
-	// debug logging
-	// only implemented in some subclasses
-	virtual void PrintfVA( char *fmt, va_list vargs ) = 0;
-	virtual void Printf( PRINTF_FORMAT_STRING const char *fmt, ... ) = 0;
-	virtual float Knob( char *knobname, float *setvalue = NULL ) = 0;
-	// Allows us to override the alpha write setting of a material
-	virtual void OverrideAlphaWriteEnable( bool bEnable, bool bAlphaWriteEnable ) = 0;
+	virtual void SetTextureRenderingParameter(int parm_number, ITexture *pTexture) = 0;
+
+	//only actually sets a bool that can be read in from shaders, doesn't do any of the legwork
+	virtual void EnableSinglePassFlashlightMode( bool bEnable ) = 0;
+
+	// stuff related to matrix stacks
+	virtual void MatrixMode( MaterialMatrixMode_t matrixMode ) = 0;
+	virtual void PushMatrix() = 0;
+	virtual void PopMatrix() = 0;
+	virtual void LoadMatrix( float *m ) = 0;
+	virtual void MultMatrix( float *m ) = 0;
+	virtual void MultMatrixLocal( float *m ) = 0;
+	virtual void LoadIdentity( void ) = 0;
+	virtual void LoadCameraToWorld( void ) = 0;
+	virtual void Ortho( double left, double right, double bottom, double top, double zNear, double zFar ) = 0;
+	virtual void PerspectiveX( double fovx, double aspect, double zNear, double zFar ) = 0;
+	virtual	void PickMatrix( int x, int y, int width, int height ) = 0;
+	virtual void Rotate( float angle, float x, float y, float z ) = 0;
+	virtual void Translate( float x, float y, float z ) = 0;
+	virtual void Scale( float x, float y, float z ) = 0;
+	virtual void ScaleXY( float x, float y ) = 0;
+	virtual void PerspectiveOffCenterX( double fovx, double aspect, double zNear, double zFar, double bottom, double top, double left, double right ) = 0;
+
+	virtual void LoadBoneMatrix( int boneIndex, const float *m ) = 0;
+
+	// interface for mat system to tell shaderapi about standard texture handles
+	virtual void SetStandardTextureHandle( StandardTextureId_t nId, ShaderAPITextureHandle_t nHandle ) =0;
+
+	virtual void DrawInstances( int nInstanceCount, const MeshInstanceData_t *pInstance ) = 0;
+
+	// Allows us to override the color/alpha write settings of a material
+	virtual void OverrideAlphaWriteEnable( bool bOverrideEnable, bool bAlphaWriteEnable ) = 0;
 	virtual void OverrideColorWriteEnable( bool bOverrideEnable, bool bColorWriteEnable ) = 0;
 
 	//extended clear buffers function with alpha independent from color
 	virtual void ClearBuffersObeyStencilEx( bool bClearColor, bool bClearAlpha, bool bClearDepth ) = 0;
+
+	virtual void OnPresent( void ) = 0;
+
+	virtual void UpdateGameTime( float flTime ) = 0;
 };
 
 

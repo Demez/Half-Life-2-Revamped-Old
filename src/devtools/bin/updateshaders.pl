@@ -119,14 +119,14 @@ sub DoAsmShader
 
 	if( $bWillCompileVcs )
 	{
-		&output_makefile_line( $incfile . "shaders\\$shadertype\\$vcsfile: $shadername @dep\n") ;
+		&output_makefile_line( $incfile . "shaders\\$shadertype\\$vcsfile: $shadername ..\\..\\devtools\\bin\\updateshaders.pl ..\\..\\devtools\\bin\\" . $shadertype . "_prep.pl" . " @dep\n") ;
 	}
 	else
 	{
 		# psh files don't need a rule at this point since they don't have inc files and we aren't compiling a vcs.
 		if( $shadertype eq "fxc" || $shadertype eq "vsh" )
 		{
-			&output_makefile_line( $incfile . ":  $shadername @dep\n") ;
+			&output_makefile_line( $incfile . ":  $shadername ..\\..\\devtools\\bin\\updateshaders.pl ..\\..\\devtools\\bin\\" . $shadertype . "_prep.pl" . " @dep\n") ;
 		}
 	}
 	
@@ -238,7 +238,7 @@ foreach $shader ( @srcfiles )
 	}
 	if( $compilevcs )
 	{
-		my $vcsFileName = "..\\..\\..\\game\\hl2\\shaders\\$shadertype\\$shaderbase" . $g_vcsext;
+		my $vcsFileName = "..\\..\\..\\game\\platform\\shaders\\$shadertype\\$shaderbase" . $g_vcsext;
 		# We want to check for perforce operations even if the crc matches in the event that a file has been manually reverted and needs to be checked out again.
 		&output_vcslist_line( "$vcsFileName\n" );  
 		$shadercrcpass{$shader} = &CheckCRCAgainstTarget( $shadersrc, $vcsFileName, 0 );

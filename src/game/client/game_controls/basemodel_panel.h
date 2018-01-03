@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2008, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -158,18 +158,18 @@ public:
 	virtual ~CBaseModelPanel();
 
 	// Overridden mdlpanel.h
-	virtual void SetMDL( MDLHandle_t handle, void *pProxyData = NULL );
-	virtual void SetMDL( const char *pMDLName, void *pProxyData = NULL );
-	virtual void SetModelAnglesAndPosition( const QAngle &angRot, const Vector &vecPos );
+	virtual void SetMDL( MDLHandle_t handle );
+	virtual void SetMDL( const char *pMDLName );
 
 	// Overridden methods of vgui::Panel
 	virtual void ApplySettings( KeyValues *inResourceData );
 	virtual void PerformLayout();
 
-	// Animation.
+	// Animaiton.
 	int FindDefaultAnim( void );
 	int FindAnimByName( const char *pszName );
 	void SetModelAnim( int iAnim );
+	void SetModelAnim( const char *pszName );
 
 	// Manipulation.
 	virtual void OnKeyCodePressed ( vgui::KeyCode code );
@@ -179,22 +179,7 @@ public:
 	virtual void OnCursorMoved( int x, int y );
 	virtual void OnMouseWheeled( int delta );
 
-	studiohdr_t* GetStudioHdr( void ) { return m_RootMDL.m_MDL.GetStudioHdr(); }
-	void SetBody( unsigned int nBody ) { m_RootMDL.m_MDL.m_nBody = nBody; }
-
-	void		 RotateYaw( float flDelta );
-
-	Vector		GetPlayerPos() const;
-	QAngle		GetPlayerAngles() const;
-
-	void LookAtBounds( const Vector &vecBoundsMin, const Vector &vecBoundsMax );
-
-	// Set to true if external code has set a specific camera position that shouldn't be clobbered by layout
-	void SetForcedCameraPosition( bool bForcedCameraPosition ) { m_bForcedCameraPosition = bForcedCameraPosition; }
-
-	int FindSequenceFromActivity( CStudioHdr *pStudioHdr, const char *pszActivity );
-
-protected:
+private:
 
 	// Resource file data.
 	void ParseModelResInfo( KeyValues *inResourceData );
@@ -204,18 +189,18 @@ protected:
 	void SetupModelDefaults( void );
 	void SetupModelAnimDefaults( void );
 
-public:
+	void LookAtBounds( const Vector &vecBoundsMin, const Vector &vecBoundsMax );
+
+	int FindSequenceFromActivity( CStudioHdr *pStudioHdr, const char *pszActivity );
+
+private:
+
 	BMPResData_t	m_BMPResData;			// Base model panel data set in the .res file.
 	QAngle			m_angPlayer;
 	Vector			m_vecPlayerPos;
-
-protected:
 	bool			m_bForcePos;
 	bool			m_bMousePressed;
 	bool			m_bAllowRotation;
-	bool			m_bAllowFullManipulation;
-	bool			m_bApplyManipulators;
-	bool			m_bForcedCameraPosition;
 
 	// VGUI script accessible variables.
 	CPanelAnimationVar( bool, m_bStartFramed, "start_framed", "0" );

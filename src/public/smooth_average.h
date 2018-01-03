@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -194,17 +194,16 @@ inline CTimingInfo< T > SumOverTimeInterval_Struct( const T &value, float nSecon
 	{
 		if ( i != newValueIndex )
 		{
-			info.m_HighAverage = max( pInfo->m_Values[i].m_Average, info.m_HighAverage );
-			info.m_LowAverage = min( pInfo->m_Values[i].m_Average, info.m_LowAverage );
+			info.m_HighAverage = MAX( pInfo->m_Values[i].m_Average, info.m_HighAverage );
+			info.m_LowAverage = MIN( pInfo->m_Values[i].m_Average, info.m_LowAverage );
 		}
 
-		info.m_HighValue = max( pInfo->m_Values[i].m_Value, info.m_HighValue );
-		info.m_LowValue = min( pInfo->m_Values[i].m_Value, info.m_LowValue );
+		info.m_HighValue = MAX( pInfo->m_Values[i].m_Value, info.m_HighValue );
+		info.m_LowValue = MIN( pInfo->m_Values[i].m_Value, info.m_LowValue );
 
 		info.m_AverageValue += pInfo->m_Values[i].m_Value;
 	}
 
-	info.m_AverageValue /= pInfo->m_Values.Count();
 	pInfo->m_Values[newValueIndex].m_Average = info.m_AverageValue;
 	return info;
 }

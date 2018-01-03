@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -284,6 +284,14 @@ struct constraint_lengthparams_t
 		pRef->WorldToLocal( &objectPosition[0], refPosition );
 		pAttached->WorldToLocal( &objectPosition[1], attachedPosition );
 		totalLength = (refPosition - attachedPosition).Length();
+		minLength = rigid ? totalLength : 0;
+	}
+
+	void Init( IPhysicsObject *pRef, IPhysicsObject *pAttached, float flLength, bool rigid = false )
+	{
+		objectPosition[0] = vec3_origin;
+		objectPosition[1] = vec3_origin;
+		totalLength = flLength;
 		minLength = rigid ? totalLength : 0;
 	}
 

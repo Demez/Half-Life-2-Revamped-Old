@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Security cameras will track a default target (if they have one)
 //			until they either acquire an enemy to track or are told to track
@@ -400,7 +400,7 @@ int CNPC_CombineCamera::OnTakeDamage(const CTakeDamageInfo &inputInfo)
 	if (m_bActive == false)
 		info.ScaleDamage(0.1f);
 
-	// If attacker can't do at least the min required damage to us, don't take any damage from them
+	// If attacker can't do at least the MIN required damage to us, don't take any damage from them
 	if (info.GetDamage() < m_iMinHealthDmg)
 		return 0;
 

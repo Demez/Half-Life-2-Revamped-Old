@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -42,8 +42,8 @@ private:
 	float	m_nCalcFrame;	// Frame the last calculation was made at
 };
 
-void RecvProxy_ScaleX( const CRecvProxyData *pData, void *pStruct, void *pOut )
-{
+extern void RecvProxy_ScaleX( const CRecvProxyData *pData, void *pStruct, void *pOut );
+/*{
 	C_PropScalable *pCoreData = (C_PropScalable *) pStruct;
 
 	pCoreData->m_flScaleX = pData->m_Value.m_Float;
@@ -53,9 +53,9 @@ void RecvProxy_ScaleX( const CRecvProxyData *pData, void *pStruct, void *pOut )
 		pCoreData->m_flTargetScale[0] = pCoreData->m_flCurrentScale[0];
 	}
 }
-
-void RecvProxy_ScaleY( const CRecvProxyData *pData, void *pStruct, void *pOut )
-{
+*/
+extern void RecvProxy_ScaleY( const CRecvProxyData *pData, void *pStruct, void *pOut );
+/*{
 	C_PropScalable *pCoreData = (C_PropScalable *) pStruct;
 
 	pCoreData->m_flScaleY = pData->m_Value.m_Float;
@@ -65,9 +65,9 @@ void RecvProxy_ScaleY( const CRecvProxyData *pData, void *pStruct, void *pOut )
 		pCoreData->m_flTargetScale[1] = pCoreData->m_flCurrentScale[1];
 	}
 }
-
-void RecvProxy_ScaleZ( const CRecvProxyData *pData, void *pStruct, void *pOut )
-{
+*/
+extern void RecvProxy_ScaleZ( const CRecvProxyData *pData, void *pStruct, void *pOut );
+/*{
 	C_PropScalable *pCoreData = (C_PropScalable *) pStruct;
 
 	pCoreData->m_flScaleZ = pData->m_Value.m_Float;
@@ -76,7 +76,7 @@ void RecvProxy_ScaleZ( const CRecvProxyData *pData, void *pStruct, void *pOut )
 	{
 		pCoreData->m_flTargetScale[2] = pCoreData->m_flCurrentScale[2];
 	}
-}
+}*/
 
 IMPLEMENT_CLIENTCLASS_DT( C_PropScalable, DT_PropScalable, CPropScalable )
 	RecvPropFloat( RECVINFO( m_flScaleX ), 0, RecvProxy_ScaleX ),

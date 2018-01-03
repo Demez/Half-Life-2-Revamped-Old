@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright � 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -135,10 +135,10 @@ CUtlBlockMemory<T,I>::~CUtlBlockMemory()
 template< class T, class I >
 void CUtlBlockMemory<T,I>::Swap( CUtlBlockMemory< T, I > &mem )
 {
-	swap( m_pMemory, mem.m_pMemory );
-	swap( m_nBlocks, mem.m_nBlocks );
-	swap( m_nIndexMask, mem.m_nIndexMask );
-	swap( m_nIndexShift, mem.m_nIndexShift );
+	V_swap( m_pMemory, mem.m_pMemory );
+	V_swap( m_nBlocks, mem.m_nBlocks );
+	V_swap( m_nIndexMask, mem.m_nIndexMask );
+	V_swap( m_nIndexShift, mem.m_nIndexShift );
 }
 
 
@@ -247,16 +247,15 @@ void CUtlBlockMemory<T,I>::ChangeSize( int nBlocks )
 
 	UTLBLOCKMEMORY_TRACK_ALLOC(); // this must stay after the recalculation of m_nBlocks, since it implicitly uses the new value
 
+	// free old blocks if shrinking
+	for ( int i = m_nBlocks; i < nBlocksOld; ++i )
+	{
+		UTLBLOCKMEMORY_TRACK_FREE();
+		free( (void*)m_pMemory[ i ] );
+	}
+
 	if ( m_pMemory )
 	{
-		// free old blocks if shrinking
-		// Only possible if m_pMemory is non-NULL (and avoids PVS-Studio warning)
-		for ( int i = m_nBlocks; i < nBlocksOld; ++i )
-		{
-			UTLBLOCKMEMORY_TRACK_FREE();
-			free( (void*)m_pMemory[ i ] );
-		}
-
 		MEM_ALLOC_CREDIT_CLASS();
 		m_pMemory = (T**)realloc( m_pMemory, m_nBlocks * sizeof(T*) );
 		Assert( m_pMemory );

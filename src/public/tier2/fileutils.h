@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 2005-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: A higher level link library for general use in the game and tools.
 //
@@ -165,11 +165,6 @@ public:
 	void Seek( int pos, FileSystemSeek_t nSeekType = FILESYSTEM_SEEK_HEAD )
 	{
 		g_pFullFileSystem->Seek( m_FileHandle, pos, nSeekType );
-	}
-
-	unsigned int Tell()
-	{
-		return g_pFullFileSystem->Tell( m_FileHandle );
 	}
 
 	unsigned int Size( void )

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -11,8 +11,8 @@
 #endif
 
 #include <vgui_controls/Panel.h>
-#include "utllinkedlist.h"
-#include "utlvector.h"
+#include "UtlLinkedList.h"
+#include "UtlVector.h"
 
 namespace vgui
 {

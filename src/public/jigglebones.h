@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,7 +13,7 @@
 #endif
 
 #include "studio.h"
-#include "utlvector.h"
+#include "UtlVector.h"
 #include "utllinkedlist.h"
 
 //-----------------------------------------------------------------------------
@@ -36,17 +36,10 @@ struct JiggleData
 		tipPos = initTipPos;
 		tipVel.Init();
 		tipAccel.Init();
-
-		lastLeft = Vector( 0, 0, 0 );
-
-		lastBoingPos = initBasePos;
-		boingDir = Vector( 0.0f, 0.0f, 1.0f );
-		boingVelDir.Init();
-		boingSpeed = 0.0f;
-		boingTime = 0.0f;
 	}
 
 	int bone;
+	int id;
 
 	float lastUpdate;	// based on gpGlobals->realtime
 
@@ -58,13 +51,6 @@ struct JiggleData
 	Vector tipPos;		// position of the tip of the jiggle bone
 	Vector tipVel;
 	Vector tipAccel;
-	Vector lastLeft;		// previous up vector
-
-	Vector lastBoingPos;	// position of base of jiggle bone last update for tracking velocity
-	Vector boingDir;		// current direction along which the boing effect is occurring
-	Vector boingVelDir;		// current estimation of jiggle bone unit velocity vector for boing effect
-	float boingSpeed;		// current estimation of jiggle bone speed for boing effect
-	float boingTime;
 };
 
 class CJiggleBones
@@ -77,6 +63,6 @@ public:
 };
 
 
-extern void DevMsgRT( PRINTF_FORMAT_STRING char const* pMsg, ... );
+extern void DevMsgRT( char const* pMsg, ... );
 
 #endif // C_BASEANIMATING_H

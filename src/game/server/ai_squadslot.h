@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:		The default shared conditions
 //
@@ -29,8 +29,6 @@ enum SQUAD_SLOT_t {
 
 	SQUAD_SLOT_ATTACK1 = 0,		// reserve 2 attack slots for most squads
 	SQUAD_SLOT_ATTACK2,
-	SQUAD_SLOT_ATTACK3,
-
 
 	SQUAD_SLOT_INVESTIGATE_SOUND,
 

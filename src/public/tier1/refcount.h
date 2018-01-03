@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========== Copyright � 2005, Valve Corporation, All rights reserved. ========
 //
 // Purpose: Tools for correctly implementing & handling reference counted
 //			objects
@@ -159,8 +159,8 @@ public:
 class CRefMT
 {
 public:
-	static int Increment( int *p) { return ThreadInterlockedIncrement( (long *)p ); }
-	static int Decrement( int *p) { return ThreadInterlockedDecrement( (long *)p ); }
+	static int Increment( int *p) { return ThreadInterlockedIncrement( (int32 *)p ); }
+	static int Decrement( int *p) { return ThreadInterlockedDecrement( (int32 *)p ); }
 };
 
 class CRefST
@@ -348,7 +348,7 @@ public:
 //			referencing problems
 //-----------------------------------------------------------------------------
 
-template <class BASE_REFCOUNTED, int FINAL_REFS, const char *pszName>
+template <class BASE_REFCOUNTED, int FINAL_REFS = 0, const char *pszName = NULL>
 class CRefDebug : public BASE_REFCOUNTED
 {
 public:

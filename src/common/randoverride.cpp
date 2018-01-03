@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -21,7 +21,7 @@ void __cdecl srand(unsigned int)
 
 int __cdecl rand()
 {
-	return RandomInt( 0, VALVE_RAND_MAX );
+	return RandomInt( 0, 0x7fff );
 }
 
 #endif // !_STATIC_LINKED || _SHARED_LIB

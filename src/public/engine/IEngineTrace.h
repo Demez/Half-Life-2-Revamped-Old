@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -15,6 +15,7 @@
 #include "basehandle.h"
 #include "utlvector.h" //need CUtlVector for IEngineTrace::GetBrushesIn*()
 #include "mathlib/vector4d.h"
+#include "bspflags.h"
 
 class Vector;
 class IHandleEntity;
@@ -23,9 +24,10 @@ class CGameTrace;
 typedef CGameTrace trace_t;
 class ICollideable;
 class QAngle;
-class CTraceListData;
+class ITraceListData;
 class CPhysCollide;
 struct cplane_t;
+struct virtualmeshlist_t;
 
 //-----------------------------------------------------------------------------
 // The standard trace filter... NOTE: Most normal traces inherit from CTraceFilter!!!
@@ -109,6 +111,12 @@ public:
 };
 
 
+enum DebugTraceCounterBehavior_t
+{
+	kTRACE_COUNTER_SET = 0,
+	kTRACE_COUNTER_INC,
+};
+
 //-----------------------------------------------------------------------------
 // Enumeration interface for EnumerateLinkEntities
 //-----------------------------------------------------------------------------
@@ -120,17 +128,27 @@ public:
 };
 
 
+struct BrushSideInfo_t
+{
+	Vector4D plane;			// The plane of the brush side
+	unsigned short bevel;	// Bevel plane?
+	unsigned short thin;	// Thin?
+};
+
 //-----------------------------------------------------------------------------
 // Interface the engine exposes to the game DLL
 //-----------------------------------------------------------------------------
-#define INTERFACEVERSION_ENGINETRACE_SERVER	"EngineTraceServer003"
-#define INTERFACEVERSION_ENGINETRACE_CLIENT	"EngineTraceClient003"
+#define INTERFACEVERSION_ENGINETRACE_SERVER	"EngineTraceServer004"
+#define INTERFACEVERSION_ENGINETRACE_CLIENT	"EngineTraceClient004"
 abstract_class IEngineTrace
 {
 public:
 	// Returns the contents mask + entity at a particular world-space position
-	virtual int		GetPointContents( const Vector &vecAbsPosition, IHandleEntity** ppEntity = NULL ) = 0;
+	virtual int		GetPointContents( const Vector &vecAbsPosition, int contentsMask = MASK_ALL, IHandleEntity** ppEntity = NULL ) = 0;
 	
+	// Returns the contents mask of the world only @ the world-space position (static props are ignored)
+	virtual int		GetPointContents_WorldOnly( const Vector &vecAbsPosition, int contentsMask = MASK_ALL ) = 0;
+
 	// Get the point contents, but only test the specific entity. This works
 	// on static props and brush models.
 	//
@@ -148,9 +166,9 @@ public:
 	virtual void	TraceRay( const Ray_t &ray, unsigned int fMask, ITraceFilter *pTraceFilter, trace_t *pTrace ) = 0;
 
 	// A version that sets up the leaf and entity lists and allows you to pass those in for collision.
-	virtual void	SetupLeafAndEntityListRay( const Ray_t &ray, CTraceListData &traceData ) = 0;
-	virtual void    SetupLeafAndEntityListBox( const Vector &vecBoxMin, const Vector &vecBoxMax, CTraceListData &traceData ) = 0;
-	virtual void	TraceRayAgainstLeafAndEntityList( const Ray_t &ray, CTraceListData &traceData, unsigned int fMask, ITraceFilter *pTraceFilter, trace_t *pTrace ) = 0;
+	virtual void	SetupLeafAndEntityListRay( const Ray_t &ray, ITraceListData *pTraceData ) = 0;
+	virtual void    SetupLeafAndEntityListBox( const Vector &vecBoxMin, const Vector &vecBoxMax, ITraceListData *pTraceData ) = 0;
+	virtual void	TraceRayAgainstLeafAndEntityList( const Ray_t &ray, ITraceListData *pTraceData, unsigned int fMask, ITraceFilter *pTraceFilter, trace_t *pTrace ) = 0;
 
 	// A version that sweeps a collideable through the world
 	// abs start + abs end represents the collision origins you want to sweep the collideable through
@@ -178,15 +196,38 @@ public:
 	//Creates a CPhysCollide out of all displacements wholly or partially contained in the specified AABB
 	virtual CPhysCollide* GetCollidableFromDisplacementsInAABB( const Vector& vMins, const Vector& vMaxs ) = 0;
 
+	// gets the number of displacements in the world
+	virtual int GetNumDisplacements( ) = 0;
+
+	// gets a specific diplacement mesh
+	virtual void GetDisplacementMesh( int nIndex, virtualmeshlist_t *pMeshTriList ) = 0;
+	
 	//retrieve brush planes and contents, returns true if data is being returned in the output pointers, false if the brush doesn't exist
-	virtual bool GetBrushInfo( int iBrush, CUtlVector<Vector4D> *pPlanesOut, int *pContentsOut ) = 0;
+	virtual bool GetBrushInfo( int iBrush, CUtlVector<BrushSideInfo_t> *pBrushSideInfoOut, int *pContentsOut ) = 0;
 
 	virtual bool PointOutsideWorld( const Vector &ptTest ) = 0; //Tests a point to see if it's outside any playable area
 
 	// Walks bsp to find the leaf containing the specified point
 	virtual int GetLeafContainingPoint( const Vector &ptTest ) = 0;
+
+	virtual ITraceListData *AllocTraceListData() = 0;
+	virtual void FreeTraceListData(ITraceListData *) = 0;
+
+	/// Used only in debugging: get/set/clear/increment the trace debug counter. See comment below for details.
+	virtual int GetSetDebugTraceCounter( int value, DebugTraceCounterBehavior_t behavior ) = 0;
 };
 
-
+/// IEngineTrace::GetSetDebugTraceCounter
+/// SET to a negative number to disable. SET to a positive number to reset the counter; it'll tick down by
+/// one for each trace, and break into the debugger on hitting zero. INC lets you add or subtract from the 
+/// counter. In each case it will return the value of the counter BEFORE you set or incremented it. INC 0 
+/// to query.  This end-around approach is necessary for security: because only the engine knows when we
+/// are in a trace, and only the server knows when we are in a think, data must somehow be shared between
+/// them. Simply returning a pointer to an address inside the engine in a retail build is unacceptable,
+/// and in the PC there is no way to distinguish between retail and non-retail builds at compile time
+/// (there is no #define for it).
+/// This may seem redundant with the VPROF_INCREMENT_COUNTER( "TraceRay" ), but it's not, because while
+/// that's readable across DLLs, there's no way to trap on its exceeding a certain value, nor can we reset
+/// it for each think. 
 
 #endif // ENGINE_IENGINETRACE_H

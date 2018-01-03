@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,14 +13,13 @@
 #include <KeyValues.h>
 #include <vgui_controls/AnimationController.h>
 #include <vgui/ISurface.h>
-#include "VGuiMatSurface/IMatSystemSurface.h"
-#include "materialsystem/imaterial.h"
-#include "materialsystem/imesh.h"
+#include "vguimatsurface/IMatSystemSurface.h"
+#include "materialsystem/IMaterial.h"
+#include "materialsystem/IMesh.h"
 #include "materialsystem/imaterialvar.h"
-#include "IEffects.h"
+#include "ieffects.h"
 #include "hudelement.h"
-#include "clienteffectprecachesystem.h"
-#include "sourcevr/isourcevirtualreality.h"
+#include "ClientEffectPrecacheSystem.h"
 
 using namespace vgui;
 
@@ -122,7 +121,7 @@ static DamageAnimation_t g_DamageAnimations[] =
 //-----------------------------------------------------------------------------
 CHudDamageIndicator::CHudDamageIndicator( const char *pElementName ) : CHudElement( pElementName ), BaseClass(NULL, "HudDamageIndicator")
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_WhiteAdditiveMaterial.Init( "vgui/white_additive", TEXTURE_GROUP_VGUI ); 
@@ -344,7 +343,7 @@ void CHudDamageIndicator::MsgFunc_Damage( bf_read &msg )
 	// player has just died, just run the dead damage animation
 	if ( pPlayer->GetHealth() <= 0 )
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "HudPlayerDeath" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "HudPlayerDeath" );
 		return;
 	}
 
@@ -354,7 +353,7 @@ void CHudDamageIndicator::MsgFunc_Damage( bf_read &msg )
 	if ( vecFrom == vec3_origin && !(bitsDamage & DMG_DROWN))
 		return;
 
-	Vector vecDelta = (vecFrom - MainViewOrigin());
+	Vector vecDelta = (vecFrom - MainViewOrigin(engine->GetActiveSplitScreenPlayerSlot()));
 	VectorNormalize( vecDelta );
 
 	int highDamage = DAMAGE_LOW;
@@ -397,7 +396,7 @@ void CHudDamageIndicator::MsgFunc_Damage( bf_read &msg )
 
 		if ( dmgAnim->name )
 		{
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( dmgAnim->name );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( dmgAnim->name );
 		}
 	}
 }
@@ -410,8 +409,8 @@ void CHudDamageIndicator::GetDamagePosition( const Vector &vecDelta, float *flRo
 	float flRadius = 360.0f;
 
 	// Player Data
-	Vector playerPosition = MainViewOrigin();
-	QAngle playerAngles = MainViewAngles();
+	Vector playerPosition = MainViewOrigin(engine->GetActiveSplitScreenPlayerSlot());
+	QAngle playerAngles = MainViewAngles(engine->GetActiveSplitScreenPlayerSlot());
 
 	Vector forward, right, up(0,0,1);
 	AngleVectors (playerAngles, &forward, NULL, NULL );
@@ -432,8 +431,8 @@ void CHudDamageIndicator::GetDamagePosition( const Vector &vecDelta, float *flRo
 	float sa = sin( yawRadians );
 				 
 	// Rotate it around the circle
-	xpos = (int)((GetWide() / 2) + (flRadius * sa));
-	ypos = (int)((GetTall() / 2) - (flRadius * ca));
+	xpos = (int)((ScreenWidth() / 2) + (flRadius * sa));
+	ypos = (int)((ScreenHeight() / 2) - (flRadius * ca));
 }
 
 //-----------------------------------------------------------------------------
@@ -444,18 +443,7 @@ void CHudDamageIndicator::ApplySchemeSettings(vgui::IScheme *pScheme)
 	BaseClass::ApplySchemeSettings(pScheme);
 	SetPaintBackgroundEnabled(false);
 
-	int vx, vy, vw, vh;
-	vgui::surface()->GetFullscreenViewport( vx, vy, vw, vh );
-
-	SetForceStereoRenderToFrameBuffer( true );
-
-	if( UseVR() )
-	{
-		m_flDmgY = 0.125f * (float)vh;
-		m_flDmgTall1 = 0.625f * (float)vh;
-		m_flDmgTall2 = 0.4f * (float)vh;
-		m_flDmgWide = 0.1f * (float)vw;
-	}
-
-	SetSize(vw, vh);
+	int wide, tall;
+	GetHudSize(wide, tall);
+	SetSize(wide, tall);
 }

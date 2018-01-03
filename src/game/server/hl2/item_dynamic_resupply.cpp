@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -349,7 +349,7 @@ void CItem_DynamicResupply::SpawnFullItem( CItem_DynamicResupply *pMaster, CBase
 
 			if ( iDebug )
 			{
-				Msg("Player is full, spawning item_healthvial due to spawnflag.\n");
+				Msg("Player is full, spawning item_healthvial due to spawnflag.\n", g_DynamicResupplyAmmoItems[i].sEntityName );
 			}
 			return;
 		}
@@ -493,7 +493,7 @@ void CItem_DynamicResupply::ComputeAmmoRatios( CItem_DynamicResupply* pMaster, C
 		}
 		else
 		{
-			float flMax = GetAmmoDef()->MaxCarry( iAmmoType );
+			float flMax = GetAmmoDef()->MaxCarry( iAmmoType, pPlayer );
 			float flCurrentAmmo = pPlayer->GetAmmoCount( iAmmoType );
 			flCurrentAmmo += (pSpawnInfo[i].m_iPotentialItems * g_DynamicResupplyAmmoItems[i].iAmmoCount);
 			pSpawnInfo[i].m_flCurrentRatio = (flCurrentAmmo / flMax);

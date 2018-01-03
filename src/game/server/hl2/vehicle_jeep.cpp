@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright (c) 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -28,8 +28,7 @@
 #include "vehicle_jeep.h"
 #include "eventqueue.h"
 #include "rumble_shared.h"
-// NVNT haptic utils
-#include "haptics/haptic_utils.h"
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -196,6 +195,10 @@ void CPropJeep::Precache( void )
 
 	PrecacheModel( GAUSS_BEAM_SPRITE );
 
+	PrecacheEffect( "ImpactJeep" );
+	PrecacheEffect( "watersplash" );
+	PrecacheEffect( "waterripple" );
+
 	BaseClass::Precache();
 }
 
@@ -277,7 +280,7 @@ void CPropJeep::DoImpactEffect( trace_t &tr, int nDamageType )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CPropJeep::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
+void CPropJeep::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vecDir, trace_t *ptr )
 {
 	CTakeDamageInfo info = inputInfo;
 	if ( ptr->hitbox != VEHICLE_HITBOX_DRIVER )
@@ -288,7 +291,7 @@ void CPropJeep::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vec
 		}
 	}
 
-	BaseClass::TraceAttack( info, vecDir, ptr, pAccumulator );
+	BaseClass::TraceAttack( info, vecDir, ptr );
 }
 
 //-----------------------------------------------------------------------------
@@ -535,7 +538,7 @@ bool CPropJeep::CheckWater( void )
 		// Check to see if we hit water.
 		if ( pWheel->GetContactPoint( &m_WaterData.m_vecWheelContactPoints[iWheel], NULL ) )
 		{
-			m_WaterData.m_bWheelInWater[iWheel] = ( UTIL_PointContents( m_WaterData.m_vecWheelContactPoints[iWheel] ) & MASK_WATER ) ? true : false;
+			m_WaterData.m_bWheelInWater[iWheel] = ( UTIL_PointContents( m_WaterData.m_vecWheelContactPoints[iWheel], MASK_WATER ) & MASK_WATER ) ? true : false;
 			if ( m_WaterData.m_bWheelInWater[iWheel] )
 			{
 				bInWater = true;
@@ -549,7 +552,7 @@ bool CPropJeep::CheckWater( void )
 	QAngle vecEngineAngles;
 	GetAttachment( iEngine, vecEnginePoint, vecEngineAngles );
 
-	m_WaterData.m_bBodyInWater = ( UTIL_PointContents( vecEnginePoint ) & MASK_WATER ) ? true : false;
+	m_WaterData.m_bBodyInWater = ( UTIL_PointContents( vecEnginePoint, MASK_WATER ) & MASK_WATER ) ? true : false;
 	if ( m_WaterData.m_bBodyInWater )
 	{
 		if ( m_bHasPoop )
@@ -603,7 +606,7 @@ void CPropJeep::CheckWaterLevel( void )
 		vecUp.z = clamp( vecUp.z, 0.0f, vecUp.z );
 		vecAttachPoint.z += r_JeepViewZHeight.GetFloat() * vecUp.z;
 
-		bool bEyes = ( UTIL_PointContents( vecAttachPoint ) & MASK_WATER ) ? true : false;
+		bool bEyes = ( UTIL_PointContents( vecAttachPoint, MASK_WATER ) & MASK_WATER ) ? true : false;
 		if ( bEyes )
 		{
 			pPlayer->SetWaterLevel( WL_Eyes );
@@ -620,7 +623,7 @@ void CPropJeep::CheckWaterLevel( void )
 		// Check feet. (vehicle_feet_passenger0 point)
 		iAttachment = LookupAttachment( "vehicle_feet_passenger0" );
 		GetAttachment( iAttachment, vecAttachPoint, vecAttachAngles );
-		bool bFeet = ( UTIL_PointContents( vecAttachPoint ) & MASK_WATER ) ? true : false;
+		bool bFeet = ( UTIL_PointContents( vecAttachPoint, MASK_WATER ) & MASK_WATER ) ? true : false;
 		if ( bFeet )
 		{
 			pPlayer->SetWaterLevel( WL_Feet );
@@ -883,9 +886,6 @@ void CPropJeep::DrawBeam( const Vector &startPos, const Vector &endPos, float wi
 	pBeam->SetEndWidth( 0.1f );
 }
 
-// NVNT Convar for jeep cannon magnitude
-ConVar hap_jeep_cannon_mag("hap_jeep_cannon_mag", "10", 0);
-
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -905,10 +905,6 @@ void CPropJeep::FireCannon( void )
 	Vector aimDir;
 	GetCannonAim( &aimDir );
 
-#if defined( WIN32 ) && !defined( _X360 ) 
-	// NVNT apply a punch on fire
-	HapticPunch(m_hPlayer,0,0,hap_jeep_cannon_mag.GetFloat());
-#endif
 	FireBulletsInfo_t info( 1, m_vecGunOrigin, aimDir, VECTOR_CONE_1DEGREES, MAX_TRACE_LENGTH, m_nAmmoType );
 
 	info.m_nFlags = FIRE_BULLETS_ALLOW_WATER_SURFACE_IMPACTS;

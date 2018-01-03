@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Dr. Eli Vance, earths last great hope, single-handedly fighting
 //			off both an evil alien invasion, as well as trying to stop 
@@ -58,7 +58,7 @@ Class_T	CNPC_Eli::Classify ( void )
 //-----------------------------------------------------------------------------
 void CNPC_Eli::HandleAnimEvent( animevent_t *pEvent )
 {
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 	case 1:
 	default:

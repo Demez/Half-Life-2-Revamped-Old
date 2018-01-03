@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Client's energy wave
 //
@@ -11,18 +11,18 @@
 // $NoKeywords: $
 //=============================================================================//
 #include "cbase.h"
-#include "materialsystem/imaterialsystem.h"
-#include "materialsystem/imesh.h"
+#include "materialsystem/IMaterialSystem.h"
+#include "materialsystem/IMesh.h"
 #include "energy_wave_effect.h"
-#include "mathlib/vmatrix.h"
-#include "clienteffectprecachesystem.h"
+#include "mathlib/VMatrix.h"
+#include "precache_register.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-CLIENTEFFECT_REGISTER_BEGIN( PrecacheEnergyWave )
-CLIENTEFFECT_MATERIAL( "effects/energywave/energywave" )
-CLIENTEFFECT_REGISTER_END()
+PRECACHE_REGISTER_BEGIN( GLOBAL, PrecacheEnergyWave )
+PRECACHE( MATERIAL, "effects/energywave/energywave" )
+PRECACHE_REGISTER_END()
 
 //-----------------------------------------------------------------------------
 // Energy Wave: 
@@ -38,7 +38,7 @@ public:
 	~C_EnergyWave();
 
 	void PostDataUpdate( DataUpdateType_t updateType );
-	int	DrawModel( int flags );
+	int	DrawModel( int flags, const RenderableInstance_t &instance );
 	void ComputePoint( float s, float t, Vector& pt, Vector& normal, float& opacity );
 	void DrawWireframeModel( );
 
@@ -68,7 +68,7 @@ END_RECV_TABLE()
 
 C_EnergyWave::C_EnergyWave() : m_EWaveEffect(NULL, NULL)
 {
-	m_pWireframe = materials->FindMaterial("shadertest/wireframevertexcolor", TEXTURE_GROUP_OTHER);
+	m_pWireframe = materials->FindMaterial("debug/debugwireframevertexcolor", TEXTURE_GROUP_OTHER);
 	m_pEWaveMat  = materials->FindMaterial("effects/energywave/energywave", TEXTURE_GROUP_CLIENT_EFFECTS);
 	m_EWaveEffect.Spawn();
 }
@@ -386,7 +386,7 @@ void C_EnergyWave::DrawEWavePoints(Vector* pt, Vector* normal, float* opacity)
 // Main draw entry point
 //-----------------------------------------------------------------------------
 
-int	C_EnergyWave::DrawModel( int flags )
+int	C_EnergyWave::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	if ( !m_bReadyToDraw )
 		return 0;

@@ -104,7 +104,7 @@ foreach $srcfile ( @srcfiles )
 	my $shadertype = &GetShaderType( $srcfile );
 	my $shaderbase = &GetShaderBase( $srcfile );
 	my $shadersrc = &GetShaderSrc( $srcfile );
-	my $vcsFileName = "..\\..\\..\\game\\hl2\\shaders\\$shadertype\\$shaderbase" . $g_vcsext;
+	my $vcsFileName = "..\\..\\..\\game\\platform\\shaders\\$shadertype\\$shaderbase" . $g_vcsext;
 #	print "shadersrc: $shadersrc vcsFileName: $vcsFileName\n";
 
 	if( $g_x360 && ( $shaderbase =~ m/_ps20$/i ) )

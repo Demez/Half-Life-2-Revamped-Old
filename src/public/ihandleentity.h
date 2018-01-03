@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -21,6 +21,14 @@ public:
 	virtual ~IHandleEntity() {}
 	virtual void SetRefEHandle( const CBaseHandle &handle ) = 0;
 	virtual const CBaseHandle& GetRefEHandle() const = 0;
+#ifdef _X360
+	IHandleEntity() :
+		m_bIsStaticProp( false )
+	{
+	}
+
+	bool m_bIsStaticProp;
+#endif
 };
 
 

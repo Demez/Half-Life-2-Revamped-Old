@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2007, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -14,51 +14,47 @@
 #ifndef COMMANDBUFFER_H
 #define COMMANDBUFFER_H
 
-
 #ifdef _WIN32
 #pragma once
 #endif
 
-// all commands defined with their struct
+
+//-----------------------------------------------------------------------------
+// Commands used by the per-pass command buffers
+//-----------------------------------------------------------------------------
 enum CommandBufferCommand_t
 {
 	// flow control commands.
-	CBCMD_END = 0,											// end of stream
-	CBCMD_JUMP = 1,											// int cmd, void *adr. jump to another
-															// stream. Can be used to implement
-															// non-sequentially allocated storage
-	CBCMD_JSR = 2,											// int cmd, void *adr. subroutine call to another stream.
+	CBCMD_END = 0,									// end of stream
+	CBCMD_JUMP,										// int cmd, void *adr. jump to another
+													// stream. Can be used to implement
+													// non-sequentially allocated storage
+	CBCMD_JSR,										// int cmd, void *adr. subroutine call to another stream.
 
 	// constant setting commands
-	CBCMD_SET_PIXEL_SHADER_FLOAT_CONST = 256, // int cmd,int first_reg, int nregs, float values[nregs*4]
+	CBCMD_SET_PIXEL_SHADER_FLOAT_CONST,				// int cmd,int first_reg, int nregs, float values[nregs*4]
 
 
-	CBCMD_SET_VERTEX_SHADER_FLOAT_CONST = 257, // int cmd,int first_reg, int nregs, float values[nregs*4]
-	CBCMD_SET_VERTEX_SHADER_FLOAT_CONST_REF = 258, // int cmd,int first_reg, int nregs, &float values[nregs*4]
-	CBCMD_SETPIXELSHADERFOGPARAMS = 259,					// int cmd, int regdest
-	CBCMD_STORE_EYE_POS_IN_PSCONST = 260,					// int cmd, int regdest
-	CBCMD_COMMITPIXELSHADERLIGHTING = 261,					// int cmd, int regdest
-	CBCMD_SETPIXELSHADERSTATEAMBIENTLIGHTCUBE = 262,		// int cmd, int regdest
-	CBCMD_SETAMBIENTCUBEDYNAMICSTATEVERTEXSHADER = 263,		// int cmd
-	CBCMD_SET_DEPTH_FEATHERING_CONST = 264,					// int cmd, int constant register, float blend scale
+	CBCMD_SET_VERTEX_SHADER_FLOAT_CONST,			// int cmd,int first_reg, int nregs, float values[nregs*4]
+	CBCMD_SET_VERTEX_SHADER_FLOAT_CONST_REF,		// int cmd,int first_reg, int nregs, &float values[nregs*4]
+	CBCMD_SETPIXELSHADERFOGPARAMS,					// int cmd, int regdest
+	CBCMD_STORE_EYE_POS_IN_PSCONST,					// int cmd, int regdest
+	CBCMD_SET_DEPTH_FEATHERING_CONST,				// int cmd, int constant register, float blend scale
 
 	// texture binding
-	CBCMD_BIND_STANDARD_TEXTURE = 512,						// cmd, sampler, texture id
-	CBCMD_BIND_SHADERAPI_TEXTURE_HANDLE = 513,				// cmd, sampler, texture handle
+	CBCMD_BIND_STANDARD_TEXTURE,					// cmd, sampler, texture id
+	CBCMD_BIND_SHADERAPI_TEXTURE_HANDLE,			// cmd, sampler, texture handle
 
 	// shaders
-	CBCMD_SET_PSHINDEX = 1024,								// cmd, idx
-	CBCMD_SET_VSHINDEX = 1025,								// cmd, idx
+	CBCMD_SET_PSHINDEX,								// cmd, idx
+	CBCMD_SET_VSHINDEX,								// cmd, idx
 
-	// commands from mainline.   In mainline commands no longer have
-	// command id's specified like this. So I make up numbers...
-	CBCMD_SET_VERTEX_SHADER_FLASHLIGHT_STATE = 2000,		// cmd, int first_reg (for worldToTexture matrix)
-	CBCMD_SET_PIXEL_SHADER_FLASHLIGHT_STATE = 2001,		    // cmd, int color reg, int atten reg, int origin reg, sampler (for flashlight texture)
+	CBCMD_SET_VERTEX_SHADER_FLASHLIGHT_STATE,		// cmd, int first_reg (for worldToTexture matrix)
+	CBCMD_SET_PIXEL_SHADER_FLASHLIGHT_STATE,		// cmd, int color reg, int atten reg, int origin reg, sampler (for flashlight texture)
 
-	CBCMD_SET_PIXEL_SHADER_UBERLIGHT_STATE = 2002,			// cmd
+	CBCMD_SET_PIXEL_SHADER_UBERLIGHT_STATE,			// cmd
 
-	CBCMD_SET_VERTEX_SHADER_NEARZFARZ_STATE = 2003,		    // cmd
-
+	CBCMD_SET_VERTEX_SHADER_NEARZFARZ_STATE,		// cmd
 };
 
 //-----------------------------------------------------------------------------
@@ -98,6 +94,7 @@ enum CommandBufferInstanceCommand_t
 	CBICMD_SETMODULATIONPIXELSHADERDYNAMICSTATE_LINEARCOLORSPACE_LINEARSCALE, // int cmd, int constant register, Vector color2
 	CBICMD_SETMODULATIONPIXELSHADERDYNAMICSTATE_LINEARCOLORSPACE,			// int cmd, int constant register, Vector color2
 	CBICMD_SETMODULATIONPIXELSHADERDYNAMICSTATE_LINEARSCALE,				// int cmd, int constant register, Vector color2, float scale
+	CBICMD_SETMODULATIONPIXELSHADERDYNAMICSTATE_LINEARSCALE_SCALEINW,		// int cmd, int constant register, Vector color2, float scale
 	CBICMD_SETMODULATIONVERTEXSHADERDYNAMICSTATE,							// int cmd, int constant register, Vector color2
 	CBICMD_SETMODULATIONPIXELSHADERDYNAMICSTATE_IDENTITY,					// int cmd, int constant register
 	CBICMD_SETMODULATIONVERTEXSHADERDYNAMICSTATE_LINEARSCALE,				// int cmd, int constant register, Vector color2, float scale
@@ -105,4 +102,4 @@ enum CommandBufferInstanceCommand_t
 	CBICMD_COUNT,
 };
 
-#endif // commandbuffer_h
+#endif // COMMANDBUFFER_H

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Deals with precaching requests from client effects
 //
@@ -7,7 +7,7 @@
 //=============================================================================//
 #include "cbase.h"
 #include "fx.h"
-#include "clienteffectprecachesystem.h"
+#include "ClientEffectPrecacheSystem.h"
 #include "particles/particles.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -26,7 +26,7 @@ CClientEffectPrecacheSystem	*ClientEffectPrecacheSystem( void )
 void CClientEffectPrecacheSystem::LevelInitPreEntity( void )
 {
 	//Precache all known effects
-	for ( int i = 0; i < m_Effects.Size(); i++ )
+	for ( int i = 0; i < m_Effects.Count(); i++ )
 	{
 		m_Effects[i]->Cache();
 	}
@@ -36,7 +36,7 @@ void CClientEffectPrecacheSystem::LevelInitPreEntity( void )
 	materials->CacheUsedMaterials();
 
 	// Now, cache off our material handles
-	FX_CacheMaterialHandles();
+//	FX_CacheMaterialHandles();
 }
 
 //-----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ void CClientEffectPrecacheSystem::LevelShutdownPreEntity( void )
 void CClientEffectPrecacheSystem::LevelShutdownPostEntity( void )
 {
 	// mark all known effects as free
-	for ( int i = 0; i < m_Effects.Size(); i++ )
+	for ( int i = 0; i < m_Effects.Count(); i++ )
 	{
 		m_Effects[i]->Cache( false );
 	}

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright � 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -12,6 +12,8 @@
 
 #include "appframework/IAppSystem.h"
 #include "tier1/iconvar.h"
+#include "tier1/utlvector.h"
+
 
 class ConCommandBase;
 class ConCommand;
@@ -34,6 +36,8 @@ public:
 	virtual void ColorPrint( const Color& clr, const char *pMessage ) = 0;
 	virtual void Print( const char *pMessage ) = 0;
 	virtual void DPrint( const char *pMessage ) = 0;
+
+	virtual void GetConsoleText( char *pchText, size_t bufSize ) const = 0;
 };
 
 
@@ -47,7 +51,6 @@ public:
 	// Can these two convars be aliased?
 	virtual bool AreConVarsLinkable( const ConVar *child, const ConVar *parent ) = 0;
 };
-
 
 //-----------------------------------------------------------------------------
 // Purpose: DLL interface to ConVars/ConCommands
@@ -75,9 +78,7 @@ public:
 	virtual ConCommand		*FindCommand( const char *name ) = 0;
 	virtual const ConCommand *FindCommand( const char *name ) const = 0;
 
-	// Get first ConCommandBase to allow iteration
-	virtual ConCommandBase	*GetCommands( void ) = 0;
-	virtual const ConCommandBase *GetCommands( void ) const = 0;
+
 
 	// Install a global change callback (to be called when any convar changes) 
 	virtual void			InstallGlobalChangeCallback( FnChangeCallback_t callback ) = 0;
@@ -87,9 +88,9 @@ public:
 	// Install a console printer
 	virtual void			InstallConsoleDisplayFunc( IConsoleDisplayFunc* pDisplayFunc ) = 0;
 	virtual void			RemoveConsoleDisplayFunc( IConsoleDisplayFunc* pDisplayFunc ) = 0;
-	virtual void			ConsoleColorPrintf( const Color& clr, PRINTF_FORMAT_STRING const char *pFormat, ... ) const = 0;
-	virtual void			ConsolePrintf( PRINTF_FORMAT_STRING const char *pFormat, ... ) const = 0;
-	virtual void			ConsoleDPrintf( PRINTF_FORMAT_STRING const char *pFormat, ... ) const = 0;
+	virtual void			ConsoleColorPrintf( const Color& clr, const char *pFormat, ... ) const = 0;
+	virtual void			ConsolePrintf( const char *pFormat, ... ) const = 0;
+	virtual void			ConsoleDPrintf( const char *pFormat, ... ) const = 0;
 
 	// Reverts cvars which contain a specific flag
 	virtual void			RevertFlaggedConVars( int nFlag ) = 0;
@@ -102,6 +103,17 @@ public:
 #if defined( _X360 )
 	virtual void			PublishToVXConsole( ) = 0;
 #endif
+
+	virtual void			SetMaxSplitScreenSlots( int nSlots ) = 0;
+	virtual int				GetMaxSplitScreenSlots() const = 0;
+
+	virtual void			AddSplitScreenConVars() = 0;
+	virtual void			RemoveSplitScreenConVars( CVarDLLIdentifier_t id ) = 0;
+
+	virtual int				GetConsoleDisplayFuncCount() const = 0;
+	virtual void			GetConsoleText( int nDisplayFuncIndex, char *pchText, size_t bufSize ) const = 0;
+
+	// Utilities for convars accessed by the material system thread
 	virtual bool			IsMaterialThreadSetAllowed( ) const = 0;
 	virtual void			QueueMaterialThreadSetValue( ConVar *pConVar, const char *pValue ) = 0;
 	virtual void			QueueMaterialThreadSetValue( ConVar *pConVar, int nValue ) = 0;
@@ -145,8 +157,6 @@ protected:
 	class ICVarIteratorInternal
 	{
 	public:
-		// warning: delete called on 'ICvar::ICVarIteratorInternal' that is abstract but has non-virtual destructor [-Wdelete-non-virtual-dtor]
-		virtual ~ICVarIteratorInternal() {}
 		virtual void		SetFirst( void ) = 0;
 		virtual void		Next( void ) = 0;
 		virtual	bool		IsValid( void ) = 0;
@@ -187,8 +197,6 @@ inline ConCommandBase * ICvar::Iterator::Get( void )
 	return m_pIter->Get();
 }
 
-#define CVAR_INTERFACE_VERSION "VEngineCvar004"
-
 
 //-----------------------------------------------------------------------------
 // These global names are defined by tier1.h, duplicated here so you
@@ -196,8 +204,8 @@ inline ConCommandBase * ICvar::Iterator::Get( void )
 //-----------------------------------------------------------------------------
 
 // These are marked DLL_EXPORT for Linux.
-DLL_EXPORT ICvar *cvar;
-extern ICvar *g_pCVar;
+DECLARE_TIER1_INTERFACE( ICvar, cvar );
+DECLARE_TIER1_INTERFACE( ICvar, g_pCVar );
 
 
 #endif // ICVAR_H

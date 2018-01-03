@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -32,10 +32,10 @@ public:
 	~RichText();
 
 	// text manipulation
-	virtual void SetText(const char *text);
-	virtual void SetText(const wchar_t *text);
-	void GetText(int offset, OUT_Z_BYTECAP(bufLenInBytes) wchar_t *buf, int bufLenInBytes);
-	void GetText(int offset, OUT_Z_BYTECAP(bufLenInBytes) char *pch, int bufLenInBytes);
+	void SetText(const char *text);
+	void SetText(const wchar_t *text);
+	void GetText(int offset, wchar_t *buf, int bufLenInBytes);
+	void GetText(int offset, char *pch, int bufLenInBytes);
 
 	// configuration
 	void SetFont(HFont font);
@@ -111,10 +111,7 @@ public:
 	virtual void SetFgColor( Color color );
 	virtual void SetDrawOffsets( int ofsx, int ofsy );
 	bool IsScrollbarVisible();
-
-	// sets how URL's are handled
-	// if set, a "URLClicked" "url" "<data>" message will be sent to that panel
-	void SetURLClickedHandler( Panel *pPanelToHandleClickMsg );
+	ScrollBar* GetScrollBar() { return _vertScrollBar; }
 
 	void SetUnderlineFont( HFont font );
 
@@ -165,10 +162,7 @@ protected:
 	ScrollBar			*_vertScrollBar;	// the scroll bar used in the window
 
 private:
-	int GetLineHeight();
-	HFont GetDefaultFont();
-
-	const wchar_t *ResolveLocalizedTextAndVariables( char const *pchLookup, OUT_Z_BYTECAP(outbufsizeinbytes) wchar_t *outbuf, size_t outbufsizeinbytes );
+	const wchar_t *ResolveLocalizedTextAndVariables( char const *pchLookup, wchar_t *outbuf, size_t outbufsizeinbytes );
 	void CheckRecalcLineBreaks();
 
 	void GotoWordRight();	// move cursor to start of next word
@@ -253,7 +247,6 @@ private:
 	int					_drawOffsetY;
 
 	Panel				*m_pInterior;
-	PHandle				m_hPanelToHandleClickingURLs;
 
 
 	// sub-controls

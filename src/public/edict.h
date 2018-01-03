@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -19,6 +19,7 @@
 #include "engine/ICollideable.h"
 #include "iservernetworkable.h"
 #include "bitvec.h"
+#include "tier1/convar.h"
 
 struct edict_t;
 
@@ -61,6 +62,7 @@ public:
 	int				maxEntities;
 
 	int				serverCount;
+	edict_t			*pEdicts;
 };
 
 inline CGlobalVars::CGlobalVars( bool bIsClient ) : 
@@ -125,8 +127,10 @@ public:
 	// change info is valid.
 	unsigned short m_iSerialNumber;
 	
+#ifdef NETWORK_VARS_ENABLED
 	CEdictChangeInfo m_ChangeInfos[MAX_EDICT_CHANGE_INFOS];
 	unsigned short m_nChangeInfos;	// How many are in use this frame.
+#endif
 };
 extern CSharedEdictChangeInfo *g_pSharedChangeInfo;
 
@@ -207,21 +211,7 @@ public:
 #endif	
 
 	// NOTE: this is in the edict instead of being accessed by a virtual because the engine needs fast access to it.
-	// int m_NetworkSerialNumber;
-
-	// NOTE: m_EdictIndex is an optimization since computing the edict index
-	// from a CBaseEdict* pointer otherwise requires divide-by-20. values for
-	// m_NetworkSerialNumber all fit within a 16-bit integer range, so we're
-	// repurposing the other 16 bits to cache off the index without changing
-	// the overall layout or size of this struct. existing mods compiled with
-	// a full 32-bit serial number field should still work. henryg 8/17/2011
-#if VALVE_LITTLE_ENDIAN
-	short m_NetworkSerialNumber;
-	short m_EdictIndex;
-#else
-	short m_EdictIndex;
-	short m_NetworkSerialNumber;
-#endif
+	int m_NetworkSerialNumber;	// Game DLL sets this when it gets a serial number for its EHANDLE.
 
 	// NOTE: this is in the edict instead of being accessed by a virtual because the engine needs fast access to it.
 	IServerNetworkable	*m_pNetworkable;
@@ -277,14 +267,15 @@ inline void	CBaseEdict::ClearStateChanged()
 
 inline void	CBaseEdict::StateChanged()
 {
-	// Note: this should only happen for properties in data tables that used some
-	// kind of pointer dereference. If the data is directly offsetable 
+	// Note: this should only happen for properties in data tables that used some kind of pointer
+	//   dereference. If the data is directly offsetable, then changes will automatically be detected
 	m_fStateFlags |= (FL_EDICT_CHANGED | FL_FULL_EDICT_CHANGED);
 	SetChangeInfoSerialNumber( 0 );
 }
 
 inline void	CBaseEdict::StateChanged( unsigned short offset )
 {
+#ifdef NETWORK_VARS_ENABLED
 	if ( m_fStateFlags & FL_FULL_EDICT_CHANGED )
 		return;
 
@@ -334,6 +325,9 @@ inline void	CBaseEdict::StateChanged( unsigned short offset )
 			p->m_nChangeOffsets = 1;
 		}
 	}
+#else
+	StateChanged();
+#endif
 }
 
 
@@ -428,9 +422,6 @@ struct edict_t : public CBaseEdict
 {
 public:
 	ICollideable *GetCollideable();
-
-	// The server timestampe at which the edict was freed (so we can try to use other edicts before reallocating this one)
-	float		freetime;	
 };
 
 inline ICollideable *edict_t::GetCollideable()

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -6,7 +6,7 @@
 
 #include "cbase.h"
 #include "model_types.h"
-#include "clienteffectprecachesystem.h"
+#include "ClientEffectPrecacheSystem.h"
 #include "fx.h"
 #include "c_te_effect_dispatch.h"
 #include "beamdraw.h"
@@ -30,13 +30,13 @@ public:
 	virtual RenderGroup_t GetRenderGroup( void )
 	{
 		// We want to draw translucent bits as well as our main model
-		return RENDER_GROUP_TWOPASS;
+		return RENDER_GROUP_TRANSLUCENT;
 	}
 
 	virtual void	ClientThink( void );
 
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
-	virtual int		DrawModel( int flags );
+	virtual int		DrawModel( int flags, const RenderableInstance_t &instance );
 
 private:
 
@@ -77,7 +77,7 @@ void C_CrossbowBolt::OnDataChanged( DataUpdateType_t updateType )
 // Input  : flags - 
 // Output : int
 //-----------------------------------------------------------------------------
-int C_CrossbowBolt::DrawModel( int flags )
+int C_CrossbowBolt::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	// See if we're drawing the motion blur
 	if ( flags & STUDIO_TRANSPARENCY )
@@ -125,7 +125,7 @@ int C_CrossbowBolt::DrawModel( int flags )
 	}
 
 	// Draw the normal portion
-	return BaseClass::DrawModel( flags );
+	return BaseClass::DrawModel( flags, instance );
 }
 
 //-----------------------------------------------------------------------------
@@ -135,7 +135,7 @@ void C_CrossbowBolt::ClientThink( void )
 {
 	m_bUpdated = false;
 }
-
+/*
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : &data - 
@@ -157,3 +157,4 @@ void CrosshairLoadCallback( const CEffectData &data )
 }
 
 DECLARE_CLIENT_EFFECT( "CrossbowLoad", CrosshairLoadCallback );
+*/

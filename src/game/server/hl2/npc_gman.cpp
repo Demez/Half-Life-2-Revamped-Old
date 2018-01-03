@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: The G-Man, misunderstood servant of the people
 //
@@ -70,7 +70,7 @@ Class_T	CNPC_GMan::Classify ( void )
 //-----------------------------------------------------------------------------
 void CNPC_GMan::HandleAnimEvent( animevent_t *pEvent )
 {
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 	case 1:
 	default:

@@ -1,9 +1,9 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: Public interfaces to vphysics DLL
 //
 // $NoKeywords: $
-//=============================================================================//
+//===========================================================================//
 
 #ifndef VPHYSICS_INTERFACE_H
 #define VPHYSICS_INTERFACE_H
@@ -17,7 +17,7 @@
 #include "mathlib/vector.h"
 #include "mathlib/vector4d.h"
 #include "vcollide.h"
-
+#include "tier3/tier3.h"
 
 // ------------------------------------------------------------------------------------
 // UNITS:
@@ -119,15 +119,15 @@ class IRestore;
 abstract_class IVPhysicsDebugOverlay
 {
 public:
-	virtual void AddEntityTextOverlay(int ent_index, int line_offset, float duration, int r, int g, int b, int a, PRINTF_FORMAT_STRING const char *format, ...) = 0;
+	virtual void AddEntityTextOverlay(int ent_index, int line_offset, float duration, int r, int g, int b, int a, const char *format, ...) = 0;
 	virtual void AddBoxOverlay(const Vector& origin, const Vector& mins, const Vector& max, QAngle const& orientation, int r, int g, int b, int a, float duration) = 0;
 	virtual void AddTriangleOverlay(const Vector& p1, const Vector& p2, const Vector& p3, int r, int g, int b, int a, bool noDepthTest, float duration) = 0;
 	virtual void AddLineOverlay(const Vector& origin, const Vector& dest, int r, int g, int b,bool noDepthTest, float duration) = 0;
-	virtual void AddTextOverlay(const Vector& origin, float duration, PRINTF_FORMAT_STRING const char *format, ...) = 0;
-	virtual void AddTextOverlay(const Vector& origin, int line_offset, float duration, PRINTF_FORMAT_STRING const char *format, ...) = 0;
+	virtual void AddTextOverlay(const Vector& origin, float duration, const char *format, ...) = 0;
+	virtual void AddTextOverlay(const Vector& origin, int line_offset, float duration, const char *format, ...) = 0;
 	virtual void AddScreenTextOverlay(float flXPos, float flYPos,float flDuration, int r, int g, int b, int a, const char *text) = 0;
 	virtual void AddSweptBoxOverlay(const Vector& start, const Vector& end, const Vector& mins, const Vector& max, const QAngle & angles, int r, int g, int b, int a, float flDuration) = 0;
-	virtual void AddTextOverlayRGB(const Vector& origin, int line_offset, float duration, float r, float g, float b, float alpha, PRINTF_FORMAT_STRING const char *format, ...) = 0;
+	virtual void AddTextOverlayRGB(const Vector& origin, int line_offset, float duration, float r, float g, float b, float alpha, const char *format, ...) = 0;
 };
 
 #define VPHYSICS_INTERFACE_VERSION	"VPhysics031"
@@ -173,8 +173,6 @@ struct truncatedcone_t
 	float	theta;		// cone angle (degrees)
 };
 
-
-#define VPHYSICS_COLLISION_INTERFACE_VERSION	"VPhysicsCollision007"
 
 abstract_class IPhysicsCollision
 {
@@ -269,6 +267,7 @@ public:
 	// begins parsing a vcollide.  NOTE: This keeps pointers to the text
 	// If you free the text and call members of IVPhysicsKeyParser, it will crash
 	virtual IVPhysicsKeyParser	*VPhysicsKeyParserCreate( const char *pKeyData ) = 0;
+	virtual IVPhysicsKeyParser *VPhysicsKeyParserCreate( vcollide_t *pVCollide ) = 0;
 	// Free the parser created by VPhysicsKeyParserCreate
 	virtual void			VPhysicsKeyParserDestroy( IVPhysicsKeyParser *pParser ) = 0;
 
@@ -298,7 +297,16 @@ public:
 	// dumps info about the collide to Msg()
 	virtual void			OutputDebugInfo( const CPhysCollide *pCollide ) = 0;
 	virtual unsigned int	ReadStat( int statID ) = 0;
+
+	// Get an AABB for an oriented collision model
+	virtual float			CollideGetRadius( const CPhysCollide *pCollide ) = 0;
+
+	virtual void			*VCollideAllocUserData( vcollide_t *pVCollide, size_t userDataSize ) = 0;
+	virtual void			VCollideFreeUserData( vcollide_t *pVCollide ) = 0;
+	virtual void			VCollideCheck( vcollide_t *pVCollide, const char *pName ) = 0;
 };
+
+
 
 // this can be used to post-process a collision model
 abstract_class ICollisionQuery
@@ -657,6 +665,12 @@ public:
 
 	virtual void EnableConstraintNotify( bool bEnable ) = 0;
 	virtual void DebugCheckContacts(void) = 0;
+
+	virtual void			SetAlternateGravity( const Vector &gravityVector ) = 0;
+	virtual void			GetAlternateGravity( Vector *pGravityVector ) const = 0;
+
+	virtual float			GetDeltaFrameTime( int maxTicks ) const = 0;
+	virtual void			ForceObjectsToSleep( IPhysicsObject **pList, int listCount ) = 0;
 };
 
 enum callbackflags
@@ -678,6 +692,12 @@ enum callbackflags
 	CALLBACK_IS_PLAYER_CONTROLLER= 0x2000,	// HACKHACK: Set this on players until player cotrollers are unified with shadow controllers
 	CALLBACK_CHECK_COLLISION_DISABLE = 0x4000,
 	CALLBACK_MARKED_FOR_TEST	= 0x8000,	// debug -- marked object is being debugged
+};
+
+enum collisionhints
+{
+	COLLISION_HINT_DEBRIS		= 0x0001,
+	COLLISION_HINT_STATICSOLID	= 0x0002,
 };
 
 abstract_class IPhysicsObject
@@ -760,6 +780,8 @@ public:
 
 	// Get the radius if this is a sphere object (zero if this is a polygonal mesh)
 	virtual float			GetSphereRadius() const = 0;
+	// Set the radius on a sphere. May need to force recalculation of contact points
+	virtual void			SetSphereRadius(float radius) = 0;
 	virtual float			GetEnergy() const = 0;
 	virtual Vector			GetMassCenterLocalSpace() const = 0;
 
@@ -854,6 +876,17 @@ public:
 	// dumps info about the object to Msg()
 	virtual void			OutputDebugInfo() const = 0;
 
+#if OBJECT_WELDING
+	virtual void			WeldToObject( IPhysicsObject *pParent ) = 0;
+	virtual void			RemoveWeld( IPhysicsObject *pOther ) = 0;
+	virtual void			RemoveAllWelds( void ) = 0;
+#endif
+
+	// EnableGravity still determines whether to apply gravity
+	// This flag determines which gravity constant to use for an alternate gravity effect
+	virtual void			SetUseAlternateGravity( bool bSet ) = 0;
+	virtual void			SetCollisionHints( uint32 collisionHints ) = 0;
+	virtual uint32			GetCollisionHints() const = 0;
 };
 
 
@@ -904,8 +937,10 @@ struct surfaceaudioparams_t
 
 struct surfacesoundnames_t
 {
-	unsigned short	stepleft;
-	unsigned short	stepright;
+	unsigned short	walkStepLeft;
+	unsigned short	walkStepRight;
+	unsigned short	runStepLeft;
+	unsigned short	runStepRight;
 
 	unsigned short	impactSoft;
 	unsigned short	impactHard;
@@ -922,8 +957,10 @@ struct surfacesoundnames_t
 
 struct surfacesoundhandles_t
 {
-	short	stepleft;
-	short	stepright;
+	short	walkStepLeft;
+	short	walkStepRight;
+	short	runStepLeft;
+	short	runStepRight;
 
 	short	impactSoft;
 	short	impactHard;
@@ -1076,6 +1113,7 @@ struct convertconvexparams_t
 	bool		buildOuterConvexHull;
 	bool		buildDragAxisAreas;
 	bool		buildOptimizedTraceTables;
+	bool		checkOptimalTracing;
 	float		dragAreaEpsilon;
 	CPhysConvex *pForcedOuterHull;
 
@@ -1085,6 +1123,7 @@ struct convertconvexparams_t
 		buildOuterConvexHull = false;
 		buildDragAxisAreas = false;
 		buildOptimizedTraceTables = false;
+		checkOptimalTracing = false;
 		pForcedOuterHull = NULL;
 	}
 };

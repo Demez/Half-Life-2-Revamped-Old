@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Definition for client-side advisor.
 //
@@ -8,14 +8,14 @@
 
 #include "cbase.h"
 // this file contains the definitions for the message ID constants (eg ADVISOR_MSG_START_BEAM etc)
-#include "npc_advisor_shared.h"
+#include "episodic/npc_advisor_shared.h"
 
 #if NPC_ADVISOR_HAS_BEHAVIOR
 
 #include "particles_simple.h"
 #include "citadel_effects_shared.h"
 #include "particles_attractor.h"
-#include "clienteffectprecachesystem.h"
+#include "ClientEffectPrecacheSystem.h"
 #include "c_te_effect_dispatch.h"
 
 #include "c_ai_basenpc.h"

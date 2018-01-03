@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Crows. Simple ambient birds that fly away when they hear gunfire or
 //			when anything gets too close to them.
@@ -89,11 +89,6 @@ static ConVar birds_debug( "birds_debug", "0" );
 void CNPC_Crow::Spawn( void )
 {
 	BaseClass::Spawn();
-
-#ifdef _XBOX
-	// Always fade the corpse
-	AddSpawnFlags( SF_NPC_FADE_CORPSE );
-#endif // _XBOX
 
 	char *szModel = (char *)STRING( GetModelName() );
 	if (!szModel || !*szModel)
@@ -217,7 +212,9 @@ void CNPC_Crow::StopLoopingSounds( void )
 //-----------------------------------------------------------------------------
 void CNPC_Crow::HandleAnimEvent( animevent_t *pEvent )
 {
-	if ( pEvent->event == AE_CROW_TAKEOFF )
+	int nEvent = pEvent->Event();
+
+	if ( nEvent == AE_CROW_TAKEOFF )
 	{
 		if ( GetNavigator()->GetPath()->GetCurWaypoint() )
 		{
@@ -226,7 +223,7 @@ void CNPC_Crow::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if( pEvent->event == AE_CROW_HOP )
+	if( nEvent == AE_CROW_HOP )
 	{
 		SetGroundEntity( NULL );
 
@@ -239,7 +236,7 @@ void CNPC_Crow::HandleAnimEvent( animevent_t *pEvent )
 		// How fast does the crow need to travel to reach the hop goal given gravity?
 		//
 		float flHopDistance = ( m_vSavePosition - GetLocalOrigin() ).Length();
-		float gravity = GetCurrentGravity();
+		float gravity = sv_gravity.GetFloat();
 		if ( gravity <= 1 )
 		{
 			gravity = 1;
@@ -282,7 +279,7 @@ void CNPC_Crow::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if( pEvent->event == AE_CROW_FLY )
+	if( nEvent == AE_CROW_FLY )
 	{
 		//
 		// Start flying.
@@ -337,7 +334,7 @@ void CNPC_Crow::InputFlyAway( inputdata_t &inputdata )
 		if ( pEnt )
 		{
 			trace_t tr;
-			AI_TraceLine ( EyePosition(), pEnt->GetAbsOrigin(), MASK_NPCSOLID, this, COLLISION_GROUP_NONE, &tr );
+			AI_TraceLine ( EyePosition(), pEnt->GetAbsOrigin(), GetAITraceMask(), this, COLLISION_GROUP_NONE, &tr );
 
 			if ( tr.fraction != 1.0f )
 				 return;
@@ -509,7 +506,7 @@ void CNPC_Crow::MoveCrowFly( float flInterval )
 
 		if ( GetNavigator()->CurWaypointIsGoal() == false  )
 		{
-  			AI_ProgressFlyPathParams_t params( MASK_NPCSOLID );
+  			AI_ProgressFlyPathParams_t params( GetAITraceMask() );
 			params.bTrySimplify = false;
 
 			GetNavigator()->ProgressFlyPath( params ); // ignore result, crow handles completion directly
@@ -579,7 +576,7 @@ void CNPC_Crow::MoveCrowFly( float flInterval )
 	if ( GetHintNode() )
 	{
 		AIMoveTrace_t moveTrace;
-		GetMoveProbe()->MoveLimit( NAV_FLY, GetAbsOrigin(), GetNavigator()->GetCurWaypointPos(), MASK_NPCSOLID, GetNavTargetEntity(), &moveTrace );
+		GetMoveProbe()->MoveLimit( NAV_FLY, GetAbsOrigin(), GetNavigator()->GetCurWaypointPos(), GetAITraceMask(), GetNavTargetEntity(), &moveTrace );
 
 		//See if it succeeded
 		if ( IsMoveBlocked( moveTrace.fStatus ) )
@@ -641,7 +638,7 @@ bool CNPC_Crow::Probe( const Vector &vecMoveDir, float flSpeed, Vector &vecDefle
 	// Look 1/2 second ahead.
 	//
 	trace_t tr;
-	AI_TraceHull( GetAbsOrigin(), GetAbsOrigin() + vecMoveDir * flSpeed, GetHullMins(), GetHullMaxs(), MASK_NPCSOLID, this, HL2COLLISION_GROUP_CROW, &tr );
+	AI_TraceHull( GetAbsOrigin(), GetAbsOrigin() + vecMoveDir * flSpeed, GetHullMins(), GetHullMaxs(), GetAITraceMask(), this, HL2COLLISION_GROUP_CROW, &tr );
 	if ( tr.fraction < 1.0f )
 	{
 		//
@@ -738,7 +735,7 @@ void CNPC_Crow::Takeoff( const Vector &vGoal )
 	}
 }
 
-void CNPC_Crow::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
+void CNPC_Crow::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
 {
 	CTakeDamageInfo	newInfo = info;
 
@@ -752,7 +749,7 @@ void CNPC_Crow::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, 
 		newInfo.SetDamageForce( puntDir );
 	}
 
-	BaseClass::TraceAttack( newInfo, vecDir, ptr, pAccumulator );
+	BaseClass::TraceAttack( newInfo, vecDir, ptr );
 }
 
 

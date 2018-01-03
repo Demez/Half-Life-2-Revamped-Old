@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright � 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -12,7 +12,12 @@
 #include "tier1/utlmemory.h"
 #include "tier1/utlfixedmemory.h"
 #include "tier1/utlblockmemory.h"
-#include "tier1/strtools.h"
+
+
+// This is a useful macro to iterate from start to end in order in a map
+#define FOR_EACH_UTLRBTREE( treeName, iteratorName ) \
+	for ( int iteratorName = treeName.FirstInorder(); iteratorName != treeName.InvalidIndex(); iteratorName = treeName.NextInorder( iteratorName ) )
+
 
 //-----------------------------------------------------------------------------
 // Tool to generate a default compare function for any type that implements
@@ -28,29 +33,10 @@ public:
 
 #define DefLessFunc( type ) CDefOps< type >::LessFunc
 
-template <typename T>
-class CDefLess
-{
-public:
-	CDefLess() {}
-	CDefLess( int i ) {}
-	inline bool operator()( const T &lhs, const T &rhs ) const { return ( lhs < rhs );	}
-	inline bool operator!() const { return false; }
-};
-
 //-------------------------------------
 
-inline bool StringLessThan( const char * const &lhs, const char * const &rhs)			{ 
-	if ( !lhs ) return false;
-	if ( !rhs ) return true;
-	return ( V_strcmp( lhs, rhs) < 0 );  
-}
-
-inline bool CaselessStringLessThan( const char * const &lhs, const char * const &rhs )	{ 
-	if ( !lhs ) return false;
-	if ( !rhs ) return true;
-	return ( V_stricmp( lhs, rhs) < 0 ); 
-}
+inline bool StringLessThan( const char * const &lhs, const char * const &rhs)			{ return ( strcmp( lhs, rhs) < 0 );  }
+inline bool CaselessStringLessThan( const char * const &lhs, const char * const &rhs )	{ return ( stricmp( lhs, rhs) < 0 ); }
 
 
 // Same as CaselessStringLessThan, but it ignores differences in / and \.
@@ -413,7 +399,7 @@ inline void CUtlRBTree<T, I, L, M>::CopyFrom( const CUtlRBTree<T, I, L, M> &othe
 {
 	Purge();
 	m_Elements.EnsureCapacity( other.m_Elements.Count() );
-	memcpy( m_Elements.Base(), other.m_Elements.Base(), other.m_Elements.Count() * sizeof( T ) );
+	memcpy( m_Elements.Base(), other.m_Elements.Base(), other.m_Elements.Count() * sizeof( UtlRBTreeNode_t< T, I > ) );
 	m_LessFunc = other.m_LessFunc;
 	m_Root = other.m_Root;
 	m_NumElements = other.m_NumElements;
@@ -1183,10 +1169,7 @@ I CUtlRBTree<T, I, L, M>::FirstInorder() const
 template < class T, class I, typename L, class M >
 I CUtlRBTree<T, I, L, M>::NextInorder( I i ) const
 {
-	// Don't go into an infinite loop if it's a bad index
 	Assert(IsValidIndex(i));
- 	if ( !IsValidIndex(i) )
- 		return InvalidIndex();
 
 	if (RightChild(i) != InvalidIndex())
 	{
@@ -1209,10 +1192,7 @@ I CUtlRBTree<T, I, L, M>::NextInorder( I i ) const
 template < class T, class I, typename L, class M >
 I CUtlRBTree<T, I, L, M>::PrevInorder( I i ) const
 {
-	// Don't go into an infinite loop if it's a bad index
 	Assert(IsValidIndex(i));
-	if ( !IsValidIndex(i) )
-		return InvalidIndex();
 
 	if (LeftChild(i) != InvalidIndex())
 	{
@@ -1350,7 +1330,7 @@ int CUtlRBTree<T, I, L, M>::Depth( I node ) const
 
 	int depthright = Depth( RightChild(node) );
 	int depthleft = Depth( LeftChild(node) );
-	return Max(depthright, depthleft) + 1;
+	return MAX( depthright, depthleft ) + 1;
 }
 
 

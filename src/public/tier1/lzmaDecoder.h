@@ -1,3 +1,4 @@
+//========= Copyright © 1996-2007, Valve Corporation, All rights reserved. ============//
 //
 //	LZMA Decoder. Designed for run time decoding.
 //
@@ -27,10 +28,12 @@ struct lzma_header_t
 };
 #pragma pack()
 
+typedef void ( *LZMAReadProgressCallbackFunc_t )();
+
 class CLZMA
 {
 public:
-	unsigned int	Uncompress( unsigned char *pInput, unsigned char *pOutput );
+	unsigned int	Uncompress( unsigned char *pInput, unsigned char *pOutput, LZMAReadProgressCallbackFunc_t pCallback = NULL );
 	bool			IsCompressed( unsigned char *pInput );
 	unsigned int	GetActualSize( unsigned char *pInput );
 

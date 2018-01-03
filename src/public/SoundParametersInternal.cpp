@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -11,8 +11,9 @@
 #if !defined(_STATIC_LINKED) || defined(SOUNDEMITTERSYSTEM_DLL)
 
 #include "SoundEmitterSystem/isoundemittersystembase.h"
-#include "interval.h"
+#include "tier2/interval.h"
 #include "soundchars.h"
+#include "KeyValues.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -33,7 +34,6 @@ static SoundChannels g_pChannelNames[] =
 	{ CHAN_BODY, "CHAN_BODY" },
 	{ CHAN_STREAM, "CHAN_STREAM" },
 	{ CHAN_STATIC, "CHAN_STATIC" },
-	{ CHAN_VOICE2, "CHAN_VOICE2" },
 };
 
 struct VolumeLevel
@@ -340,14 +340,20 @@ CSoundParametersInternal::CSoundParametersInternal()
 	had_missing_wave_files = false;
 	uses_gender_token = false;
 
+	// TERROR:
+	m_pGameData = NULL;
+
 }
 
 CSoundParametersInternal::CSoundParametersInternal( const CSoundParametersInternal& src )
 {
 	m_pSoundNames = NULL;
 	m_pConvertedNames = NULL;
-	m_nSoundNames = 0;
-	m_nConvertedNames = 0;
+	// TERROR:
+	m_pGameData = NULL;
+		// TERROR:
+	m_pGameData = NULL;
+
 	CopyFrom( src );
 }
 

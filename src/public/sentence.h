@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -21,6 +21,7 @@ class CUtlBuffer;
 
 #define CACHED_SENTENCE_VERSION			1
 #define CACHED_SENTENCE_VERSION_ALIGNED	4
+#define CACHED_SENTENCE_VERSION_PACKED	5
 
 //-----------------------------------------------------------------------------
 // Purpose: A sample point

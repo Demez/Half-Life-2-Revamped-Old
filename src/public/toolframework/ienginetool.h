@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -12,7 +12,7 @@
 
 #include "interface.h"
 #include "soundflags.h"
-#include "video/ivideoservices.h"
+#include "avi/iavi.h"
 #include "ispatialpartition.h"
 
 class CViewSetup;
@@ -53,6 +53,9 @@ public:
 	// Take over input
 	virtual void		ShowCursor( bool show ) = 0;
 	virtual bool		IsCursorVisible() const = 0;
+
+	// If module not already loaded, loads it and optionally switches to first tool in module.  Returns false if load failed or tool already loaded
+	virtual bool		LoadToolModule( char const *pToolModule, bool bSwitchToFirst ) = 0;
 };
 
 #define VENGINETOOLFRAMEWORK_INTERFACE_VERSION	"VENGINETOOLFRAMEWORK003"
@@ -89,6 +92,8 @@ public:
 		int speakerentity = -1 ) = 0;
 
 	virtual void		StopSoundByGuid( int guid ) = 0;
+
+	virtual void		SetVolumeByGuid( int guid, float flVolume ) = 0;
 
 	// Returns how long the sound is
 	virtual float		GetSoundDuration( int guid ) = 0;
@@ -162,15 +167,15 @@ public:
 	// SINGLE PLAYER/LISTEN SERVER ONLY (just matching the client .dll api for this)
 	// Prints the formatted string to the notification area of the screen ( down the right hand edge
 	//  numbered lines starting at position 0
-	virtual void		Con_NPrintf( int pos, PRINTF_FORMAT_STRING const char *fmt, ... ) = 0;
+	virtual void		Con_NPrintf( int pos, const char *fmt, ... ) = 0;
 	// SINGLE PLAYER/LISTEN SERVER ONLY(just matching the client .dll api for this)
 	// Similar to Con_NPrintf, but allows specifying custom text color and duration information
-	virtual void		Con_NXPrintf( const struct con_nprint_s *info, PRINTF_FORMAT_STRING const char *fmt, ... ) = 0;
+	virtual void		Con_NXPrintf( const struct con_nprint_s *info, const char *fmt, ... ) = 0;
 
 	// Get the current game directory (hl2, tf2, hl1, cstrike, etc.)
 	virtual void        GetGameDir( char *szGetGameDir, int maxlength ) = 0;
 
-// Do we need separate rects for the 3d "viewport" vs. the tools surface??? and can we control viewports from
+	// Do we need separate rects for the 3d "viewport" vs. the tools surface??? and can we control viewports from
 	virtual void		GetScreenSize( int& width, int &height ) = 0;
 
 	// GetRootPanel(VPANEL)
@@ -199,7 +204,7 @@ public:
 	virtual void		StartMovieRecording( KeyValues *pMovieParams ) = 0;
 	virtual void		EndMovieRecording() = 0;
 	virtual void		CancelMovieRecording() = 0;
-	virtual IVideoRecorder *GetActiveVideoRecorder() = 0;
+	virtual AVIHandle_t GetRecordingAVIHandle() = 0;
 
 	virtual void		StartRecordingVoiceToFile( char const *filename, char const *pPathID = 0 ) = 0;
 	virtual void		StopRecordingVoiceToFile() = 0;
@@ -226,6 +231,14 @@ public:
 	virtual void RemovePartitionQueryCallback( IPartitionQueryCallback *pQuery ) = 0;
 	virtual void ElementMoved( SpatialPartitionHandle_t handle, 
 		const Vector& mins, const Vector& maxs ) = 0;
+    virtual void		OnModeChanged( bool bGameMode ) = 0;
+	// Get the engine's window.
+	virtual void* GetEngineHwnd() = 0;
+
+	// Returns the actual elapsed time of the samples
+	virtual float		GetSoundElapsedTime( int guid ) = 0;
+	virtual void		ValidateSoundCache( char const *pchSoundName ) = 0;
+	virtual void		PrefetchSound( char const *pchSoundName ) = 0;
 };
 
 #define VENGINETOOL_INTERFACE_VERSION	"VENGINETOOL003"

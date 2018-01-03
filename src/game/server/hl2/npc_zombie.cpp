@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: A slow-moving, once-human headcrab victim with only melee attacks.
 //
@@ -109,6 +109,8 @@ public:
 #endif // HL2_EPISODIC
 
 	Activity NPC_TranslateActivity( Activity newActivity );
+		
+	void SetHeadlessModel (void);
 
 	void OnStateChange( NPC_STATE OldState, NPC_STATE NewState );
 
@@ -473,7 +475,14 @@ const char *CZombie::GetTorsoModel( void )
 	return "models/zombie/classic_torso.mdl";
 }
 
-
+//-----------------------------------------------------------------------------
+//	Little hack to avoid game crash when changing bodygroup (DmitRex)
+//-----------------------------------------------------------------------------
+void CZombie::SetHeadlessModel( void )
+{
+	SetModel("");
+	CreateRagGib( "models/zombie/classic.mdl", GetLocalOrigin(), GetLocalAngles(), GetLocalVelocity(), 0, ShouldIgniteZombieGib() );
+}
 //---------------------------------------------------------
 //---------------------------------------------------------
 void CZombie::SetZombieModel( void )
@@ -490,7 +499,6 @@ void CZombie::SetZombieModel( void )
 		SetModel( "models/zombie/classic.mdl" );
 		SetHullType( HULL_HUMAN );
 	}
-
 	SetBodygroup( ZOMBIE_BODYGROUP_HEADCRAB, !m_fIsHeadless );
 
 	SetHullSizeNormal( true );

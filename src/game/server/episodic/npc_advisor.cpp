@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ====
 //
 // Advisors. Large sluglike aliens with creepy psychic powers!
 //
@@ -30,7 +30,7 @@
 // #include "mathlib/noise.h"
 
 // this file contains the definitions for the message ID constants (eg ADVISOR_MSG_START_BEAM etc)
-#include "npc_advisor_shared.h"
+#include "episodic/npc_advisor_shared.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -1859,7 +1859,7 @@ CAdvisorLevitate::simresult_e	CAdvisorLevitate::Simulate( IPhysicsMotionControll
 		// if an object was recently thrown, just zero out its gravity.
 		if (pAdvisor->DidThrow(static_cast<CBaseEntity *>(pObject->GetGameData())))
 		{
-			linear = Vector( 0, 0, GetCurrentGravity() );
+			linear = Vector( 0, 0, sv_gravity.GetFloat() );
 			
 			return SIM_GLOBAL_ACCELERATION;
 		}
@@ -1877,12 +1877,12 @@ CAdvisorLevitate::simresult_e	CAdvisorLevitate::Simulate( IPhysicsMotionControll
 				if (pos.z > m_vecGoalPos2.z)
 				{
 					// turn around move down
-					linear = Vector( 0, 0, Square((1.0f - m_flFloat)) * GetCurrentGravity() );
+					linear = Vector( 0, 0, Square((1.0f - m_flFloat)) * sv_gravity.GetFloat() );
 					angular = Vector( 0, -5, 0 );
 				}
 				else
 				{	// keep moving up 
-					linear = Vector( 0, 0, (1.0f + m_flFloat) * GetCurrentGravity() );
+					linear = Vector( 0, 0, (1.0f + m_flFloat) * sv_gravity.GetFloat() );
 					angular = Vector( 0, 0, 10 );
 				}
 			}
@@ -1891,12 +1891,12 @@ CAdvisorLevitate::simresult_e	CAdvisorLevitate::Simulate( IPhysicsMotionControll
 				if (pos.z < m_vecGoalPos1.z)
 				{
 					// turn around move up
-					linear = Vector( 0, 0, Square((1.0f + m_flFloat)) * GetCurrentGravity() );
+					linear = Vector( 0, 0, Square((1.0f + m_flFloat)) * sv_gravity.GetFloat() );
 					angular = Vector( 0, 5, 0 );
 				}
 				else
 				{	// keep moving down
-					linear = Vector( 0, 0, (1.0f - m_flFloat) * GetCurrentGravity() );
+					linear = Vector( 0, 0, (1.0f - m_flFloat) * sv_gravity.GetFloat() );
 					angular = Vector( 0, 0, 10 );
 				}
 			}
@@ -1920,7 +1920,7 @@ CAdvisorLevitate::simresult_e	CAdvisorLevitate::Simulate( IPhysicsMotionControll
 		VectorNormalize( vecDir2 );
 		*/
 	
-		linear = Vector( 0, 0, m_flFloat * GetCurrentGravity() );// + m_flFloat * 0.5 * ( vecDir1 + vecDir2 );
+		linear = Vector( 0, 0, m_flFloat * sv_gravity.GetFloat() );// + m_flFloat * 0.5 * ( vecDir1 + vecDir2 );
 		angular = Vector( 0, 0, 10 );
 		
 		return SIM_GLOBAL_ACCELERATION;

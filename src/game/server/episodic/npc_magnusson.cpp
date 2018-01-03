@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ====
 //
 // Purpose: Dr. Magnusson, a grumpy bastard who builds satellites and rockets
 //			at the White Forest missile silo. Instantly unlikeable, he is also
@@ -58,7 +58,7 @@ Class_T	CNPC_Magnusson::Classify ( void )
 //-----------------------------------------------------------------------------
 void CNPC_Magnusson::HandleAnimEvent( animevent_t *pEvent )
 {
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 	case 1:
 	default:

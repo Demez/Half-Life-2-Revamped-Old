@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Implements the bullsquid
 //
@@ -12,9 +12,9 @@
 #include "AI_Hull.h"
 #include "AI_Navigator.h"
 #include "AI_Motor.h"
-#include "ai_squad.h"
+#include "AI_Squad.h"
 #include "npc_bullsquid.h"
-#include "npcevent.h"
+#include "NPCEvent.h"
 #include "soundent.h"
 #include "activitylist.h"
 #include "weapon_brickbat.h"
@@ -345,7 +345,7 @@ void CNPC_Bullsquid::HandleAnimEvent( animevent_t *pEvent )
 
 		case BSQUID_AE_HOP:
 		{
-			float flGravity = GetCurrentGravity();
+			float flGravity = sv_gravity.GetFloat();
 
 			// throw the squid up into the air on this frame.
 			if ( GetFlags() & FL_ONGROUND )

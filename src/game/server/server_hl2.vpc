@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------------
 
 $Macro SRCDIR		"..\.."
-$Macro GAMENAME 	"hl2-revamped" [!$SOURCESDK]
-$Macro GAMENAME 	"hl2-revamped" [$SOURCESDK]
+$Macro GAMENAME 	"hl2" [!$SOURCESDK]
+$Macro GAMENAME 	"mod_hl2" [$SOURCESDK]
 
 $Include "$SRCDIR\game\server\server_base.vpc"
 
@@ -19,10 +19,11 @@ $Configuration
 	}
 }
 
-$Project "Server (HL2-revamped)"
+$Project "Server (HL2)"
 {
 	$Folder	"Source Files"
-	{
+	{	
+		$File	"$SRCDIR\common\hl2orange.spa.h"
 		$File	"ai_eventresponse.cpp"
 		$File	"ai_eventresponse.h"
 		$File	"ai_relationship.cpp"
@@ -52,7 +53,7 @@ $Project "Server (HL2-revamped)"
 
 		$Folder	"HL2 DLL"
 		{
-			$File	"$SRCDIR\game\shared\hl2\achievements_hl2.cpp"
+			//$File	"$SRCDIR\game\shared\hl2\achievements_hl2.cpp"
 			$File	"hl2\ai_allymanager.cpp"
 			$File	"hl2\ai_behavior_actbusy.cpp"
 			$File	"hl2\ai_behavior_actbusy.h"
@@ -154,7 +155,7 @@ $Project "Server (HL2-revamped)"
 			$File	"hl2\npc_basescanner.h"
 			$File	"hl2\npc_BaseZombie.cpp"
 			$File	"hl2\npc_BaseZombie.h"
-			$File	"hl2\npc_blob.cpp"
+			//$File	"hl2\npc_blob.cpp"
 			$File	"hl2\npc_breen.cpp"
 			$File	"hl2\npc_bullseye.cpp"
 			$File	"hl2\npc_bullseye.h"

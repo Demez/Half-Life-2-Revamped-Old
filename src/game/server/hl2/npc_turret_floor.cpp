@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -1179,7 +1179,7 @@ bool CNPC_FloorTurret::IsValidEnemy( CBaseEntity *pEnemy )
 		return false;
 
 	// If our eye is stuck in something, don't shoot
-	if ( UTIL_PointContents(EyePosition()) & MASK_SHOT )
+	if ( UTIL_PointContents(EyePosition(), MASK_SHOT) )
 		return false;
 
 	// Turrets have limited vertical aim capability

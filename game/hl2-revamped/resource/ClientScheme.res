@@ -15,6 +15,96 @@ Scheme
 	// this is a list of all the colors used by the scheme
 	Colors
 	{
+		// base colors
+		"Orange"			"178 82 22 255"
+		"OrangeDim"			"178 82 22 120"
+		"LightOrange"		"188 112 0 128"
+		"GoalOrange"		"255 133 0"
+		
+		
+		"White"				"235 235 235 255"
+		"Red"				"192 28 0 140"
+		"RedSolid"			"192 28 0 255"
+		"Blue"				"0 28 162 140"
+		"Yellow"			"251 235 202 255"
+		"TransparentYellow"	"251 235 202 140"
+		//"Black"				"0 0 0 255"
+		//Changed black to a NTSC safe color
+		
+		"Black"				"46 43 42 255"
+		"TransparentBlack"	"0 0 0 196"
+		"TransparentLightBlack"	"0 0 0 90"
+		"FooterBGBlack"		"52 48 55 255"
+		
+		"HUDBlueTeam"		"104 124 155 127"
+		"HUDRedTeam"		"180 92 77 127"
+		"HUDSpectator"		"124 124 124 127"
+		"HUDBlueTeamSolid"	"104 124 155 255"
+		"HUDRedTeamSolid"	"180 92 77 255"
+		"HUDDeathWarning"	"255 0 0 255"
+		"HudWhite"			"255 255 255 255"
+		"HudOffWhite"		"200 187 161 255"
+		
+		"Gray"				"178 178 178 255"
+
+		"Blank"				"0 0 0 0"
+		"ForTesting"		"255 0 0 32"
+		"ForTesting_Magenta"	"255 0 255 255"
+		"ForTesting_MagentaDim"	"255 0 255 120"
+
+		"HudPanelForeground"		"123 110 59 184"
+		"HudPanelBackground"		"123 110 59 184"
+		"HudPanelBorder"			"255 255 255 102"
+
+		"HudProgressBarActive"		"240 207 78 255"
+		"HudProgressBarInActive"	"140 120 73 255"
+		"HudProgressBarActiveLow"	"240 30 30 255"
+		"HudProgressBarInActiveLow"	"240 30 30 99"	
+
+		"HudTimerProgressActive"	"251 235 202 255"
+		"HudTimerProgressInActive"	"52 48 45 255"
+		"HudTimerProgressWarning"	"240 30 30 255"
+		
+		"TanDark"				"117 107 94 255"
+		"TanLight"				"235 226 202 255"
+		"TanDarker"				"46 43 42 255"
+		
+		// Building HUD Specific
+		"LowHealthRed"		"255 0 0 255"
+		"ProgressOffWhite"	"251 235 202 255"
+		"ProgressBackground"	"250 234 201 51"
+		"HealthBgGrey"		"72 71 69 255"
+		
+		"ProgressOffWhiteTransparent"	"251 235 202 128"
+		
+		"LabelDark"			"48 43 42 255"
+		"LabelTransparent"	"109 96 80 180"
+		
+		"BuildMenuActive"	"248 231 198 255"
+		
+		"DisguiseMenuIconRed"	"192 56 63 255"
+		"DisguiseMenuIconBlue"	"92 128 166 255"
+
+ 		"MatchmakingDialogTitleColor"			"200 184 151 255"
+ 		"MatchmakingMenuItemBackground"			"46 43 42 255"
+ 		"MatchmakingMenuItemBackgroundActive"	"150 71 0 255"	
+		"MatchmakingMenuItemTitleColor"			"200 184 151 255"
+		"MatchmakingMenuItemDescriptionColor"	"200 184 151 255"
+		
+		"HTMLBackground"						"95 92 101 255"
+
+		"QualityColorNormal"					"178 178 178 255"
+		"QualityColorrarity1"					"77 116 85 255"
+		"QualityColorrarity2"					"141 131 75 255"
+		"QualityColorrarity3"					"207 106 50 255"
+		"QualityColorrarity4"					"134 80 172 255"
+		"QualityColorVintage"					"71 98 145 255"
+		"QualityColorUnique"					"255 215 0 255"
+		"QualityColorCommunity"					"112 176 74 255"
+		"QualityColorDeveloper"					"165 15 121 255"
+		"QualityColorSelfMade"					"112 176 74 255"
+		"QualityColorCustomized"				"71 98 145 255"
+		"QualityColorStrange"					"205 155 29 255"
 	}
 	
 	///////////////////// BASE SETTINGS ////////////////////////
@@ -23,8 +113,30 @@ Scheme
 	// controls use these to determine their settings
 	BaseSettings
 	{
+		Label.TextDullColor				"TanDark"
+		Label.TextColor					"TanLight"
+		Label.TextBrightColor			"TanLight"
+		Label.SelectedTextColor			"White"
+		Label.BgColor					"Blank"
+		Label.DisabledFgColor1			"Blank"
+		Label.DisabledFgColor2			"LightOrange"
+	
+		Rosette.DefaultFgColor			"White"
+		Rosette.DefaultBgColor			"Blank"
+		Rosette.ArmedBgColor			"Blank"
+		Rosette.DisabledBgColor			"Blank"
+		Rosette.DisabledBorderColor		"Blank"
+		Rosette.LineColor				"192 192 192 128"
+		Rosette.DrawBorder				"1"
+		Rosette.DefaultFont				DefaultSmall
+		Rosette.ArmedFont				Default
+
+		Frame.TopBorderImage				"vgui/menu_backgroud_top"
+		Frame.BottomBorderImage				"vgui/menu_backgroud_bottom"
+		Frame.SmearColor					"0 0 0 225"		[$X360]
+		Frame.SmearColor					"0 0 0 180"		[$WIN32]
+
 		"FgColor"			"255 220 0 100"
-		"FgColor_vrmode"	"255 220 0 200"
 		"BgColor"			"0 0 0 76"
 
 		"Panel.FgColor"			"255 220 0 100"
@@ -36,6 +148,14 @@ Scheme
 		"DamagedFg"			"180 0 0 230"
 		"BrightDamagedFg"		"255 0 0 255"
 
+		// checkboxes and radio buttons
+		"BaseText"					"OffWhite"
+		"BrightControlText"			"White"
+		"CheckBgColor"				"TransparentBlack"
+		"CheckButtonBorder1" 			"Border.Dark" 		// the left checkbutton border
+		"CheckButtonBorder2"  			"Border.Bright"		// the right checkbutton border
+		"CheckButtonCheck"				"White"				// color of the check itself
+		
 		// weapon selection colors
 		"SelectionNumberFg"		"255 220 0 255"
 		"SelectionTextFg"		"255 220 0 255"
@@ -51,35 +171,43 @@ Scheme
 		"Caution"			"255 48 0 255"
 
 		// Top-left corner of the "Half-Life 2" on the main screen
-		"Main.Title1.X"			"53"
-		"Main.Title1.Y"			"190"
-		"Main.Title1.Y_hidef"	"184"
-		"Main.Title1.Color"	"255 255 255 255"
+		"Main.Title1.X"				"32"
+		"Main.Title1.Y"				"280"
+		"Main.Title1.Y_hidef"		"130"
+		"Main.Title1.Color"	"255 255 255 0"
 
 		// Top-left corner of secondary title e.g. "DEMO" on the main screen
-		"Main.Title2.X"				"291"
-		"Main.Title2.Y"				"207"
-		"Main.Title2.Y_hidef"		"242"
-		"Main.Title2.Color"	"255 255 255 200"
+		"Main.Title2.X"				"76"
+		"Main.Title2.Y"				"190"
+		"Main.Title2.Y_hidef"		"174"
+		"Main.Title2.Color"	"255 255 255 0"
 
 		// Top-left corner of the menu on the main screen
-		"Main.Menu.X"			"53"
+		"Main.Menu.X"			"32"
 		"Main.Menu.X_hidef"		"76"
-		"Main.Menu.Y"			"240"
+		"Main.Menu.Y"			"340"
+		"Main.Menu.Color"		"168 97 64 255"
+		"Menu.TextColor"		"0 0 0 255"
+		"Menu.BgColor"			"125 125 125 255"
 
 		// Blank space to leave beneath the menu on the main screen
 		"Main.BottomBorder"	"32"
-	}
 
-	//////////////////////// BITMAP FONT FILES /////////////////////////////
-	//
-	// Bitmap Fonts are ****VERY*** expensive static memory resources so they are purposely sparse
-	BitmapFontFiles
-	{
-		// UI buttons, custom font, (256x64)
-		"Buttons"		"materials/vgui/fonts/buttons_32.vbf"
-	}
+		ScrollBar.Wide						"12"
 
+		ScrollBarButton.FgColor				"Black"
+		ScrollBarButton.BgColor				"Blank"
+		ScrollBarButton.ArmedFgColor		"White"
+		ScrollBarButton.ArmedBgColor		"Blank"
+		ScrollBarButton.DepressedFgColor	"White"
+		ScrollBarButton.DepressedBgColor	"Blank"
+
+		ScrollBarSlider.FgColor				"0 0 0 255"			// nob color
+		ScrollBarSlider.BgColor				"0 0 0 40"			// slider background color
+		ScrollBarSlider.NobFocusColor		"White"
+		ScrollBarSlider.NobDragColor		"White"
+		ScrollBarSlider.Inset				"3"
+	}
 	
 	//////////////////////// FONTS /////////////////////////////
 	//
@@ -87,19 +215,22 @@ Scheme
 	Fonts
 	{
 		// fonts are used in order that they are listed
-		// fonts are used in order that they are listed
+		// fonts listed later in the order will only be used if they fulfill a range not already filled
+		// if a font fails to load then the subsequent fonts will replace
+
 		"DebugFixed"
 		{
 			"1"
 			{
 				"name"		"Courier New"
-				"tall"		"14"
+				"tall"		"14"	[!$X360]
+				"tall"		"18"	[$X360]
 				"weight"	"400"
 				"antialias" "1"
 			}
 		}
-		// fonts are used in order that they are listed
-		"DebugFixedSmall"
+
+		"DebugFixedSmall" [!$X360]
 		{
 			"1"
 			{
@@ -109,18 +240,21 @@ Scheme
 				"antialias" "1"
 			}
 		}
-		// fonts listed later in the order will only be used if they fulfill a range not already filled
-		// if a font fails to load then the subsequent fonts will replace
-		Default
+
+		DebugOverlay [!$X360]
 		{
-			"1"	[$X360]
+			"1"
 			{
-				"name"		"Verdana"
-				"tall"		"12"
-				"weight"	"700"
-				"antialias" "1"
+				"name"		"Courier New"
+				"tall"		"14"
+				"weight"	"400"
+				"outline"	"1"
 			}
-			"1"	[$WIN32]
+		}
+
+		Default [!$X360]
+		{
+			"1"
 			{
 				"name"		"Verdana"
 				"tall"		"9"
@@ -162,7 +296,8 @@ Scheme
 				"additive"	"1"
 			}
 		}
-		"DefaultSmall"
+
+		"DefaultSmall" [!$X360]
 		{
 			"1"
 			{
@@ -215,7 +350,8 @@ Scheme
 				"weight"		"0"
 			}
 		}
-		"DefaultVerySmall"
+
+		"DefaultVerySmall" [!$X360]
 		{
 			"1"
 			{
@@ -275,7 +411,8 @@ Scheme
 				"weight"		"0"
 			}
 		}
-		WeaponIcons
+
+		WeaponIcons [!$X360]
 		{
 			"1"
 			{
@@ -288,7 +425,8 @@ Scheme
 				"custom"	"1"
 			}
 		}
-		WeaponIconsSelected
+
+		WeaponIconsSelected [!$X360]
 		{
 			"1"
 			{
@@ -303,7 +441,8 @@ Scheme
 				"custom"	"1"
 			}
 		}
-		WeaponIconsSmall
+
+		WeaponIconsSmall [!$X360]
 		{
 			"1"
 			{
@@ -315,56 +454,45 @@ Scheme
 				"custom"	"1"
 			}
 		}
-		Crosshairs
+
+		Crosshairs [!$X360]
 		{
 			"1"
 			{
-				"name"		"HalfLife2"
-				"tall"		"40" [!$OSX]
-				"tall"		"41" [$OSX]
-				"weight"	"0"
-				"antialias" "0"
-				"additive"	"1"
-				"custom"	"1"
-				"yres"		"1 10000"
+				"bitmap"	"1"
+				"name"		"Buttons"
+				"scalex"	"1"
+				"scaley"	"1"
 			}
 		}
-		QuickInfo
+
+		QuickInfo [!$X360]
 		{
-			"1"	[$X360]
+			"1"
 			{
 				"name"		"HL2cross"
-				"tall"		"57"
-				"weight"	"0"
-				"antialias" 	"1"
-				"additive"	"1"
-				"custom"	"1"
-			}
-			"1"	[$WIN32]
-			{
-				"name"		"HL2cross"
-				"tall"		"28" [!$OSX]
-				"tall"		"50" [$OSX]
+				"tall"		"28" [$WIN32]
 				"weight"	"0"
 				"antialias" "1"
 				"additive"	"1"
-				"custom"	"1" [!$OSX]
+				"custom"	"1" [$WIN32]
 			}
 		}
-		HudNumbers
+
+		HudNumbers [!$X360]
 		{
 			"1"
 			{
 				"name"		"HalfLife2"
-				"tall"		"32"	[$WIN32]
-				"tall"		"38"	[$X360]
+				"tall"		"32"
 				"weight"	"0"
 				"antialias" "1"
 				"additive"	"1"
 				"custom"	"1"
 			}
 		}
-		SquadIcon	[$X360]
+
+		SquadIcon	[!$X360]
 		{
 			"1"
 			{
@@ -376,13 +504,13 @@ Scheme
 				"custom"	"1"
 			}
 		}
-		HudNumbersGlow
+
+		HudNumbersGlow [!$X360]
 		{
 			"1"
 			{
 				"name"		"HalfLife2"
-				"tall"		"32"	[$WIN32]
-				"tall"		"38"	[$X360]
+				"tall"		"32"
 				"weight"	"0"
 				"blur"		"4"
 				"scanlines" "2"
@@ -391,21 +519,21 @@ Scheme
 				"custom"	"1"
 			}
 		}
-		HudNumbersSmall
+
+		HudNumbersSmall [!$X360]
 		{
 			"1"
 			{
-				"name"		"HalfLife2" [!$OSX]
-				"name"		"Helvetica Bold" [$OSX]
-				"tall"		"16"	[$WIN32]
-				"tall"		"22"	[$X360]
+				"name"		"HalfLife2"
+				"tall"		"16"
 				"weight"	"1000"
 				"additive"	"1"
 				"antialias" "1"
 				"custom"	"1"
 			}
 		}
-		HudSelectionNumbers
+
+		HudSelectionNumbers [!$X360]
 		{
 			"1"
 			{
@@ -416,46 +544,32 @@ Scheme
 				"additive"	"1"
 			}
 		}
-		HudHintTextLarge
+
+		HudHintTextLarge [!$X360]
 		{
-			"1"	[$X360]
+			"1"
 			{
-				"bitmap"	"1"
-				"name"		"Buttons"
-				"scalex"	"1.0"
-				"scaley"	"1.0"
-			}
-			"1"	[$WIN32]
-			{
-				"name"		"Verdana" [!$OSX]
-				"name"		"Helvetica Bold" [$OSX]
+				"name"		"Verdana"
 				"tall"		"14"
 				"weight"	"1000"
 				"antialias" "1"
 				"additive"	"1"
 			}
 		}
-		HudHintTextSmall
+
+		HudHintTextSmall [!$X360]
 		{
-			"1"	[$WIN32]
+			"1"
 			{
-				"name"		"Verdana" [!$OSX]
-				"name"		"Helvetica" [$OSX]
+				"name"		"Verdana"
 				"tall"		"11"
 				"weight"	"0"
 				"antialias" "1"
 				"additive"	"1"
 			}
-			"1"	[$X360]
-			{
-				"name"		"Verdana"
-				"tall"		"12"
-				"weight"	"700"
-				"antialias" "1"
-				"additive"	"1"
-			}
 		}
-		HudSelectionText
+
+		HudSelectionText [!$X360]
 		{
 			"1"
 			{
@@ -498,19 +612,8 @@ Scheme
 				"yres"	"1200 10000"
 			}
 		}
-		GameUIButtons
-		{
-			"1"	[$X360]
-			{
-				"bitmap"	"1"
-				"name"		"Buttons"
-				"scalex"	"0.63"
-				"scaley"	"0.63"
-				"scalex_hidef"	"1.0"
-				"scaley_hidef"	"1.0"
-			}
-		}
-		BudgetLabel
+
+		BudgetLabel [!$X360]
 		{
 			"1"
 			{
@@ -520,84 +623,9 @@ Scheme
 				"outline"	"1"
 			}
 		}
-		DebugOverlay
-		{
-			"1"	[$WIN32]
-			{
-				"name"		"Courier New"
-				"tall"		"14"
-				"weight"	"400"
-				"outline"	"1"
-			}
-			"1"	[$X360]
-			{
-				"name"		"Tahoma"
-				"tall"		"18"
-				"weight"	"200"
-				"outline"	"1"
-			}
-		}
-		"CloseCaption_Normal"
-		{
-			"1"
-			{
-				"name"		"Tahoma" [!$OSX]
-				"name"		"Verdana" [$OSX]
-				"tall"		"26" [!$OSX]
-				"tall"		"24" [$OSX]
-				"weight"	"500"
-			}
-		}
-		"CloseCaption_Italic"
-		{
-			"1"
-			{
-				"name"		"Tahoma" [!$OSX]
-				"name"		"Verdana Italic" [$OSX]
-				"tall"		"26" [!$OSX]
-				"tall"		"24" [$OSX]
-				"weight"	"500"
-				"italic"	"1"
-			}
-		}
-		"CloseCaption_Bold"
-		{
-			"1"
-			{
-				"name"		"Tahoma" [!$OSX]
-				"name"		"Verdana Bold" [$OSX]
-				"tall"		"26" [!$OSX]
-				"tall"		"24" [$OSX]
-				"weight"	"900"
-			}
-		}
-		"CloseCaption_BoldItalic"
-		{
-			"1"
-			{
-				"name"		"Tahoma" [!$OSX]
-				"name"		"Verdana Bold Italic" [$OSX]
-				"tall"		"26" [!$OSX]
-				"tall"		"24" [$OSX]
-				"weight"	"900"
-				"italic"	"1"
-			}
-		}
-		"CloseCaption_Small"
-		{
-			"1"
-			{
-				"name"		"Tahoma" [!$OSX]
-				"name"		"Verdana" [$OSX]
-				"tall"		"16" [!$OSX]
-				"tall"		"14" [$OSX]
- 				"tall_hidef"	"24"
-				"weight"	"900"
-				"range"		"0x0000 0x017F" //	Basic Latin, Latin-1 Supplement, Latin Extended-A
-			}
-		}
+
 		// this is the symbol font
-		"Marlett"
+		"Marlett" [!$X360]
 		{
 			"1"
 			{
@@ -607,7 +635,8 @@ Scheme
 				"symbol"	"1"
 			}
 		}
-		"Trebuchet24"
+
+		"Trebuchet24" [!$X360]
 		{
 			"1"
 			{
@@ -619,7 +648,8 @@ Scheme
 				"additive"	"1"
 			}
 		}
-		"Trebuchet18"
+
+		"Trebuchet18" [!$X360]
 		{
 			"1"
 			{
@@ -628,172 +658,52 @@ Scheme
 				"weight"	"900"
 			}
 		}
-		ClientTitleFont
+
+		ClientTitleFont [!$X360]
 		{
 			"1"
 			{
-				"name"  "HalfLife2"
-				"tall"			"32"
-				"tall_hidef"	"46"
+				"name"  "Impact"
+				"tall"			"64"
+				"tall_hidef"	"72"
 				"weight" "0"
 				"additive" "0"
 				"antialias" "1"
-				"custom"	"1" [$OSX]
 			}
 		}
-		CreditsLogo
-		{
-			"1"
-			{
-				"name"		"HalfLife2"
-				"tall"		"128"
-				"weight"	"0"
-				"antialias" "1"
-				"additive"	"1"
-				"custom"	"1"
-			}
-		}
-		CreditsText
-		{
-			"1"
-			{
-				"name"		"Trebuchet MS"
-				"tall"		"20"
-				"weight"	"900"
-				"antialias" "1"
-				"additive"	"1"
-			}
-		}
-		CreditsOutroLogos
-		{
-			"1"
-			{
-				"name"		"HalfLife2"
-				"tall"		"48"
-				"weight"	"0"
-				"antialias" "1"
-				"additive"	"1"
-				"custom"	"1"
-			}
-		}
-		CreditsOutroText
-		{
-			"1"
-			{
-				"name"		"Verdana" [!$OSX]
-				"name"		"Courier Bold" [$OSX]
-				"tall"		"9"
-				"weight"	"900"
-				"antialias" "1"
-			}
-		}
-		CenterPrintText
-		{
-			// note that this scales with the screen resolution
-			"1"
-			{
-				"name"		"Trebuchet MS" [!$OSX]
-				"name"		"Helvetica" [$OSX]
-				"tall"		"18"
-				"weight"	"900"
-				"antialias" "1"
-				"additive"	"1"
-			}
-		}
-		HDRDemoText
-		{
-			// note that this scales with the screen resolution
-			"1"
-			{
-				"name"		"Trebuchet MS"
-				"tall"		"24"
-				"weight"	"900"
-				"antialias" "1"
-				"additive"	"1"
-			}
-		}
-		"AchievementNotification"
-		{
-			"1"
-			{
-				"name"		"Trebuchet MS"
-				"tall"		"14"
-				"weight"	"900"
-				"antialias" "1"
-			}
-		}
-		"CommentaryDefault"
-		{
-			"1"
-			{
-				"name"		"Verdana"
-				"tall"		"12"
-				"weight"	"900"
-				"range"		"0x0000 0x017F" //	Basic Latin, Latin-1 Supplement, Latin Extended-A
-				"yres"	"480 599"
-			}
-			"2"
-			{
-				"name"		"Verdana"
-				"tall"		"13"	[$WIN32]
-				"tall"		"20"	[$X360]
-				"weight"	"900"
-				"range"		"0x0000 0x017F" //	Basic Latin, Latin-1 Supplement, Latin Extended-A
-				"yres"	"600 767"
-			}
-			"3"
-			{
-				"name"		"Verdana"
-				"tall"		"14"
-				"weight"	"900"
-				"range"		"0x0000 0x017F" //	Basic Latin, Latin-1 Supplement, Latin Extended-A
-				"yres"	"768 1023"
-				"antialias"	"1"
-			}
-			"4"
-			{
-				"name"		"Verdana"
-				"tall"		"20"
-				"weight"	"900"
-				"range"		"0x0000 0x017F" //	Basic Latin, Latin-1 Supplement, Latin Extended-A
-				"yres"	"1024 1199"
-				"antialias"	"1"
-			}
-			"5"
-			{
-				"name"		"Verdana"
-				"tall"		"24"
-				"weight"	"900"
-				"range"		"0x0000 0x017F" //	Basic Latin, Latin-1 Supplement, Latin Extended-A
-				"yres"	"1200 6000"
-				"antialias"	"1"
-			}
-			"6"
-			{
-				"name"		"Verdana"
-				"tall"		"12"
-				"range" 		"0x0000 0x00FF"
-				"weight"		"900"
-			}
-			"7"
-			{
-				"name"		"Arial"
-				"tall"		"12"
-				"range" 		"0x0000 0x00FF"
-				"weight"		"800"
-			}
-			
-		}
-	}
 
-	
+		HDRDemoText [!$X360]
+		{
+			// note that this scales with the screen resolution
+			"1"
+			{
+				"name"		"Trebuchet MS"
+				"tall"		"24"
+				"weight"	"900"
+				"antialias" "1"
+				"additive"	"1"
+			}
+		}
+				
+		"LargeHUDTitle" [!$X360]
+		{
+			"1"
+			{
+				"name"		"Trade Gothic Bold"
+				"tall"		"20"
+				"weight"	"400"
+				"antialias" "1"
+			}
+		}
+
+	}
 	//////////////////////// CUSTOM FONT FILES /////////////////////////////
 	//
 	// specifies all the custom (non-system) font files that need to be loaded to service the above described fonts
-	CustomFontFiles
+	CustomFontFiles [!$X360]
 	{
-		"1"		"resource/HALFLIFE2.ttf"
-		"2"		"resource/HL2crosshairs.ttf"
+		"1"		"resource/HALFLIFE2.vfont"
+		"2"		"resource/HL2crosshairs.vfont"
 	}
 
 }

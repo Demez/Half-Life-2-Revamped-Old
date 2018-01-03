@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2004, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -24,12 +24,9 @@ enum
 	FATTRIB_TOPOLOGICAL		= (1<<10), // Indicates this attribute effects the scene's topology (ie it's an attribute name or element)
 	FATTRIB_MUSTCOPY		= (1<<11), // parent element must make a new copy during CopyInto, even for shallow copy
 	FATTRIB_NEVERCOPY		= (1<<12), // parent element shouldn't make a new copy during CopyInto, even for deep copy
-	FATTRIB_STANDARD		= (1<<13), // This flag is set if it's a "standard" attribute, namely "name"
-	FATTRIB_USERDEFINED		= (1<<14), // This flag is used to sort attributes in the element properties view. User defined flags come last.
-	FATTRIB_NODUPLICATES	= (1<<15),// For element array types, disallows duplicate values from being inserted into the array.
-	FATTRIB_HAS_ARRAY_CALLBACK	= (1<<16), // Indicates that this will notify its owner and/or other elements array elements changes. Note that when elements shift (say, inserting at head, or fast remove), callbacks are not executed for these elements.
-	FATTRIB_HAS_PRE_CALLBACK	= (1<<17), // Indicates that this will notify its owner and/or other elements right before it changes
-	FATTRIB_OPERATOR_DIRTY	= (1<<18),// Used and cleared only by operator phase of datamodel
+	FATTRIB_USERDEFINED		= (1<<13), // This flag WAS used to sort attributes. Now it's used to guess whether vmtdoc and vmfentity attributes are shaderparams or entitykeys. TODO - remove this
+	FATTRIB_OPERATOR_DIRTY	= (1<<14), // Used and cleared only by operator phase of datamodel
+	FATTRIB_HIDDEN			= (1<<15), // shouldn't be shown in ui
 };
 
 #endif // ATTRIBUTEFLAGS_H

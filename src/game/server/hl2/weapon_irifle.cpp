@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,12 +13,12 @@
 
 
 #include "cbase.h"
-#include "npcevent.h"
+#include "NPCEvent.h"
 #include "basehlcombatweapon.h"
 #include "basecombatcharacter.h"
 #include "soundent.h"
 #include "player.h"
-#include "IEffects.h"
+#include "ieffects.h"
 #include "vstdlib/random.h"
 #include "engine/IEngineSound.h"
 #include "weapon_flaregun.h"

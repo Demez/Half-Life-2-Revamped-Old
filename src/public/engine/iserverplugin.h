@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -84,7 +84,10 @@ public:
 
 	// Client is going active
 	virtual void			ClientActive( edict_t *pEntity ) = 0;
-	
+
+	// Client is fully connected ( has received initial baseline of entities )
+	virtual void			ClientFullyConnect( edict_t *pEntity ) = 0;
+
 	// Client is disconnecting from server
 	virtual void			ClientDisconnect( edict_t *pEntity ) = 0;
 	

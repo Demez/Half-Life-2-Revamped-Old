@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Hardware Verts
 //
@@ -55,7 +55,7 @@ struct FileHeader_t
 	unsigned int m_nChecksum;
 
 	// a vertex consists of these components
-	uint32 m_nVertexFlags;
+	VertexFormatFlags_t m_nVertexFlags;
 
 	// the byte size of a single vertex
 	// this won't be adequate, need some concept of byte format i.e. rgbexp32 vs rgba8888

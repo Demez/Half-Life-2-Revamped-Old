@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -12,8 +12,8 @@
 #pragma once
 #endif
 
-#include <vgui/VGUI.h>
-#include <vgui_controls/Panel.h>
+#include <vgui/vgui.h>
+#include <vgui_controls/panel.h>
 
 namespace vgui
 {
@@ -35,23 +35,17 @@ public:
 	virtual IImage *GetImage();
 	char *GetImageName();
 
-	void SetShouldCenterImage( bool state ) { m_bCenterImage = state; }
-	bool GetShouldCenterImage() const { return m_bCenterImage; }
-
 	// sets whether or not the image should scale to fit the size of the ImagePanel (defaults to false)
 	void SetShouldScaleImage( bool state );
-	bool GetShouldScaleImage();
 	void SetScaleAmount( float scale );
 	float GetScaleAmount( void );
-
-	void SetTileImage( bool bTile )	{ m_bTileImage = bTile; }
 
 	// set the color to fill with, if no image is specified
 	void SetFillColor( Color col );
 	Color GetFillColor();
 
 	virtual Color GetDrawColor( void );
-	virtual void SetDrawColor( Color drawColor );
+	virtual void SetDrawColor( Color color );
 
 	virtual void ApplySettings(KeyValues *inResourceData);
 
@@ -60,6 +54,7 @@ public:
 	
 	int GetNumFrames();
 	void SetFrame( int nFrame );
+	int GetFrame() const;
 
 	void SetRotation( int iRotation ) { m_iRotation = iRotation; }
 
@@ -75,8 +70,6 @@ private:
 	char *m_pszImageName;
 	char *m_pszFillColorName;
 	char *m_pszDrawColorName;
-	bool m_bPositionImage;
-	bool m_bCenterImage;
 	bool m_bScaleImage;
 	bool m_bTileImage;
 	bool m_bTileHorizontally;
@@ -85,6 +78,9 @@ private:
 	Color m_FillColor;
 	Color m_DrawColor;
 	int m_iRotation;
+
+	bool m_bFrameImage;
+	int m_iFrame;
 };
 
 } // namespace vgui

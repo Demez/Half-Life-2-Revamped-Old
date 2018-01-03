@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: This is the brickbat weapon
 //
@@ -22,7 +22,7 @@
 #define GRENADE_PF_TOLERANCE 300
 #define GRENADE_PF_MODEL	 "models/Weapons/w_missile.mdl"
 
-extern short	g_sModelIndexFireball;			// (in combatweapon.cpp) holds the index for the smoke cloud
+extern int	g_sModelIndexFireball;			// (in combatweapon.cpp) holds the index for the smoke cloud
 
 ConVar    sk_dmg_pathfollower_grenade		( "sk_dmg_pathfollower_grenade","0");
 ConVar	  sk_pathfollower_grenade_radius	( "sk_pathfollower_grenade_radius","0");
@@ -265,7 +265,7 @@ void CGrenadePathfollower::AimThink( void )
 		while (flTimeToUse > 0)
 		{
 			vecNewVelocity += vTargetDir;
-			flTimeToUse = -0.1;
+			flTimeToUse =- 0.1;
 		}
 		vecNewVelocity *= m_flFlySpeed;
 		SetAbsVelocity( vecNewVelocity );

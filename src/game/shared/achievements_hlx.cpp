@@ -1,23 +1,27 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
 //=============================================================================
-
 
 #include "cbase.h"
 
 #ifdef GAME_DLL
 
 // this gets compiled in for HL2 + Ep(X) only
-#if ( defined( HL2_DLL ) || defined( HL2_EPISODIC ) ) && ( !defined ( PORTAL ) )
+#if ( defined( HL2_DLL ) || defined( HL2_EPISODIC ) ) && ( !defined ( INFESTED_DLL ) )
 
+#include "matchmaking/imatchframework.h"
 #include "baseachievement.h"
 #include "prop_combine_ball.h"
 #include "combine_mine.h"
 #include "basegrenade_shared.h"
 #include "basehlcombatweapon_shared.h"
 #include "ammodef.h"
+
+// NOTE: This has to be the last file included!
+#include "tier0/memdbgon.h"
+
 
 class CAchievementHLXKillWithPhysicsObjects : public CBaseAchievement
 {
@@ -45,7 +49,7 @@ class CAchievementHLXKillWithPhysicsObjects : public CBaseAchievement
 	}
 
 };
-DECLARE_ACHIEVEMENT( CAchievementHLXKillWithPhysicsObjects, ACHIEVEMENT_HLX_KILL_ENEMIES_WITHPHYSICS, "HLX_KILL_ENEMIES_WITHPHYSICS", 5 );
+DECLARE_ACHIEVEMENT_ORDER( CAchievementHLXKillWithPhysicsObjects, ACHIEVEMENT_HLX_KILL_ENEMIES_WITHPHYSICS, "HLX_KILL_ENEMIES_WITHPHYSICS", 5, 10 );
 
 class CAchievementHLXKillWithHopper : public CBaseAchievement
 {
@@ -72,7 +76,7 @@ class CAchievementHLXKillWithHopper : public CBaseAchievement
 		}
 	}
 };
-DECLARE_ACHIEVEMENT( CAchievementHLXKillWithHopper, ACHIEVEMENT_HLX_KILL_ENEMY_WITHHOPPERMINE, "HLX_KILL_ENEMY_WITHHOPPERMINE", 5 );
+DECLARE_ACHIEVEMENT_ORDER( CAchievementHLXKillWithHopper, ACHIEVEMENT_HLX_KILL_ENEMY_WITHHOPPERMINE, "HLX_KILL_ENEMY_WITHHOPPERMINE", 5, 20 );
 
 class CAchievementHLXKillWithManhack : public CBaseAchievement
 {
@@ -100,7 +104,7 @@ class CAchievementHLXKillWithManhack : public CBaseAchievement
 		}
 	}
 };
-DECLARE_ACHIEVEMENT( CAchievementHLXKillWithManhack, ACHIEVEMENT_HLX_KILL_ENEMIES_WITHMANHACK, "HLX_KILL_ENEMIES_WITHMANHACK", 5 );
+DECLARE_ACHIEVEMENT_ORDER( CAchievementHLXKillWithManhack, ACHIEVEMENT_HLX_KILL_ENEMIES_WITHMANHACK, "HLX_KILL_ENEMIES_WITHMANHACK", 5,30 );
 
 class CAchievementHLXKillSoldierWithOwnGrenade : public CBaseAchievement
 {
@@ -135,7 +139,7 @@ protected:
 		}			
 	}
 };
-DECLARE_ACHIEVEMENT( CAchievementHLXKillSoldierWithOwnGrenade, ACHIEVEMENT_HLX_KILL_SOLDIER_WITHHISGRENADE, "HLX_KILL_SOLDIER_WITHHISGRENADE", 10 );
+DECLARE_ACHIEVEMENT_ORDER( CAchievementHLXKillSoldierWithOwnGrenade, ACHIEVEMENT_HLX_KILL_SOLDIER_WITHHISGRENADE, "HLX_KILL_SOLDIER_WITHHISGRENADE", 10,40 );
 
 class CAchievementHLXKillWithOneEnergyBall : public CBaseAchievement
 {
@@ -178,7 +182,7 @@ protected:
 	CBaseEntity *m_pLastInflictor;
 	int m_iLocalCount;
 };
-DECLARE_ACHIEVEMENT( CAchievementHLXKillWithOneEnergyBall, ACHIEVEMENT_HLX_KILL_ENEMIES_WITHONEENERGYBALL, "HLX_KILL_ENEMIES_WITHONEENERGYBALL", 5 );
+DECLARE_ACHIEVEMENT_ORDER( CAchievementHLXKillWithOneEnergyBall, ACHIEVEMENT_HLX_KILL_ENEMIES_WITHONEENERGYBALL, "HLX_KILL_ENEMIES_WITHONEENERGYBALL", 5,50 );
 
 class CAchievementHLXKillEliteSoldierWithOwnEnergyBall : public CBaseAchievement
 {
@@ -212,7 +216,7 @@ protected:
 		}
 	}
 };
-DECLARE_ACHIEVEMENT( CAchievementHLXKillEliteSoldierWithOwnEnergyBall, ACHIEVEMENT_HLX_KILL_ELITESOLDIER_WITHHISENERGYBALL, "HLX_KILL_ELITESOLDIER_WITHHISENERGYBALL", 10 );
+DECLARE_ACHIEVEMENT_ORDER( CAchievementHLXKillEliteSoldierWithOwnEnergyBall, ACHIEVEMENT_HLX_KILL_ELITESOLDIER_WITHHISENERGYBALL, "HLX_KILL_ELITESOLDIER_WITHHISENERGYBALL", 10,60 );
 
 //-----------------------------------------------------------------------------
 // Purpose: Counts the accumulated # of primary and secondary attacks from all
@@ -248,6 +252,6 @@ int CalcPlayerAttacks( bool bBulletOnly )
 	return iTotalAttacks;
 }
 
-#endif	// ( defined( HL2_DLL ) || defined( HL2_EPISODIC ) ) && ( !defined ( PORTAL ) )
+#endif	// ( defined( HL2_DLL ) || defined( HL2_EPISODIC ) )
 
 #endif // GAME_DLL

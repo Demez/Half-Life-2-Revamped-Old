@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:	Squad classes
 //
@@ -263,9 +263,10 @@ void CAI_Squad::AddToSquad(CAI_BaseNPC *pNPC)
 
 	if (m_SquadMembers.Count() == MAX_SQUAD_MEMBERS)
 	{
-		DevMsg("Error!! Squad %s is too big!!! Replacing last member\n", STRING( this->m_Name ));
+		DevMsg("Error!! Squad %s is too big!!! Replacing last member\n", STRING(this->m_Name) );
 		m_SquadMembers.Remove(m_SquadMembers.Count()-1);
 	}
+
 	m_SquadMembers.AddToTail(pNPC);
 	pNPC->SetSquad( this );
 	pNPC->SetSquadName( m_Name );
@@ -273,6 +274,7 @@ void CAI_Squad::AddToSquad(CAI_BaseNPC *pNPC)
 	if ( m_SquadMembers.Count() > 1 )
 	{
 		CAI_BaseNPC *pCopyFrom = m_SquadMembers[0];
+		Assert( pCopyFrom != NULL );
 		CAI_Enemies *pEnemies = pCopyFrom->GetEnemies();
 		AIEnemiesIter_t iter;
 		AI_EnemyInfo_t *pInfo = pEnemies->GetFirst( &iter );
@@ -294,7 +296,7 @@ CAI_BaseNPC *CAI_Squad::SquadMemberInRange( const Vector &vecLocation, float flD
 		if (m_SquadMembers[i] != NULL && (vecLocation - m_SquadMembers[i]->GetAbsOrigin() ).Length2D() <= flDist)
 			return m_SquadMembers[i];
 	}
-	return NULL;
+	return false;
 }
 
 //-------------------------------------
@@ -457,6 +459,29 @@ CAI_BaseNPC *CAI_Squad::GetNextMember( AISquadIter_t *pIter, bool bIgnoreSilentM
 		return NULL;
 
 	return m_SquadMembers[i];
+}
+
+//-------------------------------------
+// Purpose: Returns the average of the
+// positions of all squad members. 
+// Optionally, you may exclude one
+// member.
+//-------------------------------------
+Vector CAI_Squad::ComputeSquadCentroid( bool bIncludeSilentMembers, CBaseCombatCharacter *pExcludeMember )
+{
+	int count = 0;
+	Vector vecSumOfOrigins = Vector( 0, 0, 0 );
+
+	for ( int i = 0; i < m_SquadMembers.Count(); i++ )
+	{
+		if ( (m_SquadMembers[i] != pExcludeMember) && (bIncludeSilentMembers||!IsSilentMember(m_SquadMembers[i]) ) )
+		{
+			count++;
+			vecSumOfOrigins+= m_SquadMembers[i]->GetAbsOrigin();
+		}
+	}
+
+	return vecSumOfOrigins / count;
 }
 
 //-------------------------------------

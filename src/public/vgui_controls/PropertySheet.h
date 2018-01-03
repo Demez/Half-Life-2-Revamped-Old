@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -39,7 +39,9 @@ public:
 	void		SetDraggableTabs( bool state );
 
 	// Adds a page to the sheet.  The first page added becomes the active sheet.
-	virtual void AddPage(Panel *page, const char *title, char const *imageName = NULL, bool showContextMenu = false );
+	virtual void AddPage(Panel *page, const char *title, char const *imageName = NULL, bool showContextMenu = false, int nInsertBefore = -1 );
+
+	virtual void SetPageTitle( Panel *page, const char *title );
 
 	// sets the current page
 	virtual void SetActivePage(Panel *page);
@@ -52,9 +54,6 @@ public:
 
 	// Removes (but doesn't delete) all pages
 	virtual void	RemoveAllPages();
-
-	// Removes all the pages and marks all the pages for deletion.
-	virtual void	DeleteAllPages();
 
 	// reloads the data in all the property page
 	virtual void ResetAllData();
@@ -79,13 +78,13 @@ public:
 	virtual Panel *GetActiveTab();
 
 	// returns the title text of the tab
-	virtual void GetActiveTabTitle( char *textOut, int bufferLen );
+	virtual void GetActiveTabTitle(char *textOut, int bufferLen);
+
+	// return tab "i"
+	virtual Panel *GetTab(int i);
 
 	// returns the title of tab "i"
-	virtual bool GetTabTitle( int i, char *textOut, int bufferLen );
-
-	// sets the title of tab "i"
-	virtual bool SetTabTitle( int i, char *pchTitle );
+	virtual bool GetTabTitle(int i,char *textOut, int bufferLen);
 
 	// returns the index of the active page
 	virtual int GetActivePageNum();
@@ -101,6 +100,7 @@ public:
 
 	virtual void SetSmallTabs( bool state );
 	virtual bool IsSmallTabs() const;
+	virtual void SetShowTabs( bool state );
 
 	/* MESSAGES SENT TO PAGES
 		"PageShow"	- sent when a page is shown
@@ -125,13 +125,14 @@ public:
 	bool		IsKBNavigationEnabled() const;
 
 	virtual bool HasUserConfigSettings() { return true; }
+	virtual void OnThink();
 
 protected:
 	virtual void PaintBorder();
 	virtual void PerformLayout();
 	virtual Panel *HasHotkey(wchar_t key);
 	virtual void ChangeActiveTab(int index);
-	virtual void OnKeyCodePressed(KeyCode code);
+	virtual void OnKeyCodeTyped(KeyCode code);
 	virtual void OnCommand(const char *command);
 	virtual void ApplySchemeSettings(IScheme *pScheme);
 	virtual void ApplySettings(KeyValues *inResourceData);
@@ -147,10 +148,18 @@ protected:
 	MESSAGE_FUNC_HANDLE( OnCurrentDefaultButtonSet, "CurrentDefaultButtonSet", button);
     MESSAGE_FUNC( OnFindDefaultButton, "FindDefaultButton" );
 
+	virtual void LayoutTabs();
+
 private:
 	
 	// enable/disable the page with title "title" 
 	virtual void SetPageEnabled(const char *title,bool state);
+
+	// Grabs mouse coords and figures out best tab to insert "before" or -1 if insert should be at end of tab section row
+	PageTab *FindInsertBeforeTab();
+
+	void AddPageDropTab( char const *pTabName, Panel *pPage );
+	void ClearPageDropTab();
 
 	struct Page_t
 	{
@@ -184,24 +193,14 @@ private:
 
 	CPanelAnimationVarAliasType( int, m_iTabXIndent, "tabxindent", "0", "proportional_int" );
 	CPanelAnimationVarAliasType( int, m_iTabXDelta, "tabxdelta", "0", "proportional_int" );
-	CPanelAnimationVarAliasType( bool, m_bTabFitText, "tabxfittotext", "1", "bool" );
-
-	//=============================================================================
-	// HPE_BEGIN:
-	// [tj] These variables have been split into the initially specified size
-	//		and the currently set size. This is so we can always recalculate the
-	//		new value for resolution changes.
-	//=============================================================================
-	CPanelAnimationVarAliasType( int, m_iSpecifiedTabHeight, "tabheight", "28", "int" );
-	CPanelAnimationVarAliasType( int, m_iSpecifiedTabHeightSmall, "tabheight_small", "14", "int" );
-
-	int m_iTabHeight;
-	int m_iTabHeightSmall;
-	//=============================================================================
-	// HPE_END
-	//=============================================================================
+	CPanelAnimationVarAliasType( int, m_iTabHeight, "tabheight", "28", "proportional_int" );
+	CPanelAnimationVarAliasType( int, m_iTabHeightSmall, "tabheight_small", "14", "proportional_int" );
 
 	KeyValues	*m_pTabKV;
+
+	int			m_nPageDropTabVisibleTime;
+	PageTab		*m_pDragDropTab;
+	PageTab		*m_pTemporarilyRemoved;
 };
 
 }; // namespace vgui

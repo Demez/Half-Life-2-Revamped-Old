@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Dr. Breen, the oft maligned genius, heroically saving humanity from 
 //			its own worst enemy, itself.
@@ -55,7 +55,7 @@ Class_T	CNPC_Breen::Classify ( void )
 //-----------------------------------------------------------------------------
 void CNPC_Breen::HandleAnimEvent( animevent_t *pEvent )
 {
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 	case 1:
 	default:

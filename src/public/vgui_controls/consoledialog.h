@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright � 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -12,7 +12,7 @@
 #endif
 
 #include <Color.h>
-#include "tier1/utlvector.h"
+#include "tier1/UtlVector.h"
 #include "vgui_controls/EditablePanel.h"
 #include "vgui_controls/Frame.h"
 #include "icvar.h"
@@ -159,8 +159,6 @@ public:
 	void ColorPrint( const Color& clr, const char *msg );
 	void Clear();
 	void DumpConsoleTextToFile();
-
-	virtual void OnKeyCodePressed( vgui::KeyCode code );
 
 protected:
 	CConsolePanel *m_pConsolePanel;

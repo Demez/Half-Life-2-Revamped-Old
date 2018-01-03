@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -48,6 +48,10 @@ public:
 	virtual void SetFrame( int nFrame );
 	virtual HTexture GetID();
 	virtual void SetRotation( int iRotation ) { return; };
+
+	// Get the size of the image
+	virtual int GetTall();
+	virtual int GetWide();
 
 protected:
 	virtual void SetSize(int wide, int tall);

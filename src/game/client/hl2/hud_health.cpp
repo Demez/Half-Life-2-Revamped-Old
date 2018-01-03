@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -14,7 +14,7 @@
 #include "hud.h"
 #include "hud_macros.h"
 #include "view.h"
-
+ 
 #include "iclientmode.h"
 
 #include <KeyValues.h>
@@ -29,7 +29,7 @@ using namespace vgui;
 #include "hudelement.h"
 #include "hud_numericdisplay.h"
 
-#include "convar.h"
+#include "ConVar.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -130,12 +130,12 @@ void CHudHealth::OnThink()
 
 	if ( m_iHealth >= 20 )
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthIncreasedAbove20");
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence("HealthIncreasedAbove20");
 	}
 	else if ( m_iHealth > 0 )
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthIncreasedBelow20");
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthLow");
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence("HealthIncreasedBelow20");
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence("HealthLow");
 	}
 
 	SetDisplayValue(m_iHealth);
@@ -164,7 +164,7 @@ void CHudHealth::MsgFunc_Damage( bf_read &msg )
 		if ( damageTaken > 0 )
 		{
 			// start the animation
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthDamageTaken");
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence("HealthDamageTaken");
 		}
 	}
 }

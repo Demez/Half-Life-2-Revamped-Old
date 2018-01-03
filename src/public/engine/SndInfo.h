@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -42,10 +42,25 @@ struct SndInfo_t
 	bool		m_bDryMix;
 	// true if sound is playing through in-game speaker entity.
 	bool		m_bSpeaker;
-	// true if sound is playing with special DSP effect
-	bool		m_bSpecialDSP;
 	// for snd_show, networked sounds get colored differently than local sounds
 	bool		m_bFromServer;
+};
+
+//-----------------------------------------------------------------------------
+// Hearing info
+//-----------------------------------------------------------------------------
+struct AudioState_t
+{
+	AudioState_t()
+	{
+		m_Origin.Init();
+		m_Angles.Init();
+		m_bIsUnderwater = false;
+	}
+
+	Vector m_Origin;
+	QAngle m_Angles;
+	bool m_bIsUnderwater;
 };
 
 #endif // SNDINFO_H

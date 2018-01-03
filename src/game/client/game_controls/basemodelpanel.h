@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2006, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -194,7 +194,6 @@ public:
 	void		CalculateFrameDistance( void );
 	void		ZoomToFrameDistance( void );
 
-	void		UpdateModel();
 public: // IGameEventListener:
 	virtual void FireGameEvent( IGameEvent * event );
 
@@ -207,6 +206,8 @@ private:
 	void InitCubeMaps();
 	int FindAnimByName( const char *pszName );
 	void CalculateFrameDistanceInternal( const model_t *pModel );
+
+	void UpdateIfDirty();
 
 public:
 	int								m_nFOV;

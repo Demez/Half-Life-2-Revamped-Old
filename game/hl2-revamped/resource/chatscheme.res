@@ -24,6 +24,10 @@ Scheme
 		"Black"				"0 0 0 255"
 
 		"Blank"				"0 0 0 0"
+		
+		"ScrollBarGrey"		"51 51 51 192"
+		"ScrollBarHilight"	"110 110 110 192"
+		"ScrollBarDark"		"38 38 38 192"
 	}
 
 	///////////////////// BASE SETTINGS ////////////////////////
@@ -130,17 +134,24 @@ Scheme
 		RichText.SelectedTextColor		"Black"
 		RichText.SelectedBgColor		"Orange"
 
-		ScrollBar.Wide					17
+		ScrollBar.Wide					12
+		ScrollBarNobBorder.Outer 			"ScrollBarDark"
+		ScrollBarNobBorder.Inner 			"ScrollBarGrey"
+		ScrollBarNobBorderHover.Inner 			"ScrollBarGrey"
+		ScrollBarNobBorderDragging.Inner 		"ScrollBarHilight"
 
-		ScrollBarButton.FgColor				"White"
-		ScrollBarButton.BgColor				"Blank"
-		ScrollBarButton.ArmedFgColor		"White"
-		ScrollBarButton.ArmedBgColor		"Blank"
-		ScrollBarButton.DepressedFgColor	"White"
-		ScrollBarButton.DepressedBgColor	"Blank"
+		ScrollBarButton.FgColor				"ScrollBarHilight"
+		ScrollBarButton.BgColor				"ScrollBarGrey"
+		ScrollBarButton.ArmedFgColor		"ScrollBarHilight"
+		ScrollBarButton.ArmedBgColor		"ScrollBarGrey"
+		ScrollBarButton.DepressedFgColor	"ScrollBarHilight"
+		ScrollBarButton.DepressedBgColor	"ScrollBarGrey"
 
-		ScrollBarSlider.FgColor				"Blank"			// nob color
-		ScrollBarSlider.BgColor				"255 255 255 64"	// slider background color
+		ScrollBarSlider.Inset				1			// Number of pixels to inset scroll bar nob
+		ScrollBarSlider.FgColor				"ScrollBarGrey"		// nob color
+		ScrollBarSlider.BgColor				"Blank"		// slider background color
+		ScrollBarSlider.NobFocusColor			"ScrollBarHilight"		// nob mouseover color
+		ScrollBarSlider.NobDragColor			"ScrollBarHilight"		// nob active drag color
 
 		SectionedListPanel.HeaderTextColor	"White"
 		SectionedListPanel.HeaderBgColor	"Blank"
@@ -474,7 +485,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "Border.Bright"
+					"color" "ScrollBarHilight"
 					"offset" "0 1"
 				}
 			}
@@ -483,7 +494,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "Border.Dark"
+					"color" "ScrollBarDark"
 					"offset" "1 0"
 				}
 			}
@@ -492,7 +503,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "Border.Bright"
+					"color" "ScrollBarHilight"
 					"offset" "0 0"
 				}
 			}
@@ -501,7 +512,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "Border.Dark"
+					"color" "ScrollBarDark"
 					"offset" "0 0"
 				}
 			}
@@ -514,7 +525,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "Border.Dark"
+					"color" "ScrollBarHilight"
 					"offset" "0 1"
 				}
 			}
@@ -523,7 +534,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "Border.Bright"
+					"color" "ScrollBarDark"
 					"offset" "1 0"
 				}
 			}
@@ -532,7 +543,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "Border.Dark"
+					"color" "ScrollBarHilight"
 					"offset" "0 0"
 				}
 			}
@@ -541,12 +552,55 @@ Scheme
 			{
 				"1"
 				{
-					"color" "Border.Bright"
+					"color" "ScrollBarDark"
 					"offset" "0 0"
 				}
 			}
 		}
+		
+		ScrollBarSliderBorder
+		{
+			"inset" "2 2 0 0"
+			Left
+			{
+				"1"
+				{
+					"color" "ScrollBarHilight"
+					"offset" "0 1"
+				}
+			}
 
+			Right
+			{
+				"1"
+				{
+					"color" "ScrollBarDark"
+					"offset" "1 0"
+				}
+			}
+
+			Top
+			{
+				"1"
+				{
+					"color" "ScrollBarHilight"
+					"offset" "0 0"
+				}
+			}
+
+			Bottom
+			{
+				"1"
+				{
+					"color" "ScrollBarDark"
+					"offset" "0 0"
+				}
+			}
+		}
+		
+		ScrollBarSliderBorderHover ScrollBarSliderBorder
+		ScrollBarSliderBorderDragging ScrollBarSliderBorder
+		
 		TabBorder
 		{
 			"inset" "0 0 1 1"
@@ -756,7 +810,6 @@ Scheme
 	// specifies all the custom (non-system) font files that need to be loaded to service the above described fonts
 	CustomFontFiles
 	{
-		"1"		"resource/HALFLIFE2.ttf"
-		"2"		"resource/HL2EP2.ttf"		
+		"1"		"resource/HALFLIFE2.vfont"
 	}
 }

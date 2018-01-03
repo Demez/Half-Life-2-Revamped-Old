@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========== Copyright © 2005, Valve Corporation, All rights reserved. ========
 //
 // Purpose:
 //
@@ -12,10 +12,10 @@
 
 #if defined( _WIN32 )
 #pragma once
-// Suppress this spurious warning:
-// warning C4700: uninitialized local variable 'oldHead' used
-#pragma warning( push )
-#pragma warning( disable : 4700 )
+#endif
+
+#if ( defined( PLATFORM_X360 ) || defined( PLATFORM_WINDOWS_PC64 ) )
+#define USE_NATIVE_SLIST
 #endif
 
 #if defined( USE_NATIVE_SLIST ) && !defined( _X360 )
@@ -25,50 +25,21 @@
 
 #include "tier0/dbg.h"
 #include "tier0/threadtools.h"
-#include "tier0/memalloc.h"
-#include "tier0/memdbgoff.h"
 
-#if defined( _X360 )
-#define USE_NATIVE_SLIST
-#endif
+#include "tier0/memdbgon.h"
 
 //-----------------------------------------------------------------------------
 
-#if defined( PLATFORM_64BITS )
-
-#define TSLIST_HEAD_ALIGNMENT 16
-#define TSLIST_NODE_ALIGNMENT 16
-inline bool ThreadInterlockedAssignIf64x128( volatile int128 *pDest, const int128 &value, const int128 &comperand )
-	{ return ThreadInterlockedAssignIf128( pDest, value, comperand ); }
+#if defined(PLATFORM_WINDOWS_PC64)
+#define TSLIST_HEAD_ALIGNMENT 16 //MEMORY_ALLOCATION_ALIGNMENT
+#define TSLIST_NODE_ALIGNMENT 16 //MEMORY_ALLOCATION_ALIGNMENT
 #else
 #define TSLIST_HEAD_ALIGNMENT 8
 #define TSLIST_NODE_ALIGNMENT 8
-inline bool ThreadInterlockedAssignIf64x128( volatile int64 *pDest, const int64 value, const int64 comperand )
-	{ return ThreadInterlockedAssignIf64( pDest, value, comperand ); }
 #endif
 
-#ifdef _MSC_VER
 #define TSLIST_HEAD_ALIGN DECL_ALIGN(TSLIST_HEAD_ALIGNMENT)
 #define TSLIST_NODE_ALIGN DECL_ALIGN(TSLIST_NODE_ALIGNMENT)
-#define TSLIST_HEAD_ALIGN_POST
-#define TSLIST_NODE_ALIGN_POST
-#elif defined( GNUC )
-#define TSLIST_HEAD_ALIGN 
-#define TSLIST_NODE_ALIGN 
-#define TSLIST_HEAD_ALIGN_POST DECL_ALIGN(TSLIST_HEAD_ALIGNMENT)
-#define TSLIST_NODE_ALIGN_POST DECL_ALIGN(TSLIST_NODE_ALIGNMENT)
-#elif defined( _PS3 )
-#define TSLIST_HEAD_ALIGNMENT 8
-#define TSLIST_NODE_ALIGNMENT 8
-
-#define TSLIST_HEAD_ALIGN ALIGN8
-#define TSLIST_NODE_ALIGN ALIGN8
-#define TSLIST_HEAD_ALIGN_POST ALIGN8_POST
-#define TSLIST_NODE_ALIGN_POST ALIGN8_POST
-
-#else
-#error
-#endif
 
 //-----------------------------------------------------------------------------
 
@@ -87,94 +58,38 @@ typedef SLIST_HEADER TSLHead_t;
 struct TSLIST_NODE_ALIGN TSLNodeBase_t
 {
 	TSLNodeBase_t *Next; // name to match Windows
-} TSLIST_NODE_ALIGN_POST;
+};
 
-union TSLIST_HEAD_ALIGN TSLHead_t
+union TSLHead_t
 {
 	struct Value_t
 	{
 		TSLNodeBase_t *Next;
-		// <sergiy> Depth must be in the least significant halfword when atomically loading into register,
-		//          to avoid carrying digits from Sequence. Carrying digits from Depth to Sequence is ok,
-		//          because Sequence can be pretty much random. We could operate on both of them separately,
-		//          but it could perhaps (?) lead to problems with store forwarding. I don't know 'cause I didn't 
-		//          performance-test or design original code, I'm just making it work on PowerPC.
-		#ifdef VALVE_BIG_ENDIAN
-		int16	Sequence;
-		int16   Depth;
-		#else
 		int16   Depth;
 		int16	Sequence;
-		#endif
-#ifdef PLATFORM_64BITS
-		int32   Padding;
-#endif
 	} value;
 
-	struct Value32_t
-	{
-		TSLNodeBase_t *Next_do_not_use_me;
-		int32   DepthAndSequence;
-	} value32;
-
-#ifdef PLATFORM_64BITS
-	int128 value64x128;
-#else
-	int64 value64x128;
-#endif
-} TSLIST_HEAD_ALIGN_POST;
-
+	int64 value64;
+};
 #endif
 
 //-------------------------------------
-class CTSListBase
+
+class TSLIST_HEAD_ALIGN CTSListBase
 {
 public:
-
-	// override new/delete so we can guarantee 8-byte aligned allocs
-	static void * operator new( size_t size )
-	{
-		CTSListBase *pNode = (CTSListBase *)MemAlloc_AllocAligned( size, TSLIST_HEAD_ALIGNMENT, __FILE__, __LINE__ );
-		return pNode;
-	}
-
-	static void * operator new( size_t size, int nBlockUse, const char *pFileName, int nLine )
-	{
-		CTSListBase *pNode = (CTSListBase *)MemAlloc_AllocAligned( size, TSLIST_HEAD_ALIGNMENT, pFileName, nLine );
-		return pNode;
-	}
-
-	static void operator delete( void *p)
-	{
-		MemAlloc_FreeAligned( p );
-	}
-
-	static void operator delete( void *p, int nBlockUse, const char *pFileName, int nLine )
-	{
-		MemAlloc_FreeAligned( p );
-	}
-
-private:
-	// These ain't gonna work
-	static void * operator new[] ( size_t size );
-	static void operator delete [] ( void *p);
-	
-public:
-
 	CTSListBase()
 	{
 		if ( ((size_t)&m_Head) % TSLIST_HEAD_ALIGNMENT != 0 )
 		{
-			Error( "CTSListBase: Misaligned list\n" );
+			Error( _T( "CTSListBase: Misaligned list\n" ) );
 			DebuggerBreak();
 		}
 
 #ifdef USE_NATIVE_SLIST
 		InitializeSListHead( &m_Head );
-#elif defined(PLATFORM_64BITS)
-		m_Head.value64x128 = int128_zero();
 #else
-		m_Head.value64x128 = (int64)0;
+		m_Head.value64 = (int64)0;
 #endif
 	}
 
@@ -188,7 +103,7 @@ public:
 #ifdef _DEBUG
 		if ( (size_t)pNode % TSLIST_NODE_ALIGNMENT != 0 )
 		{
-			Error( "CTSListBase: Misaligned node\n" );
+			Error( _T( "CTSListBase: Misaligned node\n" ) );
 			DebuggerBreak();
 		}
 #endif
@@ -204,23 +119,14 @@ public:
 		TSLHead_t oldHead;
 		TSLHead_t newHead;
 
-		#if defined( PLATFORM_PS3 ) || defined( PLATFORM_X360 )
-		__lwsync(); // write-release barrier
-		#endif
-
-#ifdef PLATFORM_64BITS
-		newHead.value.Padding = 0;
-#endif
 		for (;;)
 		{
-			oldHead.value64x128 = m_Head.value64x128;
+			oldHead.value64 = m_Head.value64;
 			pNode->Next = oldHead.value.Next;
 			newHead.value.Next = pNode;
-			
-			newHead.value32.DepthAndSequence = oldHead.value32.DepthAndSequence + 0x10001;
-			
-			
-			if ( ThreadInterlockedAssignIf64x128( &m_Head.value64x128, newHead.value64x128, oldHead.value64x128 ) )
+			*((uint32 *)&newHead.value.Depth) = *((uint32 *)&oldHead.value.Depth) + 0x10001;
+
+			if ( ThreadInterlockedAssignIf64( &m_Head.value64, newHead.value64, oldHead.value64 ) )
 			{
 				break;
 			}
@@ -245,24 +151,17 @@ public:
 		TSLHead_t oldHead;
 		TSLHead_t newHead;
 
-#ifdef PLATFORM_64BITS
-		newHead.value.Padding = 0;
-#endif
 		for (;;)
 		{
-			oldHead.value64x128 = m_Head.value64x128;
+			oldHead.value64 = m_Head.value64;
 			if ( !oldHead.value.Next )
 				return NULL;
 
 			newHead.value.Next = oldHead.value.Next->Next;
-			newHead.value32.DepthAndSequence = oldHead.value32.DepthAndSequence	- 1;
+			*((uint32 *)&newHead.value.Depth) = *((uint32 *)&oldHead.value.Depth) - 1;
 
-
-			if ( ThreadInterlockedAssignIf64x128( &m_Head.value64x128, newHead.value64x128, oldHead.value64x128 ) )
+			if ( ThreadInterlockedAssignIf64( &m_Head.value64, newHead.value64, oldHead.value64 ) )
 			{
-				#if defined( PLATFORM_PS3 ) || defined( PLATFORM_X360 )
-					__lwsync(); // read-acquire barrier
-				#endif
 				break;
 			}
 			ThreadPause();
@@ -276,7 +175,7 @@ public:
 	{
 #ifdef USE_NATIVE_SLIST
 		TSLNodeBase_t *pBase = (TSLNodeBase_t *)InterlockedFlushSList( &m_Head );
-#if defined( _X360 ) || defined( _PS3 )
+#ifdef _X360
 		__lwsync(); // read-acquire barrier
 #endif
 		return pBase;
@@ -284,24 +183,18 @@ public:
 		TSLHead_t oldHead;
 		TSLHead_t newHead;
 
-#ifdef PLATFORM_64BITS
-		newHead.value.Padding = 0;
-#endif
 		do
 		{
 			ThreadPause();
 
-			oldHead.value64x128 = m_Head.value64x128;
+			oldHead.value64 = m_Head.value64;
 			if ( !oldHead.value.Next )
 				return NULL;
 
 			newHead.value.Next = NULL;
-			// <sergiy> the reason for AND'ing it instead of poking a short into memory 
-			//          is probably to avoid store forward issues, but I'm not sure because
-			//          I didn't construct this code. In any case, leaving it as is on big-endian
-			newHead.value32.DepthAndSequence = oldHead.value32.DepthAndSequence & 0xffff0000;
+			*((uint32 *)&newHead.value.Depth) = *((uint32 *)&oldHead.value.Depth) & 0xffff0000;
 
-		} while( !ThreadInterlockedAssignIf64x128( &m_Head.value64x128, newHead.value64x128, oldHead.value64x128 ) );
+		} while( !ThreadInterlockedAssignIf64( &m_Head.value64, newHead.value64, oldHead.value64 ) );
 
 		return (TSLNodeBase_t *)oldHead.value.Next;
 #endif
@@ -323,7 +216,7 @@ public:
 
 private:
 	TSLHead_t m_Head;
-} TSLIST_HEAD_ALIGN_POST;
+};
 
 //-------------------------------------
 
@@ -341,7 +234,7 @@ public:
 	{
 		return (T *)CTSListBase::Pop();
 	}
-} TSLIST_HEAD_ALIGN_POST;
+};
 
 //-------------------------------------
 // this is a replacement for CTSList<> and CObjectPool<> that does not
@@ -356,16 +249,11 @@ class TSLIST_HEAD_ALIGN CTSPool : public CTSListBase
 	struct TSLIST_NODE_ALIGN simpleTSPoolStruct_t : public TSLNodeBase_t
 	{
 		T elem;
-	} TSLIST_NODE_ALIGN_POST;
+	};
 
 public:
 
 	~CTSPool()
-	{
-		Purge();
-	}
-
-	void Purge()
 	{
 		simpleTSPoolStruct_t *pNode = NULL;
 		while ( 1 )
@@ -401,7 +289,8 @@ public:
 	{
 		return GetObject();
 	}
-} TSLIST_HEAD_ALIGN_POST;
+
+};
 //-------------------------------------
 
 template <typename T>
@@ -412,32 +301,10 @@ public:
 	{
 		Node_t() {}
 		Node_t( const T &init ) : elem( init ) {}
+
 		T elem;
 
-	    // override new/delete so we can guarantee 8-byte aligned allocs
-	    static void * operator new( size_t size )
-	    {
-      		Node_t *pNode = (Node_t *)MemAlloc_AllocAligned( size, TSLIST_NODE_ALIGNMENT, __FILE__, __LINE__ );
-			return pNode;
-	    }
-
-		// override new/delete so we can guarantee 8-byte aligned allocs
-		static void * operator new( size_t size, int nBlockUse, const char *pFileName, int nLine )
-		{
-			Node_t *pNode = (Node_t *)MemAlloc_AllocAligned( size, TSLIST_NODE_ALIGNMENT, pFileName, nLine );
-			return pNode;
-		}
-
-	    static void operator delete( void *p)
-	    {
-			MemAlloc_FreeAligned( p );
-	    }
-		static void operator delete( void *p, int nBlockUse, const char *pFileName, int nLine )
-		{
-			MemAlloc_FreeAligned( p );
-		}
-
-	} TSLIST_NODE_ALIGN_POST;
+	};
 
 	~CTSList()
 	{
@@ -491,7 +358,7 @@ public:
 		return (Node_t *)CTSListBase::Detach();
 	}
 
-} TSLIST_HEAD_ALIGN_POST;
+};
 
 //-------------------------------------
 
@@ -505,7 +372,7 @@ public:
 		Node_t( const T &init ) : elem( init ) {}
 
 		T elem;
-	} TSLIST_NODE_ALIGN_POST;
+	};
 
 	~CTSListWithFreeList()
 	{
@@ -586,7 +453,7 @@ public:
 
 private:
 	CTSListBase m_FreeList;
-} TSLIST_HEAD_ALIGN_POST;
+};
 
 //-----------------------------------------------------------------------------
 // Lock free queue
@@ -606,102 +473,25 @@ template <typename T, bool bTestOptimizer = false>
 class TSLIST_HEAD_ALIGN CTSQueue
 {
 public:
-
-	// override new/delete so we can guarantee 8-byte aligned allocs
-	static void * operator new( size_t size )
-	{
-		CTSQueue *pNode = (CTSQueue *)MemAlloc_AllocAligned( size, TSLIST_HEAD_ALIGNMENT, __FILE__, __LINE__ );
-		return pNode;
-	}
-
-	// override new/delete so we can guarantee 8-byte aligned allocs
-	static void * operator new( size_t size, int nBlockUse, const char *pFileName, int nLine )
-	{
-		CTSQueue *pNode = (CTSQueue *)MemAlloc_AllocAligned( size, TSLIST_HEAD_ALIGNMENT, pFileName, nLine );
-		return pNode;
-	}
-
-	static void operator delete( void *p)
-	{
-		MemAlloc_FreeAligned( p );
-	}
-
-	static void operator delete( void *p, int nBlockUse, const char *pFileName, int nLine )
-	{
-		MemAlloc_FreeAligned( p );
-	}
-
-private:
-	// These ain't gonna work
-	static void * operator new[] ( size_t size ) throw()
-	{
-		return NULL;
-	}
-
-	static void operator delete [] ( void *p)
-	{
-	}
-
-public:
-
 	struct TSLIST_NODE_ALIGN Node_t
 	{
-		// override new/delete so we can guarantee 8-byte aligned allocs
-		static void * operator new( size_t size )
-		{
-			Node_t *pNode = (Node_t *)MemAlloc_AllocAligned( size, TSLIST_HEAD_ALIGNMENT, __FILE__, __LINE__ );
-			return pNode;
-		}
-
-		static void * operator new( size_t size, int nBlockUse, const char *pFileName, int nLine )
-		{
-			Node_t *pNode = (Node_t *)MemAlloc_AllocAligned( size, TSLIST_HEAD_ALIGNMENT, pFileName, nLine );
-			return pNode;
-		}
-
-		static void operator delete( void *p)
-		{
-			MemAlloc_FreeAligned( p );
-		}
-
-		static void operator delete( void *p, int nBlockUse, const char *pFileName, int nLine )
-		{
-			MemAlloc_FreeAligned( p );
-		}
-
 		Node_t() {}
 		Node_t( const T &init ) : elem( init ) {}
 
 		Node_t *pNext;
 		T elem;
-	} TSLIST_NODE_ALIGN_POST;
+	};
 
 	union TSLIST_HEAD_ALIGN NodeLink_t
 	{
-		// override new/delete so we can guarantee 8-byte aligned allocs
-		static void * operator new( size_t size )
-		{
-			NodeLink_t *pNode = (NodeLink_t *)MemAlloc_AllocAligned( size, TSLIST_HEAD_ALIGNMENT, __FILE__, __LINE__ );
-			return pNode;
-		}
-
-		static void operator delete( void *p)
-		{
-			MemAlloc_FreeAligned( p );
-		}
-
 		struct Value_t
 		{
 			Node_t *pNode;
-			intp	sequence;
+			int32	sequence;
 		} value;
 
-#ifdef PLATFORM_64BITS
-		int128 value64x128;
-#else
-		int64 value64x128;
-#endif
-	} TSLIST_HEAD_ALIGN_POST;
+		int64 value64;
+	};
 
 	CTSQueue()
 	{
@@ -736,7 +526,7 @@ public:
 	{
 		if ( IsDebug() )
 		{
-			ValidateQueue();
+			Validate();
 		}
 
 		Node_t *pNode;
@@ -761,7 +551,7 @@ public:
 	{
 		if ( IsDebug() )
 		{
-			ValidateQueue();
+			Validate();
 		}
 
 		Node_t *pNode;
@@ -771,53 +561,46 @@ public:
 		}
 	}
 
-	bool ValidateQueue()
+	bool Validate()
 	{
-		if ( IsDebug() )
+		bool bResult = true;
+		int nNodes = 0;
+		if ( m_Tail.value.pNode->pNext != End() )
 		{
-			bool bResult = true;
-			int nNodes = 0;
-			if ( m_Tail.value.pNode->pNext != End() )
+			DebuggerBreakIfDebugging();
+			bResult = false;
+		}
+
+		if ( m_Count == 0 )
+		{
+			if ( m_Head.value.pNode != m_Tail.value.pNode )
 			{
 				DebuggerBreakIfDebugging();
 				bResult = false;
 			}
-
-			if ( m_Count == 0 )
-			{
-				if ( m_Head.value.pNode != m_Tail.value.pNode )
-				{
-					DebuggerBreakIfDebugging();
-					bResult = false;
-				}
-			}
-
-			Node_t *pNode = m_Head.value.pNode;
-			while ( pNode != End() )
-			{
-				nNodes++;
-				pNode = pNode->pNext;
-			}
-
-			nNodes--;// skip dummy node
-
-			if ( nNodes != m_Count )
-			{
-				DebuggerBreakIfDebugging();
-				bResult = false;
-			}
-
-			if ( !bResult )
-			{
-				Msg( "Corrupt CTSQueueDetected" );
-			}
-
-			return bResult;
 		}
-		else
+
+		Node_t *pNode = m_Head.value.pNode;
+		while ( pNode != End() )
 		{
-			return true;
+			nNodes++;
+			pNode = pNode->pNext;
 		}
+
+		nNodes--;// skip dummy node
+
+		if ( nNodes != m_Count )
+		{
+			DebuggerBreakIfDebugging();
+			bResult = false;
+		}
+
+		if ( !bResult )
+		{
+			Msg( "Corrupt CTSQueueDetected" );
+		}
+
+		return bResult;
 	}
 
 	void FinishPush( Node_t *pNode, const NodeLink_t &oldTail )
@@ -827,8 +610,9 @@ public:
 		newTail.value.pNode = pNode;
 		newTail.value.sequence = oldTail.value.sequence + 1;
 
-		ThreadMemoryBarrier();
-
+#ifdef _X360
+		__lwsync(); // write-release barrier
+#endif
 		InterlockedCompareExchangeNodeLink( &m_Tail, newTail, oldTail );
 	}
 
@@ -848,8 +632,7 @@ public:
 
 		for (;;)
 		{
-			oldTail.value.sequence = m_Tail.value.sequence;
-			oldTail.value.pNode = m_Tail.value.pNode;
+			oldTail = m_Tail;
 			if ( InterlockedCompareExchangeNode( &(oldTail.value.pNode->pNext), pNode, End() ) == End() )
 			{
 				break;
@@ -861,7 +644,7 @@ public:
 			}
 		}
 
-		FinishPush( pNode, oldTail ); // This can fail if another thread pushed between the sequence and node grabs above. Later pushes or pops corrects
+		FinishPush( pNode, oldTail );
 
 		m_Count++;
 
@@ -870,66 +653,67 @@ public:
 
 	Node_t *Pop()
 	{
-		#define TSQUEUE_BAD_NODE_LINK ( (Node_t *)INT_TO_POINTER( 0xdeadbeef ) )
+		#define TSQUEUE_BAD_NODE_LINK ((Node_t *)0xdeadbeefULL)
 		NodeLink_t * volatile		pHead = &m_Head;
 		NodeLink_t * volatile		pTail = &m_Tail;
 		Node_t * volatile *			pHeadNode = &m_Head.value.pNode;
-		volatile intp * volatile	pHeadSequence = &m_Head.value.sequence;
+		volatile int * volatile		pHeadSequence = &m_Head.value.sequence;
 		Node_t * volatile * 		pTailNode = &pTail->value.pNode;
 
 		NodeLink_t head;
 		NodeLink_t newHead;
 		Node_t *pNext;
-		intp tailSequence;
+		int tailSequence;
 		T elem;
 
 		for (;;)
 		{
 			head.value.sequence = *pHeadSequence; // must grab sequence first, which allows condition below to ensure pNext is valid
-			ThreadMemoryBarrier(); // need a barrier to prevent reordering of these assignments
+#ifdef _X360
+			__lwsync(); // 360 needs a barrier to prevent reordering of these assignments
+#endif
 			head.value.pNode	= *pHeadNode;
 			tailSequence		= pTail->value.sequence;
          	pNext				= head.value.pNode->pNext;
 
-			// Checking pNext only to force optimizer to not reorder the assignment
-			// to pNext and the compare of the sequence
-			if ( !pNext || head.value.sequence != *pHeadSequence ) 
-				continue;
-
-			if ( bTestOptimizer )
+			if ( pNext && head.value.sequence == *pHeadSequence ) // Checking pNext only to force optimizer to not reorder the assignment to pNext and the compare of the sequence
 			{
-				if ( pNext == TSQUEUE_BAD_NODE_LINK )
+				if ( bTestOptimizer )
 				{
-					Msg( "Bad node link detected\n" );
-					continue;
-				}
-			}
-
-			if ( head.value.pNode == *pTailNode )
-			{
-				if ( pNext == End() )
-					return NULL;
-
-				// Another thread is trying to push, help it along
-				NodeLink_t &oldTail = head; // just reuse local memory for head to build old tail
-				oldTail.value.sequence = tailSequence; // reuse head pNode
-				FinishPush( pNext, oldTail );
-				continue;
-			}
-			
-			if ( pNext != End() )
-			{
-				elem = pNext->elem; // NOTE: next could be a freed node here, by design
-				newHead.value.pNode = pNext;
-				newHead.value.sequence = head.value.sequence + 1;
-				if ( InterlockedCompareExchangeNodeLink( pHead, newHead, head ) )
-				{
-					ThreadMemoryBarrier();
-					if ( bTestOptimizer )
+					if ( pNext == TSQUEUE_BAD_NODE_LINK )
 					{
-						head.value.pNode->pNext = TSQUEUE_BAD_NODE_LINK;
+						Msg( "Bad node link detected\n" );
+						continue;
 					}
-					break;
+				}
+				if ( head.value.pNode == *pTailNode )
+				{
+					if ( pNext == End() )
+					{
+						return NULL;
+					}
+
+					// Another thread is trying to push, help it along
+					NodeLink_t &oldTail = head; // just reuse local memory for head to build old tail
+					oldTail.value.sequence = tailSequence; // reuse head pNode
+					FinishPush( pNext, oldTail );
+				}
+				else if ( pNext != End() )
+				{
+					elem = pNext->elem; // NOTE: next could be a freed node here, by design
+					newHead.value.pNode = pNext;
+					newHead.value.sequence = head.value.sequence + 1;
+					if ( InterlockedCompareExchangeNodeLink( pHead, newHead, head ) )
+					{
+#ifdef _X360
+						__lwsync(); // read-acquire barrier 
+#endif
+						if ( bTestOptimizer )
+						{
+							head.value.pNode->pNext = TSQUEUE_BAD_NODE_LINK;
+						}
+						break;
+					}
 				}
 			}
 		}
@@ -958,18 +742,17 @@ public:
 		Push( pNode );
 	}
 
-	bool PopItem( T *pResult )
+	bool PopItem( T *pResult)
 	{
 		Node_t *pNode = Pop();
 		if ( !pNode )
 			return false;
-
 		*pResult = pNode->elem;
 		m_FreeNodes.Push( (TSLNodeBase_t *)pNode );
 		return true;
 	}
 
-	int Count() const
+	int Count()
 	{
 		return m_Count;
 	}
@@ -977,6 +760,7 @@ public:
 private:
 	Node_t *End() { return (Node_t *)this; } // just need a unique signifier
 
+#ifndef _WIN64
 	Node_t *InterlockedCompareExchangeNode( Node_t * volatile *ppNode, Node_t *value, Node_t *comperand )
 	{
 		return (Node_t *)::ThreadInterlockedCompareExchangePointer( (void **)ppNode, value, comperand );
@@ -984,8 +768,32 @@ private:
 
 	bool InterlockedCompareExchangeNodeLink( NodeLink_t volatile *pLink, const NodeLink_t &value, const NodeLink_t &comperand )
 	{
-		return ThreadInterlockedAssignIf64x128( &pLink->value64x128, value.value64x128, comperand.value64x128 );
+		return ThreadInterlockedAssignIf64( (int64 *)pLink, value.value64, comperand.value64 );
 	}
+
+#else
+	Node_t *InterlockedCompareExchangeNode( Node_t * volatile *ppNode, Node_t *value, Node_t *comperand )
+	{
+		AUTO_LOCK( m_ExchangeMutex );
+		Node_t *retVal = *ppNode;
+		if ( *ppNode == comperand )
+			*ppNode = value;
+		return retVal;
+	}
+
+	bool InterlockedCompareExchangeNodeLink( NodeLink_t volatile *pLink, const NodeLink_t &value, const NodeLink_t &comperand )
+	{
+		AUTO_LOCK( m_ExchangeMutex );
+		if ( pLink->value64 == comperand.value64 )
+		{
+			pLink->value64  = value.value64;
+			return true;
+		}
+		return false;
+	}
+
+	CThreadFastMutex m_ExchangeMutex;
+#endif
 
 	NodeLink_t m_Head;
 	NodeLink_t m_Tail;
@@ -993,12 +801,8 @@ private:
 	CInterlockedInt m_Count;
 	
 	CTSListBase m_FreeNodes;
-} TSLIST_NODE_ALIGN_POST;
+};
 
-#if defined( _WIN32 )
-// Suppress this spurious warning:
-// warning C4700: uninitialized local variable 'oldHead' used
-#pragma warning( pop )
-#endif
+#include "tier0/memdbgoff.h"
 
 #endif // TSLIST_H

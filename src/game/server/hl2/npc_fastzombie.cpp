@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -26,9 +26,10 @@
 #include "props.h"
 #include "physics_npc_solver.h"
 #include "physics_prop_ragdoll.h"
+#include "gib.h"
 
 #ifdef HL2_EPISODIC
-#include "episodic/ai_behavior_passenger_zombie.h"
+//#include "episodic/ai_behavior_passenger_zombie.h"
 #endif	// HL2_EPISODIC
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -210,6 +211,7 @@ public:
 	void Spawn( void );
 	void Precache( void );
 
+	void SetHeadlessModel( void );
 	void SetZombieModel( void );
 	bool CanSwatPhysicsObjects( void ) { return false; }
 
@@ -294,7 +296,7 @@ public:
 
 //=============================================================================
 #ifdef HL2_EPISODIC
-
+/*
 public:
 	virtual bool	CreateBehaviors( void );
 	virtual void	VPhysicsCollision( int index, gamevcollisionevent_t *pEvent );
@@ -307,8 +309,8 @@ private:
 	void			VehicleLeapAttack( void );
 	bool			CanEnterVehicle( CPropJeepEpisodic *pVehicle );
 
-	CAI_PassengerBehaviorZombie		m_PassengerBehavior;
-
+	//CAI_PassengerBehaviorZombie		m_PassengerBehavior;
+*/
 #endif	// HL2_EPISODIC
 //=============================================================================
 
@@ -363,8 +365,8 @@ BEGIN_DATADESC( CFastZombie )
 	DEFINE_SOUNDPATCH( m_pLayer2 ),
 
 #ifdef HL2_EPISODIC
-	DEFINE_ENTITYFUNC( VehicleLeapAttackTouch ),
-	DEFINE_INPUTFUNC( FIELD_STRING, "AttachToVehicle", InputAttachToVehicle ),
+/*	DEFINE_ENTITYFUNC( VehicleLeapAttackTouch ),
+	DEFINE_INPUTFUNC( FIELD_STRING, "AttachToVehicle", InputAttachToVehicle ),*/
 #endif	// HL2_EPISODIC
 
 END_DATADESC()
@@ -446,12 +448,12 @@ int CFastZombie::SelectSchedule ( void )
 // ========================================================
 #ifdef HL2_EPISODIC
 
-	// Defer all decisions to the behavior if it's running
+	/*// Defer all decisions to the behavior if it's running
 	if ( m_PassengerBehavior.CanSelectSchedule() )
 	{
 		DeferSchedulingToBehavior( &m_PassengerBehavior );
 		return BaseClass::SelectSchedule();
-	}
+	}*/
 
 #endif //HL2_EPISODIC
 // ========================================================
@@ -742,6 +744,16 @@ float CFastZombie::MaxYawSpeed( void )
 	}
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: Little hack to avoid game crash when changing bodygroup (DmitRex)
+//
+//
+//-----------------------------------------------------------------------------
+void CFastZombie::SetHeadlessModel( void )
+{
+	SetModel("");
+	CreateRagGib( "models/zombie/fast.mdl", GetLocalOrigin(), GetLocalAngles(), GetLocalVelocity(), 0, ShouldIgniteZombieGib() );
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -1048,7 +1060,7 @@ int CFastZombie::RangeAttack1Conditions( float flDot, float flDist )
 //-----------------------------------------------------------------------------
 void CFastZombie::HandleAnimEvent( animevent_t *pEvent )
 {
-	if ( pEvent->event == AE_FASTZOMBIE_CLIMB_LEFT || pEvent->event == AE_FASTZOMBIE_CLIMB_RIGHT )
+	if ( pEvent->Event() == AE_FASTZOMBIE_CLIMB_LEFT || pEvent->Event() == AE_FASTZOMBIE_CLIMB_RIGHT )
 	{
 		if( ++m_iClimbCount % 3 == 0 )
 		{
@@ -1059,57 +1071,55 @@ void CFastZombie::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_FASTZOMBIE_LEAP )
+	if ( pEvent->Event() == AE_FASTZOMBIE_LEAP )
 	{
 		LeapAttack();
 		return;
 	}
 	
-	if ( pEvent->event == AE_FASTZOMBIE_GALLOP_LEFT )
+	if ( pEvent->Event() == AE_FASTZOMBIE_GALLOP_LEFT )
 	{
 		EmitSound( "NPC_FastZombie.GallopLeft" );
 		return;
 	}
 
-	if ( pEvent->event == AE_FASTZOMBIE_GALLOP_RIGHT )
+	if ( pEvent->Event() == AE_FASTZOMBIE_GALLOP_RIGHT )
 	{
 		EmitSound( "NPC_FastZombie.GallopRight" );
 		return;
 	}
 	
-	if ( pEvent->event == AE_ZOMBIE_ATTACK_RIGHT )
+	if ( pEvent->Event() == AE_ZOMBIE_ATTACK_RIGHT )
 	{
 		Vector right;
 		AngleVectors( GetLocalAngles(), NULL, &right, NULL );
 		right = right * -50;
 
-		QAngle angle( -3, -5, -3  );
-		ClawAttack( GetClawAttackRange(), 3, angle, right, ZOMBIE_BLOOD_RIGHT_HAND );
+		ClawAttack( GetClawAttackRange(), 3, QAngle( -3, -5, -3 ), right, ZOMBIE_BLOOD_RIGHT_HAND );
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_ATTACK_LEFT )
+	if ( pEvent->Event() == AE_ZOMBIE_ATTACK_LEFT )
 	{
 		Vector right;
 		AngleVectors( GetLocalAngles(), NULL, &right, NULL );
 		right = right * 50;
-		QAngle angle( -3, 5, -3 );
-		ClawAttack( GetClawAttackRange(), 3, angle, right, ZOMBIE_BLOOD_LEFT_HAND );
+		ClawAttack( GetClawAttackRange(), 3, QAngle( -3, 5, -3 ), right, ZOMBIE_BLOOD_LEFT_HAND );
 		return;
 	}
 
 //=============================================================================
 #ifdef HL2_EPISODIC
-
+/*
 	// Do the leap attack
-	if ( pEvent->event == AE_FASTZOMBIE_VEHICLE_LEAP )
+	if ( pEvent->Event() == AE_FASTZOMBIE_VEHICLE_LEAP )
 	{
 		VehicleLeapAttack();
 		return;
 	}
 
 	// Die while doing an SS in a vehicle
-	if ( pEvent->event == AE_FASTZOMBIE_VEHICLE_SS_DIE )
+	if ( pEvent->Event() == AE_FASTZOMBIE_VEHICLE_SS_DIE )
 	{
 		if ( IsInAVehicle() )
 		{
@@ -1136,7 +1146,7 @@ void CFastZombie::HandleAnimEvent( animevent_t *pEvent )
 		}
 		return;
 	}
-
+*/
 #endif // HL2_EPISODIC
 //=============================================================================
 
@@ -1169,7 +1179,7 @@ void CFastZombie::LeapAttack( void )
 	{
 		Vector vecEnemyPos = pEnemy->WorldSpaceCenter();
 
-		float gravity = GetCurrentGravity();
+		float gravity = sv_gravity.GetFloat();
 		if ( gravity <= 1 )
 		{
 			gravity = 1;
@@ -1477,10 +1487,9 @@ void CFastZombie::LeapAttackTouch( CBaseEntity *pOther )
 
 	Vector forward;
 	AngleVectors( GetLocalAngles(), &forward );
-	forward *= 500;
 	QAngle qaPunch( 15, random->RandomInt(-5,5), random->RandomInt(-5,5) );
 	
-	ClawAttack( GetClawAttackRange(), 5, qaPunch, forward, ZOMBIE_BLOOD_BOTH_HANDS );
+	ClawAttack( GetClawAttackRange(), 5, qaPunch, forward * 500, ZOMBIE_BLOOD_BOTH_HANDS );
 
 	SetTouch( NULL );
 }
@@ -1761,8 +1770,8 @@ void CFastZombie::BuildScheduleTestBits( void )
 	// BaseClass::BuildScheduleTestBits();
 	//
 	// For now, make sure our active behavior gets a chance to add its own bits
-	if ( GetRunningBehavior() )
-		GetRunningBehavior()->BridgeBuildScheduleTestBits(); 
+//	if ( GetRunningBehavior() )
+//		GetRunningBehavior()->BridgeBuildScheduleTestBits(); 
 
 #ifdef HL2_EPISODIC
 	SetCustomInterruptCondition( COND_PROVOKED );
@@ -1871,7 +1880,7 @@ bool CFastZombie::ShouldBecomeTorso( const CTakeDamageInfo &info, float flDamage
 
 //=============================================================================
 #ifdef HL2_EPISODIC
-
+/*
 //-----------------------------------------------------------------------------
 // Purpose: Add the passenger behavior to our repertoire
 //-----------------------------------------------------------------------------
@@ -2023,7 +2032,7 @@ void CFastZombie::UpdateEfficiency( bool bInPVS )
 	// Do the default behavior
 	BaseClass::UpdateEfficiency( bInPVS );
 }
-
+*/
 #endif	// HL2_EPISODIC
 //=============================================================================
 

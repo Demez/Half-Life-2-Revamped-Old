@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Deals with singleton  
 //
@@ -12,11 +12,11 @@
 #pragma once
 #endif
 
-#include "igamesystem.h"
-#include "commonmacros.h"
+#include "IGameSystem.h"
+#include "CommonMacros.h"
 #include "utlvector.h"
-#include "materialsystem/imaterialsystem.h"
-#include "materialsystem/imaterial.h"
+#include "materialsystem/IMaterialSystem.h"
+#include "materialsystem/IMaterial.h"
 
 //-----------------------------------------------------------------------------
 // Interface to automated system for precaching materials

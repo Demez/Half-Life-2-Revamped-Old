@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -14,6 +14,14 @@
 
 #include <vgui/VGUI.h>
 #include <vgui_controls/Panel.h>
+
+enum progress_textures_t
+{
+	PROGRESS_TEXTURE_FG,
+	PROGRESS_TEXTURE_BG,
+
+	NUM_PROGRESS_TEXTURES,
+};
 
 namespace vgui
 {
@@ -36,12 +44,10 @@ public:
 	virtual void SetSegmentInfo( int gap, int width );
 
 	// utility function for calculating a time remaining string
-	static bool ConstructTimeRemainingString(OUT_Z_BYTECAP(outputBufferSizeInBytes) wchar_t *output, int outputBufferSizeInBytes, float startTime, float currentTime, float currentProgress, float lastProgressUpdateTime, bool addRemainingSuffix);
+	static bool ConstructTimeRemainingString(wchar_t *output, int outputBufferSizeInBytes, float startTime, float currentTime, float currentProgress, float lastProgressUpdateTime, bool addRemainingSuffix);
 
 	void SetBarInset( int pixels );
 	int GetBarInset( void );
-	void SetMargin( int pixels );
-	int GetMargin();
 	
 	virtual void ApplySettings(KeyValues *inResourceData);
 	virtual void GetSettings(KeyValues *outResourceData);
@@ -81,9 +87,10 @@ private:
 	int _segmentGap;
 	int _segmentWide;
 	int m_iBarInset;
-	int m_iBarMargin;
 	char *m_pszDialogVar;
 };
+
+#define NUM_CONTINUOUS_PROGRESS_BAR_TEXTURES 2
 
 //-----------------------------------------------------------------------------
 // Purpose: Non-segmented progress bar
@@ -96,6 +103,15 @@ public:
 	ContinuousProgressBar(Panel *parent, const char *panelName);
 
 	virtual void Paint();
+	virtual void PaintBackground();
+	virtual void ApplySchemeSettings( vgui::IScheme *pScheme );
+
+	void SetImage(const char *imageName, progress_textures_t iPos);
+
+private:
+	int m_nTextureId[NUM_PROGRESS_TEXTURES];
+	char *m_pszImageName[NUM_PROGRESS_TEXTURES];
+	int   m_lenImageName[NUM_PROGRESS_TEXTURES];
 };
 
 } // namespace vgui

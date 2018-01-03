@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -33,7 +33,7 @@ public:
 	// Absolute time (per frame still - Use Plat_FloatTime() for a high precision real time 
 	//  perf clock, but not that it doesn't obey host_timescale/host_framerate)
 	float			realtime;
-	// Absolute frame counter
+	// Absolute frame counter - continues to increase even if game is paused
 	int				framecount;
 	// Non-paused frametime
 	float			absoluteframetime;
@@ -60,7 +60,7 @@ public:
 	// current maxplayers setting
 	int				maxClients;
 
-	// Simulation ticks
+	// Simulation ticks - does not increase when game is paused
 	int				tickcount;
 
 	// Simulation tick interval

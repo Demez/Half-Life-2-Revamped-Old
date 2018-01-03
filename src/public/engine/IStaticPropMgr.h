@@ -1,12 +1,12 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
 // $NoKeywords: $
-//=============================================================================//
+//===========================================================================//
 
-#ifndef IPROPS_H
-#define IPROPS_H
+#ifndef ISTATICPROPMGR_H
+#define ISTATICPROPMGR_H
 #ifdef _WIN32
 #pragma once
 #endif
@@ -17,6 +17,9 @@
 #include "basehandle.h"
 
 
+//-----------------------------------------------------------------------------
+// Forward declarations
+//-----------------------------------------------------------------------------
 struct vcollide_t;
 struct Ray_t;
 class IClientRenderable;
@@ -25,12 +28,13 @@ typedef CGameTrace trace_t;
 class IVPhysicsKeyHandler;
 class IPhysicsEnvironment;
 class ICollideable;
+struct RenderableInstance_t;
 
 
 //-----------------------------------------------------------------------------
 // Interface versions for static props
 //-----------------------------------------------------------------------------
-#define INTERFACEVERSION_STATICPROPMGR_CLIENT		"StaticPropMgrClient004"
+#define INTERFACEVERSION_STATICPROPMGR_CLIENT		"StaticPropMgrClient005"
 #define INTERFACEVERSION_STATICPROPMGR_SERVER		"StaticPropMgrServer002"
 
 
@@ -57,12 +61,10 @@ public:
 abstract_class IStaticPropMgrClient : public IStaticPropMgr
 {
 public:
-	// Recomputes the static prop opacity given a view origin
-	virtual void	ComputePropOpacity( const Vector &viewOrigin, float factor ) = 0;
-
 	// Adds decals to static props, returns point of decal in trace_t
 	virtual void	AddDecalToStaticProp( const Vector& rayStart, const Vector& rayEnd,
 		int staticPropIndex, int decalIndex, bool doTrace, trace_t& tr ) = 0;
+
 	// Adds/removes shadows from static props
 	virtual void	AddShadowToStaticProp( unsigned short shadowHandle, IClientRenderable* pRenderable ) = 0;
 	virtual void	RemoveAllShadowsFromStaticProp( IClientRenderable* pRenderable ) = 0;
@@ -78,9 +80,10 @@ public:
 	virtual void GetAllStaticPropsInOBB( const Vector &ptOrigin, const Vector &vExtent1, const Vector &vExtent2, const Vector &vExtent3, CUtlVector<ICollideable *> *pOutput ) = 0; //get all static props that exist wholly or partially in an OBB
 	//===================================================================
 
-	virtual void DrawStaticProps( IClientRenderable **pProps, int count, bool bShadowDepth, bool drawVCollideWireframe ) = 0;
-	virtual void AddColorDecalToStaticProp( Vector const& rayStart, Vector const& rayEnd,
-		int staticPropIndex, int decalIndex, bool doTrace, trace_t& tr, bool bUseColor, Color cColor ) = 0;
+	virtual void DrawStaticProps( IClientRenderable **pProps, const RenderableInstance_t *pInstances, int count, bool bShadowDepth, bool drawVCollideWireframe ) = 0;
+
+	// Returns the lighting origins of a number of static props
+	virtual void GetLightingOrigins( Vector *pLightingOrigins, int nOriginStride, int nCount, IClientRenderable **ppRenderable, int nRenderableStride ) = 0; 
 };
 
 class IStaticPropMgrServer : public IStaticPropMgr

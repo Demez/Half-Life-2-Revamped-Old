@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -37,6 +37,11 @@ public:
 
 	bool operator == (Panel *pPanel)		{ return (Get() == pPanel); }
 	operator bool ()						{ return Get() != 0; }
+
+	friend inline bool operator == ( const PHandle &p1, const PHandle &p2 )
+	{ 
+		return p1.m_iPanelID == p2.m_iPanelID; 
+	}
 
 private:
 	HPanel m_iPanelID;

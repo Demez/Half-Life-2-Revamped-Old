@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -167,4 +167,4 @@ void ThumperDustCallback( const CEffectData &data )
 	FX_ThumperDust( data );
 }
 
-DECLARE_CLIENT_EFFECT( "ThumperDust", ThumperDustCallback );
+DECLARE_CLIENT_EFFECT( ThumperDust, ThumperDustCallback );

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -9,10 +9,6 @@
 #ifdef _WIN32
 #pragma once
 #endif
-
-// Don't ever change these values, or face all kinds of subtle gameplay changes
-const float k_flMaxVelocity = 2000.0f;
-const float k_flMaxAngularVelocity = 360.0f * 10.0f;
 
 const float DEFAULT_MIN_FRICTION_MASS = 10.0f;
 const float DEFAULT_MAX_FRICTION_MASS = 2500.0f;
@@ -31,8 +27,8 @@ struct physics_performanceparams_t
 	{
 		maxCollisionsPerObjectPerTimestep = 6;
 		maxCollisionChecksPerTimestep = 250;
-		maxVelocity = k_flMaxVelocity;
-		maxAngularVelocity = k_flMaxAngularVelocity;
+		maxVelocity = 2000.0f;
+		maxAngularVelocity = 360.0f * 10.0f;
 		lookAheadTimeObjectsVsWorld = 1.0f;
 		lookAheadTimeObjectsVsObject = 0.5f;
 		minFrictionMass = DEFAULT_MIN_FRICTION_MASS;

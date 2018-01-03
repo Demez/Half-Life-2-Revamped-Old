@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Combine Zombie... Zombie Combine... its like a... Zombine... get it?
 //
@@ -28,7 +28,7 @@
 #include "physics_npc_solver.h"
 #include "hl2_player.h"
 #include "hl2_gamerules.h"
-
+#include "gib.h"
 #include "basecombatweapon.h"
 #include "basegrenade_shared.h"
 #include "grenade_frag.h"
@@ -86,6 +86,7 @@ public:
 	void Precache( void );
 
 	void SetZombieModel( void );
+	void SetHeadlessModel( void );
 
 	virtual void PrescheduleThink( void );
 	virtual int SelectSchedule( void );
@@ -110,7 +111,7 @@ public:
 	virtual void MoanSound( envelopePoint_t *pEnvelope, int iEnvelopeSize );
 
 	virtual void Event_Killed( const CTakeDamageInfo &info );
-	virtual void TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator );
+	virtual void TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr );
 	virtual void RunTask( const Task_t *pTask );
 	virtual int  MeleeAttack1Conditions ( float flDot, float flDist );
 
@@ -250,6 +251,17 @@ void CNPC_Zombine::Precache( void )
 	PrecacheScriptSound( "ATV_engine_null" );
 	PrecacheScriptSound( "Zombine.Charge" );
 	PrecacheScriptSound( "Zombie.Attack" );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Little hack to avoid game crash when changing bodygroup (DmitRex)
+//
+//
+//-----------------------------------------------------------------------------
+void CNPC_Zombine::SetHeadlessModel( void )
+{
+	SetModel("");
+	CreateRagGib( "models/zombie/zombie_soldier.mdl", GetLocalOrigin(), GetLocalAngles(), GetLocalVelocity(), 0, ShouldIgniteZombieGib() );
 }
 
 void CNPC_Zombine::SetZombieModel( void )
@@ -480,7 +492,6 @@ void CNPC_Zombine::DropGrenade( Vector vDir )
 void CNPC_Zombine::Event_Killed( const CTakeDamageInfo &info )
 {
 	BaseClass::Event_Killed( info );
-
 	if ( HasGrenade() )
 	{
 		DropGrenade( vec3_origin );
@@ -508,9 +519,9 @@ bool CNPC_Zombine::HandleInteraction( int interactionType, void *data, CBaseComb
 	return BaseClass::HandleInteraction( interactionType, data, sourceEnt );
 }
 
-void CNPC_Zombine::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
+void CNPC_Zombine::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
 {
-	BaseClass::TraceAttack( info, vecDir, ptr, pAccumulator );
+	BaseClass::TraceAttack( info, vecDir, ptr );
 
 	//Only knock grenades off their hands if it's a player doing the damage.
 	if ( info.GetAttacker() && info.GetAttacker()->IsNPC() )
@@ -531,7 +542,7 @@ void CNPC_Zombine::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDi
 
 void CNPC_Zombine::HandleAnimEvent( animevent_t *pEvent )
 {
-	if ( pEvent->event == AE_ZOMBINE_PULLPIN )
+	if ( pEvent->Event() == AE_ZOMBINE_PULLPIN )
 	{
 		Vector vecStart;
 		QAngle angles;
@@ -571,7 +582,7 @@ void CNPC_Zombine::HandleAnimEvent( animevent_t *pEvent )
 				{
 					pNPC = ppAIs[i];
 
-					if( pNPC->Classify() == CLASS_PLAYER_ALLY || ( pNPC->Classify() == CLASS_PLAYER_ALLY_VITAL && pNPC->FVisible(this) ) )
+					if( pNPC->Classify() == CLASS_PLAYER_ALLY || pNPC->Classify() == CLASS_PLAYER_ALLY_VITAL && pNPC->FVisible(this) )
 					{
 						int priority;
 						Disposition_t disposition;
@@ -590,7 +601,7 @@ void CNPC_Zombine::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_NPC_ATTACK_BROADCAST )
+	if ( pEvent->Event() == AE_NPC_ATTACK_BROADCAST )
 	{
 		if ( HasGrenade() )
 			return;

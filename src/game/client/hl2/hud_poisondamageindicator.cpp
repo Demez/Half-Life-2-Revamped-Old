@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -14,11 +14,11 @@
 #include "vgui_controls/AnimationController.h"
 #include "vgui/ILocalize.h"
 #include "vgui/ISurface.h"
-#include "VGuiMatSurface/IMatSystemSurface.h"
-#include "materialsystem/imaterial.h"
-#include "materialsystem/imesh.h"
+#include "vguimatsurface/IMatSystemSurface.h"
+#include "materialsystem/IMaterial.h"
+#include "materialsystem/IMesh.h"
 #include "materialsystem/imaterialvar.h"
-#include "IEffects.h"
+#include "ieffects.h"
 #include "hudelement.h"
 
 using namespace vgui;
@@ -60,7 +60,7 @@ DECLARE_HUDELEMENT( CHudPoisonDamageIndicator );
 //-----------------------------------------------------------------------------
 CHudPoisonDamageIndicator::CHudPoisonDamageIndicator( const char *pElementName ) : CHudElement( pElementName ), BaseClass(NULL, "HudPoisonDamageIndicator")
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 	
 	SetHiddenBits( HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT );
@@ -111,11 +111,11 @@ void CHudPoisonDamageIndicator::OnThink()
 	if (m_bDamageIndicatorVisible)
 	{
 		SetVisible(true);
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "PoisonDamageTaken" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "PoisonDamageTaken" );
 	}
 	else
 	{
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "PoisonDamageCured" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "PoisonDamageCured" );
 	}
 }
 

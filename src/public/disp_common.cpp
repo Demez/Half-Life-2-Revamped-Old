@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -1293,4 +1293,338 @@ void SetupAllowedVerts( CCoreDispInfo **ppListBase, int nListSize )
 				bContinue = true;
 		}
 	} while( bContinue );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *pDisp - 
+//			&vecPoint - 
+// Output : int
+//-----------------------------------------------------------------------------
+static int FindNeighborCornerVert( CCoreDispInfo *pDisp, const Vector &vecPoint )
+{
+	CDispUtilsHelper *pDispHelper = pDisp;
+
+	int iClosest = 0;
+	float flClosest = 1e24;
+	for ( int iCorner = 0; iCorner < 4; ++iCorner )
+	{
+
+		// Has it been touched?
+		CVertIndex viCornerVert = pDispHelper->GetPowerInfo()->GetCornerPointIndex( iCorner );
+		int iCornerVert = pDispHelper->VertIndexToInt( viCornerVert );
+		const Vector &vecCornerVert = pDisp->GetVert( iCornerVert );
+
+		float flDist = vecCornerVert.DistTo( vecPoint );
+		if ( flDist < flClosest )
+		{
+			iClosest = iCorner;
+			flClosest = flDist;
+		}
+	}
+
+	if ( flClosest <= 0.1f )
+		return iClosest;
+	else
+		return -1;
+}
+
+// sets a new normal/tangentS, recomputes tangent T
+static void UpdateTangentSpace(CCoreDispInfo *pDisp, int iVert, const Vector &vNormal, const Vector &vTanS)
+{
+	Vector tanT;
+	pDisp->SetNormal( iVert, vNormal );
+	CrossProduct( vTanS, vNormal, tanT );
+	pDisp->SetTangentS(iVert, vTanS);
+	pDisp->SetTangentT(iVert, tanT);
+}
+
+static void UpdateTangentSpace(CCoreDispInfo *pDisp, const CVertIndex &index, const Vector &vNormal, const Vector &vTanS)
+{
+	UpdateTangentSpace(pDisp, pDisp->VertIndexToInt(index), vNormal, vTanS);
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : **ppListBase - 
+//			nListSize - 
+//-----------------------------------------------------------------------------
+static void BlendSubNeighbors( CCoreDispInfo **ppListBase, int nListSize )
+{
+	// Loop through all of the displacements in the list.
+	for ( int iDisp = 0; iDisp < nListSize; ++iDisp )
+	{
+		// Get the current displacement.
+		CCoreDispInfo *pDisp = ppListBase[iDisp];
+		if ( !pDisp )
+			continue;
+
+		// Loop through all the edges of the displacement.
+		for ( int iEdge = 0; iEdge < 4; ++iEdge )
+		{
+			// Find valid neighbors along the edge.
+			CDispNeighbor *pEdge = pDisp->GetEdgeNeighbor( iEdge );
+			if ( !pEdge )
+				continue;
+
+			// Check to see if we have sub-neighbors - defines a t-junction in this world.  If not,
+			// then the normal blend edges function will catch it all.
+			if ( !pEdge->m_SubNeighbors[0].IsValid() || !pEdge->m_SubNeighbors[1].IsValid() )
+				continue;
+
+			// Get the mid-point of the current displacement.
+			CVertIndex viMidPoint = pDisp->GetEdgeMidPoint( iEdge );
+			int iMidPoint = pDisp->VertIndexToInt( viMidPoint );
+
+			const Vector &vecMidPoint = pDisp->GetVert( iMidPoint );
+
+			// Get the current sub-neighbors along the edge.
+			CCoreDispInfo *pNeighbor1 = ppListBase[pEdge->m_SubNeighbors[0].GetNeighborIndex()];
+			CCoreDispInfo *pNeighbor2 = ppListBase[pEdge->m_SubNeighbors[1].GetNeighborIndex()];
+
+			// Get the current sub-neighbor corners.
+			int iCorners[2];
+			iCorners[0] = FindNeighborCornerVert( pNeighbor1, vecMidPoint );
+			iCorners[1] = FindNeighborCornerVert( pNeighbor2, vecMidPoint );
+			if ( iCorners[0] != -1 && iCorners[1] != -1 )
+			{
+				CVertIndex viCorners[2] = { pNeighbor1->GetCornerPointIndex( iCorners[0] ),pNeighbor2->GetCornerPointIndex( iCorners[1] ) };
+
+				// Accumulate the normals at the mid-point of the primary edge and corners of the sub-neighbors.
+				Vector vecAverage = pDisp->GetNormal( iMidPoint );
+				vecAverage += pNeighbor1->GetNormal( viCorners[0] );
+				vecAverage += pNeighbor2->GetNormal( viCorners[1] );
+
+				// Re-normalize.
+				VectorNormalize( vecAverage );
+				Vector vAvgTanS = pDisp->GetTangentS(iMidPoint);
+				vAvgTanS += pNeighbor1->GetTangentS(viCorners[0]);
+				vAvgTanS += pNeighbor2->GetTangentS(viCorners[1]);
+				VectorNormalize(vAvgTanS);
+				//vecAverage.Init( 0.0f, 0.0f, 1.0f );
+
+				// Set the new normal value back.
+				UpdateTangentSpace( pDisp, iMidPoint, vecAverage, vAvgTanS );
+				UpdateTangentSpace( pNeighbor1, viCorners[0], vecAverage, vAvgTanS );
+				UpdateTangentSpace( pNeighbor2, viCorners[1], vecAverage, vAvgTanS );
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *pDisp - 
+//			iNeighbors[512] - 
+// Output : int
+//-----------------------------------------------------------------------------
+static int GetAllNeighbors( const CCoreDispInfo *pDisp, int iNeighbors[512] )
+{
+	int nNeighbors = 0;
+
+	// Check corner neighbors.
+	for ( int iCorner=0; iCorner < 4; iCorner++ )
+	{
+		const CDispCornerNeighbors *pCorner = pDisp->GetCornerNeighbors( iCorner );
+
+		for ( int i=0; i < pCorner->m_nNeighbors; i++ )
+		{
+			if ( nNeighbors < _ARRAYSIZE( iNeighbors ) )
+				iNeighbors[nNeighbors++] = pCorner->m_Neighbors[i];
+		}
+	}
+
+	for ( int iEdge=0; iEdge < 4; iEdge++ )
+	{
+		const CDispNeighbor *pEdge = pDisp->GetEdgeNeighbor( iEdge );
+
+		for ( int i=0; i < 2; i++ )
+		{
+			if ( pEdge->m_SubNeighbors[i].IsValid() )
+				if ( nNeighbors < 512 )
+					iNeighbors[nNeighbors++] = pEdge->m_SubNeighbors[i].GetNeighborIndex();
+		}
+	}
+
+	return nNeighbors;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : **ppListBase - 
+//			listSize - 
+//-----------------------------------------------------------------------------
+static void BlendCorners( CCoreDispInfo **ppListBase, int nListSize )
+{
+	CUtlVector<int> nbCornerVerts;
+
+	for ( int iDisp = 0; iDisp < nListSize; ++iDisp )
+	{
+		CCoreDispInfo *pDisp = ppListBase[iDisp];
+
+		int iNeighbors[512];
+		int nNeighbors = GetAllNeighbors( pDisp, iNeighbors );
+
+		// Make sure we have room for all the neighbors.
+		nbCornerVerts.RemoveAll();
+		nbCornerVerts.EnsureCapacity( nNeighbors );
+		nbCornerVerts.AddMultipleToTail( nNeighbors );
+
+		// For each corner.
+		for ( int iCorner=0; iCorner < 4; iCorner++ )
+		{
+			// Has it been touched?
+			CVertIndex cornerVert = pDisp->GetCornerPointIndex( iCorner );
+			int iCornerVert = pDisp->VertIndexToInt( cornerVert );
+			const Vector &vCornerVert = pDisp->GetVert( iCornerVert );
+
+			// For each displacement sharing this corner..
+			Vector vAverage = pDisp->GetNormal( iCornerVert );
+			Vector vAvgTanS;
+			pDisp->GetTangentS( iCornerVert, vAvgTanS );
+
+			for ( int iNeighbor=0; iNeighbor < nNeighbors; iNeighbor++ )
+			{
+				int iNBListIndex = iNeighbors[iNeighbor];
+				CCoreDispInfo *pNeighbor = ppListBase[iNBListIndex];
+
+				// Find out which vert it is on the neighbor.
+				int iNBCorner = FindNeighborCornerVert( pNeighbor, vCornerVert );
+				if ( iNBCorner == -1 )
+				{
+					nbCornerVerts[iNeighbor] = -1; // remove this neighbor from the list.
+				}
+				else
+				{
+					CVertIndex viNBCornerVert = pNeighbor->GetCornerPointIndex( iNBCorner );
+					int iNBVert = pNeighbor->VertIndexToInt( viNBCornerVert );
+					nbCornerVerts[iNeighbor] = iNBVert;
+					vAverage += pNeighbor->GetNormal( iNBVert );
+					vAvgTanS += pNeighbor->GetTangentS( iNBVert );
+				}
+			}
+
+
+			// Blend all the neighbor normals with this one.
+			VectorNormalize( vAverage );
+			VectorNormalize( vAvgTanS );
+			UpdateTangentSpace(pDisp, iCornerVert, vAverage, vAvgTanS );
+
+			for ( int iNeighbor=0; iNeighbor < nNeighbors; iNeighbor++ )
+			{
+				int iNBListIndex = iNeighbors[iNeighbor];
+				if ( nbCornerVerts[iNeighbor] == -1 )
+					continue;
+
+				CCoreDispInfo *pNeighbor = ppListBase[iNBListIndex];
+				UpdateTangentSpace(pNeighbor, nbCornerVerts[iNeighbor], vAverage, vAvgTanS);
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : **ppListBase - 
+//			listSize - 
+//-----------------------------------------------------------------------------
+static void BlendEdges( CCoreDispInfo **ppListBase, int nListSize )
+{
+	// Loop through all the displacements in the list.
+	for ( int iDisp = 0; iDisp < nListSize; ++iDisp )
+	{
+		// Get the current displacement.
+		CCoreDispInfo *pDisp = ppListBase[iDisp];
+		if ( !pDisp )
+			continue;
+
+		// Loop through all of the edges on a displacement.
+		for ( int iEdge = 0; iEdge < 4; ++iEdge )
+		{
+			// Get the current displacement edge.
+			CDispNeighbor *pEdge = pDisp->GetEdgeNeighbor( iEdge );
+			if ( !pEdge )
+				continue;
+
+			// Check for sub-edges.
+			for ( int iSubEdge = 0; iSubEdge < 2; ++iSubEdge )
+			{
+				// Get the current sub-edge.
+				CDispSubNeighbor *pSubEdge = &pEdge->m_SubNeighbors[iSubEdge];
+				if ( !pSubEdge->IsValid() )
+					continue;
+
+				// Get the current neighbor.
+				CCoreDispInfo *pNeighbor = ppListBase[pSubEdge->GetNeighborIndex()];
+				if ( !pNeighbor )
+					continue;
+
+				// Get the edge dimension.
+				int iEdgeDim = g_EdgeDims[iEdge];
+
+				CDispSubEdgeIterator it;
+				it.Start( pDisp, iEdge, iSubEdge, true );
+
+				// Get setup on the first corner vert.
+				it.Next();
+				CVertIndex viPrevPos = it.GetVertIndex();
+				while ( it.Next() )
+				{
+					// Blend the two.
+					if ( !it.IsLastVert() )
+					{
+						Vector vecAverage = pDisp->GetNormal( it.GetVertIndex() ) + pNeighbor->GetNormal( it.GetNBVertIndex() );
+						Vector vAvgTanS = pDisp->GetTangentS( it.GetVertIndex() ) + pNeighbor->GetTangentS( it.GetNBVertIndex() );
+						VectorNormalize( vecAverage );
+						VectorNormalize( vAvgTanS );
+						UpdateTangentSpace(pDisp, it.GetVertIndex(), vecAverage, vAvgTanS );
+						UpdateTangentSpace(pNeighbor, it.GetNBVertIndex(), vecAverage, vAvgTanS );
+					}
+
+					// Now blend the in-between verts (if this edge is high-res).
+					int iPrevPos = viPrevPos[!iEdgeDim];
+					int iCurPos = it.GetVertIndex()[!iEdgeDim];
+					for ( int iTween = iPrevPos+1; iTween < iCurPos; iTween++ )
+					{
+						float flPercent = RemapVal( iTween, iPrevPos, iCurPos, 0, 1 );
+						Vector vecNormal;
+						VectorLerp( pDisp->GetNormal( viPrevPos ), pDisp->GetNormal( it.GetVertIndex() ), flPercent, vecNormal );
+						VectorNormalize( vecNormal );
+						Vector vAvgTanS;
+						VectorLerp( pDisp->GetTangentS( viPrevPos ), pDisp->GetTangentS( it.GetVertIndex() ), flPercent, vAvgTanS );
+						VectorNormalize( vAvgTanS );
+
+						CVertIndex viTween;
+						viTween[iEdgeDim] = it.GetVertIndex()[iEdgeDim];
+						viTween[!iEdgeDim] = iTween;
+						UpdateTangentSpace(pDisp, viTween, vecNormal, vAvgTanS);
+					}
+
+					viPrevPos = it.GetVertIndex();
+				}
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : **pListBase - 
+//			listSize - 
+// NOTE: todo - this is almost the same code as found in vrad, should probably
+//              move it up into common code at some point if the feature
+//              continues to get used
+//-----------------------------------------------------------------------------
+void SmoothDispSurfNormals( CCoreDispInfo **ppListBase, int nListSize )
+{
+	// Setup helper list for iteration.
+	for ( int iDisp = 0; iDisp < nListSize; ++iDisp )
+	{
+		ppListBase[iDisp]->SetDispUtilsHelperInfo( ppListBase, nListSize );
+	}
+
+	// Blend normals along t-junctions, corners, and edges.
+	BlendSubNeighbors( ppListBase, nListSize );
+	BlendCorners( ppListBase, nListSize );
+	BlendEdges( ppListBase, nListSize );
 }

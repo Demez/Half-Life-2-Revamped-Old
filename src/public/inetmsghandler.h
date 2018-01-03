@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -34,13 +34,13 @@ public:
 
 	virtual void PacketEnd( void ) = 0; // all messages has been parsed
 
-	virtual void FileRequested(const char *fileName, unsigned int transferID ) = 0; // other side request a file for download
+	virtual void FileRequested(const char *fileName, unsigned int transferID, bool isReplayDemoFile) = 0; // other side request a file for download
 
-	virtual void FileReceived(const char *fileName, unsigned int transferID ) = 0; // we received a file
+	virtual void FileReceived(const char *fileName, unsigned int transferID, bool isReplayDemoFile) = 0; // we received a file
 	
-	virtual void FileDenied(const char *fileName, unsigned int transferID ) = 0;	// a file request was denied by other side
+	virtual void FileDenied(const char *fileName, unsigned int transferID, bool isReplayDemoFile) = 0;	// a file request was denied by other side
 
-	virtual void FileSent(const char *fileName, unsigned int transferID ) = 0;	// we sent a file
+	virtual void FileSent(const char *fileName, unsigned int transferID, bool isReplayDemoFile) = 0;	// we sent a file
 };
 
 #define PROCESS_NET_MESSAGE( name )	\
@@ -51,9 +51,6 @@ public:
 
 #define PROCESS_CLC_MESSAGE( name )	\
 	virtual bool Process##name( CLC_##name *msg )
-
-#define PROCESS_MM_MESSAGE( name )	\
-	virtual bool Process##name( MM_##name *msg )
 
 
 #define REGISTER_NET_MSG( name )				\
@@ -71,15 +68,12 @@ public:
 	p##name->m_pMessageHandler = this;			\
 	chan->RegisterMessage( p##name );			\
 
-#define REGISTER_MM_MSG( name )					\
-	MM_##name * p##name = new MM_##name();		\
-	p##name->m_pMessageHandler = this;			\
-	chan->RegisterMessage( p##name );			\
 
 class NET_Tick;
 class NET_StringCmd;
 class NET_SetConVar;
 class NET_SignonState;
+class NET_SplitScreenUser;
 
 
 class INetMessageHandler 
@@ -91,6 +85,7 @@ public:
 	PROCESS_NET_MESSAGE( StringCmd ) = 0;
 	PROCESS_NET_MESSAGE( SetConVar ) = 0;
 	PROCESS_NET_MESSAGE( SignonState ) = 0;
+	PROCESS_NET_MESSAGE( SplitScreenUser ) = 0;
 };
 
 class CLC_ClientInfo;
@@ -100,10 +95,10 @@ class CLC_BaselineAck;
 class CLC_ListenEvents;
 class CLC_RespondCvarValue;
 class CLC_FileCRCCheck;
-class CLC_FileMD5Check;
-class CLC_SaveReplay;
+class CLC_SplitPlayerConnect;
+class CLC_LoadingProgress;
+class CLC_SplitPlayerConnect;
 class CLC_CmdKeyValues;
-
 class IClientMessageHandler : public INetMessageHandler
 {
 public:
@@ -115,11 +110,9 @@ public:
 	PROCESS_CLC_MESSAGE( BaselineAck ) = 0;
 	PROCESS_CLC_MESSAGE( ListenEvents ) = 0;
 	PROCESS_CLC_MESSAGE( RespondCvarValue ) = 0;
+	PROCESS_CLC_MESSAGE( SplitPlayerConnect ) = 0;
 	PROCESS_CLC_MESSAGE( FileCRCCheck ) = 0;
-	PROCESS_CLC_MESSAGE( FileMD5Check ) = 0;
-#if defined( REPLAY_ENABLED )
-	PROCESS_CLC_MESSAGE( SaveReplay ) = 0;
-#endif
+	PROCESS_CLC_MESSAGE( LoadingProgress ) = 0;
 	PROCESS_CLC_MESSAGE( CmdKeyValues ) = 0;
 };
 
@@ -146,15 +139,13 @@ class SVC_Prefetch;
 class SVC_Menu;
 class SVC_GameEventList;
 class SVC_GetCvarValue;
+class SVC_SplitScreen;
 class SVC_CmdKeyValues;
 
 class IServerMessageHandler : public INetMessageHandler
 {
 public:
 	virtual ~IServerMessageHandler( void ) {};
-
-	// Returns dem file protocol version, or, if not playing a demo, just returns PROTOCOL_VERSION
-	virtual int GetDemoProtocolVersion() const = 0;
 
 	PROCESS_SVC_MESSAGE( Print ) = 0;
 	PROCESS_SVC_MESSAGE( ServerInfo ) = 0;
@@ -179,29 +170,8 @@ public:
 	PROCESS_SVC_MESSAGE( Menu ) = 0;
 	PROCESS_SVC_MESSAGE( GameEventList ) = 0;
 	PROCESS_SVC_MESSAGE( GetCvarValue ) = 0;
+	PROCESS_SVC_MESSAGE( SplitScreen ) = 0;
 	PROCESS_SVC_MESSAGE( CmdKeyValues ) = 0;
-};
-
-class MM_Heartbeat;
-class MM_ClientInfo;
-class MM_JoinResponse;
-class MM_RegisterResponse;
-class MM_Migrate;
-class MM_Mutelist;
-class MM_Checkpoint;
-
-class IMatchmakingMessageHandler : public INetMessageHandler
-{
-public:
-	virtual ~IMatchmakingMessageHandler( void ) {};
-
-	PROCESS_MM_MESSAGE( Heartbeat ) = 0;
-	PROCESS_MM_MESSAGE( ClientInfo ) = 0;
-	PROCESS_MM_MESSAGE( JoinResponse ) = 0;
-	PROCESS_MM_MESSAGE( RegisterResponse ) = 0;
-	PROCESS_MM_MESSAGE( Migrate ) = 0;
-	PROCESS_MM_MESSAGE( Mutelist ) = 0;
-	PROCESS_MM_MESSAGE( Checkpoint) = 0;
 };
 
 class IConnectionlessPacketHandler

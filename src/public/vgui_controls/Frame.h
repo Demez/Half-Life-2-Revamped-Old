@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -133,6 +133,9 @@ public:
 	// Temporarily enables or disables the fade effect rather than zeroing the fade times as done in DisableFadeEffect
 	void SetFadeEffectDisableOverride( bool disabled );
 
+	virtual void OnGripPanelMoved( int nNewX, int nNewY, int nNewW, int nNewH );
+	virtual void OnGripPanelMoveFinished() {}
+
 protected:
 	// Respond to mouse presses
 	virtual void OnMousePressed(MouseCode code);
@@ -189,6 +192,8 @@ protected:
 
 	// optimization, return true if this control has any user config settings
 	virtual bool HasUserConfigSettings();
+
+	virtual void GetSizerClientArea(int &x, int &y, int &wide, int &tall);
 
 private:
 	MESSAGE_FUNC_CHARPTR( InternalSetTitle, "SetTitle", text );
@@ -252,7 +257,7 @@ private:
 	bool	m_iClientInsetXOverridden : 1;
 										 
 	CPanelAnimationVarAliasType( int, m_iTitleTextInsetXOverride, "titletextinsetX", "0", "proportional_int" );
-	CPanelAnimationVar( int, m_iTitleTextInsetYOverride, "titletextinsetY", "0" );
+	CPanelAnimationVarAliasType( int, m_iTitleTextInsetYOverride, "titletextinsetY", "0", "proportional_int" );
 };
 
 } // namespace vgui

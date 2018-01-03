@@ -1,6 +1,6 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
-// Purpose: 
+// Purpose:  
 //
 //=============================================================================//
 
@@ -176,7 +176,7 @@ private:
 	CHandle<CBarnacleTongueTip>	m_hTongueRoot;
 	CHandle<CBarnacleTongueTip>	m_hTongueTip;
 	CHandle<CRagdollProp>		m_hRagdoll;
-	matrix3x4_t					m_pRagdollBones[MAXSTUDIOBONES];
+	matrix3x4a_t				m_pRagdollBones[MAXSTUDIOBONES];
 	IPhysicsConstraint			*m_pConstraint;
 	float						m_flRestUnitsAboveGround;
 	int							m_nSpitAttachment;
@@ -184,9 +184,7 @@ private:
 	int							m_nShakeCount;
 
 	float						m_flNextBloodTime;
-#ifndef _XBOX
 	int							m_nBloodColor;
-#endif
 	Vector						m_vecBloodPos;
 
 	float						m_flBarnaclePullSpeed;

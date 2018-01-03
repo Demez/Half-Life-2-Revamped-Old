@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -15,14 +15,6 @@
 #include <vgui/VGUI.h>
 #include <vgui_controls/Panel.h>
 #include <vgui_controls/ProgressBar.h>
-
-enum progress_textures_t
-{
-	PROGRESS_TEXTURE_FG,
-	PROGRESS_TEXTURE_BG,
-
-	NUM_PROGRESS_TEXTURES,
-};
 
 namespace vgui
 {
@@ -51,7 +43,6 @@ public:
 	};
 	int GetProgressDirection() const { return m_iProgressDirection; }
 	void SetProgressDirection( int val ) { m_iProgressDirection = val; }
-	void SetStartSegment( int val ) { m_iStartSegment = val; }
 
 protected:
 	virtual void Paint();
@@ -62,7 +53,6 @@ protected:
 
 private:
 	int m_iProgressDirection;
-	int m_iStartSegment;
 
 	int m_nTextureId[NUM_PROGRESS_TEXTURES];
 	char *m_pszImageName[NUM_PROGRESS_TEXTURES];

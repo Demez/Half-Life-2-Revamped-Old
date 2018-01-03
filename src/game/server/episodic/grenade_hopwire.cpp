@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Gravity well device
 //
@@ -554,7 +554,7 @@ void CGrenadeHopwire::Detonate( void )
 	SetVelocity( hopVel, hopAngle );
 
 	// Get the time until the apex of the hop
-	float apexTime = sqrt( hopHeight / GetCurrentGravity() );
+	float apexTime = sqrt( hopHeight / sv_gravity.GetFloat() );
 
 	// Explode at the apex
 	SetThink( &CGrenadeHopwire::CombatThink );

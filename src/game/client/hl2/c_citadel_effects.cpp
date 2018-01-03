@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -55,7 +55,7 @@ END_RECV_TABLE()
 //-----------------------------------------------------------------------------
 RenderGroup_t C_CitadelEnergyCore::GetRenderGroup( void )
 {
-	return RENDER_GROUP_TRANSLUCENT_ENTITY;
+	return RENDER_GROUP_TRANSLUCENT;
 }
 
 //-----------------------------------------------------------------------------

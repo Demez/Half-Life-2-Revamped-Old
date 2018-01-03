@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Game-specific impact effect hooks
 //
@@ -13,7 +13,7 @@
 #include "particles_localspace.h"
 #include "dlight.h"
 #include "iefx.h"
-#include "clienteffectprecachesystem.h"
+#include "precache_register.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -24,11 +24,10 @@ extern void FX_TracerSound( const Vector &start, const Vector &end, int iTracerT
 extern ConVar muzzleflash_light;
 
 
-CLIENTEFFECT_REGISTER_BEGIN( PrecacheTracers )
-CLIENTEFFECT_MATERIAL( "effects/gunshiptracer" )
-CLIENTEFFECT_MATERIAL( "effects/combinemuzzle1" )
-CLIENTEFFECT_MATERIAL( "effects/combinemuzzle2_nocull" )
-CLIENTEFFECT_REGISTER_END()
+PRECACHE_REGISTER_BEGIN( GLOBAL, PrecacheTracers )
+PRECACHE( MATERIAL, "effects/combinemuzzle1" )
+PRECACHE( MATERIAL, "effects/combinemuzzle2_nocull" )
+PRECACHE_REGISTER_END()
 
 //-----------------------------------------------------------------------------
 // Purpose: Gunship's Tracer
@@ -40,7 +39,10 @@ void GunshipTracerCallback( const CEffectData &data )
 	FX_GunshipTracer( (Vector&)data.m_vStart, (Vector&)data.m_vOrigin, flVelocity, bWhiz );
 }
 
-DECLARE_CLIENT_EFFECT( "GunshipTracer", GunshipTracerCallback );
+DECLARE_CLIENT_EFFECT_BEGIN( GunshipTracer, GunshipTracerCallback )
+	PRECACHE( MATERIAL, "effects/gunshiptracer" )
+	PRECACHE( GAMESOUND, "Bullets.GunshipNearmiss" )
+DECLARE_CLIENT_EFFECT_END()
 
 
 //-----------------------------------------------------------------------------
@@ -53,7 +55,10 @@ void StriderTracerCallback( const CEffectData &data )
 	FX_StriderTracer( (Vector&)data.m_vStart, (Vector&)data.m_vOrigin, flVelocity, bWhiz );
 }
 
-DECLARE_CLIENT_EFFECT( "StriderTracer", StriderTracerCallback );
+DECLARE_CLIENT_EFFECT_BEGIN( StriderTracer, StriderTracerCallback )
+	PRECACHE( MATERIAL, "effects/gunshiptracer" )
+	PRECACHE( GAMESOUND, "Bullets.StriderNearmiss" )
+DECLARE_CLIENT_EFFECT_END()
 
 
 //-----------------------------------------------------------------------------
@@ -64,9 +69,12 @@ void HunterTracerCallback( const CEffectData &data )
 	float flVelocity = data.m_flScale;
 	bool bWhiz = (data.m_fFlags & TRACER_FLAG_WHIZ);
 	FX_HunterTracer( (Vector&)data.m_vStart, (Vector&)data.m_vOrigin, flVelocity, bWhiz );
-}
+} 
 
-DECLARE_CLIENT_EFFECT( "HunterTracer", HunterTracerCallback );
+DECLARE_CLIENT_EFFECT_BEGIN( HunterTracer, HunterTracerCallback )
+	PRECACHE( MATERIAL, "effects/huntertracer" )
+	PRECACHE( GAMESOUND, "Bullets.StriderNearmiss" )
+DECLARE_CLIENT_EFFECT_END()
 
 
 //-----------------------------------------------------------------------------
@@ -79,7 +87,9 @@ void GaussTracerCallback( const CEffectData &data )
 	FX_GaussTracer( (Vector&)data.m_vStart, (Vector&)data.m_vOrigin, flVelocity, bWhiz );
 }
 
-DECLARE_CLIENT_EFFECT( "GaussTracer", GaussTracerCallback );
+DECLARE_CLIENT_EFFECT_BEGIN( GaussTracer, GaussTracerCallback )
+	PRECACHE( MATERIAL, "effects/spark" )
+DECLARE_CLIENT_EFFECT_END()
 
 
 //-----------------------------------------------------------------------------
@@ -113,7 +123,10 @@ void AirboatGunHeavyTracerCallback( const CEffectData &data )
 	FX_AddDiscreetLine( vecStart, vecShotDir, flVelocity, flLength, flTotalDist, 5.0f, flLife, "effects/gunshiptracer" );
 }
 
-DECLARE_CLIENT_EFFECT( "AirboatGunHeavyTracer", AirboatGunHeavyTracerCallback );
+DECLARE_CLIENT_EFFECT_BEGIN( AirboatGunHeavyTracer, AirboatGunHeavyTracerCallback )
+	PRECACHE( MATERIAL, "effects/gunshiptracer" )
+DECLARE_CLIENT_EFFECT_END()
+
 
 //-----------------------------------------------------------------------------
 // Purpose: Airboat gun tracers 
@@ -146,7 +159,9 @@ void AirboatGunTracerCallback( const CEffectData &data )
 	FX_AddDiscreetLine( vecStart, vecShotDir, flVelocity, flLength, flTotalDist, 2.0f, flLife, "effects/gunshiptracer" );
 }
 
-DECLARE_CLIENT_EFFECT( "AirboatGunTracer", AirboatGunTracerCallback );
+DECLARE_CLIENT_EFFECT_BEGIN( AirboatGunTracer, AirboatGunTracerCallback )
+	PRECACHE( MATERIAL, "effects/gunshiptracer" )
+DECLARE_CLIENT_EFFECT_END()
 
 
 //-----------------------------------------------------------------------------
@@ -185,7 +200,11 @@ void HelicopterTracerCallback( const CEffectData &data )
 	}
 }
 
-DECLARE_CLIENT_EFFECT( "HelicopterTracer", HelicopterTracerCallback );
+DECLARE_CLIENT_EFFECT_BEGIN( HelicopterTracer, HelicopterTracerCallback )
+	PRECACHE( MATERIAL, "effects/gunshiptracer" )
+	PRECACHE( GAMESOUND, "Bullets.GunshipNearmiss" )
+DECLARE_CLIENT_EFFECT_END()
+
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -259,19 +278,15 @@ void FX_AR2Tracer( Vector& start, Vector& end, int velocity, bool makeWhiz )
 //-----------------------------------------------------------------------------
 void AR2TracerCallback( const CEffectData &data )
 {
-	C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
-	
-	if ( player == NULL )
-		return;
-
 	// Grab the data
 	Vector vecStart = GetTracerOrigin( data );
 	float flVelocity = data.m_flScale;
 	bool bWhiz = (data.m_fFlags & TRACER_FLAG_WHIZ);
 	int iEntIndex = data.entindex();
 
-	if ( iEntIndex && iEntIndex == player->index )
+	if ( IsPlayerIndex( iEntIndex ) && C_BasePlayer::IsLocalPlayer( C_BaseEntity::Instance( iEntIndex ) ) )
 	{
+		ACTIVE_SPLITSCREEN_PLAYER_GUARD_ENT( C_BaseEntity::Instance( iEntIndex ) );
 		Vector	foo = data.m_vStart;
 		QAngle	vangles;
 		Vector	vforward, vright, vup;
@@ -296,7 +311,11 @@ void AR2TracerCallback( const CEffectData &data )
 	FX_AR2Tracer( (Vector&)vecStart, (Vector&)data.m_vOrigin, flVelocity, bWhiz );
 }
 
-DECLARE_CLIENT_EFFECT( "AR2Tracer", AR2TracerCallback );
+DECLARE_CLIENT_EFFECT_BEGIN( AR2Tracer, AR2TracerCallback )
+	PRECACHE( MATERIAL, "effects/gunshiptracer" )
+	PRECACHE( GAMESOUND, "Bullets.GunshipNearmiss" )
+DECLARE_CLIENT_EFFECT_END()
+
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -329,11 +348,22 @@ void AR2ExplosionCallback( const CEffectData &data )
 	
 	float radius = data.m_flRadius * 0.15f;
 
+	unsigned int flags = 0;
+
 	// Base vertical shaft
 	FXLineData_t lineData;
 
 	start = data.m_vOrigin;
 	end = start + ( data.m_vNormal * random->RandomFloat( radius*2.0f, radius*4.0f ) );
+
+	if ( random->RandomInt( 0, 1 ) )
+	{
+		flags |= FXSTATICLINE_FLIP_HORIZONTAL;
+	}
+	else
+	{
+		flags = 0;
+	}
 
 	lineData.m_flDieTime = lifetime;
 	
@@ -357,6 +387,15 @@ void AR2ExplosionCallback( const CEffectData &data )
 	start = data.m_vOrigin;
 	end = start + ( data.m_vNormal * random->RandomFloat( 16, radius*0.25f ) );
 
+	if ( random->RandomInt( 0, 1 ) )
+	{
+		flags |= FXSTATICLINE_FLIP_HORIZONTAL;
+	}
+	else
+	{
+		flags = 0;
+	}
+
 	lineData.m_flDieTime = lifetime - 0.1f;
 	
 	lineData.m_flStartAlpha= 1.0f;
@@ -376,7 +415,11 @@ void AR2ExplosionCallback( const CEffectData &data )
 	FX_AddLine( lineData );
 }
 
-DECLARE_CLIENT_EFFECT( "AR2Explosion", AR2ExplosionCallback );
+DECLARE_CLIENT_EFFECT_BEGIN( AR2Explosion, AR2ExplosionCallback )
+	PRECACHE( MATERIAL, "effects/combinemuzzle1" )
+	PRECACHE( MATERIAL, "effects/ar2ground2" )
+DECLARE_CLIENT_EFFECT_END()
+
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -384,23 +427,21 @@ DECLARE_CLIENT_EFFECT( "AR2Explosion", AR2ExplosionCallback );
 //-----------------------------------------------------------------------------
 void AR2ImpactCallback( const CEffectData &data )
 {
-	FX_AddQuad( data.m_vOrigin, 
-				data.m_vNormal, 
-				random->RandomFloat( 24, 32 ),
-				0,
-				0.75f, 
-				1.0f,
-				0.0f,
-				0.4f,
-				random->RandomInt( 0, 360 ), 
-				0,
-				Vector( 1.0f, 1.0f, 1.0f ), 
-				0.25f, 
-				"effects/combinemuzzle2_nocull",
-				(FXQUAD_BIAS_SCALE|FXQUAD_BIAS_ALPHA) );
+	CNewParticleEffect *pEffect = CNewParticleEffect::Create( NULL, "weapon_ar2_impact" );
+	if ( pEffect )
+	{
+		pEffect->SetSortOrigin( data.m_vOrigin );
+		pEffect->SetControlPoint( 0, data.m_vOrigin );
+		Vector vecForward, vecRight, vecUp;
+		VectorVectors( data.m_vNormal, vecRight, vecUp );
+		pEffect->SetControlPointOrientation( 0, vecRight, vecUp, data.m_vNormal );
+	}
 }
 
-DECLARE_CLIENT_EFFECT( "AR2Impact", AR2ImpactCallback );
+DECLARE_CLIENT_EFFECT_BEGIN( AR2Impact, AR2ImpactCallback )
+	PRECACHE( PARTICLE_SYSTEM, "weapon_ar2_impact" )
+DECLARE_CLIENT_EFFECT_END()
+
 
 //-----------------------------------------------------------------------------
 // Creates a muzzleflash elight
@@ -441,7 +482,7 @@ void MuzzleFlash_Airboat( ClientEntityHandle_t hEntity, int attachmentIndex )
 	SimpleParticle *pParticle;
 	Vector			forward(1,0,0), offset; //NOTENOTE: All coords are in local space
 
-	float flScale = random->RandomFloat( 0.75f, IsXbox() ? 2.0f : 2.5f );
+	float flScale = random->RandomFloat( 0.75f, 2.5f );
 
 	PMaterialHandle pMuzzle[2];
 	pMuzzle[0] = pSimple->GetPMaterial( "effects/combinemuzzle1" );
@@ -458,7 +499,7 @@ void MuzzleFlash_Airboat( ClientEntityHandle_t hEntity, int attachmentIndex )
 			return;
 
 		pParticle->m_flLifetime		= 0.0f;
-		pParticle->m_flDieTime		= IsXbox() ? 0.0001f : 0.01f;
+		pParticle->m_flDieTime		= 0.01f;
 
 		pParticle->m_vecVelocity.Init();
 
@@ -501,7 +542,6 @@ void MuzzleFlash_Airboat( ClientEntityHandle_t hEntity, int attachmentIndex )
 	pParticle->m_flRoll			= (360.0/6.0f)*spokePos;
 	pParticle->m_flRollDelta	= 0.0f;
 	
-#ifndef _XBOX
 	// Grab the origin out of the transform for the attachment
 	if ( muzzleflash_light.GetInt() )
 	{
@@ -510,11 +550,10 @@ void MuzzleFlash_Airboat( ClientEntityHandle_t hEntity, int attachmentIndex )
 		if ( FX_GetAttachmentTransform( hEntity, attachmentIndex, matAttachment ) )
 		{
 			Vector		origin;
-			MatrixGetColumn( matAttachment, 3, &origin );
+			MatrixGetColumn( matAttachment, 3, origin );
 			CreateMuzzleflashELight( origin, 5, 64, 128, hEntity );
 		}
 	}
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -525,7 +564,7 @@ void AirboatMuzzleFlashCallback( const CEffectData &data )
 	MuzzleFlash_Airboat( data.m_hEntity, data.m_nAttachmentIndex );
 }
 
-DECLARE_CLIENT_EFFECT( "AirboatMuzzleFlash", AirboatMuzzleFlashCallback );
+DECLARE_CLIENT_EFFECT( AirboatMuzzleFlash, AirboatMuzzleFlashCallback );
 
 
 //-----------------------------------------------------------------------------
@@ -577,7 +616,7 @@ void MuzzleFlash_Chopper( ClientEntityHandle_t hEntity, int attachmentIndex )
 	
 	// Grab the origin out of the transform for the attachment
 	Vector		origin;
-	MatrixGetColumn( matAttachment, 3, &origin );	
+	MatrixGetColumn( matAttachment, 3, origin );	
 	CreateMuzzleflashELight( origin, 6, 128, 256, hEntity );
 }
 
@@ -590,7 +629,7 @@ void ChopperMuzzleFlashCallback( const CEffectData &data )
 	MuzzleFlash_Chopper( data.m_hEntity, data.m_nAttachmentIndex );
 }
 
-DECLARE_CLIENT_EFFECT( "ChopperMuzzleFlash", ChopperMuzzleFlashCallback );
+DECLARE_CLIENT_EFFECT( ChopperMuzzleFlash, ChopperMuzzleFlashCallback );
 
 
 //-----------------------------------------------------------------------------
@@ -638,7 +677,7 @@ void MuzzleFlash_Gunship( ClientEntityHandle_t hEntity, int attachmentIndex )
 	
 	// Grab the origin out of the transform for the attachment
 	Vector		origin;
-	MatrixGetColumn( matAttachment, 3, &origin );	
+	MatrixGetColumn( matAttachment, 3, origin );	
 	CreateMuzzleflashELight( origin, 6, 128, 256, hEntity );
 }
 
@@ -651,7 +690,7 @@ void GunshipMuzzleFlashCallback( const CEffectData &data )
 	MuzzleFlash_Gunship( data.m_hEntity, data.m_nAttachmentIndex );
 }
 
-DECLARE_CLIENT_EFFECT( "GunshipMuzzleFlash", GunshipMuzzleFlashCallback );
+DECLARE_CLIENT_EFFECT( GunshipMuzzleFlash, GunshipMuzzleFlashCallback );
 
 
 //-----------------------------------------------------------------------------
@@ -668,7 +707,7 @@ void MuzzleFlash_Hunter( ClientEntityHandle_t hEntity, int attachmentIndex )
 
 	// Grab the origin out of the transform for the attachment
 	Vector		origin;
-	MatrixGetColumn( matAttachment, 3, &origin );	
+	MatrixGetColumn( matAttachment, 3, origin );	
 	
 	dlight_t *el = effects->CL_AllocElight( LIGHT_INDEX_MUZZLEFLASH );
 	el->origin = origin;// + Vector( 12.0f, 0, 0 );
@@ -692,4 +731,4 @@ void HunterMuzzleFlashCallback( const CEffectData &data )
 	MuzzleFlash_Hunter( data.m_hEntity, data.m_nAttachmentIndex );
 }
 
-DECLARE_CLIENT_EFFECT( "HunterMuzzleFlash", HunterMuzzleFlashCallback );
+DECLARE_CLIENT_EFFECT( HunterMuzzleFlash, HunterMuzzleFlashCallback );

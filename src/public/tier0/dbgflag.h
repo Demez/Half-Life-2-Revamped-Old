@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:	This file sets all of our debugging flags.  It should be 
 //			called before all other header files.
@@ -34,7 +34,7 @@
 //-----------------------------------------------------------------------------
 // Default flags for debug builds
 //-----------------------------------------------------------------------------
-#if (defined( _DEBUG ) || defined( RELEASEASSERTS ) )
+#ifdef _DEBUG
 
 #define DBGFLAG_MEMORY
 #ifdef _SERVER	// only enable new & delete tracking for server; on client it conflicts with CRT mem leak tracking
@@ -53,7 +53,6 @@
 // Default flags for release builds
 //-----------------------------------------------------------------------------
 #else // _DEBUG
-
 #ifdef STEAM
 #define DBGFLAG_ASSERT
 #endif

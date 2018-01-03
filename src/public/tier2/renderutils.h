@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright � 2005-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: A set of utilities to render standard shapes
 //
@@ -27,8 +27,8 @@ struct matrix3x4_t;
 void RenderWireframeSphere( const Vector &vCenter, float flRadius, int nTheta, int nPhi, Color c, bool bZBuffer );
 
 // Renders a sphere
-void RenderSphere( const Vector &vCenter, float flRadius, int nTheta, int nPhi, Color c, bool bZBuffer );
-void RenderSphere( const Vector &vCenter, float flRadius, int nTheta, int nPhi, Color c, IMaterial *pMaterial );
+void RenderSphere( const Vector &vCenter, float flRadius, int nTheta, int nPhi, Color c, bool bZBuffer, bool bInsideOut = false );
+void RenderSphere( const Vector &vCenter, float flRadius, int nTheta, int nPhi, Color c, IMaterial *pMaterial, bool bInsideOut = false );
 
 // Renders a wireframe box relative to an origin 
 void RenderWireframeBox( const Vector &vOrigin, const QAngle& angles, const Vector &vMins, const Vector &vMaxs, Color c, bool bZBuffer );
@@ -64,6 +64,9 @@ void DrawScreenSpaceRectangle( IMaterial *pMaterial,
 	int nXDice = 1,
 	int nYDice = 1,
 	float fDepth = 0.0 );								// what Z value to put in the verts
+
+// Renders a single polygon without texturing in normalized-device coordinate space (x, y in the range [-1,1], z = 0)
+void DrawNDCSpaceUntexturedPolygon( IMaterial *pMaterial, int nVertexCount, Vector2D *pScreenSpaceCoordinates, void *pClientRenderable );
 
 #endif // RENDERUTILS_H
 

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 2005-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: A higher level link library for general use in the game and tools.
 //
@@ -23,12 +23,17 @@
 //-----------------------------------------------------------------------------
 struct matrix3x4_t;
 
+class CMDLAttachmentData
+{
+public:
+	matrix3x4_t	m_AttachmentToWorld;
+	bool m_bValid;
+};
+
 struct MDLSquenceLayer_t
 {
 	int		m_nSequenceIndex;
 	float	m_flWeight;
-	bool	m_bNoLoop;
-	float	m_flCycleBeganAt;
 };
 
 //-----------------------------------------------------------------------------
@@ -46,10 +51,12 @@ public:
 	// Simple version of drawing; sets up bones for you
 	void Draw( const matrix3x4_t& rootToWorld );
 
-	// NOTE: This version of draw assumes you've filled in the bone to world
-	// matrix yourself by calling IStudioRender::LockBoneMatrices. The pointer
-	// returned by that method needs to be passed into here
-	void Draw( const matrix3x4_t& rootToWorld, const matrix3x4_t *pBoneToWorld );
+	/// NOTE: This version of draw assumes you've filled in the bone to world
+	/// matrix yourself by calling IStudioRender::LockBoneMatrices. The pointer
+	/// returned by that method needs to be passed into here
+	/// @param flags allows you to specify additional STUDIORENDER_ flags -- usually never necessary
+	///        unless you need to (eg) forcibly disable shadows for some reason.
+	void Draw( const matrix3x4_t& rootToWorld, const matrix3x4_t *pBoneToWorld, int flags = 0 );
 
 
 	void SetUpBones( const matrix3x4_t& shapeToWorld, int nMaxBoneCount, matrix3x4_t *pOutputMatrices, const float *pPoseParameters = NULL, MDLSquenceLayer_t *pSequenceLayers = NULL, int nNumSequenceLayers = 0 );
@@ -58,8 +65,14 @@ public:
 	
 	studiohdr_t *GetStudioHdr();
 
+	virtual bool GetAttachment( int number, matrix3x4_t &matrix );
+	
 private:
 	void UnreferenceMDL();
+
+	void SetupBones_AttachmentHelper( CStudioHdr *hdr, Vector pos[], Quaternion q[] );
+	bool PutAttachment( int number, const matrix3x4_t &attachmentToWorld );
+	CUtlVector<CMDLAttachmentData>		m_Attachments;
 
 public:
 	MDLHandle_t	m_MDLHandle;
@@ -73,7 +86,6 @@ public:
 	float		m_pFlexControls[ MAXSTUDIOFLEXCTRL * 4 ];
 	Vector		m_vecViewTarget;
 	bool		m_bWorldSpaceViewTarget;
-	void		*m_pProxyData;
 };
 
 
@@ -91,6 +103,11 @@ float GetMDLRadius( MDLHandle_t h, int nSequence );
 // Returns a more accurate bounding sphere
 //-----------------------------------------------------------------------------
 void GetMDLBoundingSphere( Vector *pVecCenter, float *pRadius, MDLHandle_t h, int nSequence );
+
+//-----------------------------------------------------------------------------
+// Determines which pose parameters are used by the specified sequence
+//-----------------------------------------------------------------------------
+void FindSequencePoseParameters( CStudioHdr &hdr, int nSequence, bool *pPoseParameters, int nCount );
 
 
 #endif // MDLUTILS_H

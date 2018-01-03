@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Dr. Mossman, stalwart heroine, doing what is right in the face of 
 //			near certain doom, all while fighting off the clumsy advances of her
@@ -68,7 +68,7 @@ Class_T	CNPC_Mossman::Classify ( void )
 //-----------------------------------------------------------------------------
 void CNPC_Mossman::HandleAnimEvent( animevent_t *pEvent )
 {
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 	case 1:
 	default:

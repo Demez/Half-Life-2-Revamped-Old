@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -28,6 +28,16 @@ class ScrollBarSlider : public Panel
 	DECLARE_CLASS_SIMPLE( ScrollBarSlider, Panel );
 
 public:
+
+	enum SliderBorderType_t
+	{
+		Slider_Idle = 0,
+		Slider_Hover,
+		Slider_Dragging,
+
+		Slider_Count,
+	};
+
 	ScrollBarSlider(Panel *parent, const char *panelName, bool vertical);
 
 	// Set the ScrollBarSlider value of the nob.
@@ -63,8 +73,7 @@ public:
 
 	// Return true if this slider is actually drawing itself
 	virtual bool IsSliderVisible( void );
-
-	virtual void ApplySettings( KeyValues *pInResourceData );
+	virtual bool IsMouseOverNob();
 
 protected:
 	virtual void Paint();
@@ -72,13 +81,20 @@ protected:
 	virtual void PerformLayout();
 	virtual void ApplySchemeSettings(IScheme *pScheme);
 
+	virtual void OnCursorEntered();
+	virtual void OnCursorExited();
+
 private:
 	virtual void RecomputeNobPosFromValue();
 	virtual void RecomputeValueFromNobPos();
 	virtual void SendScrollBarSliderMovedMessage();
+	virtual void SendScrollBarSliderReleasedMessage();
+	void SetNobFocusColor( const Color &color );
+	void SetNobDragColor( const Color &color );
 
 	bool _vertical;
 	bool _dragging;
+	bool m_bCursorOver;
 	int _nobPos[2];
 	int _nobDragStartPos[2];
 	int _dragStartPos[2];
@@ -86,7 +102,10 @@ private:
 	int _value;		// the position of the ScrollBarSlider, in coordinates as specified by SetRange/SetRangeWindow
 	int _rangeWindow;
 	int _buttonOffset;
-	IBorder *_ScrollBarSliderBorder;
+	int m_nNobInset;
+	IBorder *_ScrollBarSliderBorder[ Slider_Count ];
+	Color m_NobFocusColor;
+	Color m_NobDragColor;
 };
 
 } // namespace vgui

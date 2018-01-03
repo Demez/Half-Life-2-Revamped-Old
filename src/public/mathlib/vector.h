@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright 1996-2005, Valve Corporation, All rights reserved. =======//
 //
 // Purpose: 
 //
@@ -27,11 +27,16 @@
 #include <xmmintrin.h>
 #endif
 
+#ifndef ALIGN16_POST
+#define ALIGN16_POST
+#endif
+
 #include "tier0/dbg.h"
+#include "tier0/platform.h"
 #include "tier0/threadtools.h"
 #include "mathlib/vector2d.h"
 #include "mathlib/math_pfns.h"
-#include "minmax.h"
+#include "tier0/memalloc.h"
 
 // Uncomment this to add extra Asserts to check for NANs, uninitialized vecs, etc.
 //#define VECTOR_PARANOIA	1
@@ -72,7 +77,6 @@ public:
 	// Construction/destruction:
 	Vector(void); 
 	Vector(vec_t X, vec_t Y, vec_t Z);
-	explicit Vector(vec_t XYZ); ///< broadcast initialize
 
 	// Initialization
 	void Init(vec_t ix=0.0f, vec_t iy=0.0f, vec_t iz=0.0f);
@@ -125,12 +129,29 @@ public:
 		return (x*x + y*y + z*z);		
 	}
 
+	// Get one over the vector's length
+	// via fast hardware approximation
+	inline vec_t LengthRecipFast(void) const
+	{ 
+		return FastRSqrtFast( LengthSqr() );
+	}
+
 	// return true if this vector is (0,0,0) within tolerance
 	bool IsZero( float tolerance = 0.01f ) const
 	{
 		return (x > -tolerance && x < tolerance &&
 				y > -tolerance && y < tolerance &&
 				z > -tolerance && z < tolerance);
+	}
+
+
+	// return true if this vector is exactly (0,0,0) -- only fast if vector is coming from memory, not registers
+	inline bool IsZeroFast( ) const RESTRICT
+	{
+		COMPILE_TIME_ASSERT( sizeof(vec_t) == sizeof(int) );
+		return ( *reinterpret_cast<const int *>(&x) == 0 && 
+				 *reinterpret_cast<const int *>(&y) == 0 && 
+				 *reinterpret_cast<const int *>(&z) == 0 );
 	}
 
 	vec_t	NormalizeInPlace();
@@ -172,9 +193,15 @@ public:
 	// assignment
 	Vector& operator=(const Vector &vOther);
 
+	// returns 0, 1, 2 corresponding to the component with the largest absolute value
+	inline int LargestComponent() const;
+
 	// 2d
 	vec_t	Length2D(void) const;					
-	vec_t	Length2DSqr(void) const;					
+	vec_t	Length2DSqr(void) const;		
+
+	/// get the component of this vector parallel to some other given vector
+	inline Vector  ProjectOnto( const Vector& onto );
 
 	operator VectorByValue &()				{ return *((VectorByValue *)(this)); }
 	operator const VectorByValue &() const	{ return *((const VectorByValue *)(this)); }
@@ -208,7 +235,6 @@ private:
 #endif
 };
 
-FORCEINLINE void NetworkVarConstruct( Vector &v ) { v.Zero(); }
 
 
 #define USE_M64S ( ( !defined( _X360 ) ) )
@@ -399,9 +425,82 @@ public:
 		Init(vOther.x, vOther.y, vOther.z);
 		return *this;
 	}
+
+	VectorAligned& operator=(const VectorAligned &vOther)
+	{
+		// we know we're aligned, so use simd
+		// we can't use the convenient abstract interface coz it gets declared later
+#ifdef _X360
+		XMStoreVector4A(Base(), XMLoadVector4A(vOther.Base()));
+#elif _WIN32
+		_mm_store_ps(Base(), _mm_load_ps( vOther.Base() ));
+#else
+		Init(vOther.x, vOther.y, vOther.z);
+#endif
+		return *this;
+	}
+
 	
 #endif
 	float w;	// this space is used anyway
+
+	void* operator new[] ( size_t nSize)
+	{
+		return MemAlloc_AllocAligned(nSize, 16);
+	}
+
+	void* operator new[] ( size_t nSize, const char *pFileName, int nLine)
+	{
+		return MemAlloc_AllocAlignedFileLine(nSize, 16, pFileName, nLine);
+	}
+
+	void* operator new[] ( size_t nSize, int /*nBlockUse*/, const char *pFileName, int nLine)
+	{
+		return MemAlloc_AllocAlignedFileLine(nSize, 16, pFileName, nLine);
+	}
+
+	void operator delete[] ( void* p) 
+	{
+		MemAlloc_FreeAligned(p);
+	}
+
+	void operator delete[] ( void* p, const char *pFileName, int nLine)  
+	{
+		MemAlloc_FreeAligned(p, pFileName, nLine);
+	}
+
+	void operator delete[] ( void* p, int /*nBlockUse*/, const char *pFileName, int nLine)  
+	{
+		MemAlloc_FreeAligned(p, pFileName, nLine);
+	}
+
+	// please don't allocate a single quaternion...
+	void* operator new   ( size_t nSize )
+	{
+		return MemAlloc_AllocAligned(nSize, 16);
+	}
+	void* operator new   ( size_t nSize, const char *pFileName, int nLine )
+	{
+		return MemAlloc_AllocAlignedFileLine(nSize, 16, pFileName, nLine);
+	}
+	void* operator new   ( size_t nSize, int /*nBlockUse*/, const char *pFileName, int nLine )
+	{
+		return MemAlloc_AllocAlignedFileLine(nSize, 16, pFileName, nLine);
+	}
+	void operator delete ( void* p) 
+	{
+		MemAlloc_FreeAligned(p);
+	}
+
+	void operator delete ( void* p, const char *pFileName, int nLine)  
+	{
+		MemAlloc_FreeAligned(p, pFileName, nLine);
+	}
+
+	void operator delete ( void* p, int /*nBlockUse*/, const char *pFileName, int nLine)  
+	{
+		MemAlloc_FreeAligned(p, pFileName, nLine);
+	}
 } ALIGN16_POST;
 
 //-----------------------------------------------------------------------------
@@ -422,9 +521,7 @@ FORCEINLINE void VectorMultiply( const Vector& a, const Vector& b, Vector& resul
 FORCEINLINE void VectorDivide( const Vector& a, vec_t b, Vector& result );
 FORCEINLINE void VectorDivide( const Vector& a, const Vector& b, Vector& result );
 inline void VectorScale ( const Vector& in, vec_t scale, Vector& result );
-// Don't mark this as inline in its function declaration. That's only necessary on its
-// definition, and 'inline' here leads to gcc warnings.
-void VectorMA( const Vector& start, float scale, const Vector& direction, Vector& dest );
+inline void VectorMA( const Vector& start, float scale, const Vector& direction, Vector& dest );
 
 // Vector equality with tolerance
 bool VectorsAreEqual( const Vector& src1, const Vector& src2, float tolerance = 0.0f );
@@ -458,22 +555,36 @@ FORCEINLINE Vector ReplicateToVector( float x )
 	return Vector( x, x, x );
 }
 
-// check if a point is in the field of a view of an object. supports up to 180 degree fov.
+// check if a point is in the field of a view of an object.
 FORCEINLINE bool PointWithinViewAngle( Vector const &vecSrcPosition, 
 									   Vector const &vecTargetPosition, 
 									   Vector const &vecLookDirection, float flCosHalfFOV )
 {
 	Vector vecDelta = vecTargetPosition - vecSrcPosition;
 	float cosDiff = DotProduct( vecLookDirection, vecDelta );
-
-	if ( cosDiff < 0 ) 
-		return false;
-
-	float flLen2 = vecDelta.LengthSqr();
-
-	// a/sqrt(b) > c  == a^2 > b * c ^2
-	return ( cosDiff * cosDiff > flLen2 * flCosHalfFOV * flCosHalfFOV );
 	
+	if ( flCosHalfFOV <= 0 ) // >180
+	{
+		// signs are different, answer is implicit
+		if ( cosDiff > 0 )
+			return true;
+
+		// a/sqrt(b) > c  == a^2 < b * c ^2
+		// IFF left and right sides are <= 0
+		float flLen2 = vecDelta.LengthSqr();
+		return ( cosDiff * cosDiff <= flLen2 * flCosHalfFOV * flCosHalfFOV );
+	}
+	else // flCosHalfFOV > 0
+	{
+		// signs are different, answer is implicit
+		if ( cosDiff < 0 )
+			return false;
+
+		// a/sqrt(b) > c  == a^2 > b * c ^2
+		// IFF left and right sides are >= 0
+		float flLen2 = vecDelta.LengthSqr();
+		return ( cosDiff * cosDiff >= flLen2 * flCosHalfFOV * flCosHalfFOV );
+	}
 }
 
 
@@ -517,12 +628,6 @@ inline Vector::Vector(vec_t X, vec_t Y, vec_t Z)
 	CHECK_VALID(*this);
 }
 
-inline Vector::Vector(vec_t XYZ)						
-{ 
-	x = y = z = XYZ;
-	CHECK_VALID(*this);
-}
-
 //inline Vector::Vector(const float *pFloat)					
 //{
 //	Assert( pFloat );
@@ -554,9 +659,9 @@ inline void Vector::Init( vec_t ix, vec_t iy, vec_t iz )
 
 inline void Vector::Random( vec_t minVal, vec_t maxVal )
 {
-	x = minVal + ((float)rand() / VALVE_RAND_MAX) * (maxVal - minVal);
-	y = minVal + ((float)rand() / VALVE_RAND_MAX) * (maxVal - minVal);
-	z = minVal + ((float)rand() / VALVE_RAND_MAX) * (maxVal - minVal);
+	x = minVal + ((float)rand() / RAND_MAX) * (maxVal - minVal);
+	y = minVal + ((float)rand() / RAND_MAX) * (maxVal - minVal);
+	z = minVal + ((float)rand() / RAND_MAX) * (maxVal - minVal);
 	CHECK_VALID(*this);
 }
 
@@ -776,6 +881,12 @@ FORCEINLINE  Vector& Vector::operator/=(const Vector& v)
 }
 
 
+// get the component of this vector parallel to some other given vector
+inline Vector Vector::ProjectOnto( const Vector& onto )
+{
+	return onto * ( this->Dot(onto) / ( onto.LengthSqr() ) );
+}
+
 
 //-----------------------------------------------------------------------------
 //
@@ -869,19 +980,19 @@ FORCEINLINE  ShortVector& ShortVector::operator-=(const ShortVector& v)
 
 FORCEINLINE  ShortVector& ShortVector::operator*=(float fl)	
 {
-	x *= fl;
-	y *= fl;
-	z *= fl;
-	w *= fl;
+	x = (short)(x * fl);
+	y = (short)(y * fl);
+	z = (short)(z * fl);
+	w = (short)(w * fl);
 	return *this;
 }
 
 FORCEINLINE  ShortVector& ShortVector::operator*=(const ShortVector& v)	
 { 
-	x *= v.x;
-	y *= v.y;
-	z *= v.z;
-	w *= v.w;
+	x = (short)(x * v.x);
+	y = (short)(y * v.y);
+	z = (short)(z * v.z);
+	w = (short)(w * v.w);
 	return *this;
 }
 
@@ -889,30 +1000,30 @@ FORCEINLINE  ShortVector& ShortVector::operator/=(float fl)
 {
 	Assert( fl != 0.0f );
 	float oofl = 1.0f / fl;
-	x *= oofl;
-	y *= oofl;
-	z *= oofl;
-	w *= oofl;
+	x = (short)(x * oofl);
+	y = (short)(y * oofl);
+	z = (short)(z * oofl);
+	w = (short)(w * oofl);
 	return *this;
 }
 
 FORCEINLINE  ShortVector& ShortVector::operator/=(const ShortVector& v)	
 { 
 	Assert( v.x != 0 && v.y != 0 && v.z != 0 && v.w != 0 );
-	x /= v.x;
-	y /= v.y;
-	z /= v.z;
-	w /= v.w;
+	x = (short)(x / v.x);
+	y = (short)(y / v.y);
+	z = (short)(z / v.z);
+	w = (short)(w / v.w);
 	return *this;
 }
 
 FORCEINLINE void ShortVectorMultiply( const ShortVector& src, float fl, ShortVector& res )
 {
 	Assert( IsFinite(fl) );
-	res.x = src.x * fl;
-	res.y = src.y * fl;
-	res.z = src.z * fl;
-	res.w = src.w * fl;
+	res.x = (short)(src.x * fl);
+	res.y = (short)(src.y * fl);
+	res.z = (short)(src.z * fl);
+	res.w = (short)(src.w * fl);
 }
 
 FORCEINLINE ShortVector ShortVector::operator*(float fl) const
@@ -1019,19 +1130,19 @@ FORCEINLINE  IntVector4D& IntVector4D::operator-=(const IntVector4D& v)
 
 FORCEINLINE  IntVector4D& IntVector4D::operator*=(float fl)	
 {
-	x *= fl;
-	y *= fl;
-	z *= fl;
-	w *= fl;
+	x = (int)(x * fl);
+	y = (int)(y * fl);
+	z = (int)(z * fl);
+	w = (int)(w * fl);
 	return *this;
 }
 
 FORCEINLINE  IntVector4D& IntVector4D::operator*=(const IntVector4D& v)	
 { 
-	x *= v.x;
-	y *= v.y;
-	z *= v.z;
-	w *= v.w;
+	x = (int)(x * v.x);
+	y = (int)(y * v.y);
+	z = (int)(z * v.z);
+	w = (int)(w * v.w);
 	return *this;
 }
 
@@ -1039,30 +1150,30 @@ FORCEINLINE  IntVector4D& IntVector4D::operator/=(float fl)
 {
 	Assert( fl != 0.0f );
 	float oofl = 1.0f / fl;
-	x *= oofl;
-	y *= oofl;
-	z *= oofl;
-	w *= oofl;
+	x = (int)(x * oofl);
+	y = (int)(y * oofl);
+	z = (int)(z * oofl);
+	w = (int)(w * oofl);
 	return *this;
 }
 
 FORCEINLINE  IntVector4D& IntVector4D::operator/=(const IntVector4D& v)	
 { 
 	Assert( v.x != 0 && v.y != 0 && v.z != 0 && v.w != 0 );
-	x /= v.x;
-	y /= v.y;
-	z /= v.z;
-	w /= v.w;
+	x = (int)(x / v.x);
+	y = (int)(y / v.y);
+	z = (int)(z / v.z);
+	w = (int)(w / v.w);
 	return *this;
 }
 
 FORCEINLINE void IntVector4DMultiply( const IntVector4D& src, float fl, IntVector4D& res )
 {
 	Assert( IsFinite(fl) );
-	res.x = src.x * fl;
-	res.y = src.y * fl;
-	res.z = src.z * fl;
-	res.w = src.w * fl;
+	res.x = (int)(src.x * fl);
+	res.y = (int)(src.y * fl);
+	res.z = (int)(src.z * fl);
+	res.w = (int)(src.w * fl);
 }
 
 FORCEINLINE IntVector4D IntVector4D::operator*(float fl) const
@@ -1187,7 +1298,7 @@ inline Vector &AllocTempVector()
 		}
 		ThreadPause();
 	} 
-	return s_vecTemp[nIndex];
+	return s_vecTemp[nIndex & 0xffff];
 }
 
 
@@ -1207,6 +1318,22 @@ inline vec_t Vector::Dot( const Vector& vOther ) const
 {
 	CHECK_VALID(vOther);
 	return DotProduct( *this, vOther );
+}
+
+inline int Vector::LargestComponent() const
+{
+	float flAbsx = fabs(x);
+	float flAbsy = fabs(y);
+	float flAbsz = fabs(z);
+	if ( flAbsx > flAbsy )
+	{
+		if ( flAbsx > flAbsz )
+			return X_INDEX;
+		return Z_INDEX;
+	}
+	if ( flAbsy > flAbsz )
+		return Y_INDEX;
+	return Z_INDEX;
 }
 
 inline void CrossProduct(const Vector& a, const Vector& b, Vector& result )
@@ -1466,6 +1593,17 @@ inline void VectorMax( const Vector &a, const Vector &b, Vector &result )
 	result.z = fpmax(a.z, b.z);
 }
 
+// and when you want to return the vector rather than cause a LHS with it...
+inline Vector VectorMin( const Vector &a, const Vector &b )
+{
+	return Vector( fpmin(a.x, b.x), fpmin(a.y, b.y), fpmin(a.z, b.z) );
+}
+
+inline Vector VectorMax( const Vector &a, const Vector &b )
+{
+	return Vector( fpmax(a.x, b.x), fpmax(a.y, b.y), fpmax(a.z, b.z) );
+}
+
 inline float ComputeVolume( const Vector &vecMins, const Vector &vecMaxs )
 {
 	Vector vecDelta;
@@ -1515,6 +1653,11 @@ inline bool operator!=( const Vector& v, float const* f )
 	return false;
 }
 
+
+// return a vector perpendicular to another, with smooth variation. The difference between this and
+// something like VectorVectors is that there are now discontinuities. _unlike_ VectorVectors,
+// you won't get an "u
+void VectorPerpendicularToVector( Vector const &in, Vector *pvecOut );
 
 //-----------------------------------------------------------------------------
 // AngularImpulse
@@ -1631,6 +1774,9 @@ public:
 		Init(X,Y,Z,W);
 	}
 
+	operator Quaternion * () { return this; } 
+	operator const Quaternion * () { return this; } 
+
 #ifdef VECTOR_NO_SLOW_OPERATIONS
 
 private:
@@ -1651,7 +1797,79 @@ public:
 		return *this;
 	}
 
+	QuaternionAligned& operator=(const QuaternionAligned &vOther)
+	{
+		// we know we're aligned, so use simd
+		// we can't use the convenient abstract interface coz it gets declared later
+#ifdef _X360
+		XMStoreVector4A(Base(), XMLoadVector4A(vOther.Base()));
+#elif _WIN32
+		_mm_store_ps(Base(), _mm_load_ps( vOther.Base() ));
+#else
+		Init(vOther.x, vOther.y, vOther.z, vOther.w);
 #endif
+		return *this;
+	}
+
+#endif
+
+	void* operator new[] ( size_t nSize)
+	{
+		return MemAlloc_AllocAligned(nSize, 16);
+	}
+
+	void* operator new[] ( size_t nSize, const char *pFileName, int nLine)
+	{
+		return MemAlloc_AllocAlignedFileLine(nSize, 16, pFileName, nLine);
+	}
+
+	void* operator new[] ( size_t nSize, int /*nBlockUse*/, const char *pFileName, int nLine)
+	{
+		return MemAlloc_AllocAlignedFileLine(nSize, 16, pFileName, nLine);
+	}
+
+	void operator delete[] ( void* p) 
+	{
+		MemAlloc_FreeAligned(p);
+	}
+
+	void operator delete[] ( void* p, const char *pFileName, int nLine)  
+	{
+		MemAlloc_FreeAligned(p, pFileName, nLine);
+	}
+
+	void operator delete[] ( void* p, int /*nBlockUse*/, const char *pFileName, int nLine)  
+	{
+		MemAlloc_FreeAligned(p, pFileName, nLine);
+	}
+
+	// please don't allocate a single quaternion...
+	void* operator new   ( size_t nSize )
+	{
+		return MemAlloc_AllocAligned(nSize, 16);
+	}
+	void* operator new   ( size_t nSize, const char *pFileName, int nLine )
+	{
+		return MemAlloc_AllocAlignedFileLine(nSize, 16, pFileName, nLine);
+	}
+	void* operator new   ( size_t nSize, int /*nBlockUse*/, const char *pFileName, int nLine )
+	{
+		return MemAlloc_AllocAlignedFileLine(nSize, 16, pFileName, nLine);
+	}
+	void operator delete ( void* p) 
+	{
+		MemAlloc_FreeAligned(p);
+	}
+
+	void operator delete ( void* p, const char *pFileName, int nLine)  
+	{
+		MemAlloc_FreeAligned(p, pFileName, nLine);
+	}
+
+	void operator delete ( void* p, int /*nBlockUse*/, const char *pFileName, int nLine)  
+	{
+		MemAlloc_FreeAligned(p, pFileName, nLine);
+	}
 } ALIGN16_POST;
 
 
@@ -1675,6 +1893,9 @@ public:
 	bool IsValid() const;
 	void Invalidate();
 
+	inline vec_t *Base() { return &x; }
+	inline const vec_t *Base() const { return &x; } 
+
 	// array access...
 	vec_t operator[](int i) const;
 	vec_t& operator[](int i);
@@ -1685,9 +1906,6 @@ public:
 
 extern void AngleQuaternion( RadianEuler const &angles, Quaternion &qt );
 extern void QuaternionAngles( Quaternion const &q, RadianEuler &angles );
-
-FORCEINLINE void NetworkVarConstruct( Quaternion &q ) { q.x = q.y = q.z = q.w = 0.0f; }
-
 inline Quaternion::Quaternion(RadianEuler const &angle)
 {
 	AngleQuaternion( angle, *this );
@@ -1835,8 +2053,6 @@ private:
 #endif
 };
 
-FORCEINLINE void NetworkVarConstruct( QAngle &q ) { q.x = q.y = q.z = 0.0f; }
-
 //-----------------------------------------------------------------------------
 // Allows us to specifically pass the vector by value when we need to
 //-----------------------------------------------------------------------------
@@ -1900,9 +2116,9 @@ inline void QAngle::Init( vec_t ix, vec_t iy, vec_t iz )
 
 inline void QAngle::Random( vec_t minVal, vec_t maxVal )
 {
-	x = minVal + ((float)rand() / VALVE_RAND_MAX) * (maxVal - minVal);
-	y = minVal + ((float)rand() / VALVE_RAND_MAX) * (maxVal - minVal);
-	z = minVal + ((float)rand() / VALVE_RAND_MAX) * (maxVal - minVal);
+	x = minVal + ((float)rand() / RAND_MAX) * (maxVal - minVal);
+	y = minVal + ((float)rand() / RAND_MAX) * (maxVal - minVal);
+	z = minVal + ((float)rand() / RAND_MAX) * (maxVal - minVal);
 	CHECK_VALID(*this);
 }
 
@@ -2176,58 +2392,34 @@ inline void AngularImpulseToQAngle( const AngularImpulse &impulse, QAngle &angle
 
 #if !defined( _X360 )
 
-FORCEINLINE vec_t InvRSquared( float const *v )
+FORCEINLINE vec_t InvRSquared( const float* v )
 {
-#if defined(__i386__) || defined(_M_IX86)
-	float sqrlen = v[0]*v[0]+v[1]*v[1]+v[2]*v[2] + 1.0e-10f, result;
-	_mm_store_ss(&result, _mm_rcp_ss( _mm_max_ss( _mm_set_ss(1.0f), _mm_load_ss(&sqrlen) ) ));
-	return result;
-#else
-	return 1.f/fpmax(1.f, v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);
-#endif
+	return 1.0 / MAX( 1.0, v[0] * v[0] + v[1] * v[1] + v[2] * v[2] );
 }
 
 FORCEINLINE vec_t InvRSquared( const Vector &v )
 {
-	return InvRSquared(&v.x);
+	return InvRSquared( v.Base() );
 }
 
-#if defined(__i386__) || defined(_M_IX86)
-inline void _SSE_RSqrtInline( float a, float* out )
+#else
+
+// call directly
+FORCEINLINE float _VMX_InvRSquared( const Vector &v )
 {
-	__m128  xx = _mm_load_ss( &a );
-	__m128  xr = _mm_rsqrt_ss( xx );
-	__m128  xt;
-	xt = _mm_mul_ss( xr, xr );
-	xt = _mm_mul_ss( xt, xx );
-	xt = _mm_sub_ss( _mm_set_ss(3.f), xt );
-	xt = _mm_mul_ss( xt, _mm_set_ss(0.5f) );
-	xr = _mm_mul_ss( xr, xt );
-	_mm_store_ss( out, xr );
+	XMVECTOR xmV = XMVector3ReciprocalLength( XMLoadVector3( v.Base() ) );
+	xmV = XMVector3Dot( xmV, xmV );
+	return xmV.x;
 }
-#endif
+
+#define InvRSquared(x) _VMX_InvRSquared(x)
+
+#endif // _X360
+
+#if !defined( _X360 )
 
 // FIXME: Change this back to a #define once we get rid of the vec_t version
-FORCEINLINE float VectorNormalize( Vector& vec )
-{
-#ifndef DEBUG // stop crashing my edit-and-continue!
-	#if defined(__i386__) || defined(_M_IX86)
-		#define DO_SSE_OPTIMIZATION
-	#endif
-#endif
-
-#if defined( DO_SSE_OPTIMIZATION )
-	float sqrlen = vec.LengthSqr() + 1.0e-10f, invlen;
-	_SSE_RSqrtInline(sqrlen, &invlen);
-	vec.x *= invlen;
-	vec.y *= invlen;
-	vec.z *= invlen;
-	return sqrlen * invlen;
-#else
-	extern float (FASTCALL *pfVectorNormalize)(Vector& v);
-	return (*pfVectorNormalize)(vec);
-#endif
-}
+float VectorNormalize( Vector& v );
 
 // FIXME: Obsolete version of VectorNormalize, once we remove all the friggin float*s
 FORCEINLINE float VectorNormalize( float * v )
@@ -2235,19 +2427,7 @@ FORCEINLINE float VectorNormalize( float * v )
 	return VectorNormalize(*(reinterpret_cast<Vector *>(v)));
 }
 
-FORCEINLINE void VectorNormalizeFast( Vector &vec )
-{
-	VectorNormalize(vec);
-}
-
 #else
-
-FORCEINLINE float _VMX_InvRSquared( const Vector &v )
-{
-	XMVECTOR xmV = XMVector3ReciprocalLength( XMLoadVector3( v.Base() ) );
-	xmV = XMVector3Dot( xmV, xmV );
-	return xmV.x;
-}
 
 // call directly
 FORCEINLINE float _VMX_VectorNormalize( Vector &vec )
@@ -2259,9 +2439,6 @@ FORCEINLINE float _VMX_VectorNormalize( Vector &vec )
 	vec.z *= den;
 	return mag;
 }
-
-#define InvRSquared(x) _VMX_InvRSquared(x)
-
 // FIXME: Change this back to a #define once we get rid of the vec_t version
 FORCEINLINE float VectorNormalize( Vector& v )
 {
@@ -2272,6 +2449,19 @@ FORCEINLINE float VectorNormalize( float *pV )
 {
 	return _VMX_VectorNormalize(*(reinterpret_cast<Vector*>(pV)));
 }
+
+#endif // _X360
+
+#if !defined( _X360 )
+FORCEINLINE void VectorNormalizeFast (Vector& vec)
+{
+	float ool = FastRSqrt( FLT_EPSILON + vec.x * vec.x + vec.y * vec.y + vec.z * vec.z );
+
+	vec.x *= ool;
+	vec.y *= ool;
+	vec.z *= ool;
+}
+#else
 
 // call directly
 FORCEINLINE void VectorNormalizeFast( Vector &vec )
@@ -2284,7 +2474,6 @@ FORCEINLINE void VectorNormalizeFast( Vector &vec )
 }
 
 #endif // _X360
-
 
 inline vec_t Vector::NormalizeInPlace()
 {

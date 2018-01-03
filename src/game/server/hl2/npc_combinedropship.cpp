@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Large vehicle what delivers combine troops.
 //
@@ -2290,7 +2290,7 @@ void CNPC_CombineDropship::PrescheduleThink( void )
 						float flSpeed = GetAbsVelocity().Length();
 						Vector vecVelocity = vecToTarget;
 						VectorNormalize( vecVelocity );
-						SetAbsVelocity( vecVelocity * min(flSpeed,flDistance) );
+						SetAbsVelocity( vecVelocity * MIN(flSpeed,flDistance) );
 					}
 					else
 					*/

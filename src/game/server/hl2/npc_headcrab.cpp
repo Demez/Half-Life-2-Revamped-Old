@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Implements the headcrab, a tiny, jumpy alien parasite.
 //
@@ -234,11 +234,6 @@ void CBaseHeadcrab::Spawn( void )
 	//SetModel( "models/headcrab.mdl" );
 	//m_iHealth			= sk_headcrab_health.GetFloat();
 	
-#ifdef _XBOX
-	// Always fade the corpse
-	AddSpawnFlags( SF_NPC_FADE_CORPSE );
-#endif // _XBOX
-
 	SetHullType(HULL_TINY);
 	SetHullSizeNormal();
 
@@ -260,7 +255,7 @@ void CBaseHeadcrab::Spawn( void )
 	{
 		m_bHidden = true;
 		AddSolidFlags( FSOLID_NOT_SOLID );
-		SetRenderColorA( 0 );
+		SetRenderAlpha( 0 );
 		m_nRenderMode = kRenderTransTexture;
 		AddEffects( EF_NODRAW );
 	}
@@ -421,7 +416,7 @@ bool CBaseHeadcrab::IsFirmlyOnGround()
 		return false;
 
 	trace_t tr;
-	UTIL_TraceLine( GetAbsOrigin(), GetAbsOrigin() - Vector( 0, 0, HEADCRAB_MAX_LEDGE_HEIGHT ), MASK_NPCSOLID, this, GetCollisionGroup(), &tr );
+	UTIL_TraceLine( GetAbsOrigin(), GetAbsOrigin() - Vector( 0, 0, HEADCRAB_MAX_LEDGE_HEIGHT ), GetAITraceMask(), this, GetCollisionGroup(), &tr );
 	return tr.fraction != 1.0;
 }
 
@@ -518,7 +513,7 @@ void CBaseHeadcrab::JumpAttack( bool bRandomJump, const Vector &vecPos, bool bTh
 	Vector vecJumpVel;
 	if ( !bRandomJump )
 	{
-		float gravity = GetCurrentGravity();
+		float gravity = sv_gravity.GetFloat();
 		if ( gravity <= 1 )
 		{
 			gravity = 1;
@@ -599,7 +594,9 @@ void CBaseHeadcrab::JumpAttack( bool bRandomJump, const Vector &vecPos, bool bTh
 //-----------------------------------------------------------------------------
 void CBaseHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 {
-	if ( pEvent->event == AE_HEADCRAB_JUMPATTACK )
+	int nEvent = pEvent->Event();
+
+	if ( nEvent == AE_HEADCRAB_JUMPATTACK )
 	{
 		// Ignore if we're in mid air
 		if ( m_bMidJump )
@@ -631,7 +628,7 @@ void CBaseHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 	
-	if ( pEvent->event == AE_HEADCRAB_CEILING_DETACH )
+	if ( nEvent == AE_HEADCRAB_CEILING_DETACH )
 	{
 		SetMoveType( MOVETYPE_STEP );
 		RemoveFlag( FL_ONGROUND );
@@ -640,7 +637,7 @@ void CBaseHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 		SetAbsVelocity( Vector ( 0, 0, -128 ) );
 		return;
 	}
-	if ( pEvent->event == AE_HEADCRAB_JUMP_TELEGRAPH )
+	if ( nEvent == AE_HEADCRAB_JUMP_TELEGRAPH )
 	{
 		TelegraphSound();
 
@@ -657,7 +654,7 @@ void CBaseHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_HEADCRAB_BURROW_IN )
+	if ( nEvent == AE_HEADCRAB_BURROW_IN )
 	{
 		EmitSound( "NPC_Headcrab.BurrowIn" );
 		CreateDust();
@@ -665,13 +662,13 @@ void CBaseHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_HEADCRAB_BURROW_IN_FINISH )
+	if ( nEvent == AE_HEADCRAB_BURROW_IN_FINISH )
 	{
 		SetBurrowed( true );
 		return;
 	}
 
-	if ( pEvent->event == AE_HEADCRAB_BURROW_OUT )
+	if ( nEvent == AE_HEADCRAB_BURROW_OUT )
 	{
 		Assert( m_bBurrowed );
 		if ( m_bBurrowed )
@@ -902,7 +899,7 @@ void CBaseHeadcrab::RunTask( const Task_t *pTask )
 bool CBaseHeadcrab::HasHeadroom()
 {
 	trace_t tr;
-	UTIL_TraceEntity( this, GetAbsOrigin(), GetAbsOrigin() + Vector( 0, 0, 1 ), MASK_NPCSOLID, this, GetCollisionGroup(), &tr );
+	UTIL_TraceEntity( this, GetAbsOrigin(), GetAbsOrigin() + Vector( 0, 0, 1 ), GetAITraceMask(), this, GetCollisionGroup(), &tr );
 
 #if 0
 	if( tr.fraction == 1.0f )
@@ -1067,15 +1064,15 @@ void CBaseHeadcrab::PrescheduleThink( void )
 	// Are we fading in after being hidden?
 	if ( !m_bHidden && (m_nRenderMode != kRenderNormal) )
 	{
-		int iNewAlpha = MIN( 255, GetRenderColor().a + 120 );
+		int iNewAlpha = MIN( 255, GetRenderAlpha() + 120 );
 		if ( iNewAlpha >= 255 )
 		{
 			m_nRenderMode = kRenderNormal;
-			SetRenderColorA( 0 );
+			SetRenderAlpha( 0 );
 		}
 		else
 		{
-			SetRenderColorA( iNewAlpha );
+			SetRenderAlpha( iNewAlpha );
 		}
 	}
 
@@ -1258,7 +1255,7 @@ void CBaseHeadcrab::JumpFromCanister()
 	StudioFrameAdvanceManual( 0.0 );
 	SetParent( NULL );
 	RemoveFlag( FL_FLY );
-	IncrementInterpolationFrame();
+	AddEffects( EF_NOINTERP );
 
 	GetMotor()->SetIdealYaw( headCrabAngles.y );
 	
@@ -1304,7 +1301,6 @@ void CBaseHeadcrab::JumpFromCanister()
 
 void CBaseHeadcrab::DropFromCeiling( void )
 {
-#ifdef HL2_EPISODIC
 	if ( HL2GameRules()->IsAlyxInDarknessMode() )
 	{
 		if ( IsHangingFromCeiling() )
@@ -1332,7 +1328,6 @@ void CBaseHeadcrab::DropFromCeiling( void )
 			}
 		}
 	}
-#endif // HL2_EPISODIC
 }
 
 //-----------------------------------------------------------------------------
@@ -1633,7 +1628,7 @@ int CBaseHeadcrab::RangeAttack1Conditions( float flDot, float flDist )
 			vEndHullTrace *= 8.0;
 			vEndHullTrace += GetAbsOrigin();
 
-			AI_TraceHull( vStartHullTrace, vEndHullTrace,GetHullMins(), GetHullMaxs(), MASK_NPCSOLID, this, GetCollisionGroup(), &tr );
+			AI_TraceHull( vStartHullTrace, vEndHullTrace,GetHullMins(), GetHullMaxs(), GetAITraceMask(), this, GetCollisionGroup(), &tr );
 
 			if ( tr.m_pEnt != NULL && tr.m_pEnt != GetEnemy() )
 			{
@@ -1871,7 +1866,7 @@ int CBaseHeadcrab::SelectSchedule( void )
 			return SCHED_HEADCRAB_UNHIDE;
 		}
 
-		return m_bBurrowed ? ( int )SCHED_HEADCRAB_BURROW_WAIT : ( int )SCHED_IDLE_STAND;
+		return m_bBurrowed ? SCHED_HEADCRAB_BURROW_WAIT : SCHED_IDLE_STAND;
 	}
 
 	if ( GetSpawnFlags() & SF_HEADCRAB_START_HANGING && IsHangingFromCeiling() == false )
@@ -1881,12 +1876,7 @@ int CBaseHeadcrab::SelectSchedule( void )
 
 	if ( IsHangingFromCeiling() )
 	{
-		bool bIsAlyxInDarknessMode = false;
-#ifdef HL2_EPISODIC
-		bIsAlyxInDarknessMode = HL2GameRules()->IsAlyxInDarknessMode();
-#endif // HL2_EPISODIC
-
-		if ( bIsAlyxInDarknessMode == false && ( HasCondition( COND_CAN_RANGE_ATTACK1 ) || HasCondition( COND_NEW_ENEMY ) ) )
+		if ( HL2GameRules()->IsAlyxInDarknessMode() == false && ( HasCondition( COND_CAN_RANGE_ATTACK1 ) || HasCondition( COND_NEW_ENEMY ) ) )
 			return SCHED_HEADCRAB_CEILING_DROP;
 
 		if ( HasCondition( COND_LIGHT_DAMAGE ) || HasCondition( COND_HEAVY_DAMAGE ) )
@@ -2013,7 +2003,7 @@ int CBaseHeadcrab::SelectFailSchedule( int failedSchedule, int failedTask, AI_Ta
 //			&vecDir - 
 //			*ptr - 
 //-----------------------------------------------------------------------------
-void CBaseHeadcrab::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
+void CBaseHeadcrab::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
 {
 	CTakeDamageInfo	newInfo = info;
 
@@ -2037,7 +2027,7 @@ void CBaseHeadcrab::TraceAttack( const CTakeDamageInfo &info, const Vector &vecD
 		ApplyAbsVelocityImpulse( puntDir );
 	}
 
-	BaseClass::TraceAttack( newInfo, vecDir, ptr, pAccumulator );
+	BaseClass::TraceAttack( newInfo, vecDir, ptr );
 }
 
 
@@ -2116,7 +2106,7 @@ bool CBaseHeadcrab::HandleInteraction(int interactionType, void *data, CBaseComb
 		pEntity->m_NPCState = NPC_STATE_DEAD;
 		return true;
 	}
-	else if (	interactionType ==	g_interactionVortigauntKick
+	else if (	(interactionType ==	g_interactionVortigauntKick)
 				/* || (interactionType ==	g_interactionBullsquidThrow) */
 				)
 	{
@@ -2198,7 +2188,7 @@ bool CBaseHeadcrab::ValidBurrowPoint( const Vector &point )
 	trace_t	tr;
 
 	AI_TraceHull( point, point+Vector(0,0,1), GetHullMins(), GetHullMaxs(), 
-		MASK_NPCSOLID, this, GetCollisionGroup(), &tr );
+		GetAITraceMask(), this, GetCollisionGroup(), &tr );
 
 	// See if we were able to get there
 	if ( ( tr.startsolid ) || ( tr.allsolid ) || ( tr.fraction < 1.0f ) )
@@ -2638,12 +2628,12 @@ void CFastHeadcrab::PrescheduleThink( void )
 			break;
 
 		case HEADCRAB_RUNMODE_ACCELERATE:
-			if( m_flPlaybackRate < HEADCRAB_RUN_MAXSPEED )
+			if( GetPlaybackRate() < HEADCRAB_RUN_MAXSPEED )
 			{
 				m_flPlaybackRate += HEADCRAB_ACCELERATION;
 			}
 
-			if( m_flPlaybackRate >= HEADCRAB_RUN_MAXSPEED )
+			if( GetPlaybackRate() >= HEADCRAB_RUN_MAXSPEED )
 			{
 				m_flPlaybackRate = HEADCRAB_RUN_MAXSPEED;
 				m_iRunMode = HEADCRAB_RUNMODE_FULLSPEED;
@@ -2655,7 +2645,7 @@ void CFastHeadcrab::PrescheduleThink( void )
 		case HEADCRAB_RUNMODE_DECELERATE:
 			m_flPlaybackRate -= HEADCRAB_ACCELERATION;
 
-			if( m_flPlaybackRate <= HEADCRAB_RUN_MINSPEED )
+			if( GetPlaybackRate() <= HEADCRAB_RUN_MINSPEED )
 			{
 				m_flPlaybackRate = HEADCRAB_RUN_MINSPEED;
 
@@ -2825,14 +2815,14 @@ void CFastHeadcrab::StartTask( const Task_t *pTask )
 			if( tr.fraction == 1.0 )
 			{
 				AIMoveTrace_t moveTrace;
-				GetMoveProbe()->MoveLimit( NAV_JUMP, GetAbsOrigin(), tr.endpos, MASK_NPCSOLID, GetEnemy(), &moveTrace );
+				GetMoveProbe()->MoveLimit( NAV_JUMP, GetAbsOrigin(), tr.endpos, GetAITraceMask(), GetEnemy(), &moveTrace );
 
 				// FIXME: Where should this happen?
 				m_vecJumpVel = moveTrace.vJumpVelocity;
 
 				if( !IsMoveBlocked( moveTrace ) )
 				{
-					SetAbsVelocity( m_vecJumpVel );// + 0.5f * Vector(0,0,GetCurrentGravity()) * flInterval;
+					SetAbsVelocity( m_vecJumpVel );// + 0.5f * Vector(0,0,sv_gravity.GetFloat()) * flInterval;
 					SetGravity( UTIL_ScaleForGravity( 1600 ) );
 					SetGroundEntity( NULL );
 					SetNavType( NAV_JUMP );
@@ -3420,7 +3410,9 @@ void CBlackHeadcrab::JumpFlinch( const Vector *pvecDir )
 //-----------------------------------------------------------------------------
 void CBlackHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 {
-	if ( pEvent->event == AE_POISONHEADCRAB_FOOTSTEP )
+	int nEvent = pEvent->Event();
+
+	if ( nEvent == AE_POISONHEADCRAB_FOOTSTEP )
 	{
 		bool walk = ( GetActivity() == ACT_WALK );   // ? 1.0 : 0.6; !!cgreen! old code had bug
 
@@ -3436,7 +3428,7 @@ void CBlackHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_HEADCRAB_JUMP_TELEGRAPH )
+	if ( nEvent == AE_HEADCRAB_JUMP_TELEGRAPH )
 	{
 		EmitSound( "NPC_BlackHeadcrab.Telegraph" );
 
@@ -3453,7 +3445,7 @@ void CBlackHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_POISONHEADCRAB_THREAT_SOUND )
+	if ( nEvent == AE_POISONHEADCRAB_THREAT_SOUND )
 	{
 		EmitSound( "NPC_BlackHeadcrab.Threat" );
 		EmitSound( "NPC_BlackHeadcrab.Alert" );
@@ -3461,7 +3453,7 @@ void CBlackHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_POISONHEADCRAB_FLINCH_HOP )
+	if ( nEvent == AE_POISONHEADCRAB_FLINCH_HOP )
 	{
 		//
 		// Hop in a random direction, then run and hide. If we're already running

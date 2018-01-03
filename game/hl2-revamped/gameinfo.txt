@@ -1,73 +1,53 @@
 "GameInfo"
 {
-	game 		"Half-Life 2: Revamped"
-	title 		"HALF-LIFE'"
-	//title2		"== REVAMPED =="
-	supportsvr	1
+	"game"		"HL2 ASW Engine"			// Game title in Steam
+	"title"		"Half Life 2"			// Change me!
+	"type"		"singleplayer_only"
+	"icon"		"icon"					// Icon in Steam
 
-	type		singleplayer_only
+	"developer"	"Strider[RUS] with help of AndreaZzZ, Aluminum Ken, Levan, Hopeless CatE and many others..."
+	"developer_url"	"https://github.com/stanriders/hl2-asw-port"
 
-	FileSystem
+	//GameData	"halflife2.fgd"
+	SupportsDX8     0
+	
+	"FileSystem"
 	{
-		SteamAppId				243730 // This sets the app ID in Steam. This is the Source SDK Base 2013 Singleplayer
-		
-		//
-		// The code that loads this file automatically does a few things here:
-		//
-		// 1. For each "Game" search path, it adds a "GameBin" path, in <dir>\bin
-		// 2. For each "Game" search path, it adds another "Game" path in front of it with _<langage> at the end.
-		//    For example: c:\hl2\cstrike on a french machine would get a c:\hl2\cstrike_french path added to it.
-		// 3. For the first "Game" search path, it adds a search path called "MOD".
-		// 4. For the first "Game" search path, it adds a search path called "DEFAULT_WRITE_PATH".
-		//
-
-		//
-		// Search paths are relative to the base directory, which is where hl2.exe is found.
-		//
-		// |gameinfo_path| points at the directory where gameinfo.txt is.
-		// We always want to mount that directory relative to gameinfo.txt, so
-		// people can mount stuff in c:\mymod, and the main game resources are in
-		// someplace like c:\program files\valve\steam\steamapps\half-life 2.
-		//
-		SearchPaths
+		"SteamAppId"		"630"			// Alien Swarm
+		"SearchPaths"
 		{
-			// First, mount all user customizations.  This will search for VPKs and subfolders
-			// and mount them in alphabetical order.  The easiest way to distribute a mod is to
-			// pack up the custom content into a VPK.  To "install" a mod, just drop it in this
-			// folder.
-			//
-			// Note that this folder is scanned only when the game is booted.
-			game+mod			|gameinfo_path|custom/*
+			"Game"	"|gameinfo_path|."
 
-			// Now search loose files.  We'll set the directory containing the gameinfo.txt file
-			// as the first "mod" search path (after any user customizations).  This is also the one
-			// that's used when writing to the "mod" path.
-			game+mod+mod_write+default_write_path		|gameinfo_path|.
-			gamebin				|gameinfo_path|bin
+			// Default ("./") path for ASW is "/steamapps/common/Alien Swarm", so we can easily go up and mount SFM content
+			
+			//i just mount the extracted vpk2 files from a different folder
+			//"Game" "D:\sourceengine\sourcegamefiles\Half Life 2 Episode 2"
+			//"Game" "D:\sourceengine\sourcegamefiles\Half Life 2 Episode 1"
+			//"Game" "D:\sourceengine\sourcegamefiles\Half Life 2"
+			//"Game" "D:\sourceengine\sourcegamefiles\Files\half life 2 with episodes"
+			//"Game" "D:\sourceengine\sourcegamefiles\Files\hl2sounds"
 
-			// We search VPK files before ordinary folders, because most files will be found in
-			// VPK and we can avoid making thousands of file system calls to attempt to open files
-			// in folders where they don't exist.  (Searching a VPK is much faster than making an operating
-			// system call.)
-			game_lv				hl2/hl2_lv.vpk
-			game				|all_source_engine_paths|hl2/hl2_english.vpk
-			game				|all_source_engine_paths|hl2/hl2_pak.vpk
-			game				|all_source_engine_paths|hl2/hl2_textures.vpk
-			game				|all_source_engine_paths|hl2/hl2_sound_vo_english.vpk
-			game				|all_source_engine_paths|hl2/hl2_sound_misc.vpk
-			game				|all_source_engine_paths|hl2/hl2_misc.vpk
-			platform			|all_source_engine_paths|platform/platform_misc.vpk
+			// TODO: Better solution if possible. MUST BE ON THE SAME HARD DRIVE AS REACTIVE DROP
+			"Game"	"../SourceFilmmaker/game/hl2"			// This is workaround for hl2 and episodic content mounting
 
-			// Add the HL2 directory as a game search path.  This is also where where writes
-			// to the "game" path go.
-			game+game_write		hl2
+			"Game"	"../Half-Life 2/ep2"				// This is workaround for ep2 maps mounting
+			"Game"	"../Half-Life 2/episodic"			// This is workaround for ep1 maps mounting
+			"Game"	"../Half-Life 2/hl2"				// This is workaround for hl2 maps mounting
+			
+			//Only if you have Reactive Drop and SFM installed on another hard drive
+			"Game"	"C:\Program Files (x86)\Steam\steamapps\common\Half-Life 2/ep2"			// This is workaround for ep2 maps mounting
+			"Game"	"C:\Program Files (x86)\Steam\steamapps\common\Half-Life 2/episodic"	// This is workaround for ep1 maps mounting
+			"Game"	"C:\Program Files (x86)\Steam\steamapps\common\Half-Life 2/hl2"			// This is workaround for hl2 maps mounting
 
-			// Where the game's binaries are
-			gamebin				|gameinfo_path|bin
+			// Just let it be. Maybe it'll help. //This only seems to mount stuff in the Reactive Drop folder, which is not what i want
+			//"Game"	"|all_source_engine_paths|ep2"			// Episode 2 Folder
+			//"Game"	"|all_source_engine_paths|episodic"		// Episode 1 Folder
+			//"Game"	"|all_source_engine_paths|hl2"			// Half-Life 2 Folder
 
-			// Last, mount in shared HL2 loose files
-			game				|all_source_engine_paths|hl2
-			platform			|all_source_engine_paths|platform
+			// Base ASW stuff.
+			"Game"	"C:\Program Files (x86)\Steam\steamapps\common\Alien Swarm\swarm_base"					// ASW Base Folder
+
+			"Game"	"platform"
 		}
 	}
 }

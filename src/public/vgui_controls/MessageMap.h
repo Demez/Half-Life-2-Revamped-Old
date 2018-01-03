@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -12,15 +12,21 @@
 #pragma once
 #endif
 
-#include "tier1/utlvector.h"
+//#include "tier1/utlvector.h"
+#include "dmxloader/dmxelement.h"
 
 // more flexible than default pointers to members code required for casting member function pointers
-//#pragma pointers_to_members( full_generality, virtual_inheritance )
+#pragma pointers_to_members( full_generality, virtual_inheritance )
 
 namespace vgui
 {
 
 ////////////// MESSAGEMAP DEFINITIONS //////////////
+
+
+#ifndef ARRAYSIZE
+#define ARRAYSIZE(p)	(sizeof(p)/sizeof(p[0]))
+#endif
 
 
 //-----------------------------------------------------------------------------
@@ -33,7 +39,7 @@ enum DataType_t
 	DATATYPE_CONSTCHARPTR,
 	DATATYPE_INT,
 	DATATYPE_FLOAT,
-	DATATYPE_PTR,	
+	DATATYPE_PTR,
 	DATATYPE_BOOL,
 	DATATYPE_KEYVALUES,
 	DATATYPE_CONSTWCHARPTR,
@@ -41,11 +47,7 @@ enum DataType_t
 	DATATYPE_HANDLE,  // It's an int, really
 };
 
-#ifdef WIN32
-class __virtual_inheritance Panel;
-#else
 class Panel;
-#endif
 typedef unsigned int VPANEL;
 
 typedef void (Panel::*MessageFunc_t)(void);
@@ -284,6 +286,7 @@ PanelMessageMap *FindOrAddPanelMessageMap( char const *className );
 
 // if more parameters are needed, just use MAP_MESSAGE_PARAMS() and pass the keyvalue set into the function
 
+
 //-----------------------------------------------------------------------------
 // Purpose: stores the list of objects in the hierarchy
 //			used to iterate through an object's message maps
@@ -334,6 +337,15 @@ public:
 
 	static vgui::Panel *InstancePanel( char const *className );
 	static void GetFactoryNames( CUtlVector< char const * >& list );
+
+	static CDmxElement *CreatePanelDmxElement( vgui::Panel *pPanel );
+	static Panel* UnserializeDmxElementPanel( CDmxElement *pElement );
+
+	// DMX serializer fxns
+	static bool Serialize( CUtlBuffer &buf, vgui::Panel *pPanel );
+	static bool Unserialize( Panel **ppPanel, CUtlBuffer &buf, const char *pFileName = NULL );
+
+
 private:
 
 	static bool HasFactory( char const *className );

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -8,9 +8,9 @@
 #include "c_ai_basenpc.h"
 #include "iviewrender_beams.h"
 #include "beam_shared.h"
-#include "materialsystem/imaterial.h"
+#include "materialsystem/IMaterial.h"
 #include "model_types.h"
-#include "clienteffectprecachesystem.h"
+#include "ClientEffectPrecacheSystem.h"
 #include "beamdraw.h"
 
 class C_RollerMine : public C_AI_BaseNPC
@@ -21,14 +21,14 @@ public:
 
 			C_RollerMine( void ) {}
 
-	int		DrawModel( int flags );
+	int		DrawModel( int flags, const RenderableInstance_t &instance );
 
 	RenderGroup_t GetRenderGroup( void ) 
 	{	
 		if ( m_bIsOpen )
-			return RENDER_GROUP_TRANSLUCENT_ENTITY;	
+			return RENDER_GROUP_TRANSLUCENT;	
 		else
-			return RENDER_GROUP_OPAQUE_ENTITY;
+			return RENDER_GROUP_OPAQUE;
 	}
 
 private:
@@ -54,7 +54,7 @@ END_RECV_TABLE()
 // Input  : flags - 
 // Output : int
 //-----------------------------------------------------------------------------
-int C_RollerMine::DrawModel( int flags )
+int C_RollerMine::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	if ( m_bIsOpen && m_flActiveTime <= gpGlobals->curtime )
 	{
@@ -170,5 +170,5 @@ int C_RollerMine::DrawModel( int flags )
 		}
 	}
 
-	return BaseClass::DrawModel( flags );
+	return BaseClass::DrawModel( flags, instance );
 }

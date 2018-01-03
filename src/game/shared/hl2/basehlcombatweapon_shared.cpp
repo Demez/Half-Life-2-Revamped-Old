@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -229,19 +229,15 @@ void CBaseHLCombatWeapon::WeaponIdle( void )
 float	g_lateralBob;
 float	g_verticalBob;
 
-//#if defined( CLIENT_DLL ) && ( !defined( HL2MP ) && !defined( PORTAL ) )
+#if defined( CLIENT_DLL ) && ( !defined( HL2MP ) && !defined( PORTAL ) )
 
-//#define	HL2_BOB_CYCLE_MIN	1.0f
-#define	HL2_BOB_CYCLE_MIN	cl_bobcycle_min.GetFloat()
-//#define	HL2_BOB_CYCLE_MAX	0.45f
-#define	HL2_BOB_CYCLE_MAX	cl_bobcycle_max.GetFloat()
-//#define	HL2_BOB			0.002f
-#define	HL2_BOB			cl_bob.GetFloat()
-//#define	HL2_BOB_UP		0.5f
-#define	HL2_BOB_UP		cl_bobup.GetFloat()
+#define	HL2_BOB_CYCLE_MIN	1.0f
+#define	HL2_BOB_CYCLE_MAX	0.45f
+#define	HL2_BOB			0.002f
+#define	HL2_BOB_UP		0.5f
 
-static ConVar	cl_bobcycle_min("cl_bobcycle_min", "1.0");
-static ConVar	cl_bobcycle_max( "cl_bobcycle_max","0.45" );
+
+static ConVar	cl_bobcycle( "cl_bobcycle","0.8" );
 static ConVar	cl_bob( "cl_bob","0.002" );
 static ConVar	cl_bobup( "cl_bobup","0.5" );
 
@@ -257,7 +253,6 @@ static ConVar	v_ipitch_level( "v_ipitch_level", "0.3"/*, FCVAR_UNREGISTERED*/ );
 // Purpose: 
 // Output : float
 //-----------------------------------------------------------------------------
-/*
 float CBaseHLCombatWeapon::CalcViewmodelBob( void )
 {
 	static	float bobtime;
@@ -333,14 +328,6 @@ float CBaseHLCombatWeapon::CalcViewmodelBob( void )
 //			&angles - 
 //			viewmodelindex - 
 //-----------------------------------------------------------------------------
-
-static ConVar viewmodelbob_vertical_roll("viewmodelbob_vertical_roll", "0.5");
-static ConVar viewmodelbob_vertical_pitch("viewmodelbob_vertical_pitch", "0.4");
-static ConVar viewmodelbob_zaxis("viewmodelbob_zaxis", "0.1");
-static ConVar viewmodelbob_lateral_yaw("viewmodelbob_lateral_yaw", "0.3");
-static ConVar viewmodelbob_lateral("viewmodelbob_lateral", "0.8");
-static ConVar viewmodelbob_scale("viewmodelbob_scale", "0.1");
-
 void CBaseHLCombatWeapon::AddViewmodelBob( CBaseViewModel *viewmodel, Vector &origin, QAngle &angles )
 {
 	Vector	forward, right;
@@ -349,152 +336,20 @@ void CBaseHLCombatWeapon::AddViewmodelBob( CBaseViewModel *viewmodel, Vector &or
 	CalcViewmodelBob();
 
 	// Apply bob, but scaled down to 40%
-	VectorMA(origin, g_verticalBob * 0.1f, forward, origin); //0.1f
-	//VectorMA(origin, g_verticalBob * viewmodelbob_scale.GetFloat(), forward, origin);
+	VectorMA( origin, g_verticalBob * 0.1f, forward, origin );
 	
 	// Z bob a bit more
 	origin[2] += g_verticalBob * 0.1f;
-	//origin[2] += g_verticalBob * viewmodelbob_zaxis.GetFloat();
 	
 	// bob the angles
-	angles[ ROLL ]	+= g_verticalBob * 0.5f; //0.5f
-	//angles[ROLL] += g_verticalBob * viewmodelbob_vertical_roll.GetFloat();
-	angles[ PITCH ]	-= g_verticalBob * 0.4f; //0.4f
-	//angles[PITCH] -= g_verticalBob * viewmodelbob_vertical_pitch.GetFloat();
+	angles[ ROLL ]	+= g_verticalBob * 0.5f;
+	angles[ PITCH ]	-= g_verticalBob * 0.4f;
 
-	angles[ YAW ]	-= g_lateralBob  * 0.3f; //0.3f
-	//angles[YAW] -= g_lateralBob  * viewmodelbob_lateral_yaw.GetFloat();
+	angles[ YAW ]	-= g_lateralBob  * 0.3f;
 
-	VectorMA( origin, g_lateralBob * 0.8f, right, origin ); //0.8f
-	//VectorMA(origin, g_lateralBob * viewmodelbob_scale.GetFloat(), right, origin); //0.8f
-}
-*/
-
-float CBaseHLCombatWeapon::CalcViewmodelBob(void)
-{
-	static	float bobtime;
-	static	float lastbobtime;
-	float	cycle;
-
-	CBasePlayer *player = ToBasePlayer(GetOwner());
-	//Assert( player );
-
-	//NOTENOTE: For now, let this cycle continue when in the air, because it snaps badly without it
-
-	if ((!gpGlobals->frametime) || (player == NULL))
-	{
-		//NOTENOTE: We don't use this return value in our case (need to restructure the calculation function setup!)
-		return 0.0f;// just use old value
-	}
-
-	//Find the speed of the player
-	float speed = player->GetLocalVelocity().Length2D();
-
-	//FIXME: This maximum speed value must come from the server.
-	//		 MaxSpeed() is not sufficient for dealing with sprinting - jdw
-
-	speed = clamp(speed, -500, 500);
-
-	float bob_offset = RemapVal(speed, 0, 500, 0.0f, 1.0f);
-
-	bobtime += (gpGlobals->curtime - lastbobtime) * bob_offset;
-	lastbobtime = gpGlobals->curtime;
-
-	//Calculate the vertical bob
-	cycle = bobtime - (int)(bobtime / HL2_BOB_CYCLE_MAX)*HL2_BOB_CYCLE_MAX;
-	cycle /= HL2_BOB_CYCLE_MAX;
-
-	if (cycle < HL2_BOB_UP)
-	{
-		cycle = M_PI * cycle / HL2_BOB_UP;
-	}
-	else
-	{
-		cycle = M_PI + M_PI*(cycle - HL2_BOB_UP) / (1.0 - HL2_BOB_UP);
-	}
-
-	static ConVar viewmodelup_scale("viewmodelup_scale", "0.1");
-	static ConVar viewmodelup_cycle("viewmodelup_cycle", "0.05");
-	static ConVar viewmodelup_clampdown("viewmodelup_clampdown", "-5.0");
-	static ConVar viewmodelup_clampup("viewmodelup_clampup", "5.0");
-
-	//g_verticalBob = speed*0.1f;
-	g_verticalBob = speed*viewmodelup_scale.GetFloat();
-	//g_verticalBob = g_verticalBob*0.10 + g_verticalBob*0.10*sin(cycle);
-	g_verticalBob = g_verticalBob*viewmodelup_cycle.GetFloat() + g_verticalBob*viewmodelup_cycle.GetFloat()*sin(cycle);
-	//g_verticalBob = clamp(g_verticalBob, -10.0f, 10.0f);
-	g_verticalBob = clamp(g_verticalBob, viewmodelup_clampdown.GetFloat(), viewmodelup_clampup.GetFloat());
-
-	//Calculate the lateral bob
-	cycle = bobtime - (int)(bobtime / HL2_BOB_CYCLE_MAX * 2)*HL2_BOB_CYCLE_MAX * 2;
-	cycle /= HL2_BOB_CYCLE_MAX * 2;
-
-	if (cycle < HL2_BOB_UP)
-	{
-		cycle = M_PI * cycle / HL2_BOB_UP;
-	}
-	else
-	{
-		cycle = M_PI + M_PI*(cycle - HL2_BOB_UP) / (1.0 - HL2_BOB_UP);
-	}
-
-	static ConVar viewmodelside_scale("viewmodellat_scale", "0.1");
-	static ConVar viewmodelside_cycle("viewmodelside_cycle", "0.05");
-	static ConVar viewmodelside_clampdown("viewmodelside_clampdown", "-5.0");
-	static ConVar viewmodelside_clampup("viewmodelside_clampup", "5.0");
-
-	//g_lateralBob = speed*0.1f;
-	g_lateralBob = speed*viewmodelside_scale.GetFloat();
-	//g_lateralBob = g_lateralBob*0.10 + g_lateralBob*0.10*sin(cycle);
-	g_lateralBob = g_lateralBob*viewmodelside_cycle.GetFloat() + g_lateralBob*viewmodelside_cycle.GetFloat()*sin(cycle);
-	//g_lateralBob = clamp(g_lateralBob, -10.0f, 10.0f);
-	g_lateralBob = clamp(g_lateralBob, viewmodelside_clampdown.GetFloat(), viewmodelside_clampup.GetFloat());
-	//NOTENOTE: We don't use this return value in our case (need to restructure the calculation function setup!)
-	return 0.0f;
+	VectorMA( origin, g_lateralBob * 0.8f, right, origin );
 }
 
-//-----------------------------------------------------------------------------
-// Purpose: 
-// Input  : &origin - 
-//			&angles - 
-//			viewmodelindex - 
-//-----------------------------------------------------------------------------
-static ConVar viewmodelbob_scale("viewmodelbob_scale", "0.0");
-static ConVar viewmodelbob_zaxis("viewmodelbob_zaxis", "0.1");
-static ConVar viewmodelbob_vertical_roll("viewmodelbob_vertical_roll", "0.5");
-static ConVar viewmodelbob_vertical_pitch("viewmodelbob_vertical_pitch", "0.4");
-static ConVar viewmodelbob_lateral_yaw("viewmodelbob_lateral_yaw", "0.2");
-static ConVar viewmodelbob_lateral_yaw2("viewmodelbob_lateral_yaw2", "0.2");
-
-void CBaseHLCombatWeapon::AddViewmodelBob(CBaseViewModel *viewmodel, Vector &origin, QAngle &angles)
-{
-	Vector	forward, right;
-	AngleVectors(angles, &forward, &right, NULL);
-
-	CalcViewmodelBob();
-
-	// Apply bob, but scaled down to 40%
-	//VectorMA(origin, g_verticalBob * 0.0f, forward, origin);
-	VectorMA(origin, g_verticalBob * viewmodelbob_scale.GetFloat(), forward, origin);
-
-	// Z bob a bit more
-	//origin[2] += g_verticalBob * 0.1f;
-	origin[2] += g_verticalBob * viewmodelbob_zaxis.GetFloat();
-
-	// bob the angles
-	//angles[ROLL] += g_verticalBob * -0.2f; //right and left
-	//angles[PITCH] -= g_verticalBob * -0.2f; //up and down
-	angles[ROLL] += g_verticalBob *viewmodelbob_vertical_roll.GetFloat(); //right and left
-	angles[PITCH] -= g_verticalBob *viewmodelbob_vertical_pitch.GetFloat(); //up and down
-
-	//angles[YAW] -= g_lateralBob  * 0.2f;
-	angles[YAW] -= g_lateralBob  *viewmodelbob_lateral_yaw.GetFloat();
-
-	//VectorMA(origin, g_lateralBob * 0.2f, right, origin);
-	VectorMA(origin, g_lateralBob *viewmodelbob_lateral_yaw2.GetFloat(), right, origin);
-}
-
-/*
 //-----------------------------------------------------------------------------
 Vector CBaseHLCombatWeapon::GetBulletSpread( WeaponProficiency_t proficiency )
 {
@@ -506,12 +361,14 @@ float CBaseHLCombatWeapon::GetSpreadBias( WeaponProficiency_t proficiency )
 {
 	return BaseClass::GetSpreadBias( proficiency );
 }
-
 //-----------------------------------------------------------------------------
+
 const WeaponProficiencyInfo_t *CBaseHLCombatWeapon::GetProficiencyValues()
 {
 	return NULL;
 }
+
+#else
 
 // Server stubs
 float CBaseHLCombatWeapon::CalcViewmodelBob( void )
@@ -527,9 +384,8 @@ float CBaseHLCombatWeapon::CalcViewmodelBob( void )
 //-----------------------------------------------------------------------------
 void CBaseHLCombatWeapon::AddViewmodelBob( CBaseViewModel *viewmodel, Vector &origin, QAngle &angles )
 {
-
 }
-*/
+
 
 //-----------------------------------------------------------------------------
 Vector CBaseHLCombatWeapon::GetBulletSpread( WeaponProficiency_t proficiency )
@@ -572,4 +428,4 @@ const WeaponProficiencyInfo_t *CBaseHLCombatWeapon::GetDefaultProficiencyValues(
 	return g_BaseWeaponProficiencyTable;
 }
 
-//#endif
+#endif

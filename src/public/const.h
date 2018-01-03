@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -20,21 +20,25 @@
 
 // the message a server sends when a clients steam login is expired
 #define INVALID_STEAM_TICKET "Invalid STEAM UserID Ticket\n"
+#define INVALID_STEAM_LOGON "No Steam logon\n"
 #define INVALID_STEAM_VACBANSTATE "VAC banned from secure server\n"
 #define INVALID_STEAM_LOGGED_IN_ELSEWHERE "This Steam account is being used in another location\n"
-#define INVALID_STEAM_LOGON_NOT_CONNECTED "Client not connected to Steam\n"
-#define INVALID_STEAM_LOGON_TICKET_CANCELED "Client left game (Steam auth ticket has been canceled)\n"
-
-#define CLIENTNAME_TIMED_OUT "%s timed out"
 
 // This is the default, see shareddefs.h for mod-specific value, which can override this
-#define DEFAULT_TICK_INTERVAL	(0.015)				// 15 msec is the default
+#define DEFAULT_TICK_INTERVAL	(1.0f / 60.0f)				// 16.666667 msec is the default
 #define MINIMUM_TICK_INTERVAL   (0.001)
 #define MAXIMUM_TICK_INTERVAL	(0.1)
 
 // This is the max # of players the engine can handle
-#define ABSOLUTE_PLAYER_LIMIT 255  // not 256, so we can send the limit as a byte 
+// Note, must be power of 2
+#define ABSOLUTE_PLAYER_LIMIT 64
 #define ABSOLUTE_PLAYER_LIMIT_DW	( (ABSOLUTE_PLAYER_LIMIT/32) + 1 )
+
+#if ABSOLUTE_PLAYER_LIMIT > 32
+#define CPlayerBitVec CBitVec<ABSOLUTE_PLAYER_LIMIT>
+#else
+#define CPlayerBitVec CDWordBitVec
+#endif
 
 // a player name may have 31 chars + 0 on the PC.
 // the 360 only allows 15 char + 0, but stick with the larger PC size for cross-platform communication
@@ -51,7 +55,7 @@
 
 // BUGBUG: Reconcile with or derive this from the engine's internal definition!
 // FIXME: I added an extra bit because I needed to make it signed
-#define SP_MODEL_INDEX_BITS			13
+#define SP_MODEL_INDEX_BITS			11
 
 // How many bits to use to encode an edict.
 #define	MAX_EDICT_BITS				11			// # of bits needed to represent max edicts
@@ -66,12 +70,13 @@
 #define SIGNED_GUID_LEN 32 // Hashed CD Key (32 hex alphabetic chars + 0 terminator )
 
 // Used for networking ehandles.
-#define NUM_ENT_ENTRY_BITS		(MAX_EDICT_BITS + 1)
+#define NUM_ENT_ENTRY_BITS		(MAX_EDICT_BITS + 2)
 #define NUM_ENT_ENTRIES			(1 << NUM_ENT_ENTRY_BITS)
-#define ENT_ENTRY_MASK			(NUM_ENT_ENTRIES - 1)
 #define INVALID_EHANDLE_INDEX	0xFFFFFFFF
 
-#define NUM_SERIAL_NUM_BITS		(32 - NUM_ENT_ENTRY_BITS)
+#define NUM_SERIAL_NUM_BITS		16 // (32 - NUM_ENT_ENTRY_BITS)
+#define NUM_SERIAL_NUM_SHIFT_BITS (32 - NUM_SERIAL_NUM_BITS)
+#define ENT_ENTRY_MASK			(( 1 << NUM_SERIAL_NUM_BITS) - 1)
 
 
 // Networked ehandles use less bits to encode the serial number.
@@ -88,7 +93,7 @@
 
 // a client can have up to 4 customization files (logo, sounds, models, txt).
 #define MAX_CUSTOM_FILES		4		// max 4 files
-#define MAX_CUSTOM_FILE_SIZE	524288	// Half a megabyte
+#define MAX_CUSTOM_FILE_SIZE	131072	
 
 //
 // Constants shared by the engine and dlls
@@ -97,8 +102,6 @@
 
 // CBaseEntity::m_fFlags
 // PLAYER SPECIFIC FLAGS FIRST BECAUSE WE USE ONLY A FEW BITS OF NETWORK PRECISION
-// This top block is for singleplayer games only....no HL2:DM (which defines HL2_DLL)
-#if !defined( HL2MP ) && ( defined( PORTAL ) || defined( HL2_EPISODIC ) || defined ( HL2_DLL ) || defined( HL2_LOSTCOAST ) )
 #define	FL_ONGROUND				(1<<0)	// At rest / on the ground
 #define FL_DUCKING				(1<<1)	// Player flag -- Player is fully crouched
 #define	FL_WATERJUMP			(1<<2)	// player jumping out of water
@@ -108,12 +111,12 @@
 #define FL_ATCONTROLS			(1<<6) // Player can't move, but keeps key inputs for controlling another entity
 #define	FL_CLIENT				(1<<7)	// Is a player
 #define FL_FAKECLIENT			(1<<8)	// Fake client, simulated server side; don't send network messages to them
-// NON-PLAYER SPECIFIC (i.e., not used by GameMovement or the client .dll ) -- Can still be applied to players, though
 #define	FL_INWATER				(1<<9)	// In water
 
 // NOTE if you move things up, make sure to change this value
 #define PLAYER_FLAG_BITS		10
 
+// NON-PLAYER SPECIFIC (i.e., not used by GameMovement or the client .dll ) -- Can still be applied to players, though
 #define	FL_FLY					(1<<10)	// Changes the SV_Movestep() behavior to not need to be on ground
 #define	FL_SWIM					(1<<11)	// Changes the SV_Movestep() behavior to not need to be on ground (but stay in water)
 #define	FL_CONVEYOR				(1<<12)
@@ -135,49 +138,7 @@
 #define FL_DISSOLVING			(1<<28) // We're dissolving!
 #define FL_TRANSRAGDOLL			(1<<29) // In the process of turning into a client side ragdoll.
 #define FL_UNBLOCKABLE_BY_PLAYER (1<<30) // pusher that can't be blocked by the player
-#else
-#define	FL_ONGROUND				(1<<0)	// At rest / on the ground
-#define FL_DUCKING				(1<<1)	// Player flag -- Player is fully crouched
-#define FL_ANIMDUCKING			(1<<2)	// Player flag -- Player is in the process of crouching or uncrouching but could be in transition
-// examples:                                   Fully ducked:  FL_DUCKING &  FL_ANIMDUCKING
-//           Previously fully ducked, unducking in progress:  FL_DUCKING & !FL_ANIMDUCKING
-//                                           Fully unducked: !FL_DUCKING & !FL_ANIMDUCKING
-//           Previously fully unducked, ducking in progress: !FL_DUCKING &  FL_ANIMDUCKING
-#define	FL_WATERJUMP			(1<<3)	// player jumping out of water
-#define FL_ONTRAIN				(1<<4) // Player is _controlling_ a train, so movement commands should be ignored on client during prediction.
-#define FL_INRAIN				(1<<5)	// Indicates the entity is standing in rain
-#define FL_FROZEN				(1<<6) // Player is frozen for 3rd person camera
-#define FL_ATCONTROLS			(1<<7) // Player can't move, but keeps key inputs for controlling another entity
-#define	FL_CLIENT				(1<<8)	// Is a player
-#define FL_FAKECLIENT			(1<<9)	// Fake client, simulated server side; don't send network messages to them
-// NON-PLAYER SPECIFIC (i.e., not used by GameMovement or the client .dll ) -- Can still be applied to players, though
-#define	FL_INWATER				(1<<10)	// In water
-
-// NOTE if you move things up, make sure to change this value
-#define PLAYER_FLAG_BITS		11
-
-#define	FL_FLY					(1<<11)	// Changes the SV_Movestep() behavior to not need to be on ground
-#define	FL_SWIM					(1<<12)	// Changes the SV_Movestep() behavior to not need to be on ground (but stay in water)
-#define	FL_CONVEYOR				(1<<13)
-#define	FL_NPC					(1<<14)
-#define	FL_GODMODE				(1<<15)
-#define	FL_NOTARGET				(1<<16)
-#define	FL_AIMTARGET			(1<<17)	// set if the crosshair needs to aim onto the entity
-#define	FL_PARTIALGROUND		(1<<18)	// not all corners are valid
-#define FL_STATICPROP			(1<<19)	// Eetsa static prop!		
-#define FL_GRAPHED				(1<<20) // worldgraph has this ent listed as something that blocks a connection
-#define FL_GRENADE				(1<<21)
-#define FL_STEPMOVEMENT			(1<<22)	// Changes the SV_Movestep() behavior to not do any processing
-#define FL_DONTTOUCH			(1<<23)	// Doesn't generate touch functions, generates Untouch() for anything it was touching when this flag was set
-#define FL_BASEVELOCITY			(1<<24)	// Base velocity has been applied this frame (used to convert base velocity into momentum)
-#define FL_WORLDBRUSH			(1<<25)	// Not moveable/removeable brush entity (really part of the world, but represented as an entity for transparency or something)
-#define FL_OBJECT				(1<<26) // Terrible name. This is an object that NPCs should see. Missiles, for example.
-#define FL_KILLME				(1<<27)	// This entity is marked for death -- will be freed by game DLL
-#define FL_ONFIRE				(1<<28)	// You know...
-#define FL_DISSOLVING			(1<<29) // We're dissolving!
-#define FL_TRANSRAGDOLL			(1<<30) // In the process of turning into a client side ragdoll.
-#define FL_UNBLOCKABLE_BY_PLAYER (1<<31) // pusher that can't be blocked by the player
-#endif
+#define FL_FREEZING				(1<<31) // We're becoming frozen!
 
 // edict->movetype values
 enum MoveType_t
@@ -249,8 +210,10 @@ enum SolidFlags_t
 	FSOLID_USE_TRIGGER_BOUNDS	= 0x0080,	// Uses a special trigger bounds separate from the normal OBB
 	FSOLID_ROOT_PARENT_ALIGNED	= 0x0100,	// Collisions are defined in root parent's local coordinate space
 	FSOLID_TRIGGER_TOUCH_DEBRIS	= 0x0200,	// This trigger will touch debris objects
+	FSOLID_TRIGGER_TOUCH_PLAYER	= 0x0400,	// This trigger will touch only players
+	FSOLID_NOT_MOVEABLE			= 0x0800,	// Assume this object will not move
 
-	FSOLID_MAX_BITS	= 10
+	FSOLID_MAX_BITS	= 12
 };
 
 //-----------------------------------------------------------------------------
@@ -363,26 +326,24 @@ enum RenderFx_t
 	kRenderFxPulseFast, 
 	kRenderFxPulseSlowWide, 
 	kRenderFxPulseFastWide, 
+
 	kRenderFxFadeSlow, 
 	kRenderFxFadeFast, 
 	kRenderFxSolidSlow, 
 	kRenderFxSolidFast, 	   
 	kRenderFxStrobeSlow, 
+
 	kRenderFxStrobeFast, 
 	kRenderFxStrobeFaster, 
 	kRenderFxFlickerSlow, 
 	kRenderFxFlickerFast,
 	kRenderFxNoDissipation,
-	kRenderFxDistort,			// Distort/scale/translate flicker
-	kRenderFxHologram,			// kRenderFxDistort + distance fade
-	kRenderFxExplode,			// Scale up really big!
-	kRenderFxGlowShell,			// Glowing Shell
-	kRenderFxClampMinScale,		// Keep this sprite from getting very small (SPRITES only!)
-	kRenderFxEnvRain,			// for environmental rendermode, make rain
-	kRenderFxEnvSnow,			//  "        "            "    , make snow
-	kRenderFxSpotlight,			// TEST CODE for experimental spotlight
-	kRenderFxRagdoll,			// HACKHACK: TEST CODE for signalling death of a ragdoll character
+
+	kRenderFxFadeOut,
+	kRenderFxFadeIn,
 	kRenderFxPulseFastWider,
+	kRenderFxGlowShell,			// Glowing Shell
+
 	kRenderFxMax
 };
 
@@ -410,6 +371,11 @@ enum Collision_Group_t
 
 	COLLISION_GROUP_NPC_ACTOR,		// Used so NPCs in scripts ignore the player.
 	COLLISION_GROUP_NPC_SCRIPTED,	// USed for NPCs in scripts that should not collide with each other
+	COLLISION_GROUP_PZ_CLIP,
+
+
+
+	COLLISION_GROUP_DEBRIS_BLOCK_PROJECTILE, // Only collides with bullets
 
 	LAST_SHARED_COLLISION_GROUP
 };
@@ -418,12 +384,25 @@ enum Collision_Group_t
 
 #define SOUND_NORMAL_CLIP_DIST	1000.0f
 
+//-----------------------------------------------------------------------------
+// Base light indices to avoid index collision
+//-----------------------------------------------------------------------------
+
+enum
+{
+	LIGHT_INDEX_TE_DYNAMIC = 0x10000000,
+	LIGHT_INDEX_PLAYER_BRIGHT = 0x20000000,
+	LIGHT_INDEX_MUZZLEFLASH = 0x40000000,
+	LIGHT_INDEX_LOW_PRIORITY = 0x64000000,
+};
+
 // How many networked area portals do we allow?
 #define MAX_AREA_STATE_BYTES		32
 #define MAX_AREA_PORTAL_STATE_BYTES 24
 
 // user message max payload size (note, this value is used by the engine, so MODs cannot change it)
-#define MAX_USER_MSG_DATA 255
+#define MAX_USER_MSG_BITS 12
+#define MAX_USER_MSG_DATA ( ( 1 << ( MAX_USER_MSG_BITS - 3 ) ) - 1 )
 #define MAX_ENTITY_MSG_DATA 255
 
 #define SOURCE_MT
@@ -433,6 +412,17 @@ typedef CThreadMutex CSourceMutex;
 #else
 class CThreadNullMutex;
 typedef CThreadNullMutex CSourceMutex;
+#endif
+
+#if defined( CLIENT_DLL )
+#define IsServerDll() false
+#define IsClientDll() true
+#elif defined( GAME_DLL )
+#define IsServerDll() true
+#define IsClientDll() false
+#else
+#define IsServerDll() false
+#define IsClientDll() false
 #endif
 
 #endif

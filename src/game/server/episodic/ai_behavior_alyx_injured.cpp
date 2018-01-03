@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: FIXME: This will ultimately become a more generic implementation
 //
@@ -71,7 +71,7 @@ void CAI_BehaviorAlyxInjured::PopulateActivityMap( void )
 		// Walks
 		{ ACT_WALK,					ACT_WALK_HURT },
 		{ ACT_WALK_AIM,				ACT_WALK_HURT },
-		{ ACT_WALK_CROUCH,			ACT_WALK_HURT },
+		{ ACT_WALK_CROUCH,			ACT_WALK_HURT }, 
 		{ ACT_WALK_CROUCH_AIM,		ACT_WALK_HURT },
 		{ ACT_WALK_RELAXED,			ACT_WALK_HURT },
 		{ ACT_WALK_STIMULATED,		ACT_WALK_HURT },

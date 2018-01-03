@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -9,9 +9,9 @@
 #include "cbase.h"
 #include "itextmessage.h"
 #include <vgui_controls/Panel.h>
-#include <vgui/IVGui.h>
+#include <vgui/IVgui.h>
 #include <vgui/ILocalize.h>
-#include "VGuiMatSurface/IMatSystemSurface.h"
+#include "VguiMatSurface/IMatSystemSurface.h"
 #include <vgui_controls/Controls.h>
 #include <vgui/ISurface.h>
 #include "hud.h"

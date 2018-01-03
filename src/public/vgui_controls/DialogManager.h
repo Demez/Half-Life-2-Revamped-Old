@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -12,7 +12,7 @@
 #pragma once
 #endif
 
-#include <utllinkedlist.h>
+#include <UtlLinkedList.h>
 #include <KeyValues.h>
 #include <vgui_controls/PHandle.h>
 

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -93,7 +93,11 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#if defined( WIN32 ) && !defined( _X360 )
+#if defined( PROTECTED_THINGS_ENABLE )
+#undef PROTECTED_THINGS_ENABLE // from protected_things.h
+#endif
+#include "tier0/platform.h"
+#ifdef IS_WINDOWS_PC
 #define STRICT
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -144,11 +148,14 @@ bool WriteFile( void *handle, void *buf, unsigned int towrite, unsigned int *wri
 #define FILE_ATTRIBUTE_READONLY	 0
 #define FILE_ATTRIBUTE_SYSTEM    0
 typedef unsigned char BYTE;
-#endif // POSIX
+#endif
 
 #if defined( _X360 )
 #include "xbox/xbox_win32stubs.h"
 #endif
+
+// NOTE: This has to be the last file included!
+#include "tier0/memdbgon.h"
 
 
 // THIS FILE is almost entirely based upon code by Jean-loup Gailly
@@ -1713,7 +1720,7 @@ int inflate_blocks_free(inflate_blocks_statef *s, z_streamp z)
 
 
 
-extern const char inflate_copyright_XUnzip[] =
+extern const char inflate_copyright[] =
    " inflate 1.1.3 Copyright 1995-1998 Mark Adler ";
 // If you use the zlib library in a product, an acknowledgment is welcome
 // in the documentation of your product. If for some reason you cannot
@@ -3232,12 +3239,10 @@ int unzlocal_GetCurrentFileInfoInternal (unzFile file, unz_file_info *pfile_info
 
 	// we check the magic
 	if (err==UNZ_OK)
-	{
 		if (unzlocal_getLong(s->file,&uMagic) != UNZ_OK)
 			err=UNZ_ERRNO;
 		else if (uMagic!=0x02014b50)
 			err=UNZ_BADZIPFILE;
-	}
 
 	if (unzlocal_getShort(s->file,&file_info.version) != UNZ_OK)
 		err=UNZ_ERRNO;
@@ -3314,12 +3319,10 @@ int unzlocal_GetCurrentFileInfoInternal (unzFile file, unz_file_info *pfile_info
 			uSizeRead = extraFieldBufferSize;
 
 		if (lSeek!=0)
-		{
 			if (lufseek(s->file,lSeek,SEEK_CUR)==0)
 				lSeek=0;
 			else
 				err=UNZ_ERRNO;
-		}
 		if ((file_info.size_file_extra>0) && (extraFieldBufferSize>0))
 			if (lufread(extraField,(uInt)uSizeRead,1,s->file)!=1)
 				err=UNZ_ERRNO;
@@ -3341,12 +3344,10 @@ int unzlocal_GetCurrentFileInfoInternal (unzFile file, unz_file_info *pfile_info
 			uSizeRead = commentBufferSize;
 
 		if (lSeek!=0)
-		{
 			if (lufseek(s->file,lSeek,SEEK_CUR)==0)
 				{} // unused lSeek=0;
 			else
 				err=UNZ_ERRNO;
-		}
 		if ((file_info.size_file_comment>0) && (commentBufferSize>0))
 			if (lufread(szComment,(uInt)uSizeRead,1,s->file)!=1)
 				err=UNZ_ERRNO;
@@ -3496,12 +3497,10 @@ int unzlocal_CheckCurrentFileCoherencyHeader (unz_s *s,uInt *piSizeVar,
 
 
 	if (err==UNZ_OK)
-	{
 		if (unzlocal_getLong(s->file,&uMagic) != UNZ_OK)
 			err=UNZ_ERRNO;
 		else if (uMagic!=0x04034b50)
 			err=UNZ_BADZIPFILE;
-	}
 
 	if (unzlocal_getShort(s->file,&uData) != UNZ_OK)
 		err=UNZ_ERRNO;
@@ -3669,7 +3668,7 @@ int unzReadCurrentFile  (unzFile file, voidp buf, unsigned len)
 
   file_in_zip_read_info_s* pfile_in_zip_read_info = s->pfile_in_zip_read;
   if (pfile_in_zip_read_info==NULL) return UNZ_PARAMERROR;
-  if (pfile_in_zip_read_info->read_buffer == NULL) return UNZ_END_OF_LIST_OF_FILE;
+  if ((pfile_in_zip_read_info->read_buffer == NULL)) return UNZ_END_OF_LIST_OF_FILE;
   if (len==0) return 0;
 
   pfile_in_zip_read_info->stream.next_out = (Byte*)buf;
@@ -4075,8 +4074,7 @@ ZRESULT TUnzip::Find(const TCHAR *name, bool ic, int *index, ZIPENTRY *ze)
 		return ZR_NOTFOUND;
 	}
 	if (currentfile!=-1) 
-		unzCloseCurrentFile(uf);
-	currentfile=-1;
+		unzCloseCurrentFile(uf); currentfile=-1;
 	int i = (int)uf->num_file;
 	if (index!=NULL) 
 		*index=i;
@@ -4301,7 +4299,7 @@ unsigned int FormatZipMessageU(ZRESULT code, char *buf,unsigned int len)
   unsigned int mlen=(unsigned int)strlen(msg);
   if (buf==0 || len==0) return mlen;
   unsigned int n=mlen; if (n+1>len) n=len-1;
-  memcpy(buf,msg,n); buf[n]=0;
+  strncpy(buf,msg,n); buf[n]=0;
   return mlen;
 }
 
@@ -4475,7 +4473,15 @@ bool SafeUnzipMemory( const void *pvZipped, int cubZipped, void *pvDest, int cub
 	int iRes = ZR_CORRUPT;
 	if ( hZip )
 	{
-		iRes = UnzipItem( hZip, 0, pvDest, cubDest, ZIP_MEMORY );
+		try
+		{
+			iRes = UnzipItem( hZip, 0, pvDest, cubDest, ZIP_MEMORY );
+		}
+		catch ( ... )
+		{
+			// failed to unzip, try to continue
+			iRes = ZR_CORRUPT;
+		}
 		CloseZip( hZip );
 	}
 

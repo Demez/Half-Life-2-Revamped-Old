@@ -1,14 +1,14 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
 //=============================================================================//
 
 #include "cbase.h"
-#include "npcevent.h"
+#include "NPCEvent.h"
 #include "basehlcombatweapon_shared.h"
 #include "basecombatcharacter.h"
-#include "ai_basenpc.h"
+#include "AI_BaseNPC.h"
 #include "player.h"
 #include "gamerules.h"
 #include "in_buttons.h"
@@ -18,8 +18,8 @@
 #include "engine/IEngineSound.h"
 #include "IEffects.h"
 #include "te_effect_dispatch.h"
-#include "Sprite.h"
-#include "SpriteTrail.h"
+#include "sprite.h"
+#include "spritetrail.h"
 #include "beam_shared.h"
 #include "rumble_shared.h"
 #include "gamestats.h"
@@ -191,6 +191,9 @@ void CCrossbowBolt::Precache( void )
 	// This is used by C_TEStickyBolt, despte being different from above!!!
 	PrecacheModel( "models/crossbow_bolt.mdl" );
 
+	PrecacheEffect( "BoltImpact" );
+	PrecacheEffect( "CrossbowLoad" );
+
 	PrecacheModel( "sprites/light_glow02_noz.vmt" );
 }
 
@@ -251,9 +254,9 @@ void CCrossbowBolt::BoltTouch( CBaseEntity *pOther )
 
 		ApplyMultiDamage();
 
-		//Adrian: keep going through the glass. //Demez: no that would break immersion
+		//Adrian: keep going through the glass.
 		if ( pOther->GetCollisionGroup() == COLLISION_GROUP_BREAKABLE_GLASS )
-			return;
+			 return;
 
 		if ( !pOther->IsAlive() )
 		{
@@ -370,7 +373,7 @@ void CCrossbowBolt::BoltTouch( CBaseEntity *pOther )
 			}
 			
 			// Shoot some sparks
-			if ( UTIL_PointContents( GetAbsOrigin() ) != CONTENTS_WATER)
+			if ( UTIL_PointContents( GetAbsOrigin(), CONTENTS_WATER))
 			{
 				g_pEffects->Sparks( GetAbsOrigin() );
 			}
@@ -520,6 +523,8 @@ void CWeaponCrossbow::Precache( void )
 	PrecacheScriptSound( "Weapon_Crossbow.BoltHitWorld" );
 	PrecacheScriptSound( "Weapon_Crossbow.BoltSkewer" );
 
+	PrecacheEffect( "CrossbowLoad" );
+	
 	PrecacheModel( CROSSBOW_GLOW_SPRITE );
 	PrecacheModel( CROSSBOW_GLOW_SPRITE2 );
 
@@ -919,7 +924,7 @@ void CWeaponCrossbow::SetChargerState( ChargerState_t state )
 //-----------------------------------------------------------------------------
 void CWeaponCrossbow::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator )
 {
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 	case EVENT_WEAPON_THROW:
 		SetChargerState( CHARGER_STATE_START_LOAD );

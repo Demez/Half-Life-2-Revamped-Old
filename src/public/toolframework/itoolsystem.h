@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -18,6 +18,13 @@
 class KeyValues;
 struct SpatializationInfo_t;
 struct AudioState_t;
+
+namespace vgui
+{
+	typedef unsigned int VPANEL;
+}
+
+class CServerDemo;
 
 //-----------------------------------------------------------------------------
 // Purpose: All tools expose this interface, which includes both client and server
@@ -44,11 +51,11 @@ public:
 	virtual void	ClientShutdown() = 0;
 
 	// Allow tool to override quitting, called before Shutdown(), return no to abort quitting
-	virtual bool	CanQuit() = 0; 
+	virtual bool	CanQuit( const char *pExitMsg ) = 0; 
 
 	// Called when another system wiches to post a message to the tool and/or a specific entity
 	// FIXME:  Are KeyValues too inefficient here?
-    virtual void	PostMessage( HTOOLHANDLE hEntity, KeyValues *message ) = 0;
+    virtual void	PostToolMessage( HTOOLHANDLE hEntity, KeyValues *message ) = 0;
 
 	// Called oncer per frame even when no level is loaded... (call ProcessMessages())
 	virtual void	Think( bool finalTick ) = 0;
@@ -74,6 +81,7 @@ public:
 
 	// Used to allow the tool to spawn different entities when it's active
 	virtual const char* GetEntityData( const char *pActualEntityData ) = 0;
+	virtual void* QueryInterface( const char *pInterfaceName ) = 0;
 
 // Client calls:
 	// Level init, shutdown
@@ -101,6 +109,9 @@ public:
 	// Should the client be allowed to render the view normally?
 	virtual bool	ShouldGameRenderView() = 0;
 	virtual bool	IsThirdPersonCamera() = 0;
+
+	// Should sounds from the game be played?
+	virtual bool	ShouldGamePlaySounds() = 0;
 
 	// is the current tool recording?
 	virtual bool	IsToolRecording() = 0;
@@ -137,6 +148,8 @@ public:
 
 	virtual void		VGui_PreSimulate() = 0;
 	virtual void		VGui_PostSimulate() = 0;
+
+	virtual vgui::VPANEL GetClientWorkspaceArea() = 0;
 };
 
 // Pointer to a member method of IGameSystem

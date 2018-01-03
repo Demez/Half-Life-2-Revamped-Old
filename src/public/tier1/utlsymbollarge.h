@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: Defines a large symbol table (intp sized handles, can store more than 64k strings)
 //
@@ -291,7 +291,7 @@ public:
 };
 
 // Base Class for threaded and non-threaded types
-template < class TreeType, bool CASEINSENSITIVE, size_t POOL_SIZE = MIN_STRING_POOL_SIZE >
+template < class TreeType, bool CASEINSENSITIVE >
 class CUtlSymbolTableLargeBase
 {
 public:
@@ -359,21 +359,21 @@ private:
 //-----------------------------------------------------------------------------
 // constructor, destructor
 //-----------------------------------------------------------------------------
-template < class TreeType, bool CASEINSENSITIVE, size_t POOL_SIZE >
-inline CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE, POOL_SIZE >::CUtlSymbolTableLargeBase() : 
+template< class TreeType, bool CASEINSENSITIVE >
+inline CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE >::CUtlSymbolTableLargeBase() : 
 	m_StringPools( 8 )
 {
 }
 
-template < class TreeType, bool CASEINSENSITIVE, size_t POOL_SIZE >
-inline CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE, POOL_SIZE>::~CUtlSymbolTableLargeBase()
+template< class TreeType, bool CASEINSENSITIVE >
+inline CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE>::~CUtlSymbolTableLargeBase()
 {
 	// Release the stringpool string data
 	RemoveAll();
 }
 
-template < class TreeType, bool CASEINSENSITIVE, size_t POOL_SIZE >
-inline CUtlSymbolLarge CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE, POOL_SIZE>::Find( const char* pString ) const
+template< class TreeType, bool CASEINSENSITIVE >
+inline CUtlSymbolLarge CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE>::Find( const char* pString ) const
 {	
 	VPROF( "CUtlSymbolLarge::Find" );
 	if (!pString)
@@ -396,8 +396,8 @@ inline CUtlSymbolLarge CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE, POOL_
 	return entry->ToSymbol();
 }
 
-template < class TreeType, bool CASEINSENSITIVE, size_t POOL_SIZE >
-inline int CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE, POOL_SIZE>::FindPoolWithSpace( int len )	const
+template< class TreeType, bool CASEINSENSITIVE >
+inline int CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE>::FindPoolWithSpace( int len )	const
 {
 	for ( int i=0; i < m_StringPools.Count(); i++ )
 	{
@@ -415,8 +415,8 @@ inline int CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE, POOL_SIZE>::FindP
 //-----------------------------------------------------------------------------
 // Finds and/or creates a symbol based on the string
 //-----------------------------------------------------------------------------
-template < class TreeType, bool CASEINSENSITIVE, size_t POOL_SIZE >
-inline CUtlSymbolLarge CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE, POOL_SIZE>::AddString( const char* pString )
+template< class TreeType, bool CASEINSENSITIVE >
+inline CUtlSymbolLarge CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE>::AddString( const char* pString )
 {
 	VPROF("CUtlSymbolLarge::AddString");
 	if (!pString) 
@@ -429,9 +429,7 @@ inline CUtlSymbolLarge CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE, POOL_
 	int lenString = Q_strlen(pString) + 1; // length of just the string
 	int lenDecorated = lenString + sizeof(LargeSymbolTableHashDecoration_t); // and with its hash decoration
 	// make sure that all strings are aligned on 2-byte boundaries so the hashes will read correctly
-	// This assert seems to be invalid because LargeSymbolTableHashDecoration_t is always
-	// a uint32, by design.
-	//COMPILE_TIME_ASSERT(sizeof(LargeSymbolTableHashDecoration_t) == sizeof(intp));
+	COMPILE_TIME_ASSERT(sizeof(LargeSymbolTableHashDecoration_t) == sizeof(intp));
 	lenDecorated = ALIGN_VALUE(lenDecorated, sizeof( intp ) );
 
 	// Find a pool with space for this string, or allocate a new one.
@@ -439,7 +437,7 @@ inline CUtlSymbolLarge CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE, POOL_
 	if ( iPool == -1 )
 	{
 		// Add a new pool.
-		int newPoolSize = MAX( lenDecorated + sizeof( StringPool_t ), POOL_SIZE );
+		int newPoolSize = MAX( lenDecorated + sizeof( StringPool_t ), MIN_STRING_POOL_SIZE );
 		StringPool_t *pPool = (StringPool_t*)malloc( newPoolSize );
 
 		pPool->m_TotalLen = newPoolSize - sizeof( StringPool_t );
@@ -452,7 +450,7 @@ inline CUtlSymbolLarge CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE, POOL_
 
 	// Copy the string in.
 	StringPool_t *pPool = m_StringPools[iPool];
-	// Assert( pPool->m_SpaceUsed < 0xFFFF );	// Pool could be bigger than 2k
+	Assert( pPool->m_SpaceUsed < 0xFFFF );	
 	// This should never happen, because if we had a string > 64k, it
 	// would have been given its entire own pool.
 	
@@ -473,16 +471,13 @@ inline CUtlSymbolLarge CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE, POOL_
 //-----------------------------------------------------------------------------
 // Remove all symbols in the table.
 //-----------------------------------------------------------------------------
-template < class TreeType, bool CASEINSENSITIVE, size_t POOL_SIZE >
-inline void CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE, POOL_SIZE>::RemoveAll()
+template< class TreeType, bool CASEINSENSITIVE >
+inline void CUtlSymbolTableLargeBase<TreeType, CASEINSENSITIVE>::RemoveAll()
 {
 	m_Lookup.Purge();
 
 	for ( int i=0; i < m_StringPools.Count(); i++ )
-	{
-		StringPool_t * pString = m_StringPools[i];
-		free( pString );
-	}
+		free( m_StringPools[i] );
 
 	m_StringPools.RemoveAll();
 }

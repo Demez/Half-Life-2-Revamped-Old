@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -12,7 +12,7 @@
 #include "cbase.h"
 #include "Sprite.h"
 #include "basecombatweapon.h"
-#include "ai_basenpc.h"
+#include "AI_BaseNPC.h"
 #include "AI_Senses.h"
 #include "AI_Memory.h"
 #include "gamerules.h"
@@ -248,7 +248,7 @@ void CBaseTurret::Spawn()
 	SetMoveType( MOVETYPE_FLY );
 	m_nSequence		= 0;
 	m_flCycle		= 0;
-	SetSolid( SOLID_SLIDEBOX );
+	SetSolid( SOLID_BBOX );
 	m_takedamage		= DAMAGE_YES;
 	AddFlag( FL_AIMTARGET );
 
@@ -935,7 +935,7 @@ void CCeilingTurret::Spawn()
 	m_pEyeGlow->SetAttachment( this, 2 );
 	m_eyeBrightness = 0;
 
-	SetNextThink( gpGlobals->curtime + 0.3; );
+	SetNextThink( gpGlobals->curtime + 0.3 );
 }
 
 void CCeilingTurret::Precache()
@@ -1068,7 +1068,7 @@ void CSentry::Spawn()
 	SetModel( "models/sentry.mdl" );
 	m_iHealth			= sk_sentry_health.GetFloat();
 	m_HackedGunPos		= Vector( 0, 0, 48 );
-	m_vecViewOffset.z		= 48;
+	m_vecViewOffset.SetZ(48);
 	m_flMaxWait = 1E6;
 
 	CBaseTurret::Spawn();
@@ -1079,7 +1079,7 @@ void CSentry::Spawn()
 
 	SetTouch(SentryTouch);
 	SetThink(Initialize);	
-	SetNextThink( gpGlobals->curtime + 0.3; );
+	SetNextThink( gpGlobals->curtime + 0.3 );
 }
 
 void CSentry::Shoot(const Vector &vecSrc, const Vector &vecDirToEnemy)

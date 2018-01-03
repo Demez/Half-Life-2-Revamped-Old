@@ -34,16 +34,6 @@
 		"tall"			"100"
 		"visible"		"1"
 	}
-	"AutoSaveImage"
-	{
-		"ControlName"		"ImagePanel"
-		"fieldName"		"AutoSaveImage"
-		"xpos"			"8"
-		"ypos"			"16"
-		"wide"			"180"
-		"tall"			"100"
-		"visible"		"0"
-	}
 	"ChapterLabel"
 	{
 		"ControlName"		"Label"

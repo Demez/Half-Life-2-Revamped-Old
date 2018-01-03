@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -181,7 +181,7 @@ class CGameSaveRestoreInfo
 {
 public:
 	CGameSaveRestoreInfo()
-		: tableCount( 0 ), pTable( 0 ), m_pCurrentEntity( 0 ), m_EntityToIndex( 1024 )
+		: tableCount( 0 ), pTable( 0 ), m_pCurrentEntity( 0 )
 	{
 		memset( &levelInfo, 0, sizeof( levelInfo ) );
 		modelSpaceOffset.Init( 0, 0, 0 );
@@ -217,6 +217,8 @@ public:
 	void BuildEntityHash()
 	{
 #ifdef GAME_DLL
+		MEM_ALLOC_CREDIT();
+		new (&m_EntityToIndex) CEntityToIndexHash( 1024 );
 		int i;
 		entitytable_t *pTable;
 		int nEntities = NumEntities();
@@ -232,6 +234,7 @@ public:
 	void PurgeEntityHash()
 	{
 		m_EntityToIndex.Purge();
+		Destruct( &m_EntityToIndex );
 	}
 
 	int	GetEntityIndex( const CBaseEntity *pEntity )

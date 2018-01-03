@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -9,9 +9,7 @@
 #include "iclientmode.h"
 #include "history_resource.h"
 #include "input.h"
-#include "../hud_crosshair.h"
 
-#include "VGuiMatSurface/IMatSystemSurface.h"
 #include <KeyValues.h>
 #include <vgui/IScheme.h>
 #include <vgui/ISurface.h>
@@ -20,7 +18,7 @@
 #include <vgui_controls/Panel.h>
 
 #include "vgui/ILocalize.h"
-
+ 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -190,7 +188,7 @@ using namespace vgui;
 //-----------------------------------------------------------------------------
 CHudWeaponSelection::CHudWeaponSelection( const char *pElementName ) : CBaseHudWeaponSelection(pElementName), BaseClass(NULL, "HudWeaponSelection")
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 	m_bFadingOut = false;
 }
@@ -227,7 +225,7 @@ void CHudWeaponSelection::OnThink( void )
 		if (!m_bFadingOut)
 		{
 			// start fading out
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "FadeOutWeaponSelectionMenu" );
+			GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "FadeOutWeaponSelectionMenu" );
 			m_bFadingOut = true;
 		}
 		else if ( gpGlobals->curtime - m_flSelectionTime > flSelectionTimeout + flSelectionFadeoutTime )
@@ -239,7 +237,7 @@ void CHudWeaponSelection::OnThink( void )
 	else if (m_bFadingOut)
 	{
 		// stop us fading out, show the animation again
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "OpenWeaponSelectionMenu" );
+		GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "OpenWeaponSelectionMenu" );
 		m_bFadingOut = false;
 	}
 }
@@ -375,11 +373,11 @@ void CHudWeaponSelection::ActivateFastswitchWeaponDisplay( C_BaseCombatWeapon *p
 			flTime *= 0.5f;
 	}
 	m_flHorizWeaponSelectOffsetPoint = flStart;
-	g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "WeaponBoxOffset", flStop, 0, flTime, AnimationController::INTERPOLATOR_LINEAR );
+	GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "WeaponBoxOffset", flStop, 0, flTime, AnimationController::INTERPOLATOR_LINEAR );
 
 	// start the highlight after the scroll completes
 	m_flBlur = 7.f;
-	g_pClientMode->GetViewportAnimationController()->RunAnimationCommand( this, "Blur", 0, flTime, 0.75f, AnimationController::INTERPOLATOR_DEACCEL );
+	GetClientMode()->GetViewportAnimationController()->RunAnimationCommand( this, "Blur", 0, flTime, 0.75f, AnimationController::INTERPOLATOR_DEACCEL );
 }
 
 //-----------------------------------------------------------------------------
@@ -399,7 +397,7 @@ void CHudWeaponSelection::ActivateWeaponHighlight( C_BaseCombatWeapon *pSelected
 		return;
 
 	// start the highlight after the scroll completes
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence( "WeaponHighlight" );
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence( "WeaponHighlight" );
 }
 
 //-----------------------------------------------------------------------------
@@ -450,17 +448,6 @@ void CHudWeaponSelection::Paint()
 	}
 	if ( !pSelectedWeapon )
 		return;
-
-	bool bPushedViewport = false;
-	if( hud_fastswitch.GetInt() == HUDTYPE_FASTSWITCH  || hud_fastswitch.GetInt() == HUDTYPE_PLUS )
-	{
-		CMatRenderContextPtr pRenderContext( materials );
-		if( pRenderContext->GetRenderTarget() )
-		{
-			surface()->PushFullscreenViewport();
-			bPushedViewport = true;
-		}
-	}
 
 	// interpolate the selected box size between the small box size and the large box size
 	// interpolation has been removed since there is no weapon pickup animation anymore, so it's all at the largest size
@@ -588,23 +575,15 @@ void CHudWeaponSelection::Paint()
 
 	case HUDTYPE_PLUS:
 		{
-			float fCenterX, fCenterY;
-			bool bBehindCamera = false;
-			CHudCrosshair::GetDrawPosition( &fCenterX, &fCenterY, &bBehindCamera );
-
-			// if the crosshair is behind the camera, don't draw it
-			if( bBehindCamera )
-				return;
-
 			// bucket style
-			int screenCenterX = (int) fCenterX;
-			int screenCenterY = (int) fCenterY - 15; // Height isn't quite screen height, so adjust for center alignment
+			int screenCenterX = GetWide() / 2;
+			int screenCenterY = GetTall() / 2 - 15; // Height isn't quite screen height, so adjust for center alignement
 
 			// Modifiers for the four directions. Used to change the x and y offsets
 			// of each box based on which bucket we're drawing. Bucket directions are
 			// 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
-			int xModifiers[] = { 0, 1, 0, -1, -1, 1 };
-			int yModifiers[] = { -1, 0, 1, 0, 1, 1 };
+			int xModifiers[] = { 0, 1, 0, -1 };
+			int yModifiers[] = { -1, 0, 1, 0 };
 
 			// Draw the four buckets
 			for ( int i = 0; i < MAX_WEAPON_SLOTS; ++i )
@@ -737,11 +716,6 @@ void CHudWeaponSelection::Paint()
 			// do nothing
 		}
 		break;
-	}
-
-	if( bPushedViewport )
-	{
-		surface()->PopFullscreenViewport();
 	}
 }
 
@@ -915,11 +889,7 @@ void CHudWeaponSelection::DrawLargeWeaponBox( C_BaseCombatWeapon *pWeapon, bool 
 		// setup our localized string
 		if ( tempString )
 		{
-#ifdef WIN32
 			_snwprintf(text, sizeof(text)/sizeof(wchar_t) - 1, L"%s", tempString);
-#else
-			_snwprintf(text, sizeof(text)/sizeof(wchar_t) - 1, L"%S", tempString);
-#endif
 			text[sizeof(text)/sizeof(wchar_t) - 1] = 0;
 		}
 		else
@@ -1051,7 +1021,7 @@ void CHudWeaponSelection::OpenSelection( void )
 	Assert(!IsInSelectionMode());
 
 	CBaseHudWeaponSelection::OpenSelection();
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("OpenWeaponSelectionMenu");
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence("OpenWeaponSelectionMenu");
 	m_iSelectedBoxPosition = 0;
 	m_iSelectedSlot = -1;
 }
@@ -1062,7 +1032,7 @@ void CHudWeaponSelection::OpenSelection( void )
 void CHudWeaponSelection::HideSelection( void )
 {
 	CBaseHudWeaponSelection::HideSelection();
-	g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("CloseWeaponSelectionMenu");
+	GetClientMode()->GetViewportAnimationController()->StartAnimationSequence("CloseWeaponSelectionMenu");
 	m_bFadingOut = false;
 }
 
@@ -1453,7 +1423,7 @@ void CHudWeaponSelection::SelectWeaponSlot( int iSlot )
 		return;
 
 	// Don't try and read past our possible number of slots
-	if ( iSlot >= MAX_WEAPON_SLOTS )
+	if ( iSlot > MAX_WEAPON_SLOTS )
 		return;
 	
 	// Make sure the player's allowed to switch weapons

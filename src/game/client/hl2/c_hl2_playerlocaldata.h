@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -41,9 +41,10 @@ public:
 	bool	m_bDisplayReticle;
 	bool	m_bStickyAutoAim;
 	bool	m_bAutoAimTarget;
+	// this was moved up
+	Vector	m_vecLocatorOrigin;
 #ifdef HL2_EPISODIC
 	float	m_flFlashBattery;
-	Vector	m_vecLocatorOrigin;
 #endif
 
 	// Ladder related data

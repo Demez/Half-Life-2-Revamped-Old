@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright (c) 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -68,27 +68,30 @@
 #define SOUND_DELAY_OFFSET					(0.100f)
 
 #pragma pack(4)
+// the full float time for now.
+#define SEND_SOUND_TIME 1
+
 //-----------------------------------------------------------------------------
 struct SoundInfo_t
 {
+	Vector			vOrigin;
+	Vector			vDirection;
+	Vector			vListenerOrigin;
+	const char		*pszName;		// UNDONE: Make this a FilenameHandle_t to avoid bugs with arrays of these
+	float			fVolume;
+	float			fDelay;
+	float			fTickTime;			// delay is encoded relative to this tick, fix up if packet is delayed
 	int				nSequenceNumber;
 	int				nEntityIndex;
 	int				nChannel;
-	const char		*pszName;		// UNDONE: Make this a FilenameHandle_t to avoid bugs with arrays of these
-	Vector			vOrigin;
-	Vector			vDirection;
-	float			fVolume;
-	soundlevel_t	Soundlevel;
-	bool			bLooping;
 	int				nPitch;
-	int				nSpecialDSP;
-	Vector			vListenerOrigin;
 	int				nFlags;
 	int 			nSoundNum;
-	float			fDelay;
+	int				nSpeakerEntity;
+	soundlevel_t	Soundlevel;
 	bool			bIsSentence;
 	bool			bIsAmbient;
-	int				nSpeakerEntity;
+	bool			bLooping;
 	
 	//---------------------------------
 	
@@ -116,10 +119,10 @@ struct SoundInfo_t
 	void SetDefault()
 	{
 		fDelay = DEFAULT_SOUND_PACKET_DELAY;
+		fTickTime = 0;
 		fVolume = DEFAULT_SOUND_PACKET_VOLUME;
 		Soundlevel = SNDLVL_NORM;
 		nPitch = DEFAULT_SOUND_PACKET_PITCH;
-		nSpecialDSP = 0;
 
 		nEntityIndex = 0;
 		nSpeakerEntity = -1;
@@ -144,7 +147,6 @@ struct SoundInfo_t
 		fVolume = 0;
 		Soundlevel = SNDLVL_NONE;
 		nPitch = PITCH_NORM;
-		nSpecialDSP = 0;
 		pszName = NULL;
 		fDelay = 0.0f;
 		nSequenceNumber = 0;
@@ -154,7 +156,7 @@ struct SoundInfo_t
 	}
 
 	// this cries for Send/RecvTables:
-	void WriteDelta( SoundInfo_t *delta, bf_write &buffer)
+	void WriteDelta( SoundInfo_t *delta, bf_write &buffer, float finalTickTime )
 	{
 		if ( nEntityIndex == delta->nEntityIndex )
 		{
@@ -219,9 +221,12 @@ struct SoundInfo_t
 
 			WRITE_DELTA_UINT( nPitch, 8 );
 
-			WRITE_DELTA_UINT( nSpecialDSP, 8 );
-
-			if ( fDelay == delta->fDelay )
+			float delayValue = fDelay;
+			if ( (nFlags & SND_DELAY) && fTickTime != finalTickTime )
+			{
+				delayValue += fTickTime - finalTickTime;
+			}
+			if ( delayValue == delta->fDelay )
 			{
 				buffer.WriteOneBit( 0 );
 			}
@@ -229,12 +234,15 @@ struct SoundInfo_t
 			{
 				buffer.WriteOneBit( 1 );
 
+#if SEND_SOUND_TIME
+				buffer.WriteFloat( delayValue );
+#else
 				// skipahead works in 10 ms increments
 				// bias results so that we only incur the precision loss on relatively large skipaheads
-				fDelay += SOUND_DELAY_OFFSET;
+				delayValue += SOUND_DELAY_OFFSET;
 
 				// Convert to msecs
-				int iDelay = fDelay * 1000.0f;
+				int iDelay = delayValue * 1000.0f;
 
 				iDelay = clamp( iDelay, (int)(-10 * MAX_SOUND_DELAY_MSEC), (int)(MAX_SOUND_DELAY_MSEC) );
 
@@ -244,6 +252,7 @@ struct SoundInfo_t
 				}
 				
 				buffer.WriteSBitLong( iDelay , MAX_SOUND_DELAY_MSEC_ENCODE_BITS );
+#endif
 			}
 
 			// don't transmit sounds with high precision
@@ -259,7 +268,7 @@ struct SoundInfo_t
 		}
 	};
 
-	void ReadDelta( SoundInfo_t *delta, bf_read &buffer, int nProtoVersion )
+	void ReadDelta( SoundInfo_t *delta, bf_read &buffer)
 	{
 		if ( !buffer.ReadOneBit() )
 		{
@@ -277,24 +286,9 @@ struct SoundInfo_t
 			}
 		}
 
-		if ( nProtoVersion > 22 )
-		{	
-			READ_DELTA_UINT( nSoundNum, MAX_SOUND_INDEX_BITS );
-		}
-		else
-		{
-			READ_DELTA_UINT( nSoundNum, 13 );
-		}
+		READ_DELTA_UINT( nSoundNum, MAX_SOUND_INDEX_BITS );
 
-		if ( nProtoVersion > 18 )
-		{
-			READ_DELTA_UINT( nFlags, SND_FLAG_BITS_ENCODE );
-		}
-		else
-		{
-			// There was 9 flag bits for version 18 and below (prior to Halloween 2011)
-			READ_DELTA_UINT( nFlags, 9 );
-		}
+		READ_DELTA_UINT( nFlags, SND_FLAG_BITS_ENCODE );
 
 		READ_DELTA_UINT( nChannel, 3 );
 
@@ -336,14 +330,12 @@ struct SoundInfo_t
 
 			READ_DELTA_UINT( nPitch, 8 );
 
-			if ( nProtoVersion > 21 )
-			{
-				// These bit weren't written in version 19 and below
-				READ_DELTA_UINT( nSpecialDSP, 8 );
-			}
 
 			if ( buffer.ReadOneBit() != 0 )
 			{
+#if SEND_SOUND_TIME
+				fDelay = buffer.ReadFloat();
+#else
 				// Up to 4096 msec delay
 				fDelay = (float)buffer.ReadSBitLong( MAX_SOUND_DELAY_MSEC_ENCODE_BITS ) / 1000.0f; ;
 				
@@ -353,6 +345,7 @@ struct SoundInfo_t
 				}
 				// bias results so that we only incur the precision loss on relatively large skipaheads
 				fDelay -= SOUND_DELAY_OFFSET;
+#endif
 			}
 			else
 			{

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -42,7 +42,7 @@ enum FUNCTANK_EFFECT_HANDLING
 {
 	EH_NONE,			// Use the effect settings
 	EH_AR2,				// Use AR2 effects
-	EH_COMBINE_CANNON	// Large Combine cannon
+	EH_COMBINE_CANNON,	// Large Combine cannon
 };
 
 enum TANKBULLET
@@ -112,6 +112,7 @@ public:
 	void StopControl( void );
 	Vector GetTargetPosition()						{ return m_vTargetPosition; }
 	void SetTargetPosition( const Vector &vecPos )	{ m_vTargetPosition = vecPos; }
+	void AimAtTargetPosition( const Vector &vecPos )	{ m_spawnflags |= SF_TANK_AIM_AT_POS; m_hTarget = NULL; m_vTargetPosition = vecPos; }
 
 	const float YawCenter() const { return m_yawCenter; }
 	const float YawCenterWorld() const { return m_yawCenterWorld; }

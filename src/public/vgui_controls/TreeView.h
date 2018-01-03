@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -46,15 +46,17 @@ public:
 	virtual int GetChild( int iParentItemIndex, int iChild ); // between 0 and GetNumChildren( iParentItemIndex ).
 
     virtual int GetItemCount(void);
-    virtual KeyValues *GetItemData(int itemIndex);
+    virtual KeyValues *GetItemData(int itemIndex) const;
      virtual void RemoveItem(int itemIndex, bool bPromoteChildren, bool bRecursivelyRemove = false );
     virtual void RemoveAll();
     virtual bool ModifyItem(int itemIndex, KeyValues *data);
-	virtual int GetItemParent(int itemIndex);
+	virtual int GetItemParent(int itemIndex) const;
 
     virtual void SetFont(HFont font);
 
     virtual void SetImageList(ImageList *imageList, bool deleteImageListWhenDone);
+
+	void SetTreeIndent( int nIndentAmount );
 
 	void SetAllowMultipleSelections( bool state );
 	bool IsMultipleSelectionAllowed() const;
@@ -64,14 +66,16 @@ public:
 	virtual void RemoveSelectedItem( int itemIndex );
 	virtual void SelectAll();
 
-	virtual bool IsItemSelected( int itemIndex );
+	virtual bool IsItemSelected( int itemIndex ) const;
 	virtual void RangeSelectItems( int clickedItem );
 	virtual void FindNodesInRange( int startItem, int endItem, CUtlVector< int >& itemIndices );
 
 	// returns the id of the currently selected item, -1 if nothing is selected
 	virtual int GetSelectedItemCount() const;
 	virtual int GetFirstSelectedItem() const;
-	virtual void GetSelectedItems( CUtlVector< int >& list );
+	virtual int GetSelectedItem( int nSelectionIndex ) const;
+	virtual void GetSelectedItems( CUtlVector< int >& list ) const;
+	virtual void GetSelectedItemsForDrag( int nPrimaryDagItem, CUtlVector< int >& list );
 	virtual void GetSelectedItemData( CUtlVector< KeyValues * >& list );
 
 	// set colors for individual elments
@@ -106,6 +110,7 @@ public:
 	virtual bool IsLabelEditingAllowed() const;
 	virtual bool IsLabelBeingEdited() const;
 	virtual void SetAllowLabelEditing( bool state );
+	virtual bool CanCurrentlyEditLabel( int nItemIndex ) const;
 
 	/* message sent
 
@@ -124,8 +129,8 @@ public:
 	virtual void SetLabelEditingAllowed( int itemIndex, bool state );
 	virtual void StartEditingLabel( int itemIndex );
 
-	virtual bool IsItemDroppable( int itemIndex, CUtlVector< KeyValues * >& msglist );
-	virtual void OnItemDropped( int itemIndex, CUtlVector< KeyValues * >& msglist );
+	virtual bool IsItemDroppable( int itemIndex, bool bInsertBefore, CUtlVector< KeyValues * >& msglist );
+	virtual void OnItemDropped( int itemIndex, bool bInsertBefore, CUtlVector< KeyValues * >& msglist );
 	virtual bool GetItemDropContextMenu( int itemIndex, Menu *menu, CUtlVector< KeyValues * >& msglist );
 	virtual HCursor GetItemDropCursor( int itemIndex, CUtlVector< KeyValues * >& msglist );
 
@@ -138,10 +143,25 @@ public:
 	ScrollBar	*SetScrollBarExternal( bool vertical, Panel *newParent );
 	void		GetScrollBarSize( bool vertical, int& w, int& h );
 
-	void		SetMultipleItemDragEnabled( bool state ); // if this is set, then clicking on one row and dragging will select a run or items, etc.
-	bool		IsMultipleItemDragEnabled() const;
-
 	int			FindItemUnderMouse( int mx, int my );
+
+	// Returns false if item is not visible
+	bool		GetItemBounds( int itemIndex, int &x, int &y, int &w, int &h );
+	bool		IsItemBeingDisplayed( int itemIndex );
+
+	// If set to false, all of the immediate children of the root node are displayed, but not the root
+	void		SetShowRootNode( bool bRootVisible );
+
+	// Insert drop toggle and state, the insert drop location functionality provides drop 
+	// locations between nodes which can be used to perform an insertion at a specific location.
+	void		SetEnableInsertDropLocation( bool bEnable );
+	bool		AreInsertDropLocationsEnabled() const;
+
+	
+	// Use these until they return InvalidItemID to iterate all the items.
+	virtual int FirstItem() const;
+	virtual int NextItem( int iItem ) const;
+	virtual int InvalidItemID() const;
 
 protected:
 	// functions to override
@@ -150,6 +170,9 @@ protected:
 
 	// override to open a custom context menu on a node being selected and right-clicked
 	virtual void GenerateContextMenu( int itemIndex, int x, int y ) {}
+
+	// override to change selection behavior when right clicking to open a context menu
+	virtual void OnContextMenuSelection( int itemIndex );
 
 	// overrides
 	virtual void OnMouseWheeled(int delta);
@@ -172,19 +195,24 @@ private:
 	// to be accessed by TreeNodes
     IImage* GetImage(int index);        
 
+	// Add the specified list of items to the selection list.
+	void AddSelectedItems( const CUtlVector< TreeNode * > &selectionList, bool clearCurrentSelection, bool requestFocus = true, bool bMakeItemVisible = true );
+
 	// bools
 	bool m_bAllowLabelEditing : 1;
 	bool m_bDragEnabledItems : 1;
 	bool m_bDeleteImageListWhenDone : 1;
 	bool m_bLeftClickExpandsTree : 1;
 	bool m_bLabelBeingEdited : 1;
-	bool m_bMultipleItemDragging : 1;
 	bool m_bAllowMultipleSelections : 1;
+	bool m_bRootVisible : 1;
+	bool m_bInsertDropLocations : 1;
 
     // cross reference - no hierarchy ordering in this list
     CUtlLinkedList<TreeNode *, int>   m_NodeList;
    	ScrollBar					*m_pHorzScrollBar, *m_pVertScrollBar;
 	int							m_nRowHeight;
+	int							m_nTreeIndent;
 
 	ImageList					*m_pImageList;
     TreeNode					*m_pRootNode;

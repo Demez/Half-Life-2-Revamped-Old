@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -15,7 +15,6 @@
 #include "toolframework/itoolentity.h"
 #include "mathlib/vector.h"
 #include "Color.h"
-#include "toolframework/itoolentity.h" // HTOOLHANDLE defn
 
 //-----------------------------------------------------------------------------
 // Forward declarations
@@ -29,15 +28,29 @@ class CBoneList;
 //-----------------------------------------------------------------------------
 // Standard messages
 //-----------------------------------------------------------------------------
+struct EffectRecordingState_t
+{
+	bool m_bVisible : 1;
+	bool m_bThirdPerson : 1;
+	Color m_Color;
+	float m_Scale;
+	const char *m_pMaterialName;
+	int m_nAttachment;
+	Vector m_vecAttachment; // only used if m_nAttachment is -1
+};
+
 struct BaseEntityRecordingState_t
 {
 	BaseEntityRecordingState_t() :	
 		m_flTime( 0.0f ),
 		m_pModelName( 0 ),
 		m_nOwner( -1 ),
-		m_nEffects( 0 ),
+		m_fEffects( 0 ),
 		m_bVisible( false ),
-		m_bRecordFinalVisibleSample( false )
+		m_bRecordFinalVisibleSample( false ),
+		m_numEffects( 0 ),
+		m_pEffects( NULL ),
+		m_nFollowEntity( -1 )
 	{
 		m_vecRenderOrigin.Init();
 		m_vecRenderAngles.Init();
@@ -46,11 +59,15 @@ struct BaseEntityRecordingState_t
 	float m_flTime;
 	const char *m_pModelName;
 	int m_nOwner;
-	int m_nEffects;
+	int m_fEffects;
 	bool m_bVisible : 1;
 	bool m_bRecordFinalVisibleSample : 1;
 	Vector m_vecRenderOrigin;
 	QAngle m_vecRenderAngles;
+	int m_nFollowEntity;
+
+	int m_numEffects;
+	EffectRecordingState_t *m_pEffects;
 };
 
 struct SpriteRecordingState_t
@@ -63,8 +80,40 @@ struct SpriteRecordingState_t
 	float m_flProxyRadius;
 };
 
+struct BaseAnimatingHighLevelRecordingState_t
+{
+	BaseAnimatingHighLevelRecordingState_t()
+	:	m_bClearIkTargets( false ),
+		m_bIsRagdoll( false ),
+		m_bShouldCreateIkContext( false ),
+		m_nNumPoseParams( 0 ),
+		m_flCycle( 0.0f ),
+		m_flPlaybackRate( 1.0f ),
+		m_flCycleRate( 0.0f ),
+		m_nFrameCount( 0 ),
+		m_bInterpEffectActive( false )
+	{
+	}
+
+	bool m_bClearIkTargets;
+	bool m_bIsRagdoll;
+	bool m_bShouldCreateIkContext;
+	int m_nNumPoseParams;
+
+	float m_flCycle;
+	float m_flPlaybackRate;
+	float m_flCycleRate;
+	int m_nFrameCount;
+
+	float m_flPoseParameter[MAXSTUDIOPOSEPARAM];
+
+	bool m_bInterpEffectActive;
+};
+
 struct BaseAnimatingRecordingState_t
 {
+	BaseAnimatingHighLevelRecordingState_t m_highLevelState;
+
 	int m_nSkin;
 	int m_nBody;
 	int m_nSequence;
@@ -244,9 +293,14 @@ public:  // Other Hooks
 	// Should the game be allowed to render the world?
 	virtual bool	ShouldGameRenderView() = 0;
 
+	// Should sounds from the game be played?
+	virtual bool	ShouldGamePlaySounds() = 0;
+
 	virtual IMaterialProxy *LookupProxy( const char *proxyName ) = 0;
 
 public:  // general framework hooks
+	virtual bool		LoadFilmmaker() = 0;
+	virtual void		UnloadFilmmaker() = 0;
 	virtual int			GetToolCount() = 0;
 	virtual char const	*GetToolName( int index ) = 0;
 	virtual void		SwitchToTool( int index ) = 0;
@@ -254,6 +308,8 @@ public:  // general framework hooks
 	virtual bool		IsTopmostTool( const IToolSystem *sys ) = 0;
 	virtual const IToolSystem *GetToolSystem( int index ) const = 0;
 	virtual IToolSystem *GetTopmostTool() = 0;
+	// If module not already loaded, loads it and optionally switches to first tool in module.  Returns false if load failed or tool already loaded
+	virtual bool		LoadToolModule( char const *pToolModule, bool bSwitchToFirst ) = 0;
 };
 
 // Expose to rest of engine as a singleton

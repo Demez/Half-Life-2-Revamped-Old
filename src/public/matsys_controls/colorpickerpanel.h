@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2003, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -12,9 +12,9 @@
 #endif
 
 
-#include "vgui_controls/EditablePanel.h"
-#include "vgui_controls/Frame.h"
-#include "vgui_controls/Button.h"
+#include "vgui_controls/editablepanel.h"
+#include "vgui_controls/frame.h"
+#include "vgui_controls/button.h"
 #include "bitmap/imageformat.h"
 #include "mathlib/vector.h"
 
@@ -147,9 +147,8 @@ public:
 	virtual void ApplySchemeSettings( vgui::IScheme *pScheme );
 	virtual void DoClick();
 
-	void	SetColor( const Color& clr );
-	void	SetColor( int r, int g, int b, int a );
-	Color	GetColor( void ) { return m_CurrentColor; }
+	void SetColor( const Color& clr );
+	void SetColor( int r, int g, int b, int a );
 
 private:
 	MESSAGE_FUNC_PARAMS( OnPicked, "ColorPickerPicked", data );

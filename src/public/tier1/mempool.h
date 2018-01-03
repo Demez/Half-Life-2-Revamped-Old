@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -28,29 +28,21 @@
 // Purpose: Optimized pool memory allocator
 //-----------------------------------------------------------------------------
 
-typedef void (*MemoryPoolReportFunc_t)( PRINTF_FORMAT_STRING char const* pMsg, ... );
-
-// Ways a memory pool can grow when it needs to make a new blob:
-enum MemoryPoolGrowType_t
-{
-	UTLMEMORYPOOL_GROW_NONE=0,		// Don't allow new blobs.
-	UTLMEMORYPOOL_GROW_FAST=1,		// New blob size is numElements * (i+1)  (ie: the blocks it allocates
-									// get larger and larger each time it allocates one).
-	UTLMEMORYPOOL_GROW_SLOW=2		// New blob size is numElements.
-};
+typedef void (*MemoryPoolReportFunc_t)( char const* pMsg, ... );
 
 class CUtlMemoryPool
 {
 public:
-	// !KLUDGE! For legacy code support, import the global enum into this scope
+	// Ways the memory pool can grow when it needs to make a new blob.
 	enum MemoryPoolGrowType_t
 	{
-		GROW_NONE=UTLMEMORYPOOL_GROW_NONE,
-		GROW_FAST=UTLMEMORYPOOL_GROW_FAST,
-		GROW_SLOW=UTLMEMORYPOOL_GROW_SLOW
+		GROW_NONE=0,		// Don't allow new blobs.
+		GROW_FAST=1,		// New blob size is numElements * (i+1)  (ie: the blocks it allocates
+							// get larger and larger each time it allocates one).
+		GROW_SLOW=2			// New blob size is numElements.
 	};
 
-				CUtlMemoryPool( int blockSize, int numElements, int growMode = UTLMEMORYPOOL_GROW_FAST, const char *pszAllocOwner = NULL, int nAlignment = 0 );
+				CUtlMemoryPool( int blockSize, int numElements, int growMode = GROW_FAST, const char *pszAllocOwner = NULL, int nAlignment = 0 );
 				~CUtlMemoryPool();
 
 	void*		Alloc();	// Allocate the element size you specified in the constructor.
@@ -66,8 +58,12 @@ public:
 	static void SetErrorReportFunc( MemoryPoolReportFunc_t func );
 
 	// returns number of allocated blocks
-	int Count() { return m_BlocksAllocated; }
-	int PeakCount() { return m_PeakAlloc; }
+	int Count() const		{ return m_BlocksAllocated; }
+	int PeakCount() const	{ return m_PeakAlloc; }
+	int BlockSize() const	{ return m_BlockSize; }
+	int Size() const		{ return m_NumBlobs * m_BlocksPerBlob * m_BlockSize; }
+
+	bool		IsAllocationWithinPool( void *pMem ) const;
 
 protected:
 	class CBlob
@@ -89,11 +85,9 @@ protected:
 
 	int			m_GrowMode;	// GROW_ enum.
 
-	// Put m_BlocksAllocated in front of m_pHeadOfFreeList for better
-	// packing on 64-bit where pointers are 8-byte aligned.
-	int				m_BlocksAllocated;
 	// FIXME: Change m_ppMemBlob into a growable array?
 	void			*m_pHeadOfFreeList;
+	int				m_BlocksAllocated;
 	int				m_PeakAlloc;
 	unsigned short	m_nAlignment;
 	unsigned short	m_NumBlobs;
@@ -106,12 +100,12 @@ protected:
 
 
 //-----------------------------------------------------------------------------
-// 
+// Multi-thread/Thread Safe Memory Class
 //-----------------------------------------------------------------------------
 class CMemoryPoolMT : public CUtlMemoryPool
 {
 public:
-	CMemoryPoolMT(int blockSize, int numElements, int growMode = UTLMEMORYPOOL_GROW_FAST, const char *pszAllocOwner = NULL) : CUtlMemoryPool( blockSize, numElements, growMode, pszAllocOwner) {}
+	CMemoryPoolMT( int blockSize, int numElements, int growMode = GROW_FAST, const char *pszAllocOwner = NULL, int nAlignment = 0) : CUtlMemoryPool( blockSize, numElements, growMode, pszAllocOwner, nAlignment ) {}
 
 
 	void*		Alloc()	{ AUTO_LOCK( m_mutex ); return CUtlMemoryPool::Alloc(); }
@@ -136,13 +130,7 @@ class CClassMemoryPool : public CUtlMemoryPool
 {
 public:
 	CClassMemoryPool(int numElements, int growMode = GROW_FAST, int nAlignment = 0 ) :
-		CUtlMemoryPool( sizeof(T), numElements, growMode, MEM_ALLOC_CLASSNAME(T), nAlignment ) {
-			#ifdef PLATFORM_64BITS 
-				COMPILE_TIME_ASSERT( sizeof(CUtlMemoryPool) == 64 );
-			#else
-				COMPILE_TIME_ASSERT( sizeof(CUtlMemoryPool) == 48 );
-			#endif
-		}
+		CUtlMemoryPool( sizeof(T), numElements, growMode, MEM_ALLOC_CLASSNAME(T), nAlignment ) {}
 
 	T*		Alloc();
 	T*		AllocZero();
@@ -151,16 +139,15 @@ public:
 	void	Clear();
 };
 
-
 //-----------------------------------------------------------------------------
-// Specialized pool for aligned data management (e.g., Xbox cubemaps)
+// Specialized pool for aligned data management (e.g., Xbox textures)
 //-----------------------------------------------------------------------------
-template <int ITEM_SIZE, int ALIGNMENT, int CHUNK_SIZE, class CAllocator, int COMPACT_THRESHOLD = 4 >
+template <int ITEM_SIZE, int ALIGNMENT, int CHUNK_SIZE, class CAllocator, bool GROWMODE = false, int COMPACT_THRESHOLD = 4 >
 class CAlignedMemPool
 {
 	enum
 	{
-		BLOCK_SIZE = ALIGN_VALUE( ITEM_SIZE, ALIGNMENT ) > 8 ? ALIGN_VALUE( ITEM_SIZE, ALIGNMENT ) : 8
+		BLOCK_SIZE = COMPILETIME_MAX( ALIGN_VALUE( ITEM_SIZE, ALIGNMENT ), 8 ),
 	};
 
 public:
@@ -172,13 +159,13 @@ public:
 	static int __cdecl CompareChunk( void * const *ppLeft, void * const *ppRight );
 	void Compact();
 
-	int NumTotal()			{ return m_Chunks.Count() * ( CHUNK_SIZE / BLOCK_SIZE ); }
-	int NumAllocated()		{ return NumTotal() - m_nFree; }
-	int NumFree()			{ return m_nFree; }
+	int NumTotal()			{ AUTO_LOCK( m_mutex ); return m_Chunks.Count() * ( CHUNK_SIZE / BLOCK_SIZE ); }
+	int NumAllocated()		{ AUTO_LOCK( m_mutex ); return NumTotal() - m_nFree; }
+	int NumFree()			{ AUTO_LOCK( m_mutex ); return m_nFree; }
 
-	int BytesTotal()		{ return NumTotal() * BLOCK_SIZE; }
-	int BytesAllocated()	{ return NumAllocated() * BLOCK_SIZE; }
-	int BytesFree()			{ return NumFree() * BLOCK_SIZE; }
+	int BytesTotal()		{ AUTO_LOCK( m_mutex ); return NumTotal() * BLOCK_SIZE; }
+	int BytesAllocated()	{ AUTO_LOCK( m_mutex ); return NumAllocated() * BLOCK_SIZE; }
+	int BytesFree()			{ AUTO_LOCK( m_mutex ); return NumFree() * BLOCK_SIZE; }
 
 	int ItemSize()			{ return ITEM_SIZE; }
 	int BlockSize()			{ return BLOCK_SIZE; }
@@ -196,6 +183,8 @@ private:
 	int					m_nFree;
 	CAllocator			m_Allocator;
 	float				m_TimeLastCompact;
+
+	CThreadFastMutex	m_mutex;
 };
 
 //-----------------------------------------------------------------------------
@@ -253,6 +242,77 @@ private:
 };
 
 //-----------------------------------------------------------------------------
+// Fixed budget pool with overflow to malloc
+//-----------------------------------------------------------------------------
+template <size_t PROVIDED_ITEM_SIZE, int ITEM_COUNT>
+class CFixedBudgetMemoryPool
+{
+public:
+	CFixedBudgetMemoryPool()
+	{
+		m_pBase = m_pLimit = 0;
+		COMPILE_TIME_ASSERT( ITEM_SIZE % 4 == 0 );
+	}
+
+	bool Owns( void *p )
+	{
+		return ( p >= m_pBase && p < m_pLimit );
+	}
+
+	void *Alloc()
+	{
+		MEM_ALLOC_CREDIT_CLASS();
+#ifndef USE_MEM_DEBUG
+		if ( !m_pBase )
+		{
+			LOCAL_THREAD_LOCK();
+			if ( !m_pBase )
+			{
+				byte *pMemory = m_pBase = (byte *)malloc( ITEM_COUNT * ITEM_SIZE );
+				m_pLimit = m_pBase + ( ITEM_COUNT * ITEM_SIZE );
+
+				for ( int i = 0; i < ITEM_COUNT; i++ )
+				{
+					m_freeList.Push( (TSLNodeBase_t *)pMemory );
+					pMemory += ITEM_SIZE;
+				}
+			}
+		}
+
+		void *p = m_freeList.Pop();
+		if ( p )
+			return p;
+#endif
+		return malloc( ITEM_SIZE );
+	}
+
+	void Free( void *p )
+	{
+#ifndef USE_MEM_DEBUG
+		if ( Owns( p ) )
+			m_freeList.Push( (TSLNodeBase_t *)p );
+		else
+#endif
+			free( p );
+	}
+
+	enum
+	{
+		ITEM_SIZE = ALIGN_VALUE( PROVIDED_ITEM_SIZE, 4 )
+	};
+
+	CTSListBase m_freeList;
+	byte *m_pBase;
+	byte *m_pLimit;
+};
+
+#define BIND_TO_FIXED_BUDGET_POOL( poolName )									\
+	inline void* operator new( size_t size ) { return poolName.Alloc(); }   \
+	inline void* operator new( size_t size, int nBlockUse, const char *pFileName, int nLine ) { return poolName.Alloc(); }   \
+	inline void  operator delete( void* p ) { poolName.Free(p); }		\
+	inline void  operator delete( void* p, int nBlockUse, const char *pFileName, int nLine ) { poolName.Free(p); }
+
+//-----------------------------------------------------------------------------
 
 
 template< class T >
@@ -261,7 +321,7 @@ inline T* CClassMemoryPool<T>::Alloc()
 	T *pRet;
 
 	{
-	MEM_ALLOC_CREDIT_(MEM_ALLOC_CLASSNAME(T));
+	MEM_ALLOC_CREDIT_CLASS();
 	pRet = (T*)CUtlMemoryPool::Alloc();
 	}
 
@@ -278,7 +338,7 @@ inline T* CClassMemoryPool<T>::AllocZero()
 	T *pRet;
 
 	{
-	MEM_ALLOC_CREDIT_(MEM_ALLOC_CLASSNAME(T));
+	MEM_ALLOC_CREDIT_CLASS();
 	pRet = (T*)CUtlMemoryPool::AllocZero();
 	}
 
@@ -382,8 +442,8 @@ inline void CClassMemoryPool<T>::Clear()
    CUtlMemoryPool*   _class::s_pAllocator = _allocator
 
 
-template <int ITEM_SIZE, int ALIGNMENT, int CHUNK_SIZE, class CAllocator, int COMPACT_THRESHOLD >
-inline CAlignedMemPool<ITEM_SIZE, ALIGNMENT, CHUNK_SIZE, CAllocator, COMPACT_THRESHOLD>::CAlignedMemPool()
+template <int ITEM_SIZE, int ALIGNMENT, int CHUNK_SIZE, class CAllocator, bool GROWMODE, int COMPACT_THRESHOLD >
+inline CAlignedMemPool<ITEM_SIZE, ALIGNMENT, CHUNK_SIZE, CAllocator, GROWMODE, COMPACT_THRESHOLD>::CAlignedMemPool()
   : m_pFirstFree( 0 ),
 	m_nFree( 0 ),
 	m_TimeLastCompact( 0 )
@@ -392,11 +452,18 @@ inline CAlignedMemPool<ITEM_SIZE, ALIGNMENT, CHUNK_SIZE, CAllocator, COMPACT_THR
 	COMPILE_TIME_ASSERT( ALIGN_VALUE( sizeof( FreeBlock_t ), ALIGNMENT ) == sizeof( FreeBlock_t ) );
 }
 
-template <int ITEM_SIZE, int ALIGNMENT, int CHUNK_SIZE, class CAllocator, int COMPACT_THRESHOLD >
-inline void *CAlignedMemPool<ITEM_SIZE, ALIGNMENT, CHUNK_SIZE, CAllocator, COMPACT_THRESHOLD>::Alloc()
+template <int ITEM_SIZE, int ALIGNMENT, int CHUNK_SIZE, class CAllocator, bool GROWMODE, int COMPACT_THRESHOLD >
+inline void *CAlignedMemPool<ITEM_SIZE, ALIGNMENT, CHUNK_SIZE, CAllocator, GROWMODE, COMPACT_THRESHOLD>::Alloc()
 {
+	AUTO_LOCK( m_mutex );
+
 	if ( !m_pFirstFree )
 	{
+		if ( !GROWMODE && m_Chunks.Count() )
+		{
+			return NULL;
+		}
+
 		FreeBlock_t *pNew = (FreeBlock_t *)m_Allocator.Alloc( CHUNK_SIZE );
 		Assert( (unsigned)pNew % ALIGNMENT == 0 );
 		m_Chunks.AddToTail( pNew );
@@ -417,9 +484,11 @@ inline void *CAlignedMemPool<ITEM_SIZE, ALIGNMENT, CHUNK_SIZE, CAllocator, COMPA
 	return p;
 }
 
-template <int ITEM_SIZE, int ALIGNMENT, int CHUNK_SIZE, class CAllocator, int COMPACT_THRESHOLD >
-inline void CAlignedMemPool<ITEM_SIZE, ALIGNMENT, CHUNK_SIZE, CAllocator, COMPACT_THRESHOLD>::Free( void *p )
+template <int ITEM_SIZE, int ALIGNMENT, int CHUNK_SIZE, class CAllocator, bool GROWMODE, int COMPACT_THRESHOLD >
+inline void CAlignedMemPool<ITEM_SIZE, ALIGNMENT, CHUNK_SIZE, CAllocator, GROWMODE, COMPACT_THRESHOLD>::Free( void *p )
 {
+	AUTO_LOCK( m_mutex ); 
+
 	// Insertion sort to encourage allocation clusters in chunks
 	FreeBlock_t *pFree = ((FreeBlock_t *)p);
 	FreeBlock_t *pCur = m_pFirstFree;
@@ -455,14 +524,14 @@ inline void CAlignedMemPool<ITEM_SIZE, ALIGNMENT, CHUNK_SIZE, CAllocator, COMPAC
 	}
 }
 
-template <int ITEM_SIZE, int ALIGNMENT, int CHUNK_SIZE, class CAllocator, int COMPACT_THRESHOLD >
-inline int __cdecl CAlignedMemPool<ITEM_SIZE, ALIGNMENT, CHUNK_SIZE, CAllocator, COMPACT_THRESHOLD>::CompareChunk( void * const *ppLeft, void * const *ppRight )
+template <int ITEM_SIZE, int ALIGNMENT, int CHUNK_SIZE, class CAllocator, bool GROWMODE, int COMPACT_THRESHOLD >
+inline int __cdecl CAlignedMemPool<ITEM_SIZE, ALIGNMENT, CHUNK_SIZE, CAllocator, GROWMODE, COMPACT_THRESHOLD>::CompareChunk( void * const *ppLeft, void * const *ppRight )
 {
 	return ((unsigned)*ppLeft) - ((unsigned)*ppRight);
 }
 
-template <int ITEM_SIZE, int ALIGNMENT, int CHUNK_SIZE, class CAllocator, int COMPACT_THRESHOLD >
-inline void CAlignedMemPool<ITEM_SIZE, ALIGNMENT, CHUNK_SIZE, CAllocator, COMPACT_THRESHOLD>::Compact()
+template <int ITEM_SIZE, int ALIGNMENT, int CHUNK_SIZE, class CAllocator, bool GROWMODE, int COMPACT_THRESHOLD >
+inline void CAlignedMemPool<ITEM_SIZE, ALIGNMENT, CHUNK_SIZE, CAllocator, GROWMODE, COMPACT_THRESHOLD>::Compact()
 {
 	FreeBlock_t *pCur = m_pFirstFree;
 	FreeBlock_t *pPrev = NULL;

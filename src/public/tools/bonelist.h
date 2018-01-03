@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -22,14 +22,21 @@ public:
 
 	static CBoneList *Alloc();
 
-public:
+	unsigned int GetWriteSize() const
+	{
+		return 2 + m_nBones * ( sizeof( Vector ) + sizeof( Quaternion ) );
+	}
 
-	int			m_nBones;
-	Vector		m_vecPos[ MAXSTUDIOBONES ];
-	Quaternion	m_quatRot[ MAXSTUDIOBONES ];
+	// The order of these data members must be maintained in order for the server
+	// demo system.  ServerDemoPacket_BaseAnimating::GetSize() depends on this.
 
 private:
-	bool		m_bShouldDelete;
+	bool		m_bShouldDelete : 1;
+
+public:
+	uint16		m_nBones : 15;
+	Vector		m_vecPos[ MAXSTUDIOBONES ];
+	Quaternion	m_quatRot[ MAXSTUDIOBONES ];
 };
 
 class CFlexList

@@ -1,4 +1,3 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
 #include "toolframework/itooldictionary.h"
 #include "utlvector.h"
 

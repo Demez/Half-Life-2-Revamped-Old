@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -12,8 +12,8 @@
 #endif
 
 #include "Panel.h"
-#include "utlmap.h"
-#include "utlsymbol.h"
+#include "UtlMap.h"
+#include "UtlSymbol.h"
 
 class CControllerMap : public vgui::Panel
 {

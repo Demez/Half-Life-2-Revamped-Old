@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Things thrown from the hand
 //
@@ -35,6 +35,7 @@ LINK_ENTITY_TO_CLASS( brickbat, CGrenade_Brickbat );
 
 void CGrenade_Brickbat::Spawn( void )
 {
+	RemoveEffects( EF_NOINTERP );
 	SetCollisionGroup( COLLISION_GROUP_PROJECTILE );
 	SetTouch( BrickbatTouch );
 	SetThink( BrickbatThink );

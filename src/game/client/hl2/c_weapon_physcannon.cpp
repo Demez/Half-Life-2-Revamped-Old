@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -22,10 +22,8 @@ public:
 	DECLARE_PREDICTABLE();
 
 	virtual void OnDataChanged( DataUpdateType_t updateType );
-	virtual int DrawModel( int flags );
+	virtual int DrawModel( int flags, const RenderableInstance_t &instance );
 	virtual void ClientThink( void );
-
-	virtual bool ShouldUseLargeViewModelVROverride() OVERRIDE { return true; }
 
 private:
 
@@ -40,13 +38,13 @@ private:
 	CSmartPtr<CSimpleEmitter>		m_pEmitter;
 	CSmartPtr<CParticleAttractor>	m_pAttractor;
 };
-
-STUB_WEAPON_CLASS_IMPLEMENT( weapon_physcannon, C_WeaponPhysCannon );
-
 IMPLEMENT_CLIENTCLASS_DT( C_WeaponPhysCannon, DT_WeaponPhysCannon, CWeaponPhysCannon )
 	RecvPropBool( RECVINFO( m_bIsCurrentlyUpgrading ) ),
 	RecvPropFloat( RECVINFO( m_flTimeForceView) ), 
 END_RECV_TABLE()
+
+STUB_WEAPON_CLASS_IMPLEMENT( weapon_physcannon, C_WeaponPhysCannon );
+
 
 //-----------------------------------------------------------------------------
 // Constructor
@@ -208,14 +206,14 @@ void ComputeRenderInfo( mstudiobbox_t *pHitBox, const matrix3x4_t &hitboxToWorld
 // Input  : flags - 
 // Output : int
 //-----------------------------------------------------------------------------
-int C_WeaponPhysCannon::DrawModel( int flags )
+int C_WeaponPhysCannon::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	// If we're not ugrading, don't do anything special
 	if ( m_bIsCurrentlyUpgrading == false && m_bWasUpgraded == false )
-		return BaseClass::DrawModel( flags );
+		return BaseClass::DrawModel( flags, instance );
 
 	if ( gpGlobals->frametime == 0 )
-		return BaseClass::DrawModel( flags );
+		return BaseClass::DrawModel( flags, instance );
 
 	if ( !m_bReadyToDraw )
 		return 0;
@@ -399,7 +397,7 @@ int C_WeaponPhysCannon::DrawModel( int flags )
 		}
 	}
 
-	return BaseClass::DrawModel( flags );
+	return BaseClass::DrawModel( flags, instance );
 }
 
 //---------------------------------------------------------

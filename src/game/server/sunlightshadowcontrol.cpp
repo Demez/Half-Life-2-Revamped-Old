@@ -1,4 +1,4 @@
-//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Sunlight shadow control entity.
 //
@@ -116,7 +116,6 @@ CSunlightShadowControl::CSunlightShadowControl()
 	m_flSunDistance = 10000.0f;
 	m_flFOV = 5.0f;
 	m_bEnableShadows = false;
-	//m_bEnableShadows = true;
 }
 
 

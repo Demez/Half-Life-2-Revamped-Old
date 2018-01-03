@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -21,6 +21,15 @@ class IClientNetworkable;
 class CBaseHandle;
 class IClientUnknown;
 
+// Cached info for networked entities.
+// NOTE: Changing this changes the interface between engine & client
+struct EntityCacheInfo_t
+{
+	// Cached off because GetClientNetworkable is called a *lot*
+	IClientNetworkable *m_pNetworkable;
+	unsigned short m_BaseEntitiesIndex;	// Index into m_BaseEntities (or m_BaseEntities.InvalidIndex() if none).
+	unsigned short m_bDormant;	// cached dormant state - this is only a bit
+};
 
 //-----------------------------------------------------------------------------
 // Purpose: Exposes IClientEntity's to engine
@@ -47,6 +56,7 @@ public:
 	// Sizes entity list to specified size
 	virtual void				SetMaxEntities( int maxents ) = 0;
 	virtual int					GetMaxEntities( ) = 0;
+	virtual EntityCacheInfo_t	*GetClientNetworkableArray() = 0;
 };
 
 extern IClientEntityList *entitylist;
@@ -54,3 +64,4 @@ extern IClientEntityList *entitylist;
 #define VCLIENTENTITYLIST_INTERFACE_VERSION	"VClientEntityList003"
 
 #endif // ICLIENTENTITYLIST_H
+

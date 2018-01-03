@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Implements the zombie, a horrific once-human headcrab victim.
 //
@@ -684,7 +684,7 @@ float CNPC_BaseZombie::GetHitgroupDamageMultiplier( int iHitGroup, const CTakeDa
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CNPC_BaseZombie::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
+void CNPC_BaseZombie::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
 {
 	CTakeDamageInfo infoCopy = info;
 
@@ -702,7 +702,7 @@ void CNPC_BaseZombie::TraceAttack( const CTakeDamageInfo &info, const Vector &ve
 		infoCopy.ScaleDamage( 0.625 );
 	}
 
-	BaseClass::TraceAttack( infoCopy, vecDir, ptr, pAccumulator );
+	BaseClass::TraceAttack( infoCopy, vecDir, ptr );
 }
 
 
@@ -840,7 +840,7 @@ int CNPC_BaseZombie::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 		Ignite( 100.0f );
 	}
 
-	int tookDamage = BaseClass::OnTakeDamage_Alive( info );
+	int tookDamage=BaseClass::OnTakeDamage_Alive( info );
 
 	// flDamageThreshold is what percentage of the creature's max health
 	// this amount of damage represents. (clips at 1.0)
@@ -949,12 +949,10 @@ int CNPC_BaseZombie::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 //-----------------------------------------------------------------------------
 void CNPC_BaseZombie::MakeAISpookySound( float volume, float duration )
 {
-#ifdef HL2_EPISODIC
 	if ( HL2GameRules()->IsAlyxInDarknessMode() )
 	{
 		CSoundEnt::InsertSound( SOUND_COMBAT, EyePosition(), volume, duration, this, SOUNDENT_CHANNEL_SPOOKY_NOISE );
 	}
-#endif // HL2_EPISODIC
 }
 
 //-----------------------------------------------------------------------------
@@ -1071,7 +1069,7 @@ void CNPC_BaseZombie::DieChopped( const CTakeDamageInfo &info )
 
 	Vector forceVector( vec3_origin );
 
-	forceVector += CalcDamageForceVector( info );
+	forceVector += CalcDeathForceVector( info );
 
 	if( !m_fIsHeadless && !bSquashed )
 	{
@@ -1250,8 +1248,9 @@ void CNPC_BaseZombie::Ignite( float flFlameLifetime, bool bNPCOnly, float flSize
 //---------------------------------------------------------
 void CNPC_BaseZombie::CopyRenderColorTo( CBaseEntity *pOther )
 {
-	color32 color = GetRenderColor();
-	pOther->SetRenderColor( color.r, color.g, color.b, color.a );
+	color24 color = GetRenderColor();
+	pOther->SetRenderColor( color.r, color.g, color.b );
+	pOther->SetRenderAlpha( GetRenderAlpha());
 }
 
 //-----------------------------------------------------------------------------
@@ -1438,7 +1437,7 @@ void CNPC_BaseZombie::PoundSound()
 //-----------------------------------------------------------------------------
 void CNPC_BaseZombie::HandleAnimEvent( animevent_t *pEvent )
 {
-	if ( pEvent->event == AE_NPC_ATTACK_BROADCAST )
+	if ( pEvent->Event() == AE_NPC_ATTACK_BROADCAST )
 	{
 		if( GetEnemy() && GetEnemy()->IsNPC() )
 		{
@@ -1453,33 +1452,33 @@ void CNPC_BaseZombie::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_POUND )
+	if ( pEvent->Event() == AE_ZOMBIE_POUND )
 	{
 		PoundSound();
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_ALERTSOUND )
+	if ( pEvent->Event() == AE_ZOMBIE_ALERTSOUND )
 	{
 		AlertSound();
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_STEP_LEFT )
+	if ( pEvent->Event() == AE_ZOMBIE_STEP_LEFT )
 	{
 		MakeAIFootstepSound( 180.0f );
 		FootstepSound( false );
 		return;
 	}
 	
-	if ( pEvent->event == AE_ZOMBIE_STEP_RIGHT )
+	if ( pEvent->Event() == AE_ZOMBIE_STEP_RIGHT )
 	{
 		MakeAIFootstepSound( 180.0f );
 		FootstepSound( true );
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_GET_UP )
+	if ( pEvent->Event() == AE_ZOMBIE_GET_UP )
 	{
 		MakeAIFootstepSound( 180.0f, 3.0f );
 		if( !IsOnFire() )
@@ -1491,14 +1490,14 @@ void CNPC_BaseZombie::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_SCUFF_LEFT )
+	if ( pEvent->Event() == AE_ZOMBIE_SCUFF_LEFT )
 	{
 		MakeAIFootstepSound( 180.0f );
 		FootscuffSound( false );
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_SCUFF_RIGHT )
+	if ( pEvent->Event() == AE_ZOMBIE_SCUFF_RIGHT )
 	{
 		MakeAIFootstepSound( 180.0f );
 		FootscuffSound( true );
@@ -1506,20 +1505,20 @@ void CNPC_BaseZombie::HandleAnimEvent( animevent_t *pEvent )
 	}
 
 	// all swat animations are handled as a single case.
-	if ( pEvent->event == AE_ZOMBIE_STARTSWAT )
+	if ( pEvent->Event() == AE_ZOMBIE_STARTSWAT )
 	{
 		MakeAIFootstepSound( 180.0f );
 		AttackSound();
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_ATTACK_SCREAM )
+	if ( pEvent->Event() == AE_ZOMBIE_ATTACK_SCREAM )
 	{
 		AttackSound();
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_SWATITEM )
+	if ( pEvent->Event() == AE_ZOMBIE_SWATITEM )
 	{
 		CBaseEntity *pEnemy = GetEnemy();
 		if ( pEnemy )
@@ -1571,7 +1570,7 @@ void CNPC_BaseZombie::HandleAnimEvent( animevent_t *pEvent )
 		}
 	}
 	
-	if ( pEvent->event == AE_ZOMBIE_ATTACK_RIGHT )
+	if ( pEvent->Event() == AE_ZOMBIE_ATTACK_RIGHT )
 	{
 		Vector right, forward;
 		AngleVectors( GetLocalAngles(), &forward, &right, NULL );
@@ -1579,13 +1578,11 @@ void CNPC_BaseZombie::HandleAnimEvent( animevent_t *pEvent )
 		right = right * 100;
 		forward = forward * 200;
 
-		QAngle qa( -15, -20, -10 );
-		Vector vec = right + forward;
-		ClawAttack( GetClawAttackRange(), sk_zombie_dmg_one_slash.GetFloat(), qa, vec, ZOMBIE_BLOOD_RIGHT_HAND );
+		ClawAttack( GetClawAttackRange(), sk_zombie_dmg_one_slash.GetFloat(), QAngle( -15, -20, -10 ), right + forward, ZOMBIE_BLOOD_RIGHT_HAND );
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_ATTACK_LEFT )
+	if ( pEvent->Event() == AE_ZOMBIE_ATTACK_LEFT )
 	{
 		Vector right, forward;
 		AngleVectors( GetLocalAngles(), &forward, &right, NULL );
@@ -1593,13 +1590,11 @@ void CNPC_BaseZombie::HandleAnimEvent( animevent_t *pEvent )
 		right = right * -100;
 		forward = forward * 200;
 
-		QAngle qa( -15, 20, -10 );
-		Vector vec = right + forward;
-		ClawAttack( GetClawAttackRange(), sk_zombie_dmg_one_slash.GetFloat(), qa, vec, ZOMBIE_BLOOD_LEFT_HAND );
+		ClawAttack( GetClawAttackRange(), sk_zombie_dmg_one_slash.GetFloat(), QAngle( -15, 20, -10 ), right + forward, ZOMBIE_BLOOD_LEFT_HAND );
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_ATTACK_BOTH )
+	if ( pEvent->Event() == AE_ZOMBIE_ATTACK_BOTH )
 	{
 		Vector forward;
 		QAngle qaPunch( 45, random->RandomInt(-5,5), random->RandomInt(-5,5) );
@@ -1609,7 +1604,7 @@ void CNPC_BaseZombie::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_POPHEADCRAB )
+	if ( pEvent->Event() == AE_ZOMBIE_POPHEADCRAB )
 	{
 		if ( GetInteractionPartner() == NULL )
 			return;
@@ -1911,7 +1906,7 @@ int CNPC_BaseZombie::SelectSchedule ( void )
 
 #ifdef DEBUG_ZOMBIES
 			DevMsg("Wandering\n");
-#endif
+#endif+
 
 			// Just lost track of our enemy. 
 			// Wander around a bit so we don't look like a dingus.
@@ -2318,7 +2313,7 @@ void CNPC_BaseZombie::StopLoopingSounds()
 void CNPC_BaseZombie::RemoveHead( void )
 {
 	m_fIsHeadless = true;
-	SetZombieModel();
+	SetHeadlessModel();
 }
 
 
@@ -2483,7 +2478,7 @@ void CNPC_BaseZombie::ReleaseHeadcrab( const Vector &vecOrigin, const Vector &ve
 		pCrab->SetNextThink( gpGlobals->curtime );
 		pCrab->PhysicsSimulate();
 		pCrab->SetAbsVelocity( vecVelocity );
-
+		
 		// if I have an enemy, stuff that to the headcrab.
 		CBaseEntity *pEnemy;
 		pEnemy = GetEnemy();
@@ -2508,7 +2503,7 @@ void CNPC_BaseZombie::ReleaseHeadcrab( const Vector &vecOrigin, const Vector &ve
 	{
 		RemoveHead();
 	}
-
+	
 	if( fRagdollBody )
 	{
 		BecomeRagdollOnClient( vec3_origin );

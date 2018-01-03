@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -16,6 +16,7 @@
 #include "vgui/VGUI.h"
 #include "vgui_controls/Panel.h"
 #include "vgui_controls/PHandle.h"
+#include "dmxloader/dmxelement.h"
 
 namespace vgui
 {
@@ -27,8 +28,10 @@ namespace vgui
 class Label : public Panel
 {
 	DECLARE_CLASS_SIMPLE( Label, Panel );
+	DECLARE_DMXELEMENT_UNPACK_NAMESPACE(vgui);
 
 public:
+
 	// Constructors
 	Label(Panel *parent, const char *panelName, const char *text);
 	Label(Panel *parent, const char *panelName, const wchar_t *wszText);
@@ -42,8 +45,8 @@ public:
 	virtual void SetText(const wchar_t *unicodeString, bool bClearUnlocalizedSymbol = false );
 
 	// Get the current text
-	virtual void GetText(OUT_Z_BYTECAP(bufferLen) char *textOut, int bufferLen);
-	virtual void GetText(OUT_Z_BYTECAP(bufLenInBytes) wchar_t *textOut, int bufLenInBytes);
+	virtual void GetText(char *textOut, int bufferLen);
+	virtual void GetText(wchar_t *textOut, int bufLenInBytes);
 
 	// Content alignment
 	// Get the size of the content within the label
@@ -68,7 +71,6 @@ public:
 	virtual void SetEnabled(bool state);
 	// Additional offset at the Start of the text (from whichever sides it is aligned)
 	virtual void SetTextInset(int xInset, int yInset);		
-	virtual void GetTextInset(int *xInset, int *yInset );
 
 	// Text colors
 	virtual void SetFgColor(Color color);
@@ -108,6 +110,7 @@ public:
 	// Images are drawn from left to right across the label, ordered by index
 	// By default there is a TextImage in position 0 (see GetTextImage()/SetTextImageIndex())
 	virtual int AddImage(IImage *image, int preOffset);  // Return the index the image was placed in
+	virtual void SetImage(IImage *image, int preOffset ); // Clears all images and sets the only remaining image to the passed in image
 	virtual void SetImageAtIndex(int index, IImage *image, int preOffset);	
 	virtual void SetImagePreOffset(int index, int preOffset);  // Set the offset in pixels before the image
 	virtual IImage *GetImageAtIndex(int index);
@@ -156,6 +159,8 @@ public:
 
 	void SetAllCaps( bool bAllCaps );
 
+	virtual void GetSizerMinimumSize(int &wide, int &tall);
+
 protected:
 	virtual void PerformLayout();
 	virtual wchar_t CalculateHotkey(const char *text);
@@ -174,18 +179,27 @@ protected:
 
 	// editing
 	virtual void ApplySchemeSettings(IScheme *pScheme);
+
+public:
 	virtual void GetSettings( KeyValues *outResourceData );
 	virtual void ApplySettings( KeyValues *inResourceData );
+
+protected:
 	virtual const char *GetDescription( void );
 
 	MESSAGE_FUNC_PARAMS( OnDialogVariablesChanged, "DialogVariables", dialogVariables );
 
 	void HandleAutoSizing( void );
 
-private:
-	void Init();
+	// Derived can override to, e.g., recenter text image text if there is space.
+	virtual void RepositionTextImage( int &x, int &y, TextImage *pTextImage ) {}
 
 	Alignment  _contentAlignment;
+
+private:
+
+	void Init();
+
 	TextImage *_textImage; // this is the textImage, if the full text will not
 							// fit we put as much as we can and add an elipsis (...)
 	struct TImageInfo
@@ -216,8 +230,6 @@ private:
 	bool	m_bAllCaps;
 	bool	m_bAutoWideToContents;
 	bool	m_bAutoWideDirty;
-	bool	m_bUseProportionalInsets;
-
 };
 
 } // namespace vgui

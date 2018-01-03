@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -11,6 +11,11 @@
 #endif
 
 #include "interface.h"
+
+//-----------------------------------------------------------------------------
+// Forward declarations
+//-----------------------------------------------------------------------------
+class CServerDemo;
 
 //-----------------------------------------------------------------------------
 // Purpose: exposed from engine to game .dll
@@ -39,6 +44,7 @@ public:
 	// The server uses this to call into the tools to get the actual
 	// entities to spawn on startup
 	virtual const char* GetEntityData( const char *pActualEntityData ) = 0;
+	virtual void* QueryInterface( const char *pInterfaceName ) = 0;
 
 	virtual void PreSetupVisibilityAllTools() = 0;
 

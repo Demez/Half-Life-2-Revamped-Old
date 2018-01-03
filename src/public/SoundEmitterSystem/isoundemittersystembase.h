@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright � 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -11,22 +11,21 @@
 #pragma once
 #endif
 
+
 #include "tier1/utldict.h"
-#include "vstdlib/random.h"
 #include "soundflags.h"
 #include "mathlib/compressed_vector.h"
 #include "appframework/IAppSystem.h"
+#include "tier3/tier3.h"
 
-
-#define SOUNDEMITTERSYSTEM_INTERFACE_VERSION	"VSoundEmitter002"
 
 #define SOUNDGENDER_MACRO "$gender"
 #define SOUNDGENDER_MACRO_LENGTH 7		// Length of above including $
 
+class KeyValues;
 typedef short HSOUNDSCRIPTHANDLE;
 #define SOUNDEMITTER_INVALID_HANDLE	(HSOUNDSCRIPTHANDLE)-1
 
-class IFileList;
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -106,7 +105,7 @@ struct sound_interval_t
 
 	interval_t &ToInterval( interval_t &dest ) const	{ dest.start = start; dest.range = range; return dest; }
 	void FromInterval( const interval_t &from )			{ start = from.start; range = from.range; }
-	float Random() const								{ return RandomFloat( start, start + range ); }
+	float Random() const								{ return RandomFloat( start, start+range ); }
 };
 
 
@@ -191,7 +190,7 @@ private:
 
 	byte			reserved;						// 28
 
-
+	KeyValues *				m_pGameData;			// 32
 };
 #pragma pack()
 
@@ -202,9 +201,9 @@ private:
 abstract_class ISoundEmitterSystemBase : public IAppSystem
 {
 public:
-	// Init, shutdown called after we know what mod is running
-	virtual bool			ModInit() = 0;
-	virtual void			ModShutdown() = 0;
+	// Unused, left in the interface so I don't have to rebuild all
+	virtual void			Unused1() {}
+	virtual void			Unused2() {}
 
 	virtual int				GetSoundIndex( const char *pName ) const = 0;
 	virtual bool			IsValidIndex( int index ) = 0;
@@ -255,7 +254,7 @@ public:
 
 	// Called from both client and server (single player) or just one (server only in dedicated server and client only if connected to a remote server)
 	// Called by LevelInitPreEntity to override sound scripts for the mod with level specific overrides based on custom mapnames, etc.
-	virtual void			AddSoundOverrides( char const *scriptfile, bool bPreload = false ) = 0;
+	virtual void			AddSoundOverrides( char const *scriptfile ) = 0;
 
 	// Called by either client or server in LevelShutdown to clear out custom overrides
 	virtual void			ClearSoundOverrides() = 0;
@@ -263,7 +262,15 @@ public:
 	virtual bool			GetParametersForSoundEx( const char *soundname, HSOUNDSCRIPTHANDLE& handle, CSoundParameters& params, gender_t gender, bool isbeingemitted = false ) = 0;
 	virtual soundlevel_t	LookupSoundLevelByHandle( char const *soundname, HSOUNDSCRIPTHANDLE& handle ) = 0;
 
-	virtual void			ReloadSoundEntriesInList( IFileList *pFilesToReload ) = 0;
+	virtual char const		*GetSoundNameForHash( unsigned int hash ) = 0; // Returns NULL if hash not found!!!
+	virtual unsigned int	HashSoundName( char const *pchSndName ) = 0;
+	virtual bool			IsValidHash( unsigned int hash ) = 0;
+
+	virtual void			DescribeSound( char const *soundname ) = 0;
+	// Flush and reload
+	virtual void			Flush() = 0;
+
+	virtual void			AddSoundsFromFile( const char *filename, bool bPreload, bool bIsOverride = false ) = 0;
 };
 
 #endif // ISOUNDEMITTERSYSTEMBASE_H

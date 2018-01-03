@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -242,7 +242,7 @@ public:
 	}
 
 	int		OnTakeDamage( const CTakeDamageInfo &info );
-	void	TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator );
+	void	TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr );
 
 	Class_T	Classify() 
 	{ 
@@ -519,6 +519,8 @@ void CNPC_RollerMine::Precache( void )
 
 	PrecacheMaterial( "effects/rollerglow" );
 
+	PrecacheEffect( "WaterSurfaceExplosion" );
+
 	gm_iszDropshipClassname = AllocPooledString( "npc_combinedropship" ); // For fast string compares.
 #ifdef HL2_EPISODIC
 	PrecacheScriptSound( "RagdollBoogie.Zap" );
@@ -613,7 +615,7 @@ unsigned int CNPC_RollerMine::PhysicsSolidMaskForEntity( void ) const
 	if ( HasSpawnFlags( SF_ROLLERMINE_PROP_COLLISION ) )
 		return MASK_SOLID;
 
-	return MASK_NPCSOLID;
+	return GetAITraceMask();
 }
 
 //-----------------------------------------------------------------------------
@@ -621,7 +623,7 @@ unsigned int CNPC_RollerMine::PhysicsSolidMaskForEntity( void ) const
 //-----------------------------------------------------------------------------
 void CNPC_RollerMine::Bury( trace_t *tr )
 {
-	AI_TraceHull( GetAbsOrigin() + Vector(0,0,64), GetAbsOrigin() - Vector( 0, 0, MAX_TRACE_LENGTH ), Vector(-16,-16,-16), Vector(16,16,16), MASK_NPCSOLID, this, GetCollisionGroup(), tr );
+	AI_TraceHull( GetAbsOrigin() + Vector(0,0,64), GetAbsOrigin() - Vector( 0, 0, MAX_TRACE_LENGTH ), Vector(-16,-16,-16), Vector(16,16,16), GetAITraceMask(), this, GetCollisionGroup(), tr );
 
 	//NDebugOverlay::Box( tr->startpos, Vector(-16,-16,-16), Vector(16,16,16), 255, 0, 0, 64, 10.0 );
 	//NDebugOverlay::Box( tr->endpos, Vector(-16,-16,-16), Vector(16,16,16), 0, 255, 0, 64, 10.0 );
@@ -1236,7 +1238,7 @@ void CNPC_RollerMine::RunTask( const Task_t *pTask )
 
 			// Robin: HACK: Bloat the rollermine check to catch the model switch (roller.mdl->roller_spikes.mdl)
 			trace_t	tr;
-			AI_TraceHull( vCenter, vCenter, Vector(-16,-16,-16), Vector(16,16,16), MASK_NPCSOLID, this, GetCollisionGroup(), &tr );
+			AI_TraceHull( vCenter, vCenter, Vector(-16,-16,-16), Vector(16,16,16), GetAITraceMask(), this, GetCollisionGroup(), &tr );
 
 			if ( tr.fraction == 1 && tr.allsolid != 1 && (tr.startsolid != 1) )
 			{
@@ -2524,7 +2526,7 @@ void CNPC_RollerMine::Explode( void )
 	}
 
 	// Underwater explosion?
-	if ( UTIL_PointContents( GetAbsOrigin() ) & MASK_WATER )
+	if ( UTIL_PointContents( GetAbsOrigin(), MASK_WATER ) & MASK_WATER )
 	{
 		CEffectData	data;
 		data.m_vOrigin = WorldSpaceCenter();
@@ -2596,11 +2598,11 @@ void CNPC_RollerMine::EmbedOnGroundImpact()
 void CNPC_RollerMine::PrescheduleThink()
 {
 	// Are we underwater?
-	if ( UTIL_PointContents( GetAbsOrigin() ) & MASK_WATER )
+	if ( UTIL_PointContents( GetAbsOrigin(), MASK_WATER ) & MASK_WATER )
 	{
 		// As soon as we're far enough underwater, detonate
 		Vector vecAboveMe = GetAbsOrigin() + Vector(0,0,64);
-		if ( UTIL_PointContents( vecAboveMe ) & MASK_WATER )
+		if ( UTIL_PointContents( vecAboveMe, MASK_WATER ) & MASK_WATER )
 		{
 			Explode();
 			return;
@@ -2814,7 +2816,7 @@ float CNPC_RollerMine::VehicleHeading( CBaseEntity *pVehicle )
 //			&vecDir - 
 //			*ptr - 
 //-----------------------------------------------------------------------------
-void CNPC_RollerMine::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
+void CNPC_RollerMine::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
 {
 	if ( info.GetDamageType() & (DMG_BULLET | DMG_CLUB) )
 	{
@@ -2830,11 +2832,11 @@ void CNPC_RollerMine::TraceAttack( const CTakeDamageInfo &info, const Vector &ve
 			newInfo.SetDamageForce( info.GetDamageForce() * 20 );
 		}
 
-		BaseClass::TraceAttack( newInfo, vecDir, ptr, pAccumulator );
+		BaseClass::TraceAttack( newInfo, vecDir, ptr );
 		return;
 	}
 
-	BaseClass::TraceAttack( info, vecDir, ptr, pAccumulator );
+	BaseClass::TraceAttack( info, vecDir, ptr );
 }
 
 //-----------------------------------------------------------------------------

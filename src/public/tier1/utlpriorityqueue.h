@@ -1,9 +1,9 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
 // $NoKeywords: $
-//=============================================================================//
+//===========================================================================//
 
 #ifndef UTLPRIORITYQUEUE_H
 #define UTLPRIORITYQUEUE_H
@@ -13,10 +13,21 @@
 
 #include "utlvector.h"
 
+template < typename T >
+class CDefUtlPriorityQueueLessFunc
+{
+public:
+	bool operator()( const T &lhs, const T &rhs, bool (*lessFuncPtr)( T const&, T const& ) )	
+	{ 
+		return lessFuncPtr( lhs, rhs );	
+	}
+};
+
+
 // T is the type stored in the queue, it must include the priority
 // The head of the list contains the element with GREATEST priority
 // configure the LessFunc_t to get the desired queue order
-template< class T > 
+template< class T, class LessFunc = CDefUtlPriorityQueueLessFunc< T >, class A = CUtlMemory<T> > 
 class CUtlPriorityQueue
 {
 public:
@@ -58,7 +69,7 @@ public:
 	inline const T &	Element( int index ) const { return m_heap.Element(index); }
 
 protected:
-	CUtlVector<T>	m_heap;
+	CUtlVector<T, A>	m_heap;
 
 	void		Swap( int index1, int index2 );
 
@@ -66,20 +77,20 @@ protected:
 	LessFunc_t m_LessFunc;
 };
 
-template< class T >
-inline CUtlPriorityQueue<T>::CUtlPriorityQueue( int growSize, int initSize, LessFunc_t lessfunc ) :
+template< class T, class LessFunc, class A >
+inline CUtlPriorityQueue<T, LessFunc, A>::CUtlPriorityQueue( int growSize, int initSize, LessFunc_t lessfunc ) :
 	m_heap(growSize, initSize), m_LessFunc(lessfunc)
 {
 }
 
-template< class T >
-inline CUtlPriorityQueue<T>::CUtlPriorityQueue( T *pMemory, int numElements, LessFunc_t lessfunc )	: 
+template< class T, class LessFunc, class A >
+inline CUtlPriorityQueue<T, LessFunc, A>::CUtlPriorityQueue( T *pMemory, int numElements, LessFunc_t lessfunc )	: 
 	m_heap(pMemory, numElements), m_LessFunc(lessfunc)
 {
 }
 
-template <class T>
-void CUtlPriorityQueue<T>::RemoveAtHead()
+template< class T, class LessFunc, class A >
+void CUtlPriorityQueue<T, LessFunc, A>::RemoveAtHead()
 {
 	m_heap.FastRemove( 0 );
 	int index = 0;
@@ -88,6 +99,7 @@ void CUtlPriorityQueue<T>::RemoveAtHead()
 	if ( !count )
 		return;
 
+	LessFunc lessFunc;
 	int half = count/2;
 	int larger = index;
 	while ( index < half )
@@ -96,7 +108,7 @@ void CUtlPriorityQueue<T>::RemoveAtHead()
 		if ( child < count )
 		{
 			// Item has been filtered down to its proper place, terminate.
-			if ( m_LessFunc( m_heap[index], m_heap[child] ) )
+			if ( lessFunc( m_heap[index], m_heap[child], m_LessFunc ) )
 			{
 				// mark the potential swap and check the other child
 				larger = child;
@@ -107,7 +119,7 @@ void CUtlPriorityQueue<T>::RemoveAtHead()
 		if ( child < count )
 		{
 			// If this child is larger, swap it instead
-			if ( m_LessFunc( m_heap[larger], m_heap[child] ) )
+			if ( lessFunc( m_heap[larger], m_heap[child], m_LessFunc ) )
 				larger = child;
 		}
 		
@@ -121,8 +133,8 @@ void CUtlPriorityQueue<T>::RemoveAtHead()
 }
 
 
-template <class T>
-void CUtlPriorityQueue<T>::RemoveAt( int index )
+template< class T, class LessFunc, class A >
+void CUtlPriorityQueue<T, LessFunc, A>::RemoveAt( int index )
 {
 	Assert(m_heap.IsValidIndex(index));
 	m_heap.FastRemove( index );
@@ -131,6 +143,7 @@ void CUtlPriorityQueue<T>::RemoveAt( int index )
 	if ( !count )
 		return;
 
+	LessFunc lessFunc;
 	int half = count/2;
 	int larger = index;
 	while ( index < half )
@@ -139,7 +152,7 @@ void CUtlPriorityQueue<T>::RemoveAt( int index )
 		if ( child < count )
 		{
 			// Item has been filtered down to its proper place, terminate.
-			if ( m_LessFunc( m_heap[index], m_heap[child] ) )
+			if ( lessFunc( m_heap[index], m_heap[child], m_LessFunc ) )
 			{
 				// mark the potential swap and check the other child
 				larger = child;
@@ -150,7 +163,7 @@ void CUtlPriorityQueue<T>::RemoveAt( int index )
 		if ( child < count )
 		{
 			// If this child is larger, swap it instead
-			if ( m_LessFunc( m_heap[larger], m_heap[child] ) )
+			if ( lessFunc( m_heap[larger], m_heap[child], m_LessFunc ) )
 				larger = child;
 		}
 		
@@ -163,16 +176,17 @@ void CUtlPriorityQueue<T>::RemoveAt( int index )
 	}
 }
 
-template <class T>
-void CUtlPriorityQueue<T>::Insert( T const &element )
+template< class T, class LessFunc, class A >
+void CUtlPriorityQueue<T, LessFunc, A>::Insert( T const &element )
 {
 	int index = m_heap.AddToTail();
 	m_heap[index] = element;
 
+	LessFunc lessFunc;
 	while ( index != 0 )
 	{
 		int parent = ((index+1) / 2) - 1;
-		if ( m_LessFunc( m_heap[index], m_heap[parent] ) )
+		if ( lessFunc( m_heap[index], m_heap[parent], m_LessFunc ) )
 			break;
 
 		// swap with parent and repeat
@@ -181,16 +195,16 @@ void CUtlPriorityQueue<T>::Insert( T const &element )
 	}
 }
 
-template <class T>
-void CUtlPriorityQueue<T>::Swap( int index1, int index2 )
+template< class T, class LessFunc, class A >
+void CUtlPriorityQueue<T, LessFunc, A>::Swap( int index1, int index2 )
 {
 	T tmp = m_heap[index1];
 	m_heap[index1] = m_heap[index2];
 	m_heap[index2] = tmp;
 }
 
-template <class T>
-void CUtlPriorityQueue<T>::SetLessFunc( LessFunc_t lessfunc )
+template< class T, class LessFunc, class A >
+void CUtlPriorityQueue<T, LessFunc, A>::SetLessFunc( LessFunc_t lessfunc )
 {
 	m_LessFunc = lessfunc;
 }

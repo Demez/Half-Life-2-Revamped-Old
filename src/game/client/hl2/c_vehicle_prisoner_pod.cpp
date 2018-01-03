@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -7,7 +7,7 @@
 #include "cbase.h"
 #include "hud.h"		
 #include "c_physicsprop.h"		
-#include "iclientvehicle.h"
+#include "IClientVehicle.h"
 #include <vgui_controls/Controls.h>
 #include <Color.h>
 #include "vehicle_viewblend_shared.h"

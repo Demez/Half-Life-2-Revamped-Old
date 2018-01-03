@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -19,6 +19,7 @@
 #include "bspfile.h"
 #include "mathlib/mathlib.h"
 #include "mathlib/bumpvects.h"
+#include "mathlib/vector4d.h"
 #include "disp_common.h"
 #include "bitvec.h"
 
@@ -146,6 +147,9 @@ protected:
 	Vector2D	m_TexCoords[QUAD_POINT_COUNT];											// texture coordinates at points
 	Vector2D	m_LuxelCoords[NUM_BUMP_VECTS+1][QUAD_POINT_COUNT];						// lightmap coordinates at points
 	float		m_Alphas[QUAD_POINT_COUNT];												// alpha at points
+	Vector4D	m_MultiBlends[ QUAD_POINT_COUNT ];
+	Vector4D	m_AlphaBlends[ QUAD_POINT_COUNT ];
+	Vector		m_vBlendColors[ QUAD_POINT_COUNT ][ MAX_MULTIBLEND_CHANNELS ];
 
 	// Luxels sizes
 	int					m_nLuxelU;
@@ -685,6 +689,10 @@ struct CoreDispVert_t
 
 	// additional per-vertex data
 	float			m_Alpha;							// displacement alpha values (per displacement vertex)
+
+	Vector4D		m_MultiBlend;
+	Vector4D		m_AlphaBlend;
+	Vector			m_vBlendColors[ 4 ];
 };
 
 // New, need to use this at the node level
@@ -694,7 +702,6 @@ struct CoreDispVert_t
 #define COREDISPTRI_TAG_BUILDABLE				(1<<3)
 #define COREDISPTRI_TAG_FORCE_BUILDABLE_BIT		(1<<4)
 #define COREDISPTRI_TAG_FORCE_BUILDABLE_VAL		(1<<5)
-#define COREDISPTRI_TAG_FORCE_REMOVE_BIT		(1<<6)
 
 struct CoreDispTri_t
 {
@@ -772,11 +779,10 @@ public:
 				   bool bGenerateSurfPointStart, Vector& startPoint, 
 				   bool bHasMappingAxes, Vector& uAxis, Vector& vAxis );
 
-	void InitDispInfo( int power, int minTess, float smoothingAngle, 
-		               float *alphas, Vector *dispVectorField, float *dispDistances );
+	void InitDispInfo( int power, int minTess, float smoothingAngle, float *alphas, Vector *dispVectorField, float *dispDistances, int nFlags, const CDispMultiBlend *pvMultiBlends );
 
 	// This just unpacks the contents of the verts into arrays and calls InitDispInfo.
-	void InitDispInfo( int power, int minTess, float smoothingAngle, const CDispVert *pVerts, const CDispTri *pTris );
+	void InitDispInfo( int power, int minTess, float smoothingAngle, const CDispVert *pVerts, const CDispTri *pTris, int nFlags, const CDispMultiBlend *pvMultiBlends );
 					   
 //	bool Create( int creationFlags );
 	bool Create( void );
@@ -797,6 +803,7 @@ public:
 	inline int GetWidth( void );
 	inline int GetHeight( void );
 	inline int GetSize( void ) const;
+	inline int GetFlags( void ) const;
 
 	// Use this disp as a CDispUtils.
 	void SetDispUtilsHelperInfo( CCoreDispInfo **ppListBase, int listSize );
@@ -838,6 +845,14 @@ public:
 	inline void SetAlpha( int index, float alpha );
 	inline float GetAlpha( int index );
 
+	inline void SetMultiBlend( int index, Vector4D &vBlend, Vector4D &vAlphaBlend, Vector &vColor1, Vector &vColor2, Vector &vColor3, Vector &vColor4 );
+	inline void SetMultiBlendColor( int index, int nColorIndex, Vector &vColor );
+	inline void SetMultiBlend( int index, Vector4D &vBlend );
+	inline void SetAlphaBlend( int index, Vector4D &vAlphaBlend );
+	inline void GetMultiBlend( int index, Vector4D &vBlend, Vector4D &vAlphaBlend, Vector &vColor1, Vector &vColor2, Vector &vColor3, Vector &vColor4 ) const;
+	inline void GetMultiBlend( int index, Vector4D &vBlend ) const;
+	inline void GetAlphaBlend( int index, Vector4D &vAlphaBlend ) const;
+
 	int GetTriCount( void );
 	void GetTriIndices( int iTri, unsigned short &v1, unsigned short &v2, unsigned short &v3 );
 	void SetTriIndices( int iTri, unsigned short v1, unsigned short v2, unsigned short v3 );
@@ -851,7 +866,6 @@ public:
 
 	bool IsTriWalkable( int iTri );
 	bool IsTriBuildable( int iTri );
-	bool IsTriRemove( int iTri );
 
 	inline void SetElevation( float elevation );
 	inline float GetElevation( void );
@@ -930,6 +944,8 @@ private:
 
 	// Triangle data..
 	CoreDispTri_t		*m_pTris;
+
+	int					m_nFlags;
 
 	// render specific data
 	int					m_RenderIndexCount;		// number of indices used in rendering
@@ -1041,6 +1057,14 @@ inline int CCoreDispInfo::GetHeight( void )
 inline int CCoreDispInfo::GetSize( void ) const
 {
     return ( ( ( 1 << m_Power ) + 1 ) * ( ( 1 << m_Power ) + 1 ) );
+}
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+inline int CCoreDispInfo::GetFlags( void ) const
+{
+	return m_nFlags;
 }
 
 
@@ -1224,6 +1248,79 @@ inline float CCoreDispInfo::GetAlpha( int index )
 	Assert( index >= 0 );
 	Assert( index < MAX_VERT_COUNT );
 	return m_pVerts[index].m_Alpha;
+}
+
+
+inline void CCoreDispInfo::SetMultiBlend( int index, Vector4D &vBlend, Vector4D &vAlphaBlend, Vector &vColor1, Vector &vColor2, Vector &vColor3, Vector &vColor4 )
+{
+	Assert( index >= 0 );
+	Assert( index < MAX_VERT_COUNT );
+
+	m_pVerts[ index ].m_MultiBlend = vBlend;
+	m_pVerts[ index ].m_AlphaBlend = vAlphaBlend;
+	m_pVerts[ index ].m_vBlendColors[ 0 ] = vColor1;
+	m_pVerts[ index ].m_vBlendColors[ 1 ] = vColor2;
+	m_pVerts[ index ].m_vBlendColors[ 2 ] = vColor3;
+	m_pVerts[ index ].m_vBlendColors[ 3 ] = vColor4;
+}
+
+
+void CCoreDispInfo::SetMultiBlendColor( int index, int nColorIndex, Vector &vColor )
+{
+	Assert( index >= 0 );
+	Assert( index < MAX_VERT_COUNT );
+
+	m_pVerts[ index ].m_vBlendColors[ nColorIndex ] = vColor;
+}
+
+
+inline void CCoreDispInfo::SetMultiBlend( int index, Vector4D &vBlend )
+{
+	Assert( index >= 0 );
+	Assert( index < MAX_VERT_COUNT );
+
+	m_pVerts[ index ].m_MultiBlend = vBlend;
+}
+
+
+inline void CCoreDispInfo::SetAlphaBlend( int index, Vector4D &vAlphaBlend )
+{
+	Assert( index >= 0 );
+	Assert( index < MAX_VERT_COUNT );
+
+	m_pVerts[ index ].m_AlphaBlend = vAlphaBlend;
+}
+
+
+inline void CCoreDispInfo::GetMultiBlend( int index, Vector4D &vBlend, Vector4D &vAlphaBlend, Vector &vColor1, Vector &vColor2, Vector &vColor3, Vector &vColor4 ) const
+{
+	Assert( index >= 0 );
+	Assert( index < MAX_VERT_COUNT );
+
+	vBlend = m_pVerts[ index ].m_MultiBlend;
+	vAlphaBlend = m_pVerts[ index ].m_AlphaBlend;
+	vColor1 = m_pVerts[ index ].m_vBlendColors[ 0 ];
+	vColor2 = m_pVerts[ index ].m_vBlendColors[ 1 ];
+	vColor3 = m_pVerts[ index ].m_vBlendColors[ 2 ];
+	vColor4 = m_pVerts[ index ].m_vBlendColors[ 3 ];
+}
+
+
+inline void CCoreDispInfo::GetMultiBlend( int index, Vector4D &vBlend ) const
+{
+	Assert( index >= 0 );
+	Assert( index < MAX_VERT_COUNT );
+
+	vBlend = m_pVerts[ index ].m_MultiBlend;
+}
+
+
+inline void CCoreDispInfo::GetAlphaBlend( int index, Vector4D &vAlphaBlend ) const
+{
+	Assert( index >= 0 );
+	Assert( index < MAX_VERT_COUNT );
+
+	vAlphaBlend = m_pVerts[ index ].m_AlphaBlend;
 }
 
 

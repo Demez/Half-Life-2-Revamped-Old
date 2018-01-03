@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -9,7 +9,6 @@
 #include <windows.h>
 #endif
 #include "tier0/platform.h"
-#include "tier0/vcrmode.h"
 #include "iregistry.h"
 #include "tier0/dbg.h"
 #include "tier1/strtools.h"
@@ -157,7 +156,7 @@ int CRegistry::ReadInt( const char *key, int defaultValue /*= 0*/ )
 
 	dwSize = sizeof( DWORD );
 
-	lResult = VCRHook_RegQueryValueEx(
+	lResult = RegQueryValueEx(
 		m_hKey,		// handle to key
 		key,	// value name
 		0,			// reserved
@@ -191,7 +190,7 @@ void CRegistry::WriteInt( const char *key, int value )
 
 	dwSize = sizeof( DWORD );
 
-	VCRHook_RegSetValueEx(
+	RegSetValueEx(
 		m_hKey,		// handle to key
 		key,	// value name
 		0,			// reserved
@@ -223,7 +222,7 @@ const char *CRegistry::ReadString( const char *key, const char *defaultValue /* 
 		return defaultValue;
 	}
 
-	lResult = VCRHook_RegQueryValueEx(
+	lResult = RegQueryValueEx(
 		m_hKey,		// handle to key
 		key,	// value name
 		0,			// reserved
@@ -260,7 +259,7 @@ void CRegistry::WriteString( const char *key, const char *value )
 
 	dwSize = (DWORD)( strlen( value ) + 1 );
 
-	VCRHook_RegSetValueEx(
+	RegSetValueEx(
 		m_hKey,		// handle to key
 		key,	// value name
 		0,			// reserved
@@ -280,7 +279,7 @@ bool CRegistry::DirectInit( const char *subDirectoryUnderValve )
 	char szModelKey[ 1024 ];
 	wsprintf( szModelKey, "Software\\Valve\\%s", subDirectoryUnderValve );
 
-	lResult = VCRHook_RegCreateKeyEx(
+	lResult = RegCreateKeyEx(
 		HKEY_CURRENT_USER,	// handle of open key 
 		szModelKey,			// address of name of subkey to open 
 		0ul,					// DWORD ulOptions,	  // reserved 
@@ -322,7 +321,7 @@ void CRegistry::Shutdown( void )
 
 	// Make invalid
 	m_bValid = false;
-	VCRHook_RegCloseKey( m_hKey );
+	RegCloseKey( m_hKey );
 }
 
 #else

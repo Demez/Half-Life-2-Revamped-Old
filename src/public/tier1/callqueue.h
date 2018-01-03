@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========== Copyright © 2006, Valve Corporation, All rights reserved. ========
 //
 // Purpose:
 //
@@ -9,6 +9,7 @@
 
 #include "tier0/tslist.h"
 #include "functors.h"
+#include "vstdlib/jobthread.h"
 
 #if defined( _WIN32 )
 #pragma once
@@ -135,6 +136,30 @@ public:
 
 	}
 
+	void ParallelCallQueued( IThreadPool *pPool = NULL )
+	{
+		if ( ! pPool ) 
+		{
+			pPool = g_pThreadPool;
+		}
+		int nNumThreads = 1;
+
+		if ( pPool )
+		{
+			nNumThreads = MIN( pPool->NumThreads(), MAX( 1, Count() ) );
+		}
+		
+		if ( nNumThreads < 2 )
+		{
+			CallQueued();
+		}
+		else
+		{
+			int *pDummy = NULL;
+			ParallelProcess( pPool, pDummy, nNumThreads, this, &CCallQueueT<>::ExecuteWrapper );
+		}
+	}
+
 	void QueueFunctor( CFunctor *pFunctor )
 	{
 		Assert( pFunctor );
@@ -156,6 +181,11 @@ public:
 	FUNC_GENERATE_QUEUE_METHODS();
 
 private:
+	void ExecuteWrapper( int &nDummy )						// to match paralell process function template
+	{
+		CallQueued();
+	}
+
 	void QueueFunctorInternal( CFunctor *pFunctor )
 	{
 		if ( !m_bNoQueue )

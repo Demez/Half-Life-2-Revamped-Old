@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Alyx, the female sidekick and love interest that's taking the world by storm!
 //
@@ -209,7 +209,7 @@ int CNPC_Alyx::ObjectCaps()
 //=========================================================
 void CNPC_Alyx::HandleAnimEvent( animevent_t *pEvent )
 {
-	if (pEvent->event == AE_ALYX_EMPTOOL_ATTACHMENT)
+	if (pEvent->Event() == AE_ALYX_EMPTOOL_ATTACHMENT)
 	{
 		if (!m_hEmpTool)
 		{
@@ -235,7 +235,7 @@ void CNPC_Alyx::HandleAnimEvent( animevent_t *pEvent )
 
 		return;
 	}
-	else if (pEvent->event == AE_ALYX_EMPTOOL_SEQUENCE)
+	else if (pEvent->Event() == AE_ALYX_EMPTOOL_SEQUENCE)
 	{
 		if (!m_hEmpTool)
 			return;
@@ -253,7 +253,7 @@ void CNPC_Alyx::HandleAnimEvent( animevent_t *pEvent )
 
 		return;
 	}
-	else if (pEvent->event == AE_ALYX_EMPTOOL_USE)
+	else if (pEvent->Event() == AE_ALYX_EMPTOOL_USE)
 	{
 		if( m_OperatorBehavior.IsGoalReady() )
 		{
@@ -264,24 +264,24 @@ void CNPC_Alyx::HandleAnimEvent( animevent_t *pEvent )
 		}
 		return;
 	}
-	else if ( pEvent->event == COMBINE_AE_BEGIN_ALTFIRE )
+	else if ( pEvent->Event() == COMBINE_AE_BEGIN_ALTFIRE )
 	{
 		EmitSound( "Weapon_CombineGuard.Special1" );
 		return;
 	}
-	else if ( pEvent->event == COMBINE_AE_ALTFIRE )
+	else if ( pEvent->Event() == COMBINE_AE_ALTFIRE )
 	{
 		animevent_t fakeEvent;
 
 		fakeEvent.pSource = this;
-		fakeEvent.event = EVENT_WEAPON_AR2_ALTFIRE;
+		fakeEvent.Event( EVENT_WEAPON_AR2_ALTFIRE );
 		GetActiveWeapon()->Operator_HandleAnimEvent( &fakeEvent, this );
 		//m_iNumGrenades--;
 
 		return;
 	}
 
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 	case 1:
 	default:
@@ -1821,7 +1821,7 @@ int CNPC_Alyx::TranslateSchedule( int scheduleType )
 					// Does my enemy have enough health to warrant crouching?
 					if ( pEnemy->GetHealth() > ALYX_MIN_ENEMY_HEALTH_TO_CROUCH )
 					{
-						// And are they far enough away? Expand the min dist so we don't crouch & stand immediately.
+						// And are they far enough away? Expand the MIN dist so we don't crouch & stand immediately.
 						if ( EnemyDistance( pEnemy ) > (ALYX_MIN_ENEMY_DIST_TO_CROUCH * 1.5) && (pEnemy->GetFlags() & FL_ONGROUND) )
 						{
 							//Warning("CROUCH: Desiring due to enemy far away.\n" );
@@ -2224,9 +2224,9 @@ void CNPC_Alyx::OnStateChange( NPC_STATE OldState, NPC_STATE NewState )
 //-----------------------------------------------------------------------------
 // Purpose:
 //-----------------------------------------------------------------------------
-void CNPC_Alyx::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
+void CNPC_Alyx::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
 {
-	BaseClass::TraceAttack( info, vecDir, ptr, pAccumulator );
+	BaseClass::TraceAttack( info, vecDir, ptr );
 
 	// FIXME: hack until some way of removing decals after healing
 	m_fNoDamageDecal = true;

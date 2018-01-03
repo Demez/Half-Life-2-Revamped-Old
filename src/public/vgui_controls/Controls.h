@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -127,8 +127,7 @@ class Slider;
 class Splitter;
 class TextEntry;
 class ToggleButton;
-class BaseTooltip;
-class TextTooltip;
+class Tooltip;
 class TreeView;
 class CTreeViewListControl;
 class URLLabel;
@@ -148,7 +147,7 @@ class TextImage;
 
 // hotkeys disabled until we work out exactly how we want to do them
 #define VGUI_HOTKEYS_ENABLED
-//#define VGUI_DRAW_HOTKEYS_ENABLED
+#define VGUI_DRAW_HOTKEYS_ENABLED
 
 #define USING_BUILD_FACTORY( className )				\
 	extern className *g_##className##LinkerHack;		\

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -824,7 +824,7 @@ void CEnvHeadcrabCanister::SetLanded( void )
 	SetSolid( SOLID_VPHYSICS );
 	VPhysicsInitStatic();
 	
-	IncrementInterpolationFrame();
+	AddEffects( EF_NOINTERP );
 	m_bLanded = true;
 }
 
@@ -906,7 +906,7 @@ void CEnvHeadcrabCanister::Detonate( )
 		SetAbsOrigin( m_vecImpactPosition );
 		SetModel( ENV_HEADCRABCANISTER_BROKEN_MODEL );
 		SetMoveType( MOVETYPE_NONE );
-		IncrementInterpolationFrame();
+		AddEffects( EF_NOINTERP );
 		m_bLanded = true;
 		
 		// Become invisible so our trail can finish up

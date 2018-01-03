@@ -1,6 +1,6 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
-// Purpose: HL2 specific input handling
+// Purpose: HL2 specific input handling. No need it in ASW [str]
 //
 // $NoKeywords: $
 //=============================================================================//

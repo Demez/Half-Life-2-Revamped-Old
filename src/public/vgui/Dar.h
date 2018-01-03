@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright � 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Holds the enumerated list of default cursors
 //
@@ -57,7 +57,7 @@ public:
 			return;
 
 		// quick check to see if it's already at the end
-		if ( this->Element( this->Count() - 1 ) == elem )
+		if ( Element( this->Count() - 1 ) == elem )
 			return;
 
 		int idx = this->Find( elem );
@@ -74,7 +74,7 @@ public:
 	}
 	bool HasElement(ELEMTYPE elem)
 	{
-		if ( this->FindElement(elem) != this->InvalidIndex() )
+		if ( FindElement(elem) != this->InvalidIndex() )
 		{
 			return true;
 		}
@@ -82,17 +82,17 @@ public:
 	}
 	int PutElement(ELEMTYPE elem)
 	{
-		int index = this->FindElement(elem);
+		int index = FindElement(elem);
 		if (index >= 0)
 		{
 			return index;
 		}
-		return this->AddElement(elem);
+		return AddElement(elem);
 	}
 	// insert element at index and move all the others down 1
 	void InsertElementAt(ELEMTYPE elem,int index)
 	{
-		this->InsertBefore( index, elem );
+		InsertBefore( index, elem );
 	}
 	void SetElementAt(ELEMTYPE elem,int index)
 	{
@@ -113,7 +113,7 @@ public:
 
 	void RemoveElement(ELEMTYPE elem)
 	{
-		this->FindAndRemove( elem );
+		FindAndRemove( elem );
 	}
 
 	void *GetBaseData()
@@ -123,7 +123,7 @@ public:
 
 	void CopyFrom(Dar<ELEMTYPE> &dar)
 	{
-		this->CopyArray( dar.Base(), dar.Count() );
+		CoypArray( dar.Base(), dar.Count() );
 	}
 };
 

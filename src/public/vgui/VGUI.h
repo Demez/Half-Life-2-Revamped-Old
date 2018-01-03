@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Basic header for using vgui
 //
@@ -22,7 +22,6 @@
 #endif
 #endif
 
-#pragma warning( disable: 4800 )	// disables 'performance warning converting int to bool'
 #pragma warning( disable: 4786 )	// disables 'identifier truncated in browser information' warning
 #pragma warning( disable: 4355 )	// disables 'this' : used in base member initializer list
 #pragma warning( disable: 4097 )	// warning C4097: typedef-name 'BaseClass' used as synonym for class-name
@@ -55,7 +54,6 @@ typedef unsigned int VPANEL;
 // handles to vgui objects
 // NULL values signify an invalid value
 typedef unsigned long HScheme;
-// Both -1 and 0 are used for invalid textures. Be careful.
 typedef unsigned long HTexture;
 typedef unsigned long HCursor;
 typedef unsigned long HPanel;
@@ -65,17 +63,6 @@ const HFont INVALID_FONT = 0; // the value of an invalid font handle
 }
 
 #include "tier1/strtools.h"
-
-#if defined( OSX ) // || defined( LINUX )
-// Set to 1 to use GetKernedCharWidth() instead of GetCharABCwide(). Alfred
-//  initially started using that code on the Mac because it did better
-//  kerning, but he was a leery about switching win32 over. I enabled this
-//  for Linux, but it causes some strings to look different than Windows. So
-//  I've disabled it for now. mikesart - 12/2012.
-#define USE_GETKERNEDCHARWIDTH 1
-#else
-#define USE_GETKERNEDCHARWIDTH 0
-#endif
 
 
 #endif // VGUI_H

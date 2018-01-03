@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -35,13 +35,13 @@ public:
 	// Get data by the string's symbol table ID - only used to retrieve a pre-existing symbol, not create a new one!
 	T& operator[]( UtlSymId_t n )
 	{
-		Assert( n >=0 && n <= m_Vector.Count() );
+		Assert( n <= m_Vector.Count() );
 		return m_Vector[n];
 	}
 
 	const T& operator[]( UtlSymId_t n ) const
 	{
-		Assert( n >=0 && n <= m_Vector.Count() );
+		Assert( n <= m_Vector.Count() );
 		return m_Vector[n];
 	}
 
@@ -53,6 +53,17 @@ public:
 	UtlSymId_t Find( const char *pString ) const
 	{
 		return m_SymbolTable.Find( pString );
+	}
+
+	UtlSymId_t AddString( const char *pString )
+	{
+		CUtlSymbol symbol = m_SymbolTable.AddString( pString );
+		int index = ( int )( UtlSymId_t )symbol;
+		if( m_Vector.Count() <= index )
+		{
+			m_Vector.EnsureCount( index + 1 );
+		}
+		return symbol;
 	}
 
 	static UtlSymId_t InvalidIndex()

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright c 1996-2007, Valve Corporation, All rights reserved. =======//
 //
 // Purpose: 
 //
@@ -392,6 +392,12 @@ void CPoseDebuggerImpl::StartBlending( IClientNetworkable *pEntity, const CStudi
 // 	if ( !pVMdl )
 // 		return;
 
+	if ( !ThreadInMainThread() )
+	{
+		ExecuteOnce( "Turn of threading when using pose debugger\n" );
+		return;
+	}
+
 	// If we are starting a new model then finalize the previous one
 	if ( pStudioHdr != m_pLastModel && m_pLastModel )
 	{
@@ -469,6 +475,11 @@ void CPoseDebuggerImpl::AccumulatePose( const CStudioHdr *pStudioHdr, CIKContext
 //	virtualmodel_t const *pVMdl = pStudioHdr->GetVirtualModel();
 // 	if ( !pVMdl )
 // 		return;
+
+	if ( !ThreadInMainThread() )
+	{
+		return;
+	}
 
 	studiohdr_t const *pRMdl = pStudioHdr->GetRenderHdr();
 	if ( !pRMdl ||

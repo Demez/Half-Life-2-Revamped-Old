@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Hud locator element, helps direct the player to objects in the world
 //
@@ -35,8 +35,6 @@ class CHudLocator : public CHudElement, public vgui::Panel
 
 public:
 	CHudLocator( const char *pElementName );
-	virtual ~CHudLocator( void );
-
 	virtual void ApplySchemeSettings( vgui::IScheme *pScheme );
 	void VidInit( void );
 	bool ShouldDraw();
@@ -68,7 +66,7 @@ DECLARE_HUDELEMENT( CHudLocator );
 //-----------------------------------------------------------------------------
 CHudLocator::CHudLocator( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "HudLocator" )
 {
-	vgui::Panel *pParent = g_pClientMode->GetViewport();
+	vgui::Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	SetHiddenBits( HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT );
@@ -76,30 +74,6 @@ CHudLocator::CHudLocator( const char *pElementName ) : CHudElement( pElementName
 	m_textureID_IconJalopy = -1;
 	m_textureID_IconSmallTick = -1;
 	m_textureID_IconBigTick = -1;
-}
-
-CHudLocator::~CHudLocator( void )
-{
-	if ( vgui::surface() )
-	{
-		if ( m_textureID_IconJalopy != -1 )
-		{
-			vgui::surface()->DestroyTextureID( m_textureID_IconJalopy );
-			m_textureID_IconJalopy = -1;
-		}
-
-		if ( m_textureID_IconSmallTick != -1 )
-		{
-			vgui::surface()->DestroyTextureID( m_textureID_IconSmallTick );
-			m_textureID_IconSmallTick = -1;
-		}
-
-		if ( m_textureID_IconBigTick != -1 )
-		{
-			vgui::surface()->DestroyTextureID( m_textureID_IconBigTick );
-			m_textureID_IconBigTick = -1;
-		}
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -180,10 +154,7 @@ void CHudLocator::DrawGraduations( float flYawPlayerFacing )
 	{
 		m_textureID_IconBigTick = vgui::surface()->CreateNewTextureID();
 		vgui::surface()->DrawSetTextureFile( m_textureID_IconBigTick, LOCATOR_MATERIAL_BIG_TICK, true, false );
-	}
 
-	if( m_textureID_IconSmallTick == -1 )
-	{
 		m_textureID_IconSmallTick = vgui::surface()->CreateNewTextureID();
 		vgui::surface()->DrawSetTextureFile( m_textureID_IconSmallTick, LOCATOR_MATERIAL_SMALL_TICK, true, false );
 	}

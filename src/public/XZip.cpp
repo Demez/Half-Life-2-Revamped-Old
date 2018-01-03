@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -93,7 +93,11 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#if defined( WIN32) && !defined( _X360 )
+#if defined( PROTECTED_THINGS_ENABLE )
+#undef PROTECTED_THINGS_ENABLE // from protected_things.h
+#endif
+#include "tier0/platform.h"
+#ifdef IS_WINDOWS_PC
 #define STRICT
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -111,10 +115,9 @@
 #include <time.h>
 #include "zip/XZip.h"
 
-#ifdef __clang__
-	// These clang 3.1 warnings don't seem very useful, and cannot easily be
-	// avoided in this file.
-	#pragma GCC diagnostic ignored "-Wdangling-else"	// warning: add explicit braces to avoid dangling else [-Wdangling-else]
+#ifdef POSIX
+#include <sys/mman.h>
+#define _stricmp strcasecmp
 #endif
 
 #ifdef OSX
@@ -125,8 +128,12 @@
 static ZRESULT lasterrorZ=ZR_OK;
 #else
 #include "tier0/threadtools.h"
-static CThreadLocalInt<ZRESULT> lasterrorZ;
+static GenericThreadLocals::CThreadLocalInt<ZRESULT> lasterrorZ;
 #endif
+
+// NOTE: This has to be the last file included!
+#include "tier0/memdbgon.h"
+
 
 typedef unsigned char uch;      // unsigned 8-bit value
 typedef unsigned short ush;     // unsigned 16-bit value
@@ -660,9 +667,10 @@ class TState
 
 
 #undef Assert
-void Assert(TState &state,bool cond, const char *msg)
-{ if (cond) return;
-  state.err=msg;
+void AssertXZip(TState &state,bool cond, const char *msg)
+{ 
+	if (cond) return;
+	state.err=msg;
 }
 void __cdecl Trace(const char *x, ...) {va_list paramList; va_start(paramList, x); paramList; va_end(paramList);}
 void __cdecl Tracec(bool ,const char *x, ...) {va_list paramList; va_start(paramList, x); paramList; va_end(paramList);}
@@ -733,7 +741,7 @@ void ct_init(TState &state, ush *attr)
             state.ts.length_code[length++] = (uch)code;
         }
     }
-    Assert(state,length == 256, "ct_init: length != 256");
+    AssertXZip(state,length == 256, "ct_init: length != 256");
     /* Note that the length 255 (match length 258) can be represented
      * in two different ways: code 284 + 5 bits or code 285, so we
      * overwrite length_code[255] to use the best encoding:
@@ -748,7 +756,7 @@ void ct_init(TState &state, ush *attr)
             state.ts.dist_code[dist++] = (uch)code;
         }
     }
-    Assert(state,dist == 256, "ct_init: dist != 256");
+    AssertXZip(state,dist == 256, "ct_init: dist != 256");
     dist >>= 7; /* from now on, all distances are divided by 128 */
     for ( ; code < D_CODES; code++) {
         state.ts.base_dist[code] = dist << 7;
@@ -756,7 +764,7 @@ void ct_init(TState &state, ush *attr)
             state.ts.dist_code[256 + dist++] = (uch)code;
         }
     }
-    Assert(state,dist == 256, "ct_init: 256+dist != 512");
+    AssertXZip(state,dist == 256, "ct_init: 256+dist != 512");
 
     /* Construct the codes of the static literal tree */
     for (bits = 0; bits <= MAX_BITS; bits++) state.ts.bl_count[bits] = 0;
@@ -962,7 +970,7 @@ void gen_codes (TState &state, ct_data *tree, int max_code)
     /* Check that the bit counts in bl_count are consistent. The last code
      * must be all ones.
      */
-    Assert(state,code + state.ts.bl_count[MAX_BITS]-1 == (1<< ((ush) MAX_BITS)) - 1,
+    AssertXZip(state,code + state.ts.bl_count[MAX_BITS]-1 == (1<< ((ush) MAX_BITS)) - 1,
             "inconsistent bit counts");
     Trace("\ngen_codes: max_code %d ", max_code);
 
@@ -1130,7 +1138,7 @@ void send_tree (TState &state, ct_data *tree, int max_code)
             if (curlen != prevlen) {
                 send_code(state, curlen, state.ts.bl_tree); count--;
             }
-            Assert(state,count >= 3 && count <= 6, " 3_6?");
+            AssertXZip(state,count >= 3 && count <= 6, " 3_6?");
             send_code(state,REP_3_6, state.ts.bl_tree); send_bits(state,count-3, 2);
 
         } else if (count <= 10) {
@@ -1191,8 +1199,8 @@ void send_all_trees(TState &state,int lcodes, int dcodes, int blcodes)
 {
     int rank;                    /* index in bl_order */
 
-    Assert(state,lcodes >= 257 && dcodes >= 1 && blcodes >= 4, "not enough codes");
-    Assert(state,lcodes <= L_CODES && dcodes <= D_CODES && blcodes <= BL_CODES,
+    AssertXZip(state,lcodes >= 257 && dcodes >= 1 && blcodes >= 4, "not enough codes");
+    AssertXZip(state,lcodes <= L_CODES && dcodes <= D_CODES && blcodes <= BL_CODES,
             "too many codes");
     Trace("\nbl counts: ");
     send_bits(state,lcodes-257, 5);
@@ -1261,10 +1269,10 @@ ulg flush_block(TState &state,char *buf, ulg stored_len, int eof)
     //   && state.ts.cmpr_len_bits == 0L && state.seekable)
     //{   // && state.ts.file_method != NULL
     //    // Since LIT_BUFSIZE <= 2*WSIZE, the input data must be there:
-    //    Assert(state,buf!=NULL,"block vanished");
+    //    AssertXZip(state,buf!=NULL,"block vanished");
     //    copy_block(state,buf, (unsigned)stored_len, 0); // without header
     //    state.ts.cmpr_bytelen = stored_len;
-    //    Assert(state,false,"unimplemented *state.ts.file_method = STORE;");
+    //    AssertXZip(state,false,"unimplemented *state.ts.file_method = STORE;");
     //    //*state.ts.file_method = STORE;
     //}
     //else
@@ -1297,11 +1305,11 @@ ulg flush_block(TState &state,char *buf, ulg stored_len, int eof)
         state.ts.cmpr_bytelen += state.ts.cmpr_len_bits >> 3;
         state.ts.cmpr_len_bits &= 7L;
     }
-    Assert(state,((state.ts.cmpr_bytelen << 3) + state.ts.cmpr_len_bits) == state.bs.bits_sent, "bad compressed size");
+    AssertXZip(state,((state.ts.cmpr_bytelen << 3) + state.ts.cmpr_len_bits) == state.bs.bits_sent, "bad compressed size");
     init_block(state);
 
     if (eof) {
-        // Assert(state,input_len == isize, "bad input size");
+        // AssertXZip(state,input_len == isize, "bad input size");
         bi_windup(state);
         state.ts.cmpr_len_bits += 7;  /* align on byte boundary */
     }
@@ -1323,7 +1331,7 @@ int ct_tally (TState &state,int dist, int lc)
     } else {
         /* Here, lc is the match length - MIN_MATCH */
         dist--;             /* dist = match distance - 1 */
-        Assert(state,(ush)dist < (ush)MAX_DIST &&
+        AssertXZip(state,(ush)dist < (ush)MAX_DIST &&
                (ush)lc <= (ush)(MAX_MATCH-MIN_MATCH) &&
                (ush)d_code(dist) < (ush)D_CODES,  "ct_tally: bad match");
 
@@ -1393,7 +1401,7 @@ void compress_block(TState &state,ct_data *ltree, ct_data *dtree)
             dist = state.ts.d_buf[dx++];
             /* Here, dist is the match distance - 1 */
             code = d_code(dist);
-            Assert(state,code < D_CODES, "bad d_code");
+            AssertXZip(state,code < D_CODES, "bad d_code");
 
             send_code(state,code, dtree);       /* send the distance code */
             extra = extra_dbits[code];
@@ -1447,7 +1455,7 @@ void bi_init (TState &state,char *tgt_buf, unsigned tgt_size, int flsh_allowed)
  */
 void send_bits(TState &state,int value, int length)
 {
-    Assert(state,length > 0 && length <= 15, "invalid length");
+    AssertXZip(state,length > 0 && length <= 15, "invalid length");
     state.bs.bits_sent += (ulg)length;
     /* If not enough room in bi_buf, use (bi_valid) bits from bi_buf and
      * (Buf_size - bi_valid) bits from value to flush the filled bi_buf,
@@ -1514,7 +1522,7 @@ void copy_block(TState &state, char *block, unsigned len, int header)
         state.bs.out_offset = len;
         state.flush_outbuf(state.param, block, &state.bs.out_offset);
     } else if (state.bs.out_offset + len > state.bs.out_size) {
-        Assert(state,false,"output buffer too small for in-memory compression");
+        AssertXZip(state,false,"output buffer too small for in-memory compression");
     } else {
         memcpy(state.bs.out_buf + state.bs.out_offset, block, len);
         state.bs.out_offset += len;
@@ -1573,7 +1581,7 @@ void lm_init (TState &state, int pack_level, ush *flags)
 {
     register unsigned j;
 
-    Assert(state,pack_level>=1 && pack_level<=8,"bad pack level");
+    AssertXZip(state,pack_level>=1 && pack_level<=8,"bad pack level");
 
     /* Do not slide the window if the whole input is already in memory
      * (window_size > 0)
@@ -1653,7 +1661,7 @@ int longest_match(TState &state,IPos cur_match)
 
   // The code is optimized for HASH_BITS >= 8 and MAX_MATCH-2 multiple of 16.
   // It is easy to get rid of this optimization if necessary.
-    Assert(state,HASH_BITS>=8 && MAX_MATCH==258,"Code too clever");
+    AssertXZip(state,HASH_BITS>=8 && MAX_MATCH==258,"Code too clever");
 
 
 
@@ -1666,10 +1674,10 @@ int longest_match(TState &state,IPos cur_match)
         chain_length >>= 2;
     }
 
-    Assert(state,state.ds.strstart <= state.ds.window_size-MIN_LOOKAHEAD, "insufficient lookahead");
+    AssertXZip(state,state.ds.strstart <= state.ds.window_size-MIN_LOOKAHEAD, "insufficient lookahead");
 
     do {
-        Assert(state,cur_match < state.ds.strstart, "no future");
+        AssertXZip(state,cur_match < state.ds.strstart, "no future");
         match = state.ds.window + cur_match;
 
         /* Skip to next match if the match length cannot increase
@@ -1698,7 +1706,7 @@ int longest_match(TState &state,IPos cur_match)
                  *++scan == *++match && *++scan == *++match &&
                  scan < strend);
 
-        Assert(state,scan <= state.ds.window+(unsigned)(state.ds.window_size-1), "wild scan");
+        AssertXZip(state,scan <= state.ds.window+(unsigned)(state.ds.window_size-1), "wild scan");
                           
         len = MAX_MATCH - (int)(strend - scan);
         scan = strend - MAX_MATCH;
@@ -1803,7 +1811,7 @@ void fill_window(TState &state)
          * Otherwise, window_size == 2*WSIZE so more >= 2.
          * If there was sliding, more >= WSIZE. So in all cases, more >= 2.
          */
-        Assert(state,more >= 2, "more < 2");
+        AssertXZip(state,more >= 2, "more < 2");
 
         n = state.readfunc(state, (char*)state.ds.window+state.ds.strstart+state.ds.lookahead, more);
 
@@ -1885,7 +1893,7 @@ ulg deflate_fast(TState &state)
                 match_length = 0;
                 state.ds.ins_h = state.ds.window[state.ds.strstart];
                 UPDATE_HASH(state.ds.ins_h, state.ds.window[state.ds.strstart+1]);
-                Assert(state,MIN_MATCH==3,"Call UPDATE_HASH() MIN_MATCH-3 more times");
+                AssertXZip(state,MIN_MATCH==3,"Call UPDATE_HASH() MIN_MATCH-3 more times");
             }
         } else {
             /* No match, output a literal byte */
@@ -2000,7 +2008,7 @@ ulg deflate(TState &state)
             state.ds.strstart++;
             state.ds.lookahead--;
         }
-//        Assert(state,strstart <= isize && lookahead <= isize, "a bit too far");
+//        AssertXZip(state,strstart <= isize && lookahead <= isize, "a bit too far");
 
         /* Make sure that we always have enough lookahead, except
          * at the end of the input file. We need MAX_MATCH bytes
@@ -2272,29 +2280,6 @@ ZRESULT GetFileInfo(HANDLE hf, ulg *attr, long *size, iztimes *times, ulg *times
 }
 #endif
 
-#ifndef _WIN32
-int timet_to_timestamp( time_t time )
-{
-	struct tm *tm;
-	tm = localtime( &time );
-	if ( !tm )
-		return 0;
-	
-	int date = 0;
-	
-	date |= ( ( ( tm->tm_year & 0x7f ) + ( 1900 - 1980 ) ) << 9 );
-	date |= ( ( ( tm->tm_mon & 0x0f ) + 1 ) << 5 );
-	date |= ( ( ( tm->tm_mday & 0x1f ) ) );
-	
-	int timepart = 0;
-	
-	timepart |= ( ( ( tm->tm_hour & 0x1f ) ) << 11 );
-	timepart |= ( ( ( tm->tm_min & 0x3f ) ) << 5 );
-	timepart |= ( ( ( tm->tm_sec & 0x3e ) ) >> 1 );
-	
-	return time | (date << 16 );
-}
-#endif
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2315,6 +2300,7 @@ class TZip
   unsigned writ;            // how far have we written. This is maintained by Add, not write(), to avoid confusion over seeks
   bool ocanseek;            // can we seek?
   char *obuf;               // this is where we've locked mmap to view.
+  unsigned int size;        // how big is the buffer (needed for munmap on *nix)
   unsigned int opos;        // current pos in the mmap
   unsigned int mapsize;     // the size of the map we created
   bool hasputcen;           // have we yet placed the central directory?
@@ -2366,17 +2352,18 @@ ZRESULT TZip::Create(void *z,unsigned int len,DWORD flags)
 	//
 	if (flags==ZIP_MEMORY)
 	{ 
-		if (len==0) 
+	        size = len;
+		if (size==0) 
 			return ZR_MEMSIZE;
 		if (z!=0) 
 			obuf=(char*)z;
 		else
 		{ 
 #ifdef _WIN32
-			hmapout = CreateFileMapping(INVALID_HANDLE_VALUE,NULL,PAGE_READWRITE,0,len,NULL);
+			hmapout = CreateFileMapping(INVALID_HANDLE_VALUE,NULL,PAGE_READWRITE,0,size,NULL);
 			if (hmapout==NULL) 
 				return ZR_NOALLOC;
-			obuf = (char*)MapViewOfFile(hmapout,FILE_MAP_ALL_ACCESS,0,0,len);
+			obuf = (char*)MapViewOfFile(hmapout,FILE_MAP_ALL_ACCESS,0,0,size);
 			if (obuf==0) 
 			{
 				CloseHandle(hmapout); 
@@ -2385,15 +2372,14 @@ ZRESULT TZip::Create(void *z,unsigned int len,DWORD flags)
 			}
 #endif
 #ifdef POSIX
-			obuf = (char*) calloc( len, 1 );
-			hmapout = (void*)-1; // sentinel to let close know it's a file in posix.
-			if ( !obuf )
-				return ZR_NOALLOC;
+			obuf = (char*) mmap( NULL, size, PROT_READ | PROT_WRITE, MAP_ANONYMOUS, -1, 0 );
+			if (obuf==NULL)
+			  return ZR_NOALLOC;
 #endif
 		}
 		ocanseek=true;
 		opos=0; 
-		mapsize=len;
+		mapsize=size;
 		return ZR_OK;
 	}
 #ifdef _WIN32
@@ -2500,9 +2486,11 @@ ZRESULT TZip::Close()
   if (obuf!=0 && hmapout!=0) 
 #ifdef _WIN32
     UnmapViewOfFile(obuf); 
-#elif defined( POSIX )
-	free(obuf);
 #endif
+#ifdef POSIX
+  munmap(obuf, size);
+#endif
+  size=0;
   obuf=0;
 #ifdef _WIN32
   if (hmapout!=0) CloseHandle(hmapout); hmapout=0;
@@ -2581,11 +2569,7 @@ ZRESULT TZip::open_mem(void *src,unsigned int len)
   timestamp = (WORD)dostime | (((DWORD)dosdate)<<16);
   return ZR_OK;
 #else
-	times.atime = time(NULL);
-	times.mtime = times.atime;
-	times.ctime = times.atime;
-	timestamp = timet_to_timestamp( times.atime );
-	return ZR_OK;
+  return ZR_FAILED;
 #endif
 }
 
@@ -2604,11 +2588,7 @@ ZRESULT TZip::open_dir()
   timestamp = (WORD)dostime | (((DWORD)dosdate)<<16);
   return ZR_OK;
 #else
-	times.atime = time(NULL);
-	times.mtime = times.atime;
-	times.ctime = times.atime;
-	timestamp = timet_to_timestamp( times.atime );
-	return ZR_OK;
+  return ZR_FAILED;
 #endif
 }
 
@@ -2705,8 +2685,7 @@ ZRESULT TZip::Add(const char *odstzn, void *src,unsigned int len, DWORD flags)
 	while (*d != 0) 
 	{
 		if (*d == '\\') 
-			*d = '/';
-		d++;
+			*d = '/'; d++;
 	}
 	bool isdir = (flags==ZIP_FOLDER);
 	bool needs_trailing_slash = (isdir && dstzn[strlen(dstzn)-1]!='/');
@@ -2930,7 +2909,7 @@ unsigned int FormatZipMessageZ(ZRESULT code, char *buf,unsigned int len)
   unsigned int mlen=(unsigned int)strlen(msg);
   if (buf==0 || len==0) return mlen;
   unsigned int n=mlen; if (n+1>len) n=len-1;
-  memcpy(buf,msg,n); buf[n]=0;
+  strncpy(buf,msg,n); buf[n]=0;
   return mlen;
 }
 

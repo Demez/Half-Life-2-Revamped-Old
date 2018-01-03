@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -34,9 +34,10 @@
 // This value is the LONGEST possible range (limited by max valid coordinate number, not 2x)
 #define MAX_COORD_RANGE				(MAX_COORD_INTEGER)
 
-#define ASSERT_COORD( v ) Assert( (v.x>=MIN_COORD_INTEGER*2) && (v.x<=MAX_COORD_INTEGER*2) && \
-								  (v.y>=MIN_COORD_INTEGER*2) && (v.y<=MAX_COORD_INTEGER*2) && \
-								  (v.z>=MIN_COORD_INTEGER*2) && (v.z<=MAX_COORD_INTEGER*2) ); \
+#define TEST_COORD( v )				(((v).x>=MIN_COORD_INTEGER*2) && ((v).x<=MAX_COORD_INTEGER*2) && \
+									 ((v).y>=MIN_COORD_INTEGER*2) && ((v).y<=MAX_COORD_INTEGER*2) && \
+									 ((v).z>=MIN_COORD_INTEGER*2) && ((v).z<=MAX_COORD_INTEGER*2))
 
+#define ASSERT_COORD( v )			Assert( TEST_COORD( v ) );
 
 #endif // WORLDSIZE_H

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2006, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -80,12 +80,6 @@ public:
 	// Specifies a max limit of the args buffer. For unittesting. Size == 0 means use default
 	void LimitArgumentBufferSize( int nSize );
 
-	void SetWaitEnabled( bool bEnable )		{ m_bWaitEnabled = bEnable; }
-	bool IsWaitEnabled( void )				{ return m_bWaitEnabled; }
-
-	int GetArgumentBufferSize() { return m_nArgSBufferSize; }
-	int GetMaxArgumentBufferSize() { return m_nMaxArgSBufferLength; }
-
 private:
 	enum
 	{
@@ -128,7 +122,6 @@ private:
 	int		m_hNextCommand;
 	int		m_nMaxArgSBufferLength;
 	bool	m_bIsProcessingCommands;
-	bool	m_bWaitEnabled;
 
 	// NOTE: This is here to avoid the pointers returned by DequeueNextCommand
 	// to become invalid by calling AddText. Is there a way we can avoid the memcpy?

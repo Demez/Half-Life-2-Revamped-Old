@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: NOTE: This file is for backward compat!
 // We'll get rid of it soon. Most of the contents of this file were moved
@@ -54,16 +54,9 @@ enum ShaderTexWrapMode_t
 
 
 //-----------------------------------------------------------------------------
-// Sampler + texture stage identifiers
-// NOTE: Texture stages are used only by fixed function shading algorithms
+// Sampler identifiers
 // Samplers are used to enable and bind textures + by programmable shading algorithms
 //-----------------------------------------------------------------------------
-enum TextureStage_t
-{
-	SHADER_TEXTURE_STAGE0 = 0,
-	SHADER_TEXTURE_STAGE1,
-};
-
 enum Sampler_t
 {
 	SHADER_SAMPLER0 = 0,
@@ -82,6 +75,8 @@ enum Sampler_t
 	SHADER_SAMPLER13,
 	SHADER_SAMPLER14,
 	SHADER_SAMPLER15,
+
+	SHADER_SAMPLER_COUNT,
 };
 
 //-----------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -97,7 +97,7 @@ public:
 	virtual void	DrawDebugGeometryOverlays( void );
 
 	virtual Vector	BodyTarget( const Vector &posSrc, bool bNoisy = true );
-	virtual void	TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator );
+	virtual void	TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr );
 	virtual int		OnTakeDamage( const CTakeDamageInfo &info );
 
 	void			PlayerControlInit( CBasePlayer *pPlayer );
@@ -255,7 +255,7 @@ void CPropVehiclePrisonerPod::Spawn( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CPropVehiclePrisonerPod::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
+void CPropVehiclePrisonerPod::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
 {
 	if ( ptr->hitbox == VEHICLE_HITBOX_DRIVER )
 	{
@@ -399,12 +399,12 @@ void CPropVehiclePrisonerPod::InputClose( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CPropVehiclePrisonerPod::HandleAnimEvent( animevent_t *pEvent )
 {
-	if ( pEvent->event == AE_POD_OPEN )
+	if ( pEvent->Event() == AE_POD_OPEN )
 	{
 		m_OnOpen.FireOutput( this, this );
 		m_bLocked = false;
 	}
-	else if ( pEvent->event == AE_POD_CLOSE )
+	else if ( pEvent->Event() == AE_POD_CLOSE )
 	{
 		m_OnClose.FireOutput( this, this );
 		m_bLocked = true;

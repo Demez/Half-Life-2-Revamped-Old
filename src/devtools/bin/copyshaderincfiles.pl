@@ -43,6 +43,12 @@ while( $src = <TXTFILE> )
 	# What are the time stamps for the src and dst?
 	my $srcmodtime = ( stat $src )[9];
 	my $dstmodtime = ( stat $dst )[9];
+	
+	if( $dstexists && !$srcexists )
+	{
+		printf STDERR "$src doesn't exist, deleting $dst\n";
+		unlink $dst;
+	}
 
 	# Open for edit or add if different than what is in perforce already.
 	if( !$dstexists || ( $srcmodtime != $dstmodtime ) )

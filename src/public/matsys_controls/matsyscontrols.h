@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -41,19 +41,19 @@ bool VGui_InitMatSysInterfacesList( const char *moduleName, CreateInterfaceFn *f
 // the appropriate header file for each is listed above the item
 //-----------------------------------------------------------------------------
 
-// #include <materialsystem/imaterialsystem.h>
+// #include <materialsystem/IMaterialSystem.h>
 IMaterialSystem *MaterialSystem();
 
 // #include <datacache/imdlcache.h>
 IMDLCache *MDLCache();
 
-// #include <VGuiMatSurface/IMatSystemSurface.h>
+// #include <vguimatsurface/imatsystemsurface.h>
 IMatSystemSurface *MatSystemSurface();
 
 // #include <istudiorender.h"
 IStudioRender *StudioRender();
 
-// #include <materialsystem/imaterialsystemhardwareconfig.h>
+// #include <materialsystem/IMaterialSystemHardwareConfig.h>
 IMaterialSystemHardwareConfig *MaterialSystemHardwareConfig();
 
 } // end namespace vgui

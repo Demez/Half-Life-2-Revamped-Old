@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: provides an interface for dlls to query information about players from the game dll
 //
@@ -124,6 +124,9 @@ public:
 
 	// various player flags
 	virtual bool IsHLTV() = 0;
+#if defined( REPLAY_ENABLED )
+	virtual bool IsReplay() = 0;
+#endif
 	virtual bool IsPlayer() = 0;
 	virtual bool IsFakeClient() = 0;
 	virtual bool IsDead() = 0;
@@ -145,8 +148,6 @@ public:
 	virtual const int GetMaxHealth() = 0;
 	// the last user input from this player
 	virtual CBotCmd GetLastUserCommand() = 0;
-
-	virtual bool IsReplay() = 0;
 };
 
 
@@ -176,6 +177,8 @@ public:
 	virtual void RemoveAllItems( bool removeSuit ) = 0;
 	// give them a weapon
 	virtual void SetActiveWeapon( const char *WeaponName ) = 0;
+	// called after running a move command
+	virtual void PostClientMessagesSent( void ) = 0;
 	// check various effect flags
 	virtual bool IsEFlagSet( int nEFlagMask ) = 0;
 	// fire a virtual move command to the bot

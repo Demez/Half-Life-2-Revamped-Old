@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -26,8 +26,11 @@ enum
 	CHAN_BODY		= 4,
 	CHAN_STREAM		= 5,		// allocate stream channel from the static or dynamic area
 	CHAN_STATIC		= 6,		// allocate channel from the static area 
-	CHAN_VOICE2		= 7,
-	CHAN_VOICE_BASE	= 8,		// allocate channel for network voice data
+	CHAN_VOICE_BASE	= 7,		// allocate channel for network voice data
+};
+
+enum
+{
 	CHAN_USER_BASE	= (CHAN_VOICE_BASE+128)		// Anything >= this number is allocated to game code.
 };
 
@@ -103,7 +106,7 @@ enum soundlevel_t
 
 
 #define ATTN_TO_SNDLVL( a ) (soundlevel_t)(int)((a) ? (50 + 20 / ((float)a)) : 0 )
-#define SNDLVL_TO_ATTN( a ) ((a > 50) ? (20.0f / (float)(a - 50)) : 4.0 )
+#define SNDLVL_TO_ATTN( a ) ( (a > 50) ? (20.0f / (float)(a - 50)) : ( (a == 0) ? (0.0f) : (4.0f) ) )
 
 // This is a limit due to network encoding.
 // It encodes attenuation * 64 in 8 bits, so the maximum is (255 / 64)
@@ -127,13 +130,11 @@ enum SoundFlags_t
 	SND_SHOULDPAUSE		= (1<<7),		// this sound should be paused if the game is paused
 	SND_IGNORE_PHONEMES	= (1<<8),
 	SND_IGNORE_NAME		= (1<<9),		// used to change all sounds emitted by an entity, regardless of scriptname
-
-	SND_DO_NOT_OVERWRITE_EXISTING_ON_CHANNEL = (1<<10),
 };
 
-#define SND_FLAG_BITS_ENCODE 11
+#define SND_FLAG_BITS_ENCODE 9
 
-#define MAX_SOUND_INDEX_BITS	14
+#define MAX_SOUND_INDEX_BITS	13
 #define	MAX_SOUNDS				(1<<MAX_SOUND_INDEX_BITS)
 
 #if !defined( IN_XBOX_CODELINE )

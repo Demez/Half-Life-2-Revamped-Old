@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:		Projectile shot by bullsquid 
 //
@@ -38,7 +38,7 @@ public:
 	virtual void		Precache( void );
 	virtual void		Event_Killed( const CTakeDamageInfo &info );
 
-	virtual	unsigned int	PhysicsSolidMaskForEntity( void ) const { return ( BaseClass::PhysicsSolidMaskForEntity() | CONTENTS_WATER ); }
+	virtual	unsigned int	PhysicsSolidMaskForEntity( void ) const { return ( BaseClass::PhysicsSolidMaskForEntity() | CONTENTS_WATER ) & (~CONTENTS_GRATE); }
 
 	void 				GrenadeSpitTouch( CBaseEntity *pOther );
 	void				SetSpitSize( int nSize );

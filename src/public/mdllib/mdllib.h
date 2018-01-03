@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2007, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -25,7 +25,27 @@ abstract_class IMdlStripInfo;
 //-----------------------------------------------------------------------------
 // Purpose: Interface to accessing model data operations
 //-----------------------------------------------------------------------------
-#define MDLLIB_INTERFACE_VERSION		"VMDLLIB001"
+
+
+namespace MdlLib
+{
+
+	struct MdlVertex
+	{
+		float position[3];
+		float normal[3];
+		float texcoord[2];
+	};
+
+	struct MdlMesh
+	{
+		unsigned long checksum;
+		CUtlVector< unsigned int > ib;
+		CUtlVector< MdlVertex > vb;
+	};
+
+};
+
 
 abstract_class IMdlLib : public IAppSystem
 {
@@ -49,6 +69,16 @@ public:
 	//	Creates an empty strip info or resets an existing strip info so that it can be reused.
 	//
 	virtual bool CreateNewStripInfo( IMdlStripInfo **ppStripInfo ) = 0;
+
+	//
+	// ParseMdlMesh
+	//	The main function that parses the mesh buffers
+	//		mdlBuffer			- mdl buffer
+	//		vvdBuffer			- vvd buffer
+	//		vtxBuffer			- vtx buffer
+	//		mesh				- on return will be filled with the mesh info
+	//
+	virtual bool ParseMdlMesh( CUtlBuffer &mdlBuffer, CUtlBuffer &vvdBuffer, CUtlBuffer &vtxBuffer, MdlLib::MdlMesh &mesh ) = 0;
 
 };
 

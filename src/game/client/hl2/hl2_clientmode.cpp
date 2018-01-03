@@ -1,6 +1,6 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
-// Purpose: 
+// Purpose: Why did i disabled it?! [str]
 //
 // $NoKeywords: $
 //
@@ -14,7 +14,7 @@
 #include "tier0/memdbgon.h"
 
 // default FOV for HL2
-ConVar default_fov( "default_fov", "75", FCVAR_CHEAT );
+extern ConVar default_fov;
 
 // The current client mode. Always ClientModeNormal in HL.
 IClientMode *g_pClientMode = NULL;
@@ -73,5 +73,5 @@ void CHLModeManager::LevelShutdown( void )
 
 
 static CHLModeManager g_HLModeManager;
-IVModeManager *modemanager = &g_HLModeManager;
+static IVModeManager *modemanager = &g_HLModeManager;
 

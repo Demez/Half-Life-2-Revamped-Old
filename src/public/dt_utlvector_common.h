@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -20,7 +20,7 @@ typedef void (*ResizeUtlVectorFn)( void *pVoid, int offsetToUtlVector, int len )
 template< class T >
 void UtlVector_InitializeAllocatedElements( T *pBase, int count )
 {
-	memset( reinterpret_cast<void*>( pBase ), 0, count * sizeof( T ) );
+	memset( pBase, 0, count * sizeof( T ) );
 }
 
 template< class T, class A >
@@ -75,11 +75,11 @@ inline EnsureCapacityFn GetEnsureCapacityTemplate( CUtlVector<T,A> &vec )
 
 
 // Format and allocate a string.
-char* AllocateStringHelper( PRINTF_FORMAT_STRING const char *pFormat, ... );
+char* AllocateStringHelper( const char *pFormat, ... );
 
 // Allocates a string for a data table name. Data table names must be unique, so this will
 // assert if you try to allocate a duplicate.
-char* AllocateUniqueDataTableName( bool bSendTable, PRINTF_FORMAT_STRING const char *pFormat, ... );
+char* AllocateUniqueDataTableName( bool bSendTable, const char *pFormat, ... );
 
 
 #endif // DT_UTLVECTOR_COMMON_H

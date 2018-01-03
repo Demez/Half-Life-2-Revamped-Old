@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -7,16 +7,16 @@
 
 #include "cbase.h"
 #include "basecombatweapon.h"
-#include "npcevent.h"
+#include "NPCevent.h"
 #include "basecombatcharacter.h"
-#include "ai_basenpc.h"
+#include "AI_BaseNPC.h"
 #include "player.h"
 #include "weapon_ar2.h"
 #include "grenade_ar2.h"
 #include "gamerules.h"
 #include "game.h"
 #include "in_buttons.h"
-#include "ai_memory.h"
+#include "AI_Memory.h"
 #include "soundent.h"
 #include "hl2_player.h"
 #include "EntityFlame.h"
@@ -124,6 +124,8 @@ void CWeaponAR2::Precache( void )
 {
 	BaseClass::Precache();
 
+	PrecacheEffect( "AR2Impact" );
+	PrecacheEffect( "AR2Tracer" );
 	UTIL_PrecacheOther( "prop_combine_ball" );
 	UTIL_PrecacheOther( "env_entity_dissolver" );
 }
@@ -445,7 +447,7 @@ void CWeaponAR2::Operator_ForceNPCFire( CBaseCombatCharacter *pOperator, bool bS
 //-----------------------------------------------------------------------------
 void CWeaponAR2::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator )
 {
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{ 
 		case EVENT_WEAPON_AR2:
 			{

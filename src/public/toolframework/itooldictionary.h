@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -34,6 +34,6 @@ public:
 	virtual IToolSystem	*GetTool( int index ) = 0;
 };
 
-#define VTOOLDICTIONARY_INTERFACE_VERSION "VTOOLDICTIONARY002"
+#define VTOOLDICTIONARY_INTERFACE_VERSION "VTOOLDICTIONARY003"
 
 #endif // ITOOLDICTIONARY_H

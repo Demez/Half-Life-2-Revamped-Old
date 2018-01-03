@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -854,7 +854,7 @@ void CNPC_MetroPolice::SpeakSentence( int nSentenceType )
 
 	if ( nSentenceType >= SENTENCE_BASE_BEHAVIOR_INDEX )
 	{
-		if ( GetRunningBehavior() == &m_FuncTankBehavior )
+		/*if ( GetRunningBehavior() == &m_FuncTankBehavior )
 		{
 			SpeakFuncTankSentence( nSentenceType );
 			return;
@@ -870,7 +870,7 @@ void CNPC_MetroPolice::SpeakSentence( int nSentenceType )
 		{
 			SpeakAssaultSentence( nSentenceType );
 			return;
-		}
+		}*/
 	}
 
 	switch ( nSentenceType )
@@ -1148,7 +1148,7 @@ CBaseEntity *CNPC_MetroPolice::GetEnemyAirboat() const
 {
 	// Should this be a condition??
 	if ( !GetEnemy() || !GetEnemy()->IsPlayer() )
-		return NULL;
+		return false;
 
 	return static_cast<CBasePlayer*>( GetEnemy() )->GetVehicleEntity(); 
 }
@@ -2920,31 +2920,31 @@ void CNPC_MetroPolice::OnAnimEventBatonOff( void )
 void CNPC_MetroPolice::HandleAnimEvent( animevent_t *pEvent )
 {
 	// Shove!
-	if ( pEvent->event == AE_METROPOLICE_SHOVE )
+	if ( pEvent->Event() == AE_METROPOLICE_SHOVE )
 	{
 		OnAnimEventShove();
 		return;
 	}
 
-	if ( pEvent->event == AE_METROPOLICE_BATON_ON )
+	if ( pEvent->Event() == AE_METROPOLICE_BATON_ON )
 	{
 		OnAnimEventBatonOn();
 		return;
 	}
 
-	if ( pEvent->event == AE_METROPOLICE_BATON_OFF )
+	if ( pEvent->Event() == AE_METROPOLICE_BATON_OFF )
 	{
 		OnAnimEventBatonOff();
 		return;
 	}
 
-	if ( pEvent->event == AE_METROPOLICE_START_DEPLOY )
+	if ( pEvent->Event() == AE_METROPOLICE_START_DEPLOY )
 	{
 		OnAnimEventStartDeployManhack();
 		return;
 	}
 
-	if ( pEvent->event == AE_METROPOLICE_DRAW_PISTOL )
+	if ( pEvent->Event() == AE_METROPOLICE_DRAW_PISTOL )
 	{
 		m_fWeaponDrawn = true;
 		if( GetActiveWeapon() )
@@ -2954,7 +2954,7 @@ void CNPC_MetroPolice::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_METROPOLICE_DEPLOY_MANHACK )
+	if ( pEvent->Event() == AE_METROPOLICE_DEPLOY_MANHACK )
 	{
 		OnAnimEventDeployManhack( pEvent );
 		return;
@@ -3817,7 +3817,7 @@ bool CNPC_MetroPolice::IsHeavyDamage( const CTakeDamageInfo &info )
 //-----------------------------------------------------------------------------
 // TraceAttack
 //-----------------------------------------------------------------------------
-void CNPC_MetroPolice::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
+void CNPC_MetroPolice::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
 {
 	// This is needed so we can keep track of the direction of the shot
 	// because we're going to use it to choose the flinch animation
@@ -3837,7 +3837,7 @@ void CNPC_MetroPolice::TraceAttack( const CTakeDamageInfo &info, const Vector &v
 		}
 	}
 
-	BaseClass::TraceAttack( info, vecDir, ptr, pAccumulator );
+	BaseClass::TraceAttack( info, vecDir, ptr );
 }
 
 //-----------------------------------------------------------------------------

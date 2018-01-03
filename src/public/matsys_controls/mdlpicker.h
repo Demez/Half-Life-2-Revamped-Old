@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -27,7 +27,6 @@ namespace vgui
 
 class CMDLPanel;
 
-const int MAX_SELECTED_MODELS = 2;
 
 //-----------------------------------------------------------------------------
 // Purpose: Main app window
@@ -46,7 +45,6 @@ public:
 		PAGE_ACTIVITIES = 0x4,
 		PAGE_SKINS = 0x8,
 		PAGE_INFO = 0x10,
-		PAGE_SCREEN_CAPS = 0x20,
 		PAGE_ALL	= 0xFFFFFFFF,
 	};
 
@@ -64,7 +62,7 @@ public:
 	int			GetSelectedPage();
 
 	// Allows external apps to select a MDL
-	void		SelectMDL( const char *pRelativePath, bool bDoLookAt = true, int nSelectSecondary = 0 );
+	void		SelectMDL( const char *pRelativePath );
 
 	// Set/Get Sequence
 	void		SelectSequence( const char *pSequenceName );
@@ -86,7 +84,7 @@ private:
 	void RefreshRenderSettings();
 	int	 UpdateSkinsList();
 	void UpdateInfoTab();
-	int  UpdatePropDataList( const char* pszPropData, bool &bIsStatic );
+	int  UpdatePropDataList( KeyValues *pkvPropData, bool &bIsStatic );
 
 	// Plays the selected activity
 	void PlaySelectedActivity( );
@@ -94,19 +92,9 @@ private:
 	// Plays the selected sequence
 	void PlaySelectedSequence( );
 
-	const char *CaptureModel( int nModIndex, const char *AssetName, const char *OutputPath, int Width, int Height, Color BackgroundColor, bool bSelectedOnly );
-	void CaptureScreenCaps( void );
-	void SaveCaps( const char *szFileName );
-	bool RestoreCaps( const char *szFileName );
-
-	void WriteBackbackVMTFiles( const char *assetName );
-	void GenerateBackpackIcons( void );
-	CUtlString GetOutputFileSuffix();
-
 	MESSAGE_FUNC_PARAMS( OnCheckButtonChecked, "CheckButtonChecked", kv );
 	MESSAGE_FUNC_PARAMS( OnItemSelected, "ItemSelected", kv );
 	MESSAGE_FUNC( OnPageChanged, "PageChanged" );	
-	MESSAGE_FUNC_CHARPTR( OnDirectorySelected, "DirectorySelected", dir );
 
 	CMDLPanel *m_pMDLPreview;
 	vgui::Splitter* m_pFileBrowserSplitter;
@@ -118,17 +106,13 @@ private:
 	vgui::PropertyPage *m_pActivitiesPage;
 	vgui::PropertyPage *m_pSkinsPage;
 	vgui::PropertyPage *m_pInfoPage;
-	vgui::PropertyPage *m_pScreenCapsPage;
-
 
 	vgui::ListPanel *m_pSequencesList;
 	vgui::ListPanel *m_pActivitiesList;
 	vgui::ListPanel	*m_pSkinsList;
 	vgui::ListPanel *m_pPropDataList;
 
-	MDLHandle_t m_hSelectedMDL[ MAX_SELECTED_MODELS ];
-
-	vgui::DHANDLE< vgui::DirectorySelectDialog > m_hDirectorySelectDialog;
+    MDLHandle_t m_hSelectedMDL;
 
 	int m_nFlags;
 

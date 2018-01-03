@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Special handling for hl2 usable ladders
 //
@@ -8,6 +8,10 @@
 #include "in_buttons.h"
 #include "utlrbtree.h"
 #include "hl2_shareddefs.h"
+
+#ifdef HL2MP
+#include "hl2mp_gamerules.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -1150,3 +1154,27 @@ bool CHL2GameMovement::CanAccelerate()
 
 	EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CGameMovement, IGameMovement,INTERFACENAME_GAMEMOVEMENT, g_GameMovement );
 #endif
+
+//-----------------------------------------------------------------------------
+// Purpose: Allow bots etc to use slightly different solid masks
+//-----------------------------------------------------------------------------
+unsigned int CHL2GameMovement::PlayerSolidMask( bool brushOnly )
+{
+	int mask = 0;
+#ifdef HL2MP
+	if ( HL2MPRules()->IsTeamplay() )
+	{
+		switch ( player->GetTeamNumber() )
+		{
+		case TEAM_REBELS:
+			mask = CONTENTS_TEAM1;
+			break;
+
+		case TEAM_COMBINE:
+			mask = CONTENTS_TEAM2;
+			break;
+		}
+	}
+#endif
+	return ( mask | BaseClass::PlayerSolidMask( brushOnly ) );
+}

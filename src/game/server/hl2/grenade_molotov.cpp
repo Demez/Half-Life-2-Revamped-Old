@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Flaming bottle thrown from the hand
 //
@@ -49,6 +49,7 @@ void CGrenade_Molotov::Spawn( void )
 	SetMoveType( MOVETYPE_FLYGRAVITY, MOVECOLLIDE_FLY_BOUNCE );
 	SetSolid( SOLID_BBOX ); 
 	SetCollisionGroup( COLLISION_GROUP_PROJECTILE );
+	RemoveEffects( EF_NOINTERP );
 
 	SetModel( "models/weapons/w_molotov.mdl");
 

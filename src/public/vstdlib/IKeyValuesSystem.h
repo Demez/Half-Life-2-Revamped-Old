@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -39,6 +39,14 @@ public:
 	// for debugging, adds KeyValues record into global list so we can track memory leaks
 	virtual void AddKeyValuesToMemoryLeakList(void *pMem, HKeySymbol name) = 0;
 	virtual void RemoveKeyValuesFromMemoryLeakList(void *pMem) = 0;
+
+	// set/get a value for keyvalues resolution symbol
+	// e.g.: SetKeyValuesExpressionSymbol( "LOWVIOLENCE", true ) - enables [$LOWVIOLENCE]
+	virtual void SetKeyValuesExpressionSymbol( const char *name, bool bValue ) = 0;
+	virtual bool GetKeyValuesExpressionSymbol( const char *name ) = 0;
+
+	// symbol table access from code with case-preserving requirements (used for key names)
+	virtual HKeySymbol GetSymbolForStringCaseSensitive( HKeySymbol &hCaseInsensitiveSymbol, const char *name, bool bCreate = true ) = 0;
 };
 
 VSTDLIB_INTERFACE IKeyValuesSystem *KeyValuesSystem();

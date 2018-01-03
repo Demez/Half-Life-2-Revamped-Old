@@ -1,9 +1,9 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
 //=============================================================================
-#include "vgui/IVGui.h"
+#include "vgui/IVgui.h"
 #include "vgui_controls/Controls.h"
 
 #include "vgui_controls/AnimatingImagePanel.h"
@@ -49,7 +49,6 @@ USING_BUILD_FACTORY( ScalableImagePanel );
 USING_BUILD_FACTORY_ALIAS( ScrollBar, ScrollBar_Vertical );
 USING_BUILD_FACTORY_ALIAS( ScrollBar, ScrollBar_Horizontal );
 USING_BUILD_FACTORY( ScrollBar );
-USING_BUILD_FACTORY( Slider );
 USING_BUILD_FACTORY( TextEntry );
 USING_BUILD_FACTORY( TreeView );
 USING_BUILD_FACTORY( CTreeViewListControl );

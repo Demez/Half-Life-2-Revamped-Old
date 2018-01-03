@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Grigori's personal shotgun (npc_monk)
 //
@@ -70,9 +70,7 @@ IMPLEMENT_SERVERCLASS_ST(CWeaponAnnabelle, DT_WeaponAnnabelle)
 END_SEND_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_annabelle, CWeaponAnnabelle );
-#ifndef HL2MP
 PRECACHE_WEAPON_REGISTER(weapon_annabelle);
-#endif
 
 BEGIN_DATADESC( CWeaponAnnabelle )
 	DEFINE_FIELD( m_bNeedPump, FIELD_BOOLEAN ),
@@ -112,7 +110,7 @@ void CWeaponAnnabelle::Precache( void )
 //-----------------------------------------------------------------------------
 void CWeaponAnnabelle::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator )
 {
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 		case EVENT_WEAPON_SHOTGUN_FIRE:
 		{

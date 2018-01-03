@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -543,7 +543,7 @@ bool CAI_FollowBehavior::IsFollowGoalInRange( float tolerance, float zTolerance,
 	// Increase Z tolerance slightly as XY distance decreases
 	float flToleranceSq = (tolerance*tolerance);
 	float flIncreaseRange = flToleranceSq * 0.25;
-	zTolerance += zTolerance * clamp((distanceSq / flIncreaseRange), 0.f, 1.f );
+	zTolerance += zTolerance * clamp((distanceSq / flIncreaseRange), 0, 1 );
 	if ( fabs( origin.z - goal.z ) > zTolerance )
 		return false;
 
@@ -2483,6 +2483,38 @@ static AI_FollowFormation_t g_HunterFollowFormation =
 	g_HunterFollowFormationSlots,
 };
 
+//-------------------------------------
+// Infested used this for marines in Follow order mode
+//-------------------------------------
+// follow tolerances
+#define ASW_TIGHT_MIN 60
+#define ASW_TIGHT_MAX 80
+#define ASW_TIGHT_TOL 48
+static AI_FollowSlot_t g_TopDownTightFollowFormationSlots[] = 
+{
+	// asw version
+	{ 1, { 0, 0, 0 }, 0, ASW_TIGHT_MIN,  ASW_TIGHT_MAX, ASW_TIGHT_TOL },
+	{ 1, { 0, 0, 0 }, 0, ASW_TIGHT_MIN,  ASW_TIGHT_MAX, ASW_TIGHT_TOL },
+	{ 1, { 0, 0, 0 }, 0, ASW_TIGHT_MIN,  ASW_TIGHT_MAX, ASW_TIGHT_TOL },
+	{ 1, { 0, 0, 0 }, 0, ASW_TIGHT_MIN,  ASW_TIGHT_MAX, ASW_TIGHT_TOL },
+};
+
+static AI_FollowFormation_t g_TopDownTightFollowFormation = 
+{
+	"TopDownTight",
+	AIFF_DEFAULT | AIFF_USE_FOLLOW_POINTS,
+	ARRAYSIZE(g_CommanderFollowFormationSlots),
+	48,							// followPointTolerance		// asw (was 48)
+	6,							// targetMoveTolerance	// asw was 6
+	60,							// repathOnRouteTolerance
+	12,							// walkTolerance	// asw was 12 - this one seems to let me move a bit before he follows
+	600,						// coverTolerance
+	32,							// enemyLOSTolerance	// asw was 32
+	32,							// chaseEnemyTolerance	// asw was 32
+	g_WideFollowFormationSlots,
+	//g_TightFollowFormationSlots,
+};
+
 
 //-------------------------------------
 
@@ -2536,6 +2568,7 @@ AI_FollowFormation_t *g_AI_Formations[] =
 	&g_SidekickFollowFormation,
 	&g_HunterFollowFormation,
 	&g_VortigauntFollowFormation,
+	&g_TopDownTightFollowFormation,
 };
 
 AI_FollowFormation_t *AIGetFormation( AI_Formations_t formation )

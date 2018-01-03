@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Alyx, the female sidekick and love interest that's taking the world by storm!
 //
@@ -49,7 +49,7 @@ Class_T	CNPC_Alyx::Classify ( void )
 //=========================================================
 void CNPC_Alyx::HandleAnimEvent( animevent_t *pEvent )
 {
-	if (pEvent->event == AE_ALYX_EMPTOOL_ATTACHMENT)
+	if (pEvent->Event() == AE_ALYX_EMPTOOL_ATTACHMENT)
 	{
 		if (!m_hEmpTool)
 		{
@@ -66,7 +66,7 @@ void CNPC_Alyx::HandleAnimEvent( animevent_t *pEvent )
 
 		return;
 	}
-	else if (pEvent->event == AE_ALYX_EMPTOOL_SEQUENCE)
+	else if (pEvent->Event() == AE_ALYX_EMPTOOL_SEQUENCE)
 	{
 		if (!m_hEmpTool)
 			return;
@@ -85,7 +85,7 @@ void CNPC_Alyx::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 	case 1:
 	default:
@@ -153,7 +153,7 @@ void CNPC_Alyx::SelectModel()
 	const char *szModel = STRING( GetModelName() );
 	if (!szModel || !*szModel)
 	{
-		SetModelName( AllocPooledString("models/alyx.mdl") );
+		SetModelName( AllocPooledString("models/alyx.mdl") ); //alyx.mdl
 	}
 }
 
@@ -241,9 +241,9 @@ Activity CNPC_Alyx::NPC_TranslateActivity( Activity activity )
 // Purpose:
 //-----------------------------------------------------------------------------
 
-void CNPC_Alyx::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
+void CNPC_Alyx::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr )
 {
-	BaseClass::TraceAttack( info, vecDir, ptr, pAccumulator );
+	BaseClass::TraceAttack( info, vecDir, ptr );
 
 	// FIXME: hack until some way of removing decals after healing
 	m_fNoDamageDecal = true;

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -337,7 +337,7 @@ class C_GrenadeHopwire : public C_BaseGrenade
 public:
 	C_GrenadeHopwire( void );
 
-	virtual int		DrawModel( int flags );
+	virtual int		DrawModel( int flags, const RenderableInstance_t &instance );
 
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
 	virtual void	ReceiveMessage( int classID, bf_read &msg );
@@ -411,11 +411,11 @@ void C_GrenadeHopwire::OnDataChanged( DataUpdateType_t updateType )
 // Purpose: 
 // Input  : flags - 
 //-----------------------------------------------------------------------------
-int	C_GrenadeHopwire::DrawModel( int flags )
+int	C_GrenadeHopwire::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	if ( m_ExplosionEffect.IsActive() )
 		return 1;
 
-	return BaseClass::DrawModel( flags );
+	return BaseClass::DrawModel( flags, instance );
 }
 

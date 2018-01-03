@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -58,7 +58,7 @@ public:
 	bool	WasPunted( void ) const { return m_punted; }
 
 	// this function only used in episodic.
-#if defined(HL2_EPISODIC) && 0 // FIXME: HandleInteraction() is no longer called now that base grenade derives from CBaseAnimating
+#ifdef HL2_EPISODIC
 	bool	HandleInteraction(int interactionType, void *data, CBaseCombatCharacter* sourceEnt);
 #endif 
 
@@ -155,58 +155,30 @@ void CGrenadeFrag::OnRestore( void )
 void CGrenadeFrag::CreateEffects( void )
 {
 	// Start up the eye glow
-	//m_pMainGlow = CSprite::SpriteCreate( "sprites/redglow1.vmt", GetLocalOrigin(), false );
-	int	nAttachment = LookupAttachment("fuse");
+	m_pMainGlow = CSprite::SpriteCreate( "sprites/redglow1.vmt", GetLocalOrigin(), false );
 
-	//int	nAttachment = LookupAttachment( "fuse" );
+	int	nAttachment = LookupAttachment( "fuse" );
 
-	//if ( m_pMainGlow != NULL )
-	if (m_pMainGlow == NULL)
+	if ( m_pMainGlow != NULL )
 	{
-		//m_pMainGlow->FollowEntity( this );
-		//m_pMainGlow->SetAttachment( this, nAttachment );
-		//m_pMainGlow->SetTransparency( kRenderGlow, 255, 255, 255, 200, kRenderFxNoDissipation );
-		//m_pMainGlow->SetScale( 0.2f );
-		//m_pMainGlow->SetGlowProxySize( 4.0f );
-	//}	
-		// Start up the eye glow
- 		m_pMainGlow = CSprite::SpriteCreate("sprites/redglow1.vmt", GetLocalOrigin(), false);
-	
+		m_pMainGlow->FollowEntity( this );
+		m_pMainGlow->SetAttachment( this, nAttachment );
+		m_pMainGlow->SetTransparency( kRenderGlow, 255, 255, 255, 200, kRenderFxNoDissipation );
+		m_pMainGlow->SetScale( 0.2f );
+		m_pMainGlow->SetGlowProxySize( 4.0f );
+	}
 
 	// Start up the eye trail
-	//m_pGlowTrail	= CSpriteTrail::SpriteTrailCreate( "sprites/bluelaser1.vmt", GetLocalOrigin(), false );
-	
-	if (m_pMainGlow != NULL)
- 		{
- 			m_pMainGlow->FollowEntity(this);
- 			m_pMainGlow->SetAttachment(this, nAttachment);
- 			m_pMainGlow->SetTransparency(kRenderGlow, 255, 255, 255, 200, kRenderFxNoDissipation);
- 			m_pMainGlow->SetScale(0.2f);
- 			m_pMainGlow->SetGlowProxySize(4.0f);
- 		}
- 	}
+	m_pGlowTrail	= CSpriteTrail::SpriteTrailCreate( "sprites/bluelaser1.vmt", GetLocalOrigin(), false );
 
-	//if ( m_pGlowTrail != NULL )
-	if (m_pGlowTrail == NULL)
+	if ( m_pGlowTrail != NULL )
 	{
-		//m_pGlowTrail->FollowEntity( this );
-		//m_pGlowTrail->SetAttachment( this, nAttachment );
-		//m_pGlowTrail->SetTransparency( kRenderTransAdd, 255, 0, 0, 255, kRenderFxNone );
-		//m_pGlowTrail->SetStartWidth( 8.0f );
-		//m_pGlowTrail->SetEndWidth( 1.0f );
-		//m_pGlowTrail->SetLifeTime( 0.5f );
-		// Start up the eye trail
- 		m_pGlowTrail = CSpriteTrail::SpriteTrailCreate("sprites/bluelaser1.vmt", GetLocalOrigin(), false);
- 
- 		if (m_pGlowTrail != NULL)
- 		{
- 			m_pGlowTrail->FollowEntity(this);
- 			m_pGlowTrail->SetAttachment(this, nAttachment);
- 			m_pGlowTrail->SetTransparency(kRenderTransAdd, 255, 0, 0, 255, kRenderFxNone);
- 			m_pGlowTrail->SetStartWidth(8.0f);
- 			m_pGlowTrail->SetEndWidth(1.0f);
- 			m_pGlowTrail->SetLifeTime(0.5f);
- 		}
+		m_pGlowTrail->FollowEntity( this );
+		m_pGlowTrail->SetAttachment( this, nAttachment );
+		m_pGlowTrail->SetTransparency( kRenderTransAdd, 255, 0, 0, 255, kRenderFxNone );
+		m_pGlowTrail->SetStartWidth( 8.0f );
+		m_pGlowTrail->SetEndWidth( 1.0f );
+		m_pGlowTrail->SetLifeTime( 0.5f );
 	}
 }
 
@@ -404,7 +376,7 @@ int CGrenadeFrag::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	return BaseClass::OnTakeDamage( inputInfo );
 }
 
-#if defined(HL2_EPISODIC) && 0 // FIXME: HandleInteraction() is no longer called now that base grenade derives from CBaseAnimating
+#ifdef HL2_EPISODIC
 extern int	g_interactionBarnacleVictimGrab; ///< usually declared in ai_interactions.h but no reason to haul all of that in here.
 extern int g_interactionBarnacleVictimBite;
 extern int g_interactionBarnacleVictimReleased;

@@ -1,17 +1,17 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
 //=============================================================================//
 
 #include "cbase.h"
-#include <vgui/ISurface.h>
+#include <vgui/isurface.h>
 #include "hud_numericdisplay.h"
 #include "iclientmode.h"
 #include <coordsize.h>
 #include "hud_macros.h"
-#include "vgui/IVGui.h"
-#include "vgui/ILocalize.h"
+#include "vgui/ivgui.h"
+#include "vgui/ilocalize.h"
 #include "mapoverview.h"
 #include "hud_radar.h"
 #include "iclientvehicle.h"
@@ -194,10 +194,10 @@ void CHudRadar::SetVisible(bool state)
 {
 	BaseClass::SetVisible(state);
 
-	if( g_pMapOverview  &&  g_pMapOverview->GetMode() == CMapOverview::MAP_MODE_RADAR )
+	if( GetMapOverView() && GetMapOverView()->GetMode() == CMapOverview::MAP_MODE_RADAR )
 	{
 		// We are the hud element still, but he is in charge of the new style now.
-		g_pMapOverview->SetVisible( state );		
+		GetMapOverView()->SetVisible( state );		
 	}
 }
 

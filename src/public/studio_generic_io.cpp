@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -8,7 +8,7 @@
 #include <assert.h>
 
 #include "studio.h"
-#include "utlrbtree.h"
+#include "UtlRBTree.h"
 
 extern studiohdr_t *FindOrLoadGroupFile( char const *modelname );
 

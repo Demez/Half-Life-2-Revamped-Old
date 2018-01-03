@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -6,13 +6,13 @@
 
 #include "cbase.h"
 #include "c_prop_combine_ball.h"
-#include "materialsystem/imaterial.h"
+#include "materialsystem/IMaterial.h"
 #include "model_types.h"
 #include "c_physicsprop.h"
 #include "c_te_effect_dispatch.h"
 #include "fx_quad.h"
 #include "fx.h"
-#include "clienteffectprecachesystem.h"
+#include "ClientEffectPrecacheSystem.h"
 #include "view.h"
 #include "view_scene.h"
 #include "beamdraw.h"
@@ -66,7 +66,7 @@ void C_PropCombineBall::OnDataChanged( DataUpdateType_t updateType )
 //-----------------------------------------------------------------------------
 RenderGroup_t C_PropCombineBall::GetRenderGroup( void )
 {
-	return RENDER_GROUP_TRANSLUCENT_ENTITY;
+	return RENDER_GROUP_TRANSLUCENT;
 }
 
 //-----------------------------------------------------------------------------
@@ -228,7 +228,7 @@ void DrawHaloOriented( const Vector& source, float scale, float const *color, fl
 // Input  : flags - 
 // Output : int
 //-----------------------------------------------------------------------------
-int C_PropCombineBall::DrawModel( int flags )
+int C_PropCombineBall::DrawModel( int flags, const RenderableInstance_t &instance )
 {
 	if ( !m_bEmit )
 		return 0;
@@ -259,7 +259,7 @@ int C_PropCombineBall::DrawModel( int flags )
 		// Always orient towards the camera!
 		SetAbsAngles( angles );
 
-		BaseClass::DrawModel( flags );
+		BaseClass::DrawModel( flags, instance );
 	}
 	else
 	{
@@ -323,7 +323,7 @@ void CombineBallImpactCallback( const CEffectData &data )
 	FX_ElectricSpark( data.m_vOrigin, 2, 1, &data.m_vNormal );
 }
 
-DECLARE_CLIENT_EFFECT( "cball_bounce", CombineBallImpactCallback );
+DECLARE_CLIENT_EFFECT( cball_bounce, CombineBallImpactCallback );
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -337,4 +337,4 @@ void CombineBallExplosionCallback( const CEffectData &data )
 	FX_ElectricSpark( data.m_vOrigin, 4, 1, &normal );
 }
 
-DECLARE_CLIENT_EFFECT( "cball_explode", CombineBallExplosionCallback );
+DECLARE_CLIENT_EFFECT( cball_explode, CombineBallExplosionCallback );

@@ -1,8 +1,8 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: A fast stack memory allocator that uses virtual memory if available
 //
-//=============================================================================//
+//===========================================================================//
 
 #ifndef MEMSTACK_H
 #define MEMSTACK_H
@@ -10,6 +10,8 @@
 #if defined( _WIN32 )
 #pragma once
 #endif
+
+#include "tier1/utlvector.h"
 
 //-----------------------------------------------------------------------------
 
@@ -23,7 +25,7 @@ public:
 
 	bool Init( unsigned maxSize = 0, unsigned commitSize = 0, unsigned initialCommit = 0, unsigned alignment = 16 );
 #ifdef _X360
-	bool InitPhysical( unsigned size = 0, unsigned alignment = 16 );
+	bool InitPhysical( uint size, uint nBaseAddrAlignment, uint alignment = 16, uint32 nAdditionalFlags = 0 );
 #endif
 	void Term();
 
@@ -44,14 +46,19 @@ public:
 	void *GetBase();
 	const void *GetBase() const {  return const_cast<CMemoryStack *>(this)->GetBase(); }
 
+	bool CommitSize( int );
+
 private:
 	bool CommitTo( byte * ) RESTRICT;
+	void RegisterAllocation();
+	void RegisterDeallocation();
 
 	byte *m_pNextAlloc;
 	byte *m_pCommitLimit;
 	byte *m_pAllocLimit;
 	
 	byte *m_pBase;
+	bool m_bRegisteredAllocation;
 
 	unsigned m_maxSize;
 	unsigned m_alignment;
@@ -104,6 +111,17 @@ FORCEINLINE void *CMemoryStack::Alloc( unsigned bytes, bool bClear ) RESTRICT
 
 //-------------------------------------
 
+inline bool CMemoryStack::CommitSize( int nBytes )
+{
+	if ( GetSize() != nBytes )
+	{
+		return CommitTo( m_pBase + nBytes );
+	}
+	return true;
+}
+
+//-------------------------------------
+
 inline int CMemoryStack::GetMaxSize()
 { 
 	return m_maxSize;
@@ -130,6 +148,7 @@ inline MemoryStackMark_t CMemoryStack::GetCurrentAllocPoint()
 	return ( m_pNextAlloc - m_pBase );
 }
 
+
 //-----------------------------------------------------------------------------
 // The CUtlMemoryStack class:
 // A fixed memory class
@@ -143,7 +162,7 @@ public:
 	CUtlMemoryStack( T* pMemory, int numElements )			{ Assert( 0 ); 										}
 
 	// Can we use this index?
-	bool IsIdxValid( I i ) const							{ return (i >= 0) && (i < m_nAllocated); }
+	bool IsIdxValid( I i ) const							{ long x=i; return (x >= 0) && (x < m_nAllocated); }
 
 	// Specify the invalid ('null') index that we'll only return on failure
 	static const I INVALID_INDEX = ( I )-1; // For use with COMPILE_TIME_ASSERT
@@ -162,7 +181,7 @@ public:
 	Iterator_t Next( const Iterator_t &it ) const			{ return Iterator_t( it.index < m_nAllocated ? it.index + 1 : InvalidIndex() ); }
 	I GetIndex( const Iterator_t &it ) const				{ return it.index; }
 	bool IsIdxAfter( I i, const Iterator_t &it ) const		{ return i > it.index; }
-	bool IsValidIterator( const Iterator_t &it ) const		{ return it.index >= 0 && it.index < m_nAllocated; }
+	bool IsValidIterator( const Iterator_t &it ) const		{ long x=it.index; return x >= 0 && x < m_nAllocated; }
 	Iterator_t InvalidIterator() const						{ return Iterator_t( InvalidIndex() ); }
 
 	// Gets the base address
@@ -202,6 +221,125 @@ private:
 	int m_nAllocated;
 };
 
+
+#ifdef _X360
 //-----------------------------------------------------------------------------
+// A memory stack used for allocating physical memory on the 360
+// Usage pattern anticipates we usually never go over the initial allocation
+// When we do so, we're ok with slightly slower allocation
+//-----------------------------------------------------------------------------
+class CPhysicalMemoryStack
+{
+public:
+	CPhysicalMemoryStack();
+	~CPhysicalMemoryStack();
+
+	// The physical memory stack is allocated in chunks. We will initially
+	// allocate nInitChunkCount chunks, which will always be in memory.
+	// When FreeAll() is called, it will free down to the initial chunk count
+	// but not below it.
+	bool	Init( size_t nChunkSizeInBytes, size_t nAlignment, int nInitialChunkCount, uint32 nAdditionalFlags );
+	void	Term();
+
+	size_t	GetSize() const;
+	size_t	GetPeakUsed() const;
+	size_t	GetUsed() const;
+	size_t	GetFramePeakUsed() const;
+
+	MemoryStackMark_t GetCurrentAllocPoint() const;
+	void	FreeToAllocPoint( MemoryStackMark_t mark, bool bUnused = true ); // bUnused is for interface compat with CMemoryStack
+	void	*Alloc( size_t nSizeInBytes, bool bClear = false ) RESTRICT;
+	void	FreeAll( bool bUnused = true ); // bUnused is for interface compat with CMemoryStack
+
+	void	PrintContents();
+
+private:
+	void *AllocFromOverflow( size_t nSizeInBytes );
+
+	struct PhysicalChunk_t
+	{
+		uint8 *m_pBase;
+		uint8 *m_pNextAlloc;
+		uint8 *m_pAllocLimit;
+	};
+
+	PhysicalChunk_t m_InitialChunk;
+	CUtlVector< PhysicalChunk_t > m_ExtraChunks; 
+	size_t m_nUsage;
+	size_t m_nFramePeakUsage;
+	size_t m_nPeakUsage;
+	size_t m_nAlignment;
+	size_t m_nChunkSizeInBytes;
+	int m_nFirstAvailableChunk;
+	int m_nAdditionalFlags;
+	PhysicalChunk_t *m_pLastAllocedChunk;
+};
+
+//-------------------------------------
+
+FORCEINLINE void *CPhysicalMemoryStack::Alloc( size_t nSizeInBytes, bool bClear ) RESTRICT
+{
+	if ( nSizeInBytes )
+	{
+		nSizeInBytes = AlignValue( nSizeInBytes, m_nAlignment );
+	}
+	else
+	{
+		nSizeInBytes = m_nAlignment;
+	}
+
+	// Can't do an allocation bigger than the chunk size
+	Assert( nSizeInBytes <= m_nChunkSizeInBytes );
+
+	void *pResult = m_InitialChunk.m_pNextAlloc;
+	uint8 *pNextAlloc = m_InitialChunk.m_pNextAlloc + nSizeInBytes;
+	if ( pNextAlloc <= m_InitialChunk.m_pAllocLimit )
+	{
+		m_InitialChunk.m_pNextAlloc = pNextAlloc;
+		m_pLastAllocedChunk = &m_InitialChunk;
+	}
+	else
+	{
+		pResult = AllocFromOverflow( nSizeInBytes );
+	}
+
+	m_nUsage += nSizeInBytes;
+	m_nFramePeakUsage = MAX( m_nUsage, m_nFramePeakUsage ); 
+	m_nPeakUsage = MAX( m_nUsage, m_nPeakUsage );
+
+	if ( bClear )
+	{
+		memset( pResult, 0, nSizeInBytes );
+	}
+
+	return pResult;
+}
+
+//-------------------------------------
+
+inline size_t CPhysicalMemoryStack::GetPeakUsed() const
+{ 
+	return m_nPeakUsage;
+}
+
+//-------------------------------------
+
+inline size_t CPhysicalMemoryStack::GetUsed() const
+{ 
+	return m_nUsage; 
+}
+
+inline size_t CPhysicalMemoryStack::GetFramePeakUsed() const
+{ 
+	return m_nFramePeakUsage; 
+}
+
+inline MemoryStackMark_t CPhysicalMemoryStack::GetCurrentAllocPoint() const
+{
+	Assert( m_pLastAllocedChunk );
+	return ( m_pLastAllocedChunk->m_pNextAlloc - m_pLastAllocedChunk->m_pBase );
+}
+
+#endif // _X360
 
 #endif // MEMSTACK_H

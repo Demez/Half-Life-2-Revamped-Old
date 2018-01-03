@@ -18,7 +18,6 @@
 	{
 		"hostname"	"string"	// public host name
 		"address"	"string"	// hostame, IP or DNS name	
-		"ip"		"long"
 		"port"		"short"		// server port
 		"game"		"string"	// game dir 
 		"mapname"	"string"	// map name
@@ -26,6 +25,11 @@
 		"os"		"string"	// WIN32, LINUX
 		"dedicated"	"bool"		// true if dedicated server
 		"password"	"bool"		// true if password protected
+	}
+	
+	"server_pre_shutdown" 		// server is about to be shut down	
+	{
+		"reason"	"string"	// reason why server is about to be shut down
 	}
 	
 	"server_shutdown" 			// server shut down	
@@ -69,7 +73,6 @@
 		"userid"	"short"		// user ID on server (unique on server)
 		"networkid" "string" // player network (i.e steam) id
 		"address"	"string"	// ip:port
-		"bot"		"short"		// is a bot
 	}
 	
 	"player_info"				// a player changed his name
@@ -87,48 +90,22 @@
 		"reason"	"string"	// "self", "kick", "ban", "cheat", "error"
 		"name"		"string"	// player name
 		"networkid"	"string"	// player network (i.e steam) id
-		"bot"		"short"		// is a bot
 	}
 
 	"player_activate"
 	{
 		"userid"	"short"		// user ID on server
 	}
+	
+	"player_connect_full"			// player has sent final message in the connection sequence
+	{
+		"userid"	"short"		// user ID on server
+		"index"		"byte"		// player slot (entity index-1)
+	}
 
 	"player_say"
 	{
 		"userid"	"short"		// user ID on server
 		"text"		"string"	// the say text
-	}
-	
-	"client_disconnect"			// client side disconnect message
-	{
-		"message"	"string"		// Why are we disconnecting?  This could be a localization token or an English-language string
-	}
-
-	"client_beginconnect"			// client tries to connect to server
-	{
-		"address"	"string"		// Name we used to connect to the server
-		"ip"		"long"
-		"port"		"short"			// server port
-		"source"	"string"		// what caused us to attempt this connection?  (blank for general command line, "serverbrowser", "quickplay", etc)
-	}
-
-	"client_connected"			// client has completed the challenge / handshake process and is in SIGNONSTATE_CONNECTED
-	{
-		"address"	"string"		// Name we used to connect to the server
-		"ip"		"long"
-		"port"		"short"			// server port
-	}
-
-	"client_fullconnect"
-	{
-		"address"	"string"		// Name we used to connect to the server
-		"ip"		"long"
-		"port"		"short"			// server port
-	}
-
-	"host_quit"
-	{
 	}
 }

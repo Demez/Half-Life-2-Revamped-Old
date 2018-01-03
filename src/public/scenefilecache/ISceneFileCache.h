@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -17,6 +17,7 @@
 struct SceneCachedData_t
 {
 	unsigned int	msecs;
+	float			m_fLastSpeakSecs;
 	int				numSounds;
 	int				sceneId;
 };

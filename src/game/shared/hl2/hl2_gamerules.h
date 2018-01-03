@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Game rules for Half-Life 2.
 //
@@ -46,6 +46,9 @@ public:
 	virtual float			GetAmmoQuantityScale( int iAmmoIndex );
 	virtual void			LevelInitPreEntity();
 #endif
+	virtual bool			ClientCommand( CBaseEntity *pEdict, const CCommand &args );
+	virtual void			Think( void );
+	virtual void			CreateStandardEntities( void );	
 
 private:
 	// Rules change for the mega physgun
@@ -54,17 +57,18 @@ private:
 #ifdef CLIENT_DLL
 
 	DECLARE_CLIENTCLASS_NOBASE(); // This makes datatables able to access our private vars.
-
+public:
+	CHalfLife2();
+	virtual ~CHalfLife2();
 #else
 
 	DECLARE_SERVERCLASS_NOBASE(); // This makes datatables able to access our private vars.
 
 	CHalfLife2();
-	virtual ~CHalfLife2() {}
+	virtual ~CHalfLife2();
 
-	virtual void			Think( void );
 
-	virtual bool			ClientCommand( CBaseEntity *pEdict, const CCommand &args );
+
 	virtual void			PlayerSpawn( CBasePlayer *pPlayer );
 
 	virtual void			InitDefaultAIRelationships( void );
@@ -106,10 +110,6 @@ private:
 //-----------------------------------------------------------------------------
 inline CHalfLife2* HL2GameRules()
 {
-#if ( !defined( HL2_DLL ) && !defined( HL2_CLIENT_DLL ) ) || defined( HL2MP )
-	Assert( 0 );	// g_pGameRules is NOT an instance of CHalfLife2 and bad things happen
-#endif
-
 	return static_cast<CHalfLife2*>(g_pGameRules);
 }
 

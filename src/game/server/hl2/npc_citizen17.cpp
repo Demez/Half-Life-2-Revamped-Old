@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: The downtrodden citizens of City 17.
 //
@@ -32,7 +32,7 @@
 #include "ai_interactions.h"
 #include "ai_looktarget.h"
 #include "sceneentity.h"
-#include "tier0/icommandline.h"
+#include "tier0/ICommandLine.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -1507,6 +1507,7 @@ int CNPC_Citizen::TranslateSchedule( int scheduleType )
 				}
 			}
 		}
+		return SCHED_RANGE_ATTACK1;
 		break;
 	}
 
@@ -1859,7 +1860,7 @@ Activity CNPC_Citizen::NPC_TranslateActivity( Activity activity )
 //------------------------------------------------------------------------------
 void CNPC_Citizen::HandleAnimEvent( animevent_t *pEvent )
 {
-	if ( pEvent->event == AE_CITIZEN_GET_PACKAGE )
+	if ( pEvent->Event() == AE_CITIZEN_GET_PACKAGE )
 	{
 		// Give the citizen a package
 		CBaseCombatWeapon *pWeapon = Weapon_Create( "weapon_citizenpackage" );
@@ -1868,13 +1869,13 @@ void CNPC_Citizen::HandleAnimEvent( animevent_t *pEvent )
 			// If I have a name, make my weapon match it with "_weapon" appended
 			if ( GetEntityName() != NULL_STRING )
 			{
-				pWeapon->SetName( AllocPooledString(UTIL_VarArgs("%s_weapon", STRING(GetEntityName()) )) );
+				pWeapon->SetName( AllocPooledString(UTIL_VarArgs("%s_weapon", GetEntityName())) );
 			}
 			Weapon_Equip( pWeapon );
 		}
 		return;
 	}
-	else if ( pEvent->event == AE_CITIZEN_HEAL )
+	else if ( pEvent->Event() == AE_CITIZEN_HEAL )
 	{
 		// Heal my target (if within range)
 #if HL2_EPISODIC
@@ -1898,7 +1899,7 @@ void CNPC_Citizen::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 	case NPC_EVENT_LEFTFOOT:
 		{
@@ -2184,7 +2185,7 @@ bool CNPC_Citizen::ShouldLookForBetterWeapon()
 			return false;
 		}
 
-#ifdef DBGFLAG_ASSERT
+#ifdef DEBUG
 		// Cached off to make sure you change this if you ask the code to defer.
 		float flOldWeaponSearchTime = m_flNextWeaponSearchTime;
 #endif
@@ -3489,7 +3490,7 @@ bool CNPC_Citizen::ShouldHealTarget( CBaseEntity *pTarget, bool bActiveUse )
 			else
 			{
 				// Does the player need the ammo we can give him?
-				int iMax = GetAmmoDef()->MaxCarry(iAmmoType);
+				int iMax = GetAmmoDef()->MaxCarry(iAmmoType, ((CBaseCombatCharacter*)pTarget));
 				int iCount = ((CBasePlayer*)pTarget)->GetAmmoCount(iAmmoType);
 				if ( !iCount || ((iMax - iCount) >= m_iAmmoAmount) )
 				{
@@ -3621,7 +3622,7 @@ void CNPC_Citizen::Heal()
 		{
 			if ( pTarget->IsPlayer() && npc_citizen_medic_emit_sound.GetBool() )
 			{
-				CPASAttenuationFilter filter( pTarget, "HealthKit.Touch" );
+				CPASAttenuationFilter filter( pTarget, "HealthKit.Touch" ); //gcc hated this being inline in the function.
 				EmitSound( filter, pTarget->entindex(), "HealthKit.Touch" );
 			}
 

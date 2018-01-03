@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -12,6 +12,8 @@
 #endif
 
 #include <stdio.h>
+#include "tier0/platform.h"
+#include "tier0/dbg.h"
 
 enum NormalDecodeMode_t
 {
@@ -23,6 +25,7 @@ enum NormalDecodeMode_t
 // Forward declaration
 #ifdef _WIN32
 typedef enum _D3DFORMAT D3DFORMAT;
+typedef enum DXGI_FORMAT;
 #endif
 
 //-----------------------------------------------------------------------------
@@ -63,28 +66,35 @@ enum ImageFormat
 	IMAGE_FORMAT_RGBA16161616,
 	IMAGE_FORMAT_UVLX8888,
 	IMAGE_FORMAT_R32F,			// Single-channel 32-bit floating point
-	IMAGE_FORMAT_RGB323232F,
+	IMAGE_FORMAT_RGB323232F,	// NOTE: D3D9 does not have this format
 	IMAGE_FORMAT_RGBA32323232F,
+	IMAGE_FORMAT_RG1616F,
+	IMAGE_FORMAT_RG3232F,
+	IMAGE_FORMAT_RGBX8888,
 
-	// Depth-stencil texture formats for shadow depth mapping
-	IMAGE_FORMAT_NV_DST16,		// 
-	IMAGE_FORMAT_NV_DST24,		//
-	IMAGE_FORMAT_NV_INTZ,		// Vendor-specific depth-stencil texture
-	IMAGE_FORMAT_NV_RAWZ,		// formats for shadow depth mapping 
-	IMAGE_FORMAT_ATI_DST16,		// 
-	IMAGE_FORMAT_ATI_DST24,		//
-	IMAGE_FORMAT_NV_NULL,		// Dummy format which takes no video memory
+	IMAGE_FORMAT_NULL,			// Dummy format which takes no video memory
 
 	// Compressed normal map formats
 	IMAGE_FORMAT_ATI2N,			// One-surface ATI2N / DXN format
 	IMAGE_FORMAT_ATI1N,			// Two-surface ATI1N format
 
-#if defined( _X360 )
+	IMAGE_FORMAT_RGBA1010102,	// 10 bit-per component render targets
+	IMAGE_FORMAT_BGRA1010102,
+	IMAGE_FORMAT_R16F,			// 16 bit FP format
+
 	// Depth-stencil texture formats
-	IMAGE_FORMAT_X360_DST16,
-	IMAGE_FORMAT_X360_DST24,
-	IMAGE_FORMAT_X360_DST24F,
-	// supporting these specific formats as non-tiled for procedural cpu access
+	IMAGE_FORMAT_D16,
+	IMAGE_FORMAT_D15S1,
+	IMAGE_FORMAT_D32,
+	IMAGE_FORMAT_D24S8,
+	IMAGE_FORMAT_LINEAR_D24S8,
+	IMAGE_FORMAT_D24X8,
+	IMAGE_FORMAT_D24X4S4,
+	IMAGE_FORMAT_D24FS8,
+	IMAGE_FORMAT_D16_SHADOW,	// Specific formats for shadow mapping
+	IMAGE_FORMAT_D24X8_SHADOW,	// Specific formats for shadow mapping
+
+	// supporting these specific formats as non-tiled for procedural cpu access (360-specific)
 	IMAGE_FORMAT_LINEAR_BGRX8888,
 	IMAGE_FORMAT_LINEAR_RGBA8888,
 	IMAGE_FORMAT_LINEAR_ABGR8888,
@@ -98,7 +108,6 @@ enum ImageFormat
 
 	IMAGE_FORMAT_LE_BGRX8888,
 	IMAGE_FORMAT_LE_BGRA8888,
-#endif
 
 	NUM_IMAGE_FORMATS
 };
@@ -161,26 +170,140 @@ typedef enum _D3DFORMAT
 //-----------------------------------------------------------------------------
 // Color structures
 //-----------------------------------------------------------------------------
+#pragma warning ( disable : 4293 )
+template< int nBitCount > FORCEINLINE int ConvertTo10Bit( int x )
+{
+	switch ( nBitCount )
+	{
+	case 1:
+		return ( x & 0x1 ) ? 0x3FF : 0;
+	case 2:
+		return ( x << 8 ) | ( x << 6 ) | ( x << 4 ) | ( x << 2 ) | x;
+	case 3:
+		return ( x << 7 ) | ( x << 4 ) | ( x << 1 ) | ( x >> 2 );
+	case 4:
+		return ( x << 6 ) | ( x << 2 ) | ( x >> 2 );
+	default:
+		return ( x << ( 10 - nBitCount ) ) | ( x >> ( nBitCount - ( 10 - nBitCount ) ) );
+	}
+}
+#pragma warning ( default : 4293 )
+
+template< int nBitCount > FORCEINLINE int ConvertFrom10Bit( int x )
+{
+	return ( x >> ( 10 - nBitCount ) );
+}
+
+struct R32F_t
+{
+	float32 r;
+};
+
+struct RG3232F_t
+{
+	float32 r;
+	float32 g;
+};
+
+struct RGB323232F_t
+{
+	float32 r;
+	float32 g;
+	float32 b;
+};
+
+struct RGBA32323232F_t
+{
+	float32 r;
+	float32 g;
+	float32 b;
+	float32 a;
+};
+
+struct RGBA1010102_t
+{
+	uint32 r : 10;	
+	uint32 g : 10;	
+	uint32 b : 10;	
+	uint32 a : 2;
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<10>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<10>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<10>( b ); }
+	inline int ATo10Bit( ) const { return ConvertTo10Bit<2>( a ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<10>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<10>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<10>( b10 ); }
+	inline void AFrom10Bit( int a10 ) { a = ConvertFrom10Bit<10>( a10 ); }
+};
+
+struct BGRA1010102_t
+{
+	uint32 b : 10;	
+	uint32 g : 10;	
+	uint32 r : 10;	
+	uint32 a : 2;
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<10>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<10>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<10>( b ); }
+	inline int ATo10Bit( ) const { return ConvertTo10Bit<2>( a ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<10>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<10>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<10>( b10 ); }
+	inline void AFrom10Bit( int a10 ) { a = ConvertFrom10Bit<10>( a10 ); }
+};
 
 struct BGRA8888_t
 {
-	unsigned char b;		// change the order of names to change the 
-	unsigned char g;		//  order of the output ARGB or BGRA, etc...
-	unsigned char r;		//  Last one is MSB, 1st is LSB.
-	unsigned char a;
+	uint8 b;		// change the order of names to change the 
+	uint8 g;		//  order of the output ARGB or BGRA, etc...
+	uint8 r;		//  Last one is MSB, 1st is LSB.
+	uint8 a;
 	inline BGRA8888_t& operator=( const BGRA8888_t& in )
 	{
 		*( unsigned int * )this = *( unsigned int * )&in;
 		return *this;
 	}
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<8>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<8>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<8>( b ); }
+	inline int ATo10Bit( ) const { return ConvertTo10Bit<8>( a ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<8>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<8>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
+	inline void AFrom10Bit( int a10 ) { a = ConvertFrom10Bit<8>( a10 ); }
 };
+
+struct ABGR8888_t
+{
+	uint8 a;
+	uint8 b;		// change the order of names to change the 
+	uint8 g;		//  order of the output ARGB or BGRA, etc...
+	uint8 r;		//  Last one is MSB, 1st is LSB.
+	inline ABGR8888_t& operator=( const BGRA8888_t& in )
+	{
+		r = in.r;
+		g = in.g;
+		b = in.b;
+		a = in.a;
+		return *this;
+	}
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<8>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<8>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<8>( b ); }
+	inline int ATo10Bit( ) const { return ConvertTo10Bit<8>( a ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<8>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<8>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
+	inline void AFrom10Bit( int a10 ) { a = ConvertFrom10Bit<8>( a10 ); }
+};
+
 
 struct RGBA8888_t
 {
-	unsigned char r;		// change the order of names to change the 
-	unsigned char g;		//  order of the output ARGB or BGRA, etc...
-	unsigned char b;		//  Last one is MSB, 1st is LSB.
-	unsigned char a;
+	uint8 r;		// change the order of names to change the 
+	uint8 g;		//  order of the output ARGB or BGRA, etc...
+	uint8 b;		//  Last one is MSB, 1st is LSB.
+	uint8 a;
 	inline RGBA8888_t& operator=( const BGRA8888_t& in )
 	{
 		r = in.r;
@@ -189,13 +312,21 @@ struct RGBA8888_t
 		a = in.a;
 		return *this;
 	}
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<8>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<8>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<8>( b ); }
+	inline int ATo10Bit( ) const { return ConvertTo10Bit<8>( a ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<8>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<8>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
+	inline void AFrom10Bit( int a10 ) { a = ConvertFrom10Bit<8>( a10 ); }
 };
 
 struct RGB888_t
 {
-	unsigned char r;
-	unsigned char g;
-	unsigned char b;
+	uint8 r;
+	uint8 g;
+	uint8 b;
 	inline RGB888_t& operator=( const BGRA8888_t& in )
 	{
 		r = in.r;
@@ -211,13 +342,19 @@ struct RGB888_t
 	{
 		return ( r != in.r ) || ( g != in.g ) || ( b != in.b );
 	}
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<8>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<8>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<8>( b ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<8>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<8>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
 };
 
 struct BGR888_t
 {
-	unsigned char b;
-	unsigned char g;
-	unsigned char r;
+	uint8 b;
+	uint8 g;
+	uint8 r;
 	inline BGR888_t& operator=( const BGRA8888_t& in )
 	{
 		r = in.r;
@@ -225,7 +362,36 @@ struct BGR888_t
 		b = in.b;
 		return *this;
 	}
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<8>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<8>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<8>( b ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<8>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<8>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
 };
+
+struct BGRX8888_t
+{
+	uint8 b;
+	uint8 g;
+	uint8 r;
+	uint8 x;
+	inline BGRX8888_t& operator=( const BGRA8888_t& in )
+	{
+		r = in.r;
+		g = in.g;
+		b = in.b;
+		x = 255;
+		return *this;
+	}
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<8>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<8>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<8>( b ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<8>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<8>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<8>( b10 ); }
+};
+
 
 // 360 uses this structure for x86 dxt decoding
 #if defined( _X360 )
@@ -233,9 +399,9 @@ struct BGR888_t
 #endif
 struct BGR565_t
 {
-	unsigned short b : 5;		// order of names changes
-	unsigned short g : 6;		//  byte order of output to 32 bit
-	unsigned short r : 5;
+	uint16 b : 5;		// order of names changes
+	uint16 g : 6;		//  byte order of output to 32 bit
+	uint16 r : 5;
 	inline BGR565_t& operator=( const BGRA8888_t& in )
 	{
 		r = in.r >> 3;
@@ -250,6 +416,12 @@ struct BGR565_t
 		b = blue >> 3;
 		return *this;
 	}
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<5>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<6>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<5>( b ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<5>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<6>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<5>( b10 ); }
 };
 #if defined( _X360 )
 #pragma bitfield_order( pop )
@@ -257,10 +429,10 @@ struct BGR565_t
 
 struct BGRA5551_t
 {
-	unsigned short b : 5;		// order of names changes
-	unsigned short g : 5;		//  byte order of output to 32 bit
-	unsigned short r : 5;
-	unsigned short a : 1;
+	uint16 b : 5;		// order of names changes
+	uint16 g : 5;		//  byte order of output to 32 bit
+	uint16 r : 5;
+	uint16 a : 1;
 	inline BGRA5551_t& operator=( const BGRA8888_t& in )
 	{
 		r = in.r >> 3;
@@ -269,14 +441,22 @@ struct BGRA5551_t
 		a = in.a >> 7;
 		return *this;
 	}
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<5>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<5>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<5>( b ); }
+	inline int ATo10Bit( ) const { return ConvertTo10Bit<1>( a ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<5>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<5>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<5>( b10 ); }
+	inline void AFrom10Bit( int a10 ) { a = ConvertFrom10Bit<1>( a10 ); }
 };
 
 struct BGRA4444_t
 {
-	unsigned short b : 4;		// order of names changes
-	unsigned short g : 4;		//  byte order of output to 32 bit
-	unsigned short r : 4;
-	unsigned short a : 4;
+	uint16 b : 4;		// order of names changes
+	uint16 g : 4;		//  byte order of output to 32 bit
+	uint16 r : 4;
+	uint16 a : 4;
 	inline BGRA4444_t& operator=( const BGRA8888_t& in )
 	{
 		r = in.r >> 4;
@@ -285,14 +465,22 @@ struct BGRA4444_t
 		a = in.a >> 4;
 		return *this;
 	}
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<4>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<4>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<4>( b ); }
+	inline int ATo10Bit( ) const { return ConvertTo10Bit<4>( a ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<4>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<4>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<4>( b10 ); }
+	inline void AFrom10Bit( int a10 ) { a = ConvertFrom10Bit<4>( a10 ); }
 };
 
 struct RGBX5551_t
 {
-	unsigned short r : 5;
-	unsigned short g : 5;
-	unsigned short b : 5;
-	unsigned short x : 1;
+	uint16 r : 5;
+	uint16 g : 5;
+	uint16 b : 5;
+	uint16 x : 1;
 	inline RGBX5551_t& operator=( const BGRA8888_t& in )
 	{
 		r = in.r >> 3;
@@ -300,6 +488,34 @@ struct RGBX5551_t
 		b = in.b >> 3;
 		return *this;
 	}
+	inline int RTo10Bit( ) const { return ConvertTo10Bit<5>( r ); }
+	inline int GTo10Bit( ) const { return ConvertTo10Bit<5>( g ); }
+	inline int BTo10Bit( ) const { return ConvertTo10Bit<5>( b ); }
+	inline void RFrom10Bit( int r10 ) { r = ConvertFrom10Bit<5>( r10 ); }
+	inline void GFrom10Bit( int g10 ) { g = ConvertFrom10Bit<5>( g10 ); }
+	inline void BFrom10Bit( int b10 ) { b = ConvertFrom10Bit<5>( b10 ); }
+};
+
+struct UV88_t
+{
+	int8 u;
+	int8 v;
+};
+
+struct UVWQ8888_t
+{
+	int8 u;
+	int8 v;
+	int8 w;
+	int8 q;
+};
+
+struct UVLX8888_t
+{
+	int8 u;
+	int8 v;
+	uint8 l;
+	uint8 x;
 };
 
 //-----------------------------------------------------------------------------
@@ -315,12 +531,30 @@ struct RGBX5551_t
 struct ImageFormatInfo_t
 {
 	const char* m_pName;
-	int m_NumBytes;
-	int m_NumRedBits;
-	int m_NumGreeBits;
-	int m_NumBlueBits;
-	int m_NumAlphaBits;
-	bool m_IsCompressed;
+	uint8 m_nNumBytes;
+	uint8 m_nNumRedBits;
+	uint8 m_nNumGreenBits;
+	uint8 m_nNumBlueBits;
+	uint8 m_nNumAlphaBits;
+	uint8 m_nNumDepthBits;
+	uint8 m_nNumStencilBits;
+	bool m_bIsCompressed:1;
+	bool m_bIsFloat:1;
+	bool m_bIsDepthFormat : 1;
+};
+
+
+//-----------------------------------------------------------------------------
+// Computes nice filters for a compression ratio
+//-----------------------------------------------------------------------------
+struct KernelInfo_t
+{
+	float *m_pKernel;
+	float *m_pInvKernel;
+	int m_nWidth;
+	int m_nHeight;
+	int m_nDepth;
+	int m_nDiameter;
 };
 
 
@@ -329,13 +563,26 @@ struct ImageFormatInfo_t
 //-----------------------------------------------------------------------------
 namespace ImageLoader
 {
-
 	bool GetInfo( const char *fileName, int *width, int *height, enum ImageFormat *imageFormat, float *sourceGamma );
-	int  GetMemRequired( int width, int height, int depth, ImageFormat imageFormat, bool mipmap );
-	int  GetMipMapLevelByteOffset( int width, int height, enum ImageFormat imageFormat, int skipMipLevels );
+
+	// Generates a nice filter kernel
+	void ComputeNiceFilterKernel( float flWRatio, float flHRatio, float flDRatio, KernelInfo_t *pKernel );
+	void CleanupNiceFilterKernel( KernelInfo_t *pKernel );
+
+	// adjustedheight received the height adjusted for compression (/4 for dxt)
+	int  GetMemRequired( int width, int height, int depth, ImageFormat imageFormat, bool mipmap, int *pAdjustedHeightOut = NULL );
+	int  GetMemRequired( int width, int height, int depth, int nMipmapCount, ImageFormat imageFormat, int *pAdjustedHeightOut = NULL );
+
+	// This version is for mipmaps which are stored biggest level to smallest level in memory
+	int  GetMipMapLevelByteOffset( int width, int height, ImageFormat imageFormat, int skipMipLevels, int nDepth = 1 );
+
+	// This version is for mipmaps which are stored smallest level to largest level in memory
+	int  GetMipMapLevelByteOffsetReverse( int nWidth, int nHeight, int nDepth, int nTotalMipCount, ImageFormat imageFormat, int nMipLevel );
+
 	void GetMipMapLevelDimensions( int *width, int *height, int skipMipLevels );
+	void GetMipMapLevelDimensions( int &nWidth, int &nHeight, int &nDepth, int nMipLevel );
 	int  GetNumMipMapLevels( int width, int height, int depth = 1 );
-	bool Load( unsigned char *imageData, const char *fileName, int width, int height, enum ImageFormat imageFormat, float targetGamma, bool mipmap );
+	bool Load( unsigned char *imageData, const char *fileName, int width, int height, ImageFormat imageFormat, float targetGamma, bool mipmap );
 	bool Load( unsigned char *imageData, FILE *fp, int width, int height, 
 			   enum ImageFormat imageFormat, float targetGamma, bool mipmap );
 
@@ -356,6 +603,7 @@ namespace ImageLoader
 	//-----------------------------------------------------------------------------
 	// convert back and forth from D3D format to ImageFormat, regardless of
 	// whether it's supported or not
+	// FIXME: Move into shaderapidx8/rendersystemdx9
 	//-----------------------------------------------------------------------------
 	ImageFormat D3DFormatToImageFormat( D3DFORMAT format );
 	D3DFORMAT ImageFormatToD3DFormat( ImageFormat format );
@@ -406,20 +654,18 @@ namespace ImageLoader
 	bool ResampleRGBA8888( const ResampleInfo_t &info );
 	bool ResampleRGBA16161616( const ResampleInfo_t &info );
 	bool ResampleRGB323232F( const ResampleInfo_t &info );
+	bool ResampleRGBA32323232F( const ResampleInfo_t &info );
 
-	void ConvertNormalMapRGBA8888ToDUDVMapUVLX8888( const unsigned char *src, int width, int height,
-													unsigned char *dst_ );
-	void ConvertNormalMapRGBA8888ToDUDVMapUVWQ8888( const unsigned char *src, int width, int height,
-													unsigned char *dst_ );
-	void ConvertNormalMapRGBA8888ToDUDVMapUV88( const unsigned char *src, int width, int height,
-												unsigned char *dst_ );
+	void ConvertNormalMapRGBA8888ToDUDVMapUVLX8888( const unsigned char *src, int width, int height, unsigned char *dst_ );
+	void ConvertNormalMapRGBA8888ToDUDVMapUVWQ8888( const unsigned char *src, int width, int height, unsigned char *dst_ );
+	void ConvertNormalMapRGBA8888ToDUDVMapUV88( const unsigned char *src, int width, int height, unsigned char *dst_ );
+	void ConvertNormalMapARGB8888ToDXT5GA( const unsigned char *src, unsigned char *dst, int width, int height );
 
 	void ConvertIA88ImageToNormalMapRGBA8888( const unsigned char *src, int width, 
 											  int height, unsigned char *dst,
 											  float bumpScale );
 
 	void NormalizeNormalMapRGBA8888( unsigned char *src, int numTexels );
-
 
 	//-----------------------------------------------------------------------------
 	// Gamma correction
@@ -465,7 +711,7 @@ namespace ImageLoader
 	//-----------------------------------------------------------------------------
 	// Returns info about each image format
 	//-----------------------------------------------------------------------------
-	ImageFormatInfo_t const& ImageFormatInfo( ImageFormat fmt );
+	const ImageFormatInfo_t &ImageFormatInfo( ImageFormat fmt );
 
 
 	//-----------------------------------------------------------------------------
@@ -482,7 +728,7 @@ namespace ImageLoader
 	//-----------------------------------------------------------------------------
 	inline int SizeInBytes( ImageFormat fmt )
 	{
-		return ImageFormatInfo(fmt).m_NumBytes;
+		return ImageFormatInfo(fmt).m_nNumBytes;
 	}
 
 	//-----------------------------------------------------------------------------
@@ -490,7 +736,7 @@ namespace ImageLoader
 	//-----------------------------------------------------------------------------
 	inline bool IsTransparent( ImageFormat fmt )
 	{
-		return ImageFormatInfo(fmt).m_NumAlphaBits > 0;
+		return ImageFormatInfo(fmt).m_nNumAlphaBits > 0;
 	}
 
 
@@ -499,8 +745,18 @@ namespace ImageLoader
 	//-----------------------------------------------------------------------------
 	inline bool IsCompressed( ImageFormat fmt )
 	{
-		return ImageFormatInfo(fmt).m_IsCompressed;
+		return ImageFormatInfo(fmt).m_bIsCompressed;
 	}
+
+
+	//-----------------------------------------------------------------------------
+	// Is the image format compressed?
+	//-----------------------------------------------------------------------------
+	inline bool IsDepthFormat( ImageFormat fmt )
+	{
+		return ImageFormatInfo(fmt).m_bIsDepthFormat;
+	}
+
 
 	//-----------------------------------------------------------------------------
 	// Is any channel > 8 bits?
@@ -508,9 +764,18 @@ namespace ImageLoader
 	inline bool HasChannelLargerThan8Bits( ImageFormat fmt )
 	{
 		ImageFormatInfo_t info = ImageFormatInfo(fmt);
-		return ( info.m_NumRedBits > 8 || info.m_NumGreeBits > 8 || info.m_NumBlueBits > 8 || info.m_NumAlphaBits > 8 );
+		return ( info.m_nNumRedBits > 8 || info.m_nNumGreenBits > 8 || info.m_nNumBlueBits > 8 || info.m_nNumAlphaBits > 8 );
 	}
 
+	inline bool IsFloatFormat( ImageFormat fmt )
+	{
+		return ( fmt == IMAGE_FORMAT_RGBA16161616F ) ||
+				( fmt == IMAGE_FORMAT_RG1616F ) ||
+				( fmt == IMAGE_FORMAT_R32F ) ||
+				( fmt == IMAGE_FORMAT_RG3232F ) ||
+				( fmt == IMAGE_FORMAT_RGB323232F ) ||
+				( fmt == IMAGE_FORMAT_RGBA32323232F );
+	}
 
 } // end namespace ImageLoader
 

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -17,31 +17,11 @@
 #include <vgui_controls/Image.h>
 
 #include <utlvector.h>
-#include <UtlSortVector.h>
 
 class KeyValues;
 
 namespace vgui
 {
-
-struct label_colorchange_t
-{
-	Color	color;
-	int		textStreamIndex;
-};
-
-// Used to sort the color changes into sequential order.
-class CColorChangeListLess
-{
-public:
-	bool Less( const label_colorchange_t &src1, const label_colorchange_t &src2, void *pCtx )
-	{
-		if ( src1.textStreamIndex < src2.textStreamIndex )
-			return true;
-
-		return false;
-	}
-};
 
 //-----------------------------------------------------------------------------
 // Purpose: Image that handles drawing of a text string
@@ -101,9 +81,7 @@ public:
 
 	const wchar_t *GetUText( void ) { return _utext; }
 
-	void AddColorChange( Color col, int iTextStreamIndex );
-	void SetColorChangeStream( CUtlSortVector<label_colorchange_t,CColorChangeListLess> *pUtlVecStream );
-	void ClearColorChangeStream( void ) { m_ColorChangeStream.Purge(); }
+	void SetBounds( int x, int y, int w, int h );
 
 protected:
 	// truncate the _text string to fit into the draw width
@@ -134,8 +112,6 @@ private:
 
 	bool m_bWrapCenter;								// Separate from m_bWrap to ensure it doesn't break legacy code.
 	CUtlVector<int>				m_LineXIndent;		// For centered word wrap. The X indent for each line.
-
-	CUtlSortVector<label_colorchange_t,CColorChangeListLess>		m_ColorChangeStream;
 };
 
 } // namespace vgui

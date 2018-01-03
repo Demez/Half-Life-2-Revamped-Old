@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2004, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -12,10 +12,10 @@
 
 #include "tier1/interface.h"
 #include "tier1/utlvector.h"
-#include "tier1/utlsymbol.h"
+#include "tier1/utlsymbollarge.h"
 #include "appframework/IAppSystem.h"
 #include "datamodel/dmattributetypes.h"
-
+#include "datamodel/dmxheader.h"
 
 //-----------------------------------------------------------------------------
 // Forward declarations: 
@@ -24,44 +24,23 @@ class CDmAttribute;
 class CDmElement;
 class IDmeOperator;
 class IElementForKeyValueCallback;
+class CDmElementFactoryHelper;
 
 struct DmValueBase_t;
 class CUtlBuffer;
 class KeyValues;
-class CUtlSymbolTable;
 class CUtlCharConversion;
+class CElementIdHash;
 
+// Use this for profiling dmx binary unserialization times
+//#define DMX_PROFILE_UNSERIALIZE 2
+// If you set it to 2, then SFM will exit(-1) right after the first session is loaded (so you can see the PROFILE_SCOPE counters)
 
-//-----------------------------------------------------------------------------
-// data file format info
-//-----------------------------------------------------------------------------
-#define DMX_LEGACY_VERSION_STARTING_TOKEN "<!-- DMXVersion"
-#define DMX_LEGACY_VERSION_ENDING_TOKEN "-->"
-
-#define DMX_VERSION_STARTING_TOKEN "<!-- dmx"
-#define DMX_VERSION_ENDING_TOKEN "-->"
-
-#define GENERIC_DMX_FORMAT "dmx"
-
-
-enum
-{
-	DMX_MAX_FORMAT_NAME_MAX_LENGTH = 64,
-	DMX_MAX_HEADER_LENGTH = 40 + 2 * DMX_MAX_FORMAT_NAME_MAX_LENGTH,
-};
-
-struct DmxHeader_t
-{
-	char encodingName[ DMX_MAX_FORMAT_NAME_MAX_LENGTH ];
-	int nEncodingVersion;
-	char formatName[ DMX_MAX_FORMAT_NAME_MAX_LENGTH ];
-	int nFormatVersion;
-
-	DmxHeader_t() : nEncodingVersion( -1 ), nFormatVersion( -1 )
-	{
-		encodingName[ 0 ] = formatName[ 0 ] = '\0';
-	}
-};
+#if defined( DMX_PROFILE_UNSERIALIZE )
+#define DMX_PROFILE_SCOPE( name ) PROFILE_SCOPE( name )
+#else
+#define DMX_PROFILE_SCOPE( name )
+#endif
 
 
 //-----------------------------------------------------------------------------
@@ -76,15 +55,6 @@ enum DmPhase_t
 	PH_OPERATE,
 	PH_OPERATE_RESOLVE,
 	PH_OUTPUT,
-};
-
-
-//-----------------------------------------------------------------------------
-// file id - also used to refer to elements that don't have file associations
-//-----------------------------------------------------------------------------
-enum DmFileId_t
-{
-	DMFILEID_INVALID = 0xffffffff
 };
 
 //-----------------------------------------------------------------------------
@@ -123,8 +93,17 @@ public:
 	virtual void BeginEdit() = 0; // ends in edit phase, forces apply/resolve if from edit phase
 	virtual void Operate( bool bResolve ) = 0; // ends in output phase
 	virtual void Resolve() = 0;
+
+	virtual const CUtlVector< IDmeOperator* > &GetSortedOperators() const = 0;
 };
 
+
+
+abstract_class IDmeElementCreated
+{
+	public:
+		virtual void OnElementCreated( CDmElement *pElement ) = 0;
+};
 
 //-----------------------------------------------------------------------------
 // Used only by aplpications to hook in the element framework
@@ -146,9 +125,13 @@ abstract_class IDmeOperator
 public:
 	virtual bool IsDirty() = 0; // ie needs to operate
 	virtual void Operate() = 0;
+	virtual const char* GetOperatorName() const { return "Unknown"; }
 
 	virtual void GetInputAttributes ( CUtlVector< CDmAttribute * > &attrs ) = 0;
 	virtual void GetOutputAttributes( CUtlVector< CDmAttribute * > &attrs ) = 0;
+
+	virtual void SetSortKey( int key ) = 0;
+	virtual int GetSortKey() const = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -160,6 +143,9 @@ public:
 	// Creation, destruction
 	virtual CDmElement* Create( DmElementHandle_t handle, const char *pElementType, const char *pElementName, DmFileId_t fileid, const DmObjectId_t &id ) = 0;
 	virtual void Destroy( DmElementHandle_t hElement ) = 0;
+	virtual void AddOnElementCreatedCallback( IDmeElementCreated *callback ) = 0;
+	virtual void RemoveOnElementCreatedCallback( IDmeElementCreated *callback ) = 0;
+	virtual void OnElementCreated( CDmElement* pElement ) = 0;
 };
 
 
@@ -175,7 +161,7 @@ enum DmConflictResolution_t
 };
 
 // convert files to elements and back
-// current file encodings supported: binary, xml, xml_flat, keyvalues2, keyvalues2_flat, keyvalues (vmf/vmt/actbusy), text? (qc/obj)
+// current file encodings supported: binary, keyvalues2, keyvalues2_flat, keyvalues (vmf/vmt/actbusy), text? (qc/obj)
 class IDmSerializer
 {
 public:
@@ -193,10 +179,14 @@ public:
 	virtual bool Unserialize( CUtlBuffer &buf, const char *pEncodingName, int nEncodingVersion,
 							  const char *pSourceFormatName, int nSourceFormatVersion,
 							  DmFileId_t fileid, DmConflictResolution_t idConflictResolution, CDmElement **ppRoot ) = 0;
+
+	// Methods used for importing (only should return non-NULL for serializers that return false from StoresVersionInFile)
+	virtual const char *GetImportedFormat() const = 0;
+ 	virtual int GetImportedVersion() const = 0;
 };
 
 // convert legacy elements to non-legacy elements
-// legacy formats include: sfm_vN, binary_vN, keyvalues2_v1, keyvalues2_flat_v1, xml, xml_flat
+// legacy formats include: sfm_vN, binary_vN, keyvalues2_v1, keyvalues2_flat_v1
 //   where N is a version number (1..9 for sfm, 1..2 for binary)
 class IDmLegacyUpdater
 {
@@ -267,6 +257,7 @@ enum DmNotifyFlags_t
 	NOTIFY_CHANGE_ATTRIBUTE_VALUE		= (1<<(NOTIFY_SOURCE_BITS+5)),	// Non-element attribute value changed
 	NOTIFY_CHANGE_ATTRIBUTE_ARRAY_SIZE	= (1<<(NOTIFY_SOURCE_BITS+6)),	// Non-element array attribute added or removed
 	NOTIFY_CHANGE_OTHER					= (1<<(NOTIFY_SOURCE_BITS+7)),	// Non attribute related change (a change in UI, for example)
+	NOTIFY_FLAG_FIRST_APPLICATION_BIT	= NOTIFY_SOURCE_BITS+8,			// First bit # the app can use for its own notify flags
 
 	NOTIFY_CHANGE_MASK = ( NOTIFY_CHANGE_TOPOLOGICAL | NOTIFY_CHANGE_ATTRIBUTE_VALUE | NOTIFY_CHANGE_ATTRIBUTE_ARRAY_SIZE | NOTIFY_CHANGE_OTHER ),
 
@@ -326,7 +317,6 @@ enum TraversalDepth_t
 	TD_NONE,	// don't traverse any attributes
 };
 
-
 //-----------------------------------------------------------------------------
 // Main interface for creation of all IDmeElements: 
 //-----------------------------------------------------------------------------
@@ -334,7 +324,8 @@ class IDataModel : public IAppSystem
 {
 public:	
 	// Installs factories used to instance elements
-	virtual void			AddElementFactory( const char *pElementTypeName, IDmElementFactory *pFactory ) = 0;
+	virtual void			AddElementFactory( CDmElementFactoryHelper *pFactoryHelper ) = 0;
+	virtual CDmElementFactoryHelper	*GetElementFactoryHelper( const char *pClassName ) = 0;
 
 	// This factory will be used to instance all elements whose type name isn't found.
 	virtual void			SetDefaultElementFactory( IDmElementFactory *pFactory ) = 0;
@@ -345,13 +336,13 @@ public:
 	virtual const char		*GetFactoryName( int index ) const = 0;
 
 	// create/destroy element methods - proxies to installed element factories
-	virtual DmElementHandle_t	CreateElement( UtlSymId_t typeSymbol, const char *pElementName, DmFileId_t fileid = DMFILEID_INVALID, const DmObjectId_t *pObjectID = NULL ) = 0;
-	virtual DmElementHandle_t	CreateElement( const char *pTypeName, const char *pElementName, DmFileId_t fileid = DMFILEID_INVALID, const DmObjectId_t *pObjectID = NULL ) = 0;
+	virtual DmElementHandle_t	CreateElement( CUtlSymbolLarge typeSymbol, const char *pElementName, DmFileId_t fileid, const DmObjectId_t *pObjectID = NULL ) = 0;
+	virtual DmElementHandle_t	CreateElement( const char *pTypeName, const char *pElementName, DmFileId_t fileid, const DmObjectId_t *pObjectID = NULL ) = 0;
 	virtual void				DestroyElement( DmElementHandle_t hElement ) = 0;
 
 	// element handle related methods
 	virtual	CDmElement*			GetElement			( DmElementHandle_t hElement ) const = 0;
-	virtual UtlSymId_t			GetElementType	    ( DmElementHandle_t hElement ) const = 0;
+	virtual CUtlSymbolLarge		GetElementType	    ( DmElementHandle_t hElement ) const = 0;
 	virtual const char*			GetElementName	    ( DmElementHandle_t hElement ) const = 0;
 	virtual const DmObjectId_t&	GetElementId	    ( DmElementHandle_t hElement ) const = 0;
 
@@ -389,7 +380,7 @@ public:
 
 	// Unserializes, returns the root of the unserialized tree in hRoot 
 	// The file name passed in is simply for error messages and fileid creation
-	virtual bool			Unserialize( CUtlBuffer &inBuf, const char *pEncodingName, const char *pSourceFormatName, const char *pFormatHint,
+	virtual bool			Unserialize( CUtlBuffer &inBuf, const char *pEncodingName, const char *pRequiredFormat, const char *pUnused,
 										 const char *pFileName, DmConflictResolution_t idConflictResolution, DmElementHandle_t &hRoot ) = 0;
 
 	// converts from elements from old file formats to elements for the current file format
@@ -411,15 +402,15 @@ public:
 	// NOTE: Format name is only used here for those formats which don't store
 	// the format name in the file. Use NULL for those formats which store the 
 	// format name in the file.
-	virtual DmFileId_t			RestoreFromFile( const char *pFileName, const char *pPathID, const char *pFormatHint, CDmElement **ppRoot, DmConflictResolution_t idConflictResolution = CR_DELETE_NEW, DmxHeader_t *pHeaderOut = NULL ) = 0;
+	virtual DmFileId_t			RestoreFromFile( const char *pFileName, const char *pPathID, const char *pEncodingHint, CDmElement **ppRoot, DmConflictResolution_t idConflictResolution = CR_DELETE_NEW, DmxHeader_t *pHeaderOut = NULL ) = 0;
 
 	// Sets the name of the DME element to create in keyvalues serialization
 	virtual void			SetKeyValuesElementCallback( IElementForKeyValueCallback *pCallbackInterface ) = 0;
 	virtual const char		*GetKeyValuesElementName( const char *pszKeyName, int iNestingLevel ) = 0;
 
 	// Global symbol table for the datamodel system
-	virtual UtlSymId_t		GetSymbol( const char *pString ) = 0;
-	virtual const char *	GetString( UtlSymId_t sym ) const = 0;
+	virtual CUtlSymbolLarge		GetSymbol( const char *pString ) = 0;
+	// Once you have a CUtlSymbolLarge, don't need an external API to get the char *, just use the String() method.
 
 	// Returns the total number of elements allocated at the moment
 	virtual int				GetMaxNumberOfElements() = 0;
@@ -457,8 +448,8 @@ public:
 	virtual void			GetUndoInfo( CUtlVector< UndoInfo_t >& list ) = 0;
 
 	virtual void			AddUndoElement( IUndoElement *pElement ) = 0;
-	virtual UtlSymId_t		GetUndoDescInternal( const char *context ) = 0;
-	virtual UtlSymId_t		GetRedoDescInternal( const char *context ) = 0;
+	virtual CUtlSymbolLarge		GetUndoDescInternal( const char *context ) = 0;
+	virtual CUtlSymbolLarge		GetRedoDescInternal( const char *context ) = 0;
 
 	virtual void			EmptyClipboard() = 0;
 	virtual void			SetClipboardData( CUtlVector< KeyValues * >& data, IClipboardCleanup *pfnOptionalCleanuFunction = 0 ) = 0;
@@ -482,6 +473,9 @@ public:
 	virtual void				SetFileFormat( DmFileId_t fileid, const char *pFormat ) = 0;
 	virtual DmElementHandle_t	GetFileRoot( DmFileId_t fileid ) = 0;
 	virtual void				SetFileRoot( DmFileId_t fileid, DmElementHandle_t hRoot ) = 0;
+	virtual long				GetFileModificationUTCTime( DmFileId_t fileid ) = 0;
+	virtual long				GetCurrentUTCTime() = 0;
+	virtual void				UTCTimeToString( char *pString, int maxChars, long fileTime ) = 0;
 	virtual bool				IsFileLoaded( DmFileId_t fileid ) = 0;
 	virtual void				MarkFileLoaded( DmFileId_t fileid ) = 0;
 	virtual void				UnloadFile( DmFileId_t fileid ) = 0;
@@ -494,6 +488,7 @@ public:
 	virtual void			MarkHandleValid( DmElementHandle_t hElement ) = 0;
 
 	virtual DmElementHandle_t	FindElement( const DmObjectId_t &id ) = 0;
+	virtual void				GetExistingElements( CElementIdHash &hash ) const = 0;
 
 	virtual	DmAttributeReferenceIterator_t	FirstAttributeReferencingElement( DmElementHandle_t hElement ) = 0;
 	virtual DmAttributeReferenceIterator_t	NextAttributeReferencingElement( DmAttributeReferenceIterator_t hAttrIter ) = 0;
@@ -506,15 +501,25 @@ public:
 	virtual void SetSuppressingNotify( bool bSuppress ) = 0;
 	virtual void PushNotificationScope( const char *pReason, int nNotifySource, int nNotifyFlags ) = 0;
 	virtual void PopNotificationScope( bool bAbort = false ) = 0;
-	virtual const char *GetUndoString( UtlSymId_t sym )	= 0;
+	virtual const char *GetUndoString( CUtlSymbolLarge sym )	= 0;
 
 	virtual bool HasElementFactory( const char *pElementType ) const = 0;
 
 	// Call before you make any undo records
 	virtual void SetUndoDepth( int nSize ) = 0;
 
-	// Displats memory stats to the console
-	virtual void DisplayMemoryStats() = 0;
+	// Displays memory stats to the console (passing in invalid handle causes memory for all elements to be estimated, otherwise it's only
+	//  the element and it's recursive children)
+	virtual void DisplayMemoryStats( DmElementHandle_t hElement = DMELEMENT_HANDLE_INVALID ) = 0;
+
+	// Is this file a DMX file?
+	virtual bool IsDMXFormat( CUtlBuffer &buf ) const = 0;
+
+	// Dump the symbol table to the console
+	virtual void DumpSymbolTable() = 0;
+	
+	virtual void AddOnElementCreatedCallback( const char *pElementType, IDmeElementCreated *callback ) = 0;
+	virtual void RemoveOnElementCreatedCallback( const char *pElementType, IDmeElementCreated *callback ) = 0;
 };
 
 
@@ -576,8 +581,8 @@ protected:
 	}
 
 	const char *m_pDesc;
-	CUtlSymbol	m_UndoDesc;
-	CUtlSymbol	m_RedoDesc;
+	CUtlSymbolLarge	m_UndoDesc;
+	CUtlSymbolLarge	m_RedoDesc;
 	bool m_bEndOfStream;
 
 private:
@@ -932,7 +937,6 @@ private:
 //-----------------------------------------------------------------------------
 DEFINE_SOURCE_UNDO_SCOPE_GUARD( App, NOTIFY_SOURCE_APPLICATION );
 DEFINE_SOURCE_NOTIFY_SCOPE_GUARD( App, NOTIFY_SOURCE_APPLICATION );
-
 
 
 #endif // IDATAMODEL_H

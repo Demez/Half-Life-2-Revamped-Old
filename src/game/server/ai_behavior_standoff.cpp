@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Combat behaviors for AIs in a relatively self-preservationist mode.
 //			Lots of cover taking and attempted shots out of cover.
@@ -386,6 +386,8 @@ void CAI_StandoffBehavior::GatherConditions()
 	{
 		m_TimePreventForceNewEnemy.Reset();
 		GetOuter()->SetEnemy( NULL );
+
+		DevMsg(2, "Forcing lose enemy from standoff\n");
 	}
 	BaseClass::GatherConditions();
 	m_fForceNewEnemy = false;

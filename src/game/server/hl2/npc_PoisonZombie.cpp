@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: A hideous, putrescent, pus-filled undead carcass atop which a vile
 //			nest of filthy poisonous headcrabs lurks.
@@ -32,13 +32,13 @@
 //
 // Controls how soon he throws the first headcrab after seeing his enemy (also when the first headcrab leaps off)
 //
-#define ZOMBIE_THROW_FIRST_MIN_DELAY	1	// min seconds before first crab throw
+#define ZOMBIE_THROW_FIRST_MIN_DELAY	1	// MIN seconds before first crab throw
 #define ZOMBIE_THROW_FIRST_MAX_DELAY	2	// max seconds before first crab throw
 
 //
 // Controls how often he throws headcrabs (also how often headcrabs leap off)
 //
-#define ZOMBIE_THROW_MIN_DELAY	4			// min seconds between crab throws
+#define ZOMBIE_THROW_MIN_DELAY	4			// MIN seconds between crab throws
 #define ZOMBIE_THROW_MAX_DELAY	10			// max seconds between crab throws
 
 //
@@ -649,28 +649,28 @@ void CNPC_PoisonZombie::BreatheOffShort( void )
 void CNPC_PoisonZombie::HandleAnimEvent( animevent_t *pEvent )
 {
 	
-	if ( pEvent->event == AE_ZOMBIE_POISON_PICKUP_CRAB )
+	if ( pEvent->Event() == AE_ZOMBIE_POISON_PICKUP_CRAB )
 	{
 		EnableCrab( m_nThrowCrab, false );
 		SetBodygroup( ZOMBIE_BODYGROUP_THROW, 1 );
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_POISON_THROW_WARN_SOUND )
+	if ( pEvent->Event() == AE_ZOMBIE_POISON_THROW_WARN_SOUND )
 	{
 		BreatheOffShort();
 		EmitSound( "NPC_PoisonZombie.ThrowWarn" );
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_POISON_THROW_SOUND )
+	if ( pEvent->Event() == AE_ZOMBIE_POISON_THROW_SOUND )
 	{
 		BreatheOffShort();
 		EmitSound( "NPC_PoisonZombie.Throw" );
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_POISON_THROW_CRAB )
+	if ( pEvent->Event() == AE_ZOMBIE_POISON_THROW_CRAB )
 	{
 		SetBodygroup( ZOMBIE_BODYGROUP_THROW, 0 );
 
@@ -716,7 +716,7 @@ void CNPC_PoisonZombie::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_ZOMBIE_POISON_SPIT )
+	if ( pEvent->Event() == AE_ZOMBIE_POISON_SPIT )
 	{
 		Vector forward;
 		QAngle qaPunch( 45, random->RandomInt(-5, 5), random->RandomInt(-5, 5) );

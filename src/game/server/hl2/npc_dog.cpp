@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Implements d0g, the loving and caring head crushing Alyx companion.
 //
@@ -962,15 +962,17 @@ void CNPC_Dog::PickupOrCatchObject( const char *pAttachmentName )
 //-----------------------------------------------------------------------------
 void CNPC_Dog::HandleAnimEvent( animevent_t *pEvent )
 {
-	if ( pEvent->event == AE_DOG_THROW )
+	int nEvent = pEvent->Event();
+
+	if ( nEvent == AE_DOG_THROW )
 	{
 		ThrowObject( pEvent->options );
 		return;
 	}
 
-	if ( pEvent->event == AE_DOG_PICKUP || pEvent->event == AE_DOG_CATCH || pEvent->event == AE_DOG_PICKUP_NOEFFECT )
+	if ( nEvent == AE_DOG_PICKUP || nEvent == AE_DOG_CATCH || nEvent == AE_DOG_PICKUP_NOEFFECT )
 	{
-		if ( pEvent->event == AE_DOG_PICKUP_NOEFFECT )
+		if ( nEvent == AE_DOG_PICKUP_NOEFFECT )
 			 m_bBeamEffects = false;
 		else
 			 m_bBeamEffects = true;

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -28,7 +28,7 @@
 #define ROPE_COLLIDE			(1<<2)		// Collide with the world?
 #define ROPE_SIMULATE			(1<<3)		// Is the rope valid?
 #define ROPE_BREAKABLE			(1<<4)		// Can the endpoints detach?
-#define ROPE_NO_WIND			(1<<5)		// No wind simulation on this rope.
+#define ROPE_USE_WIND			(1<<5)		// Wind simulation on this rope.
 #define ROPE_INITIAL_HANG		(1<<6)		// By default, ropes will simulate for a bit internally when they 
 											// are created so they sag, but dynamically created ropes for things
 											// like harpoons don't want this.
@@ -37,7 +37,8 @@
 											// (This is a flag because it requires special code on the client to
 											// find the weapon).
 #define ROPE_NO_GRAVITY			(1<<8)		// Disable gravity on this rope.
-#define ROPE_NUMFLAGS			9
+#define ROPE_TONGUE_ATTACH		(1<<9)		// Use the special rules unique to a tongue rope, without cutting open the class to inherit one function.
+#define ROPE_NUMFLAGS			10
 
 
 // This is added to all rope slacks so when a level designer enters a 

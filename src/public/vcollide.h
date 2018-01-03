@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -21,6 +21,7 @@ struct vcollide_t
 	// VPhysicsSolids
 	CPhysCollide	**solids;
 	char			*pKeyValues;
+	void			*pUserData;
 };
 
 #endif // VCOLLIDE_H

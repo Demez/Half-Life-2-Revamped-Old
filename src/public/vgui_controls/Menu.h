@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -182,9 +182,6 @@ public:
 	// Set the max number of items visible (scrollbar appears with more)
 	virtual void SetNumberOfVisibleItems( int numItems );
 
-	// Add the menu to the menu manager (see Menu::SetVisible())?
-	void EnableUseMenuManager( bool bUseMenuManager );
-
 	// Set up the menu items layout
 	virtual void PerformLayout( void );
 
@@ -211,7 +208,6 @@ public:
 
 	// Activates item in the menu list, as if that menu item had been selected by the user
 	virtual void ActivateItem(int itemID);
-	virtual void SilentActivateItem(int itemID); // activate item, but don't fire the action signal
 	virtual void ActivateItemByRow(int row);
 	virtual int GetActiveItem();		// returns the itemID (not the row) of the active item
 
@@ -330,7 +326,6 @@ private:
 	bool 			_sizedForScrollBar: 1 ;  // whether menu has been sized for a scrollbar
 	bool			m_bUseFallbackFont : 1;
 	bool 			_recalculateWidth : 1;
-	bool			m_bUseMenuManager : 1;
 
 	int 			_menuWide;
 	int 			m_iCurrentlySelectedItemID;

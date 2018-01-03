@@ -1,7 +1,8 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Houndeye - a spooky sonic dog.
 //
+// No need it in ASW [str]
 // $NoKeywords: $
 //=============================================================================//
 
@@ -12,7 +13,7 @@
 #include "ai_route.h"
 #include "AI_Navigator.h"
 #include "AI_Motor.h"
-#include "ai_squad.h"
+#include "AI_Squad.h"
 #include "AI_TacticalServices.h"
 #include "soundent.h"
 #include "EntityList.h"
@@ -23,7 +24,7 @@
 #include "energy_wave.h"
 #include "ai_interactions.h"
 #include "ndebugoverlay.h"
-#include "npcevent.h"
+#include "NPCEvent.h"
 #include "player.h"
 #include "vstdlib/random.h"
 #include "engine/IEngineSound.h"
@@ -272,7 +273,7 @@ float CNPC_Houndeye::MaxYawSpeed ( void )
 //=========================================================
 void CNPC_Houndeye::HandleAnimEvent( animevent_t *pEvent )
 {
-	switch ( pEvent->event )
+	switch ( pEvent->Event() )
 	{
 		case HOUND_AE_WARN:
 			// do stuff for this event.
@@ -285,7 +286,7 @@ void CNPC_Houndeye::HandleAnimEvent( animevent_t *pEvent )
 
 		case HOUND_AE_HOPBACK:
 			{
-				float flGravity = GetCurrentGravity();
+				float flGravity = sv_gravity.GetFloat();
 
 				SetGroundEntity( NULL );
 
@@ -337,7 +338,7 @@ void CNPC_Houndeye::HandleAnimEvent( animevent_t *pEvent )
 				{
 					Vector vecEnemyEyePos = GetEnemy()->EyePosition();
 
-					float gravity = GetCurrentGravity();
+					float gravity = sv_gravity.GetFloat();
 					if ( gravity <= 1 )
 					{
 						gravity = 1;

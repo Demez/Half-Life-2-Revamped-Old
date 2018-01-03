@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -72,11 +72,9 @@ public:
 	RecvVarProxyFn m_Int32ToInt8;
 	RecvVarProxyFn m_Int32ToInt16;
 	RecvVarProxyFn m_Int32ToInt32;
+	RecvVarProxyFn m_Int64ToInt64;
 	RecvVarProxyFn m_FloatToFloat;
 	RecvVarProxyFn m_VectorToVector;
-#ifdef SUPPORTS_INT64
-	RecvVarProxyFn m_Int64ToInt64;
-#endif
 };
 extern CStandardRecvProxies g_StandardRecvProxies;
 
@@ -137,7 +135,7 @@ public:
 
 public:
 
-	const char              *m_pVarName;
+	char					*m_pVarName;
 	SendPropType			m_RecvType;
 	int						m_Flags;
 	int						m_StringBufferSize;
@@ -176,10 +174,10 @@ public:
 	typedef RecvProp	PropType;
 
 				RecvTable();
-				RecvTable( RecvProp *pProps, int nProps, const char *pNetTableName );
+				RecvTable( RecvProp *pProps, int nProps, char *pNetTableName );
 				~RecvTable();
 
-	void		Construct( RecvProp *pProps, int nProps, const char *pNetTableName );
+	void		Construct( RecvProp *pProps, int nProps, char *pNetTableName );
 
 	int			GetNumProps();
 	RecvProp*	GetProp( int i );
@@ -205,7 +203,7 @@ public:
 	// will have their own decoders that include props for all their children).
 	CRecvDecoder	*m_pDecoder;
 
-	const char		*m_pNetTableName;	// The name matched between client and server.
+	char			*m_pNetTableName;	// The name matched between client and server.
 
 
 private:
@@ -272,7 +270,7 @@ inline bool RecvTable::IsInMainList() const
 	template <> int ClientClassInit<tableName::ignored>(tableName::ignored *) \
 	{ \
 		typedef className currentRecvDTClass; \
-		const char *pRecvTableName = #tableName; \
+		char *pRecvTableName = #tableName; \
 		RecvTable &RecvTable = tableName::g_RecvTable; \
 		static RecvProp RecvProps[] = { \
 			RecvPropInt("should_never_see_this", 0, sizeof(int)),		// It adds a dummy property at the start so you can define "empty" SendTables.
@@ -304,12 +302,8 @@ void RecvProxy_Int32ToInt8   ( const CRecvProxyData *pData, void *pStruct, void 
 void RecvProxy_Int32ToInt16  ( const CRecvProxyData *pData, void *pStruct, void *pOut );
 void RecvProxy_StringToString( const CRecvProxyData *pData, void *pStruct, void *pOut );
 void RecvProxy_Int32ToInt32  ( const CRecvProxyData *pData, void *pStruct, void *pOut );
-#ifdef SUPPORTS_INT64
 void RecvProxy_Int64ToInt64  ( const CRecvProxyData *pData, void *pStruct, void *pOut );
-#endif
-//sunlightshadowctrl
 void RecvProxy_Int32ToColor32( const CRecvProxyData *pData, void *pStruct, void *pOut );
-//
 
 // StaticDataTable does *pOut = pData.
 void DataTableRecvProxy_StaticDataTable(const RecvProp *pProp, void **pOut, void *pData, int objectID);
@@ -319,7 +313,7 @@ void DataTableRecvProxy_PointerDataTable(const RecvProp *pProp, void **pOut, voi
 
 	
 RecvProp RecvPropFloat(
-	const char *pVarName, 
+	char *pVarName, 
 	int offset,
 	int sizeofVar=SIZEOF_IGNORE,	// Handled by RECVINFO macro, but set to SIZEOF_IGNORE if you don't want to bother.
 	int flags=0, 
@@ -327,7 +321,7 @@ RecvProp RecvPropFloat(
 	);
 
 RecvProp RecvPropVector(
-	const char *pVarName, 
+	char *pVarName, 
 	int offset, 
 	int sizeofVar=SIZEOF_IGNORE,	// Handled by RECVINFO macro, but set to SIZEOF_IGNORE if you don't want to bother.
 	int flags=0, 
@@ -335,7 +329,7 @@ RecvProp RecvPropVector(
 	);
 
 RecvProp RecvPropVectorXY(
-	const char *pVarName, 
+	char *pVarName, 
 	int offset, 
 	int sizeofVar=SIZEOF_IGNORE,	// Handled by RECVINFO macro, but set to SIZEOF_IGNORE if you don't want to bother.
 	int flags=0, 
@@ -348,7 +342,7 @@ RecvProp RecvPropVectorXY(
 #if 0 // We can't ship this since it changes the size of DTVariant to be 20 bytes instead of 16 and that breaks MODs!!!
 
 RecvProp RecvPropQuaternion(
-	const char *pVarName, 
+	char *pVarName, 
 	int offset, 
 	int sizeofVar=SIZEOF_IGNORE,	// Handled by RECVINFO macro, but set to SIZEOF_IGNORE if you don't want to bother.
 	int flags=0, 
@@ -357,7 +351,7 @@ RecvProp RecvPropQuaternion(
 #endif
 
 RecvProp RecvPropInt(
-	const char *pVarName, 
+	char *pVarName, 
 	int offset, 
 	int sizeofVar=SIZEOF_IGNORE,	// Handled by RECVINFO macro, but set to SIZEOF_IGNORE if you don't want to bother.
 	int flags=0, 
@@ -365,7 +359,7 @@ RecvProp RecvPropInt(
 	);
 
 RecvProp RecvPropString(
-	const char *pVarName,
+	char *pVarName,
 	int offset,
 	int bufferSize,
 	int flags=0,
@@ -373,7 +367,7 @@ RecvProp RecvPropString(
 	);
 
 RecvProp RecvPropDataTable(
-	const char *pVarName,
+	char *pVarName,
 	int offset,
 	int flags,
 	RecvTable *pTable,
@@ -381,7 +375,7 @@ RecvProp RecvPropDataTable(
 	);
 
 RecvProp RecvPropArray3(
-	const char *pVarName,
+	char *pVarName,
 	int offset,
 	int sizeofVar,
 	int elements,
@@ -395,9 +389,23 @@ RecvProp RecvPropArray3(
 RecvProp InternalRecvPropArray(
 	const int elementCount,
 	const int elementStride,
-	const char *pName,
+	char *pName,
 	ArrayLengthRecvProxyFn proxy
 	);
+
+
+//
+// Use this to match a SendPropArray_AllAtOnce
+//
+#define RecvPropArray_AllAtOnce( arrayName, propDefinition ) \
+	RecvPropArray( propDefinition, arrayName )
+
+//
+// Use this to match a SendPropArray_UniqueElements
+//
+#define RecvPropArray_UniqueElements( arrayName, propDefinition ) \
+	RecvPropArray3( RECVINFO_ARRAY( m_nValues ), propDefinition )
+
 
 
 //

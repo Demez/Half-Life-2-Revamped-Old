@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -55,11 +55,13 @@ public:
 
 public:
 
-	float		fractionleftsolid;		// time we left a solid, only valid if we started in solid
-	csurface_t	surface;				// surface hit (impact surface)
+	float			fractionleftsolid;	// time we left a solid, only valid if we started in solid
+	csurface_t		surface;			// surface hit (impact surface)
 
-	int			hitgroup;				// 0 == generic, non-zero is specific body part
-	short		physicsbone;			// physics bone hit by trace in studio
+	int				hitgroup;			// 0 == generic, non-zero is specific body part
+
+	short			physicsbone;		// physics bone hit by trace in studio
+	unsigned short	worldSurfaceIndex;	// Index of the msurface2_t, if applicable
 
 #if defined( CLIENT_DLL )
 		C_BaseEntity *m_pEnt;
@@ -93,84 +95,17 @@ typedef CGameTrace trace_t;
 
 //=============================================================================
 
-#define TLD_DEF_LEAF_MAX	256
-#define TLD_DEF_ENTITY_MAX	1024
-
-class CTraceListData : public IPartitionEnumerator
+class ITraceListData
 {
 public:
+	virtual ~ITraceListData() {}
 
-	CTraceListData( int nLeafMax = TLD_DEF_LEAF_MAX, int nEntityMax = TLD_DEF_ENTITY_MAX )
-	{
-		MEM_ALLOC_CREDIT();
-		m_nLeafCount = 0;
-		m_aLeafList.SetSize( nLeafMax );
-
-		m_nEntityCount = 0;
-		m_aEntityList.SetSize( nEntityMax );
-	}
-
-	~CTraceListData()
-	{
-		m_nLeafCount = 0;
-		m_aLeafList.RemoveAll();
-
-		m_nEntityCount = 0;
-		m_aEntityList.RemoveAll();
-	}
-
-	void Reset( void )
-	{
-		m_nLeafCount = 0;
-		m_nEntityCount = 0;
-	}
-
-	bool	IsEmpty( void ) const			{ return ( m_nLeafCount == 0 && m_nEntityCount == 0 ); }
-
-	int		LeafCount( void ) const			{ return m_nLeafCount; }
-	int		LeafCountMax( void ) const		{ return m_aLeafList.Count(); }
-	void    LeafCountReset( void )			{ m_nLeafCount = 0; }
-
-	int		EntityCount( void ) const		{ return m_nEntityCount; }
-	int		EntityCountMax( void ) const	{ return m_aEntityList.Count(); }
-	void	EntityCountReset( void )		{ m_nEntityCount = 0; }
-
-	// For leaves...
-	void AddLeaf( int iLeaf )
-	{
-		if ( m_nLeafCount >= m_aLeafList.Count() )
-		{
-			DevMsg( "CTraceListData: Max leaf count along ray exceeded!\n" );
-			m_aLeafList.AddMultipleToTail( m_aLeafList.Count() );
-		}
-
-		m_aLeafList[m_nLeafCount] = iLeaf;
-		m_nLeafCount++;
-	}
-
-	// For entities...
-	IterationRetval_t EnumElement( IHandleEntity *pHandleEntity )
-	{
-		if ( m_nEntityCount >= m_aEntityList.Count() )
-		{
-			DevMsg( "CTraceListData: Max entity count along ray exceeded!\n" );
-			m_aEntityList.AddMultipleToTail( m_aEntityList.Count() );
-		}
-
-		m_aEntityList[m_nEntityCount] = pHandleEntity;
-		m_nEntityCount++;
-
-		return ITERATION_CONTINUE;
-	}
-	
-public:
-
-	int							m_nLeafCount;
-	CUtlVector<int>				m_aLeafList;
-
-	int							m_nEntityCount;
-	CUtlVector<IHandleEntity*>	m_aEntityList;
+	virtual void Reset() = 0;
+	virtual bool IsEmpty() = 0;
+	// CanTraceRay will return true if the current volume encloses the ray
+	// NOTE: The leaflist trace will NOT check this.  Traces are intersected
+	// against the culled volume exclusively.
+	virtual bool CanTraceRay( const Ray_t &ray ) = 0;
 };
-
 #endif // GAMETRACE_H
 

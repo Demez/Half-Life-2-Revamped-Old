@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Implements the big scary boom-boom machine Antlions fear.
 //
@@ -147,6 +147,8 @@ void CPropThumper::Precache( void )
 {
 	BaseClass::Precache();
 
+	PrecacheEffect( "ThumperDust" );
+
 	PrecacheModel( STRING( GetModelName() ) );
 	PrecacheScriptSound( "coast.thumper_hit" );
 	PrecacheScriptSound( "coast.thumper_ambient" );
@@ -232,7 +234,7 @@ void CPropThumper::Thump ( void )
 
 void CPropThumper::HandleAnimEvent( animevent_t *pEvent )
 {
-	if ( pEvent->event == AE_THUMPER_THUMP )
+	if ( pEvent->Event() == AE_THUMPER_THUMP )
 	{
 		Thump();
 		return;

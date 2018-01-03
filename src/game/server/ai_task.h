@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Defines the tasks for default AI.
 //
@@ -53,6 +53,7 @@ enum AI_BaseTaskFailureCodes_t
 	FAIL_BAD_PATH_GOAL,
 	FAIL_STUCK_ONTOP,
 	FAIL_ITEM_TAKEN,
+	FAIL_FROZEN,
 
 	NUM_FAIL_CODES,
 };
@@ -177,6 +178,9 @@ enum sharedtasks_e
 
 		// Allow a little slop, and allow for some Z offset (like the target is a gun on a table).
 		TASK_GET_PATH_TO_TARGET_WEAPON,
+
+		// I'm on another NPC's head and I need to get down
+		TASK_GET_PATH_OFF_OF_NPC,
 
 		TASK_CREATE_PENDING_WEAPON,
 

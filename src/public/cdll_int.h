@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: Interfaces between the client.dll and engine
 //
@@ -18,7 +18,8 @@
 #include "datamap.h"
 #include "tier1/bitbuf.h"
 #include "inputsystem/ButtonCode.h"
-#include "modes.h"
+#include "string_t.h"
+#include "toolframework/itoolentity.h"
 
 #if !defined( _X360 )
 #include "xbox/xboxstubs.h"
@@ -27,6 +28,9 @@
 //-----------------------------------------------------------------------------
 // forward declarations
 //-----------------------------------------------------------------------------
+FORWARD_DECLARE_HANDLE( InputContextHandle_t );
+class CSteamAPIContext;
+struct adsp_auto_params_t;
 class ClientClass;
 struct model_t;
 class CSentence;
@@ -53,12 +57,19 @@ struct typedescription_t;
 class CStandardRecvProxies;
 struct client_textmessage_t;
 class IAchievementMgr;
+class ISPSharedMemory;
+class IDemoRecorder;
+struct AudioState_t;
 class CGamestatsData;
-class KeyValues;
-class IFileList;
-class CRenamedRecvTableInfo;
-class CMouthInfo;
-class IConVar;
+class IMaterialProxy;
+struct InputEvent_t;
+
+namespace vgui
+{
+	// handle to an internal vgui panel
+	// this is the only handle to a panel that is valid across dll boundaries
+	typedef unsigned int VPANEL;
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: This data structure is filled in by the engine when the client .dll requests information about
@@ -71,6 +82,8 @@ class IConVar;
 typedef struct player_info_s
 {
 	DECLARE_BYTESWAP_DATADESC();
+	// network xuid
+	uint64			xuid;
 	// scoreboard information
 	char			name[MAX_PLAYER_NAME_LENGTH];
 	// local server user ID, unique while server is running
@@ -85,26 +98,13 @@ typedef struct player_info_s
 	bool			fakeplayer;
 	// true if player is the HLTV proxy
 	bool			ishltv;
-#if defined( REPLAY_ENABLED )
 	// true if player is the Replay proxy
 	bool			isreplay;
-#endif
 	// custom files CRC for this player
 	CRC32_t			customFiles[MAX_CUSTOM_FILES];
 	// this counter increases each time the server downloaded a new file
 	unsigned char	filesDownloaded;
 } player_info_t;
-
-
-//-----------------------------------------------------------------------------
-// Hearing info
-//-----------------------------------------------------------------------------
-struct AudioState_t
-{
-	Vector m_Origin;
-	QAngle m_Angles;
-	bool m_bIsUnderwater;
-};
 
 
 //-----------------------------------------------------------------------------
@@ -117,14 +117,13 @@ enum SkyboxVisibility_t
 	SKYBOX_2DSKYBOX_VISIBLE,
 };
 
-//-----------------------------------------------------------------------------
-// Skybox materials
-//-----------------------------------------------------------------------------
-struct SkyBoxMaterials_t
+
+enum EngineInputContextId_t
 {
-	// order: "rt", "bk", "lf", "ft", "up", "dn"
-	IMaterial *material[6];
+	ENGINE_INPUT_CONTEXT_GAME = 0,
+	ENGINE_INPUT_CONTEXT_GAMEUI,
 };
+
 
 //-----------------------------------------------------------------------------
 // Purpose: The engine reports to the client DLL what stage it's entering so the DLL can latch events
@@ -161,6 +160,21 @@ enum RenderViewInfo_t
 	RENDERVIEW_SUPPRESSMONITORRENDERING = (1<<2),
 };
 
+// Spectator Movement modes (mods define these i
+enum ClientDLLObserverMode_t
+{
+	CLIENT_DLL_OBSERVER_NONE = 0,	// not in spectator mode
+
+	CLIENT_DLL_OBSERVER_DEATHCAM,	// special mode for death cam animation
+	CLIENT_DLL_OBSERVER_FREEZECAM,	// zooms to a target, and freeze-frames on them
+	CLIENT_DLL_OBSERVER_FIXED,		// view from a fixed camera position
+	CLIENT_DLL_OBSERVER_IN_EYE,	// follow a player in first person view
+	CLIENT_DLL_OBSERVER_CHASE,		// follow a player in third person view
+	CLIENT_DLL_OBSERVER_ROAMING,	// free roaming
+
+	CLIENT_DLL_OBSERVER_OTHER,
+};
+
 //-----------------------------------------------------------------------------
 // Lightcache entry handle
 //-----------------------------------------------------------------------------
@@ -176,6 +190,11 @@ struct OcclusionParams_t
 	float	m_flMinOccluderArea;
 };
 
+//-----------------------------------------------------------------------------
+// Demo custom data callback type
+//-----------------------------------------------------------------------------
+typedef void (*pfnDemoCustomDataCallback)( uint8 *pData, size_t iSize );
+
 
 //-----------------------------------------------------------------------------
 // Just an interface version name for the random number interface
@@ -185,13 +204,12 @@ struct OcclusionParams_t
 #define VENGINE_CLIENT_RANDOM_INTERFACE_VERSION	"VEngineRandom001"
 
 // change this when the new version is incompatable with the old
-#define VENGINE_CLIENT_INTERFACE_VERSION		"VEngineClient014"
-#define VENGINE_CLIENT_INTERFACE_VERSION_13		"VEngineClient013"
+#define VENGINE_CLIENT_INTERFACE_VERSION		"VEngineClient013"
 
 //-----------------------------------------------------------------------------
 // Purpose: Interface exposed from the engine to the client .dll
 //-----------------------------------------------------------------------------
-abstract_class IVEngineClient013
+abstract_class IVEngineClient
 {
 public:
 	// Find the model's surfaces that intersect the given sphere.
@@ -215,7 +233,7 @@ public:
 	// Given an input text buffer data pointer, parses a single token into the variable token and returns the new
 	//  reading position
 	virtual const char			*ParseFile( const char *data, char *token, int maxlen ) = 0;
-	virtual bool				CopyLocalFile( const char *source, const char *destination ) = 0;
+	virtual bool				CopyFile( const char *source, const char *destination ) = 0;
 
 	// Gets the dimensions of the game window
 	virtual void				GetScreenSize( int& width, int& height ) = 0;
@@ -245,9 +263,6 @@ public:
 	// Client DLL is hooking a model, loads the model into memory and returns  pointer to the model_t
 	virtual const model_t		*LoadModel( const char *pName, bool bProp = false ) = 0;
 
-	// Get accurate, sub-frame clock ( profiling use )
-	virtual float				Time( void ) = 0; 
-
 	// Get the exact server timesstamp ( server time ) from the last message received from the server
 	virtual float				GetLastTimeStamp( void ) = 0; 
 
@@ -272,7 +287,7 @@ public:
 	virtual	const char			*Key_LookupBinding( const char *pBinding ) = 0;
 
 	// Given the name of the key "mouse1", "e", "tab", etc., return the string it is bound to "+jump", "impulse 50", etc.
-	virtual const char			*Key_BindingForKey( ButtonCode_t code ) = 0;
+	virtual const char			*Key_BindingForKey( ButtonCode_t &code ) = 0;
 
 	// key trapping (for binding keys)
 	virtual void				StartKeyTrapMode( void ) = 0;
@@ -284,12 +299,13 @@ public:
 	virtual bool				IsConnected( void ) = 0;
 	// Returns true if the loading plaque should be drawn
 	virtual bool				IsDrawingLoadingImage( void ) = 0;
+	virtual void				HideLoadingPlaque( void ) = 0;
 
 	// Prints the formatted string to the notification area of the screen ( down the right hand edge
 	//  numbered lines starting at position 0
-	virtual void				Con_NPrintf( int pos, PRINTF_FORMAT_STRING const char *fmt, ... ) = 0;
+	virtual void				Con_NPrintf( int pos, const char *fmt, ... ) = 0;
 	// Similar to Con_NPrintf, but allows specifying custom text color and duration information
-	virtual void				Con_NXPrintf( const struct con_nprint_s *info, PRINTF_FORMAT_STRING const char *fmt, ... ) = 0;
+	virtual void				Con_NXPrintf( const struct con_nprint_s *info, const char *fmt, ... ) = 0;
 
 	// Is the specified world-space bounding box inside the view frustum?
 	virtual int					IsBoxVisible( const Vector& mins, const Vector& maxs ) = 0;
@@ -354,7 +370,7 @@ public:
 	// Get the name of the current map
 	virtual void GetChapterName( char *pchBuff, int iMaxLength ) = 0;
 	virtual char const	*GetLevelName( void ) = 0;
-	virtual int	GetLevelVersion( void ) = 0;
+	virtual char const	*GetLevelNameShort( void ) = 0;
 #if !defined( NO_VOICE )
 	// Obtain access to the voice tweaking API
 	virtual struct IVoiceTweak_s *GetVoiceTweakAPI( void ) = 0;
@@ -368,10 +384,11 @@ public:
 	virtual void		FireEvents() = 0;
 
 	// Returns an area index if all the leaves are in the same area. If they span multple areas, then it returns -1.
-	virtual int			GetLeavesArea( int *pLeaves, int nLeaves ) = 0;
+	virtual int			GetLeavesArea( unsigned short *pLeaves, int nLeaves ) = 0;
 
 	// Returns true if the box touches the specified area's frustum.
 	virtual bool		DoesBoxTouchAreaFrustum( const Vector &mins, const Vector &maxs, int iArea ) = 0;
+	virtual int			GetFrustumList( Frustum_t **pList, int listMax ) = 0;
 
 	// Sets the hearing origin (i.e., the origin and orientation of the listener so that the sound system can spatialize 
 	//  sound appropriately ).
@@ -405,7 +422,7 @@ public:
 
 	// Debugging functionality:
 	// Very slow routine to draw a physics model
-	virtual void		DebugDrawPhysCollide( const CPhysCollide *pCollide, IMaterial *pMaterial, matrix3x4_t& transform, const color32 &color ) = 0;
+	virtual void		DebugDrawPhysCollide( const CPhysCollide *pCollide, IMaterial *pMaterial, const matrix3x4_t& transform, const color32 &color ) = 0;
 	// This can be used to notify test scripts that we're at a particular spot in the code.
 	virtual void		CheckPoint( const char *pName ) = 0;
 	// Draw portals if r_DrawPortals is set (Debugging only)
@@ -421,17 +438,20 @@ public:
 	virtual int			GetDemoPlaybackTotalTicks( void ) = 0;
 	// Is the game paused?
 	virtual bool		IsPaused( void ) = 0;
+
+	// What is the game timescale multiplied with the host_timescale?
+	virtual float GetTimescale( void ) const = 0;
+
 	// Is the game currently taking a screenshot?
 	virtual bool		IsTakingScreenshot( void ) = 0;
 	// Is this a HLTV broadcast ?
 	virtual bool		IsHLTV( void ) = 0;
+	// Is this a Replay demo?
+	virtual bool		IsReplay( void ) = 0;
 	// is this level loaded as just the background to the main menu? (active, but unplayable)
 	virtual bool		IsLevelMainMenuBackground( void ) = 0;
 	// returns the name of the background level
 	virtual void		GetMainMenuBackgroundName( char *dest, int destlen ) = 0;
-
-	// Get video modes
-	virtual void		GetVideoModes( int &nCount, vmode_s *&pModes ) = 0;
 
 	// Occlusion system control
 	virtual void		SetOcclusionParameters( const OcclusionParams_t &params ) = 0;
@@ -449,7 +469,7 @@ public:
 	virtual bool		IsInEditMode( void ) = 0;
 
 	// current screen aspect ratio (eg. 4.0f/3.0f, 16.0f/9.0f)
-	virtual float		GetScreenAspectRatio() = 0;
+	virtual float		GetScreenAspectRatio( int viewportWidth, int viewportHeight ) = 0;
 
 	// allow the game UI to login a user
 	virtual bool		REMOVED_SteamRefreshLogin( const char *password, bool isSecure ) = 0;
@@ -498,11 +518,8 @@ public:
 
 	virtual bool			CopyFrameBufferToMaterial( const char *pMaterialName ) = 0;
 
-	// Matchmaking
-	virtual void			ChangeTeam( const char *pTeamName ) = 0;
-
 	// Causes the engine to read in the user's configuration on disk
-	virtual void			ReadConfiguration( const bool readDefault = false ) = 0; 
+	virtual void			ReadConfiguration( const int iController, const bool readDefault ) = 0; 
 
 	virtual void SetAchievementMgr( IAchievementMgr *pAchievementMgr ) = 0;
 	virtual IAchievementMgr *GetAchievementMgr() = 0;
@@ -516,58 +533,139 @@ public:
 
 	virtual void			StartXboxExitingProcess() = 0;
 	virtual bool			IsSaveInProgress() = 0;
-	virtual uint			OnStorageDeviceAttached( void ) = 0;
-	virtual void			OnStorageDeviceDetached( void ) = 0;
+	virtual uint			OnStorageDeviceAttached( int iController ) = 0;
+	virtual void			OnStorageDeviceDetached( int iController ) = 0;
+
+	// generic screenshot writing
+	virtual void		WriteScreenshot( const char *pFilename ) = 0;
 
 	virtual void			ResetDemoInterpolation( void ) = 0;
+
+// For non-split screen games this will always be zero
+	virtual int				GetActiveSplitScreenPlayerSlot() = 0;
+	virtual int				SetActiveSplitScreenPlayerSlot( int slot ) = 0;
+
+	// This is the current # of players on the local host
+	virtual bool			SetLocalPlayerIsResolvable( char const *pchContext, int nLine, bool bResolvable ) = 0;
+	virtual bool			IsLocalPlayerResolvable() = 0;
+
+	virtual int				GetSplitScreenPlayer( int nSlot ) = 0;
+	virtual bool			IsSplitScreenActive() = 0;
+	virtual bool			IsValidSplitScreenSlot( int nSlot ) = 0;
+	virtual int				FirstValidSplitScreenSlot() = 0; // -1 == invalid
+	virtual int				NextValidSplitScreenSlot( int nPreviousSlot ) = 0; // -1 == invalid
+
+	//Finds or Creates a shared memory space, the returned pointer will automatically be AddRef()ed
+	virtual ISPSharedMemory *GetSinglePlayerSharedMemorySpace( const char *szName, int ent_num = MAX_EDICTS ) = 0;
+
+	// Computes an ambient cube that includes ALL dynamic lights
+	virtual void ComputeLightingCube( const Vector& pt, bool bClamp, Vector *pBoxColors ) = 0;
+
+	//All callbacks have to be registered before demo recording begins. TODO: Macro'ize a way to do it at startup
+	virtual void RegisterDemoCustomDataCallback( string_t szCallbackSaveID, pfnDemoCustomDataCallback pCallback ) = 0;
+	virtual void RecordDemoCustomData( pfnDemoCustomDataCallback pCallback, const void *pData, size_t iDataLength ) = 0;
+
+	// global sound pitch scaling
+	virtual void SetPitchScale( float flPitchScale ) = 0;
+	virtual float GetPitchScale( void ) = 0;
+
+	// Load/unload the SFM - used by Replay
+	virtual bool		LoadFilmmaker() = 0;
+	virtual void		UnloadFilmmaker() = 0;
+
+	// leaf flag management. Allows fast leaf enumeration of leaves that have a flag set
+
+	// set a bit in a leaf flag
+	virtual void SetLeafFlag( int nLeafIndex, int nFlagBits ) = 0;
+
+	// you must call this once done modifying flags. Not super fast.
+	virtual void RecalculateBSPLeafFlags( void ) = 0;
+
+	virtual bool DSPGetCurrentDASRoomNew(void) = 0;
+	virtual bool DSPGetCurrentDASRoomChanged(void) = 0;
+	virtual bool DSPGetCurrentDASRoomSkyAbove(void) = 0;
+	virtual float DSPGetCurrentDASRoomSkyPercent(void) = 0;
+	virtual void SetMixGroupOfCurrentMixer( const char *szgroupname, const char *szparam, float val, int setMixerType) = 0;
+	virtual int GetMixLayerIndex( const char *szmixlayername ) = 0;
+	virtual void SetMixLayerLevel(int index, float level ) = 0;
+
+
+	virtual bool IsCreatingReslist() = 0;
+	virtual bool IsCreatingXboxReslist() = 0;
+
+	virtual void SetTimescale( float flTimescale ) = 0;
 
 	// Methods to set/get a gamestats data container so client & server running in same process can send combined data
 	virtual void SetGamestatsData( CGamestatsData *pGamestatsData ) = 0;
 	virtual CGamestatsData *GetGamestatsData() = 0;
 
-#if defined( USE_SDL )
-	// we need to pull delta's from the cocoa mgr, the engine vectors this for us
-	virtual void GetMouseDelta( int &x, int &y, bool bIgnoreNextMouseDelta = false ) = 0;
-#endif
+	// Given the string pBinding which may be bound to a key, 
+	//  returns the string name of the key to which this string is bound. Returns NULL if no such binding exists
+	// Increment start count to iterate through multiple keys bound to the same binding
+	// iAllowJoystick defaults to -1 witch returns joystick and non-joystick binds, 0 returns only non-joystick, 1 returns only joystick
+	virtual	const char *Key_LookupBindingEx( const char *pBinding, int iUserId = -1, int iStartCount = 0, int iAllowJoystick = -1 ) = 0;
+
+	// Updates dynamic light state. Necessary for light cache to work properly for d- and elights
+	virtual void UpdateDAndELights( void ) = 0;
+
+	// Methods to get bug count for internal dev work stat tracking.
+	// Will get the bug count and clear it every map transition
+	virtual int			GetBugSubmissionCount() const = 0;
+	virtual void		ClearBugSubmissionCount() = 0;
+
+	// Is there water anywhere in the level?
+	virtual bool	DoesLevelContainWater() const = 0;
+
+	// How much time was spent in server simulation?
+	virtual float	GetServerSimulationFrameTime() const = 0;
+
+	virtual void SolidMoved( class IClientEntity *pSolidEnt, class ICollideable *pSolidCollide, const Vector* pPrevAbsOrigin, bool accurateBboxTriggerChecks ) = 0;
+	virtual void TriggerMoved( class IClientEntity *pTriggerEnt, bool accurateBboxTriggerChecks ) = 0;
+
+	// Using area bits, check whether the area of the specified point flows into the other areas
+	virtual void ComputeLeavesConnected( const Vector &vecOrigin, int nCount, const int *pLeafIndices, bool *pIsConnected ) = 0;
+
+	// Is the engine in Commentary mode?
+	virtual bool IsInCommentaryMode( void ) = 0;
+
+	virtual void SetBlurFade( float amount ) = 0; 
+	virtual bool IsTransitioningToLoad() = 0;
+
+	virtual void SearchPathsChangedAfterInstall() = 0;
+
+	virtual void ConfigureSystemLevel( int nCPULevel, int nGPULevel ) = 0;
+
+	virtual void SetConnectionPassword( char const *pchCurrentPW ) = 0;
+
+	virtual CSteamAPIContext* GetSteamAPIContext() = 0;
+
+	virtual void SubmitStatRecord( char const *szMapName, uint uiBlobVersion, uint uiBlobSize, const void *pvBlob ) = 0;
 
 	// Sends a key values server command, not allowed from scripts execution
 	// Params:
 	//	pKeyValues	- key values to be serialized and sent to server
 	//				  the pointer is deleted inside the function: pKeyValues->deleteThis()
 	virtual void ServerCmdKeyValues( KeyValues *pKeyValues ) = 0;
+	// Tells the engine what and where to paint
+	virtual void PaintSurface( const model_t *model, const Vector& position, const Color& color, float radius ) = 0;
+	// Enable paint in the engine for project Paint
+	virtual void EnablePaintmapRender() = 0;
+	virtual void TracePaintSurface( const model_t *model, const Vector& position, float radius, CUtlVector<Color>& surfColors ) = 0;
+	virtual void RemoveAllPaint() = 0;
 
-	virtual bool IsSkippingPlayback( void ) = 0;
-	virtual bool IsLoadingDemo( void ) = 0;
-
-	// Returns true if the engine is playing back a "locally recorded" demo, which includes
-	// both SourceTV and replay demos, since they're recorded locally (on servers), as opposed
-	// to a client recording a demo while connected to a remote server.
-	virtual bool IsPlayingDemoALocallyRecordedDemo() = 0;
-
-	// Given the string pBinding which may be bound to a key, 
-	//  returns the string name of the key to which this string is bound. Returns NULL if no such binding exists
-	// Unlike Key_LookupBinding, leading '+' characters are not stripped from bindings.
-	virtual	const char			*Key_LookupBindingExact( const char *pBinding ) = 0;
-};
-
-abstract_class IVEngineClient : public IVEngineClient013
-{
-public:
-	virtual uint GetProtocolVersion() = 0;
-	virtual bool IsWindowedMode() = 0;
-
-	// Flash the window (os specific)
-	virtual void	FlashWindow() = 0;
-
-	// Client version from the steam.inf, this will be compared to the GC version
-	virtual int GetClientVersion() const = 0; // engines build
-
-	// Is App Active 
 	virtual bool IsActiveApp() = 0;
 
-	virtual void DisconnectInternal() = 0;
+	// is this client running inside the same process as an active server?
+	virtual bool IsClientLocalToActiveServer() = 0;
 
-	virtual int GetInstancesRunningCount( ) = 0;
+	// Callback for LevelInit to tick the progress bar during time consuming operations
+	virtual void TickProgressBar() = 0;
+
+	// Returns the requested input context
+	virtual InputContextHandle_t GetInputContext( EngineInputContextId_t id ) = 0;
+
+	// let client lock mouse to the window bounds
+	virtual void SetMouseWindowLock( bool bLockToWindow ) = 0;
 };
 
 
@@ -577,20 +675,17 @@ public:
 abstract_class IBaseClientDLL
 {
 public:
-	// Called once when the client DLL is loaded
-	virtual int				Init( CreateInterfaceFn appSystemFactory, 
-									CreateInterfaceFn physicsFactory,
-									CGlobalVarsBase *pGlobals ) = 0;
+	// Connect appsystem components, get global interfaces, don't run any other init code
+	virtual int				Connect( CreateInterfaceFn appSystemFactory, CGlobalVarsBase *pGlobals ) = 0;
+
+	// run other init code here
+	virtual int				Init( CreateInterfaceFn appSystemFactory, CGlobalVarsBase *pGlobals ) = 0;
 
 	virtual void			PostInit() = 0;
 
 	// Called once when the client DLL is being unloaded
 	virtual void			Shutdown( void ) = 0;
 	
-	// Called once the client is initialized to setup client-side replay interface pointers
-	virtual bool			ReplayInit( CreateInterfaceFn replayFactory ) = 0;
-	virtual bool			ReplayPostInit() = 0;
-
 	// Called at the start of each level change
 	virtual void			LevelInitPreEntity( char const* pMapName ) = 0;
 	// Called at the start of a new level, after the entities have been received and created
@@ -625,8 +720,6 @@ public:
 	virtual void			IN_ClearStates (void) = 0;
 	// If key is found by name, returns whether it's being held down in isdown, otherwise function returns false
 	virtual bool			IN_IsKeyDown( const char *name, bool& isdown ) = 0;
-	// Notify the client that the mouse was wheeled while in game - called prior to executing any bound commands.
-	virtual void			IN_OnMouseWheeled( int nDelta ) = 0;
 	// Raw keyboard signal, if the client .dll returns 1, the engine processes the key as usual, otherwise,
 	//  if the client .dll returns 0, the key is swallowed.
 	virtual int				IN_KeyEvent( int eventcode, ButtonCode_t keynum, const char *pszCurrentBinding ) = 0;
@@ -645,10 +738,10 @@ public:
 
 	// Encode the delta (changes) between the CUserCmd in slot from vs the one in slot to.  The game code will have
 	//  matching logic to read the delta.
-	virtual bool			WriteUsercmdDeltaToBuffer( bf_write *buf, int from, int to, bool isnewcommand ) = 0;
+	virtual bool			WriteUsercmdDeltaToBuffer( int nSlot, bf_write *buf, int from, int to, bool isnewcommand ) = 0;
 	// Demos need to be able to encode/decode CUserCmds to memory buffers, so these functions wrap that
-	virtual void			EncodeUserCmdToBuffer( bf_write& buf, int slot ) = 0;
-	virtual void			DecodeUserCmdFromBuffer( bf_read& buf, int slot ) = 0;
+	virtual void			EncodeUserCmdToBuffer( int nSlot, bf_write& buf, int slot ) = 0;
+	virtual void			DecodeUserCmdFromBuffer( int nSlot, bf_read& buf, int slot ) = 0;
 
 	// Set up and render one or more views (e.g., rear view window, etc.).  This called into RenderView below
 	virtual void			View_Render( vrect_t *rect ) = 0;
@@ -675,7 +768,7 @@ public:
 	// entindex is -1 to represent the local client talking (before the data comes back from the server). 
 	// entindex is -2 to represent the local client's voice being acked by the server.
 	// entindex is GetPlayer() when the server acknowledges that the local client is talking.
-	virtual void			VoiceStatus( int entindex, qboolean bTalking ) = 0;
+	virtual void			VoiceStatus( int entindex, int iSsSlot, qboolean bTalking ) = 0;
 
 	// Networked string table definitions have arrived, allow client .dll to 
 	//  hook string changes with a callback function ( see INetworkStringTableClient.h )
@@ -720,71 +813,55 @@ public:
 	virtual void			OnDemoPlaybackStart( char const* pDemoBaseName ) = 0;
 	virtual void			OnDemoPlaybackStop() = 0;
 
-	// Draw the console overlay?
-	virtual bool			ShouldDrawDropdownConsole() = 0;
+	// Demo polish callbacks.
+	virtual void			RecordDemoPolishUserInput( int nCmdIndex ) = 0;
 
-	// Get client screen dimensions
-	virtual int				GetScreenWidth() = 0;
-	virtual int				GetScreenHeight() = 0;
+	// Cache replay ragdolls
+	virtual bool			CacheReplayRagdolls( const char* pFilename, int nStartTick ) = 0;
 
 	// Added interface
 
 	// save game screenshot writing
-	virtual void			WriteSaveGameScreenshotOfSize( const char *pFilename, int width, int height, bool bCreatePowerOf2Padded = false, bool bWriteVTF = false ) = 0;
+	virtual void			WriteSaveGameScreenshotOfSize( const char *pFilename, int width, int height ) = 0;
 
 	// Gets the current view
 	virtual bool			GetPlayerView( CViewSetup &playerView ) = 0;
 
-	// Matchmaking
-	virtual void			SetupGameProperties( CUtlVector< XUSER_CONTEXT > &contexts, CUtlVector< XUSER_PROPERTY > &properties ) = 0;
-	virtual uint			GetPresenceID( const char *pIDName ) = 0;
-	virtual const char		*GetPropertyIdString( const uint id ) = 0;
-	virtual void			GetPropertyDisplayString( uint id, uint value, char *pOutput, int nBytes ) = 0;
+	virtual bool			ShouldHideLoadingPlaque( void ) = 0;
 
-#ifdef WIN32
-	virtual void			StartStatsReporting( HANDLE handle, bool bArbitrated ) = 0;
-#endif
-	
 	virtual void			InvalidateMdlCache() = 0;
 
 	virtual void			IN_SetSampleTime( float frametime ) = 0;
 
+	virtual void			OnActiveSplitscreenPlayerChanged( int nNewSlot ) = 0;
+	// We are entering into/leaving split screen mode (or # of players is changing)
+	virtual void			OnSplitScreenStateChanged() = 0;
 
-	// For sv_pure mode. The filesystem figures out which files the client needs to reload to be "pure" ala the server's preferences.
-	virtual void			ReloadFilesInList( IFileList *pFilesToReload ) = 0;
-#ifdef POSIX
-	// AR: Same as above win32 defn but down here at the end of the vtable for back compat
-	virtual void			StartStatsReporting( HANDLE handle, bool bArbitrated ) = 0;
-#endif
+	virtual void			CenterStringOff() = 0;
 
-	// Let the client handle UI toggle - if this function returns false, the UI will toggle, otherwise it will not.
-	virtual bool			HandleUiToggle() = 0;
+	virtual void			OnScreenSizeChanged( int nOldWidth, int nOldHeight ) = 0;
 
-	// Allow the console to be shown?
-	virtual bool			ShouldAllowConsole() = 0;
+	virtual IMaterialProxy *InstantiateMaterialProxy( const char *proxyName ) = 0;
 
-	// Get renamed recv tables
-	virtual CRenamedRecvTableInfo	*GetRenamedRecvTableInfos() = 0;
+	virtual vgui::VPANEL	GetFullscreenClientDLLVPanel( void ) = 0;
 
-	// Get the mouthinfo for the sound being played inside UI panels
-	virtual CMouthInfo		*GetClientUIMouthInfo() = 0;
+	// The engine wants to mark two entities as touching
+	virtual void			MarkEntitiesAsTouching( IClientEntity *e1, IClientEntity *e2 ) = 0;
 
-	// Notify the client that a file has been received from the game server
-	virtual void			FileReceived( const char * fileName, unsigned int transferID ) = 0;
-	
-	virtual const char* TranslateEffectForVisionFilter( const char *pchEffectType, const char *pchEffectName ) = 0;
+	virtual void			OnKeyBindingChanged( ButtonCode_t buttonCode, char const *pchKeyName, char const *pchNewBinding ) = 0;
 
-	// Give the client a chance to modify sound settings however they want before the sound plays. This is used for
-	// things like adjusting pitch of voice lines in Pyroland in TF2.
-	virtual void			ClientAdjustStartSoundParams( struct StartSoundParams_t& params ) = 0;
+	virtual void			SetBlurFade( float scale ) = 0;
 
-	// Returns true if the disconnect command has been handled by the client
-	virtual bool DisconnectAttempt( void ) = 0;
+	virtual void			ResetHudCloseCaption() = 0;
 
-	virtual bool IsConnectedUserInfoChangeAllowed( IConVar *pCvar ) = 0;
+	// Called by the engine to allow the new GameUI to handle key events
+	// Function must return true if the key event was handled
+	virtual bool			HandleGameUIEvent( const InputEvent_t &event ) = 0;
+
+	virtual bool			SupportsRandomMaps() = 0;
 };
 
-#define CLIENT_DLL_INTERFACE_VERSION		"VClient017"
+#define CLIENT_DLL_INTERFACE_VERSION		"VClient016"
 
 //-----------------------------------------------------------------------------
 // Purpose: Interface exposed from the client .dll back to the engine for specifying shared .dll IAppSystems (e.g., ISoundEmitterSystem)
@@ -798,5 +875,19 @@ public:
 };
 
 #define CLIENT_DLL_SHARED_APPSYSTEMS		"VClientDllSharedAppSystems001"
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Interface exposed from client back to materialsystem, currently just for recording into tools
+//-----------------------------------------------------------------------------
+abstract_class IClientMaterialSystem
+{
+public:
+	virtual HTOOLHANDLE GetCurrentRecordingEntity() = 0;
+	virtual void PostToolMessage( HTOOLHANDLE hEntity, KeyValues *pMsg ) = 0;
+};
+
+#define VCLIENTMATERIALSYSTEM_INTERFACE_VERSION "VCLIENTMATERIALSYSTEM001"
+
 
 #endif // CDLL_INT_H

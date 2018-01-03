@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: This module defines the CPowerInfo class, which contains a 
 //          whole bunch of precalculated data for each displacement power.
@@ -35,6 +35,8 @@ struct DispNodeInfo_t
 	unsigned short	m_FirstTesselationIndex;
 	unsigned char	m_Count;
 	unsigned char	m_Flags;
+	Vector m_mins;	// AABB for node triangles
+	Vector m_maxs;
 };
 
 

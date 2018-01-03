@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright � 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Implements shared baseplayer class functionality
 //
@@ -9,9 +9,7 @@
 #include "movevars_shared.h"
 #include "util_shared.h"
 #include "datacache/imdlcache.h"
-#if defined ( TF_DLL ) || defined ( TF_CLIENT_DLL )
-#include "tf_gamerules.h"
-#endif
+#include "collisionutils.h"
 
 #if defined( CLIENT_DLL )
 
@@ -20,9 +18,8 @@
 	#include "c_basedoor.h"
 	#include "c_world.h"
 	#include "view.h"
-	#include "client_virtualreality.h"
+
 	#define CRecipientFilter C_RecipientFilter
-	#include "sourcevr/isourcevirtualreality.h"
 
 #else
 
@@ -32,14 +29,11 @@
 	#include "doors.h"
 	#include "ai_basenpc.h"
 	#include "env_zoom.h"
+	#include "ammodef.h"
 
 	extern int TrainSpeed(int iSpeed, int iMax);
 	
 #endif
-
-#if defined( CSTRIKE_DLL )
-#include "weapon_c4.h"
-#endif // CSTRIKE_DLL
 
 #include "in_buttons.h"
 #include "engine/IEngineSound.h"
@@ -47,16 +41,13 @@
 #include "SoundEmitterSystem/isoundemittersystembase.h"
 #include "decals.h"
 #include "obstacle_pushaway.h"
-#ifdef SIXENSE
-#include "sixense/in_sixense.h"
-#endif
 
-// NVNT haptic utils
-#include "haptics/haptic_utils.h"
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-#if defined(GAME_DLL) && !defined(_XBOX)
+#if defined(GAME_DLL) 
+	ConVar sv_infinite_ammo( "sv_infinite_ammo", "0", FCVAR_CHEAT, "Player's active weapon will never run out of ammo" );
+#if !defined(_XBOX)
 	extern ConVar sv_pushaway_max_force;
 	extern ConVar sv_pushaway_force;
 	extern ConVar sv_turbophysics;
@@ -76,15 +67,10 @@
 			if ( !pEntity->VPhysicsGetObject() )
 				return false;
 
-#if defined( CSTRIKE_DLL )
-			// don't push the bomb!
-			if ( dynamic_cast<CC4*>( pEntity ) )
-				return false;
-#endif // CSTRIKE_DLL
-
 			return g_pGameRules->CanEntityBeUsePushed( pEntity );
 		}
 	};
+#endif
 #endif
 
 #ifdef CLIENT_DLL
@@ -93,47 +79,14 @@ ConVar mp_usehwmmodels( "mp_usehwmmodels", "0", NULL, "Enable the use of the hw 
 
 bool UseHWMorphModels()
 {
-// #ifdef CLIENT_DLL 
-// 	if ( mp_usehwmmodels.GetInt() == 0 )
-// 		return g_pMaterialSystemHardwareConfig->HasFastVertexTextures();
-// 
-// 	return mp_usehwmmodels.GetInt() > 0;
-// #else
-// 	return false;
-// #endif
+#ifdef CLIENT_DLL 
+	if ( mp_usehwmmodels.GetInt() == 0 )
+		return g_pMaterialSystemHardwareConfig->HasFastVertexTextures();
+
+	return mp_usehwmmodels.GetInt() > 0;
+#else
 	return false;
-}
-
-void CopySoundNameWithModifierToken( char *pchDest, const char *pchSource, int nMaxLenInChars, const char *pchToken )
-{
-	// Copy the sound name
-	int nSource = 0;
-	int nDest = 0;
-	bool bFoundPeriod = false;
-
-	while ( pchSource[ nSource ] != '\0' && nDest < nMaxLenInChars - 2 )
-	{
-		pchDest[ nDest ] = pchSource[ nSource ];
-		nDest++;
-		nSource++;
-
-		if ( !bFoundPeriod && pchSource[ nSource - 1 ] == '.' )
-		{
-			// Insert special token after the period
-			bFoundPeriod = true;
-
-			int nToken = 0;
-
-			while ( pchToken[ nToken ] != '\0' && nDest < nMaxLenInChars - 2 )
-			{
-				pchDest[ nDest ] = pchToken[ nToken ];
-				nDest++;
-				nToken++;
-			}
-		}
-	}
-
-	pchDest[ nDest ] = '\0';
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -143,16 +96,6 @@ void CopySoundNameWithModifierToken( char *pchDest, const char *pchSource, int n
 float CBasePlayer::GetTimeBase( void ) const
 {
 	return m_nTickBase * TICK_INTERVAL;
-}
-
-float CBasePlayer::GetPlayerMaxSpeed()
-{
-	// player max speed is the lower limit of m_flMaxSpeed and sv_maxspeed
-	float fMaxSpeed = sv_maxspeed.GetFloat();
-	if ( MaxSpeed() > 0.0f && MaxSpeed() < fMaxSpeed )
-		fMaxSpeed = MaxSpeed();
-
-	return fMaxSpeed;
 }
 
 //-----------------------------------------------------------------------------
@@ -289,6 +232,22 @@ void CBasePlayer::ItemPostFrame()
 
 #if !defined( CLIENT_DLL )
 	ImpulseCommands();
+
+	extern ConVar sv_infinite_ammo;
+	if( sv_infinite_ammo.GetBool() && (GetActiveWeapon() != NULL) )
+	{
+		CBaseCombatWeapon *pWeapon = GetActiveWeapon();
+		
+		pWeapon->m_iClip1 = pWeapon->GetMaxClip1();
+		int iPrimaryAmmoType = pWeapon->GetPrimaryAmmoType();
+		if( iPrimaryAmmoType >= 0 )
+			SetAmmoCount( GetAmmoDef()->MaxCarry( iPrimaryAmmoType, this ), iPrimaryAmmoType );
+		
+		pWeapon->m_iClip2 = pWeapon->GetMaxClip2();
+		int iSecondaryAmmoType = pWeapon->GetSecondaryAmmoType();
+		if( iSecondaryAmmoType >= 0 )
+			SetAmmoCount( GetAmmoDef()->MaxCarry( iSecondaryAmmoType, this ), iSecondaryAmmoType );
+	}
 #else
 	// NOTE: If we ever support full impulse commands on the client,
 	// remove this line and call ImpulseCommands instead.
@@ -307,6 +266,11 @@ const QAngle &CBasePlayer::EyeAngles( )
 
 	if ( !pMoveParent )
 	{
+		// if in camera mode, use that
+		if ( GetViewEntity() != NULL )
+		{
+			return GetViewEntity()->EyeAngles();
+		}
 		return pl.v_angle;
 	}
 
@@ -342,15 +306,21 @@ Vector CBasePlayer::EyePosition( )
 #ifdef CLIENT_DLL
 		if ( IsObserver() )
 		{
-			if ( GetObserverMode() == OBS_MODE_CHASE )
+			if ( m_iObserverMode == OBS_MODE_CHASE )
 			{
-				if ( IsLocalPlayer() )
+				if ( IsLocalPlayer( this ) )
 				{
-					return MainViewOrigin();
+					return MainViewOrigin(GetSplitScreenPlayerSlot());
 				}
 			}
 		}
 #endif
+		// if in camera mode, use that
+		if ( GetViewEntity() != NULL )
+		{
+			return GetViewEntity()->EyePosition();
+		}
+
 		return BaseClass::EyePosition();
 	}
 }
@@ -365,17 +335,17 @@ const Vector CBasePlayer::GetPlayerMins( void ) const
 {
 	if ( IsObserver() )
 	{
-		return VEC_OBS_HULL_MIN_SCALED( this );	
+		return VEC_OBS_HULL_MIN;	
 	}
 	else
 	{
 		if ( GetFlags() & FL_DUCKING )
 		{
-			return VEC_DUCK_HULL_MIN_SCALED( this );
+			return VEC_DUCK_HULL_MIN;
 		}
 		else
 		{
-			return VEC_HULL_MIN_SCALED( this );
+			return VEC_HULL_MIN;
 		}
 	}
 }
@@ -389,20 +359,37 @@ const Vector CBasePlayer::GetPlayerMaxs( void ) const
 {	
 	if ( IsObserver() )
 	{
-		return VEC_OBS_HULL_MAX_SCALED( this );	
+		return VEC_OBS_HULL_MAX;	
 	}
 	else
 	{
 		if ( GetFlags() & FL_DUCKING )
 		{
-			return VEC_DUCK_HULL_MAX_SCALED( this );
+			return VEC_DUCK_HULL_MAX;
 		}
 		else
 		{
-			return VEC_HULL_MAX_SCALED( this );
+			return VEC_HULL_MAX;
 		}
 	}
 }
+
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CBasePlayer::UpdateCollisionBounds( void )
+{
+	if ( GetFlags() & FL_DUCKING )
+	{
+		SetCollisionBounds( VEC_DUCK_HULL_MIN, VEC_DUCK_HULL_MAX );
+	}
+	else
+	{
+		SetCollisionBounds( VEC_HULL_MIN, VEC_HULL_MAX );
+	}
+}
+
 
 //-----------------------------------------------------------------------------
 // Purpose: Update the vehicle view, or simply return the cached position and angles
@@ -426,23 +413,6 @@ void CBasePlayer::CacheVehicleView( void )
 		// Get our view for this frame
 		pVehicle->GetVehicleViewPosition( nRole, &m_vecVehicleViewOrigin, &m_vecVehicleViewAngles, &m_flVehicleViewFOV );
 		m_nVehicleViewSavedFrame = gpGlobals->framecount;
-
-#ifdef CLIENT_DLL
-		if( UseVR() )
-		{
-			C_BaseAnimating *pVehicleAnimating = dynamic_cast<C_BaseAnimating *>( pVehicle );
-			if( pVehicleAnimating )
-			{
-				int eyeAttachmentIndex = pVehicleAnimating->LookupAttachment( "vehicle_driver_eyes" );
-
-				Vector vehicleEyeOrigin;
-				QAngle vehicleEyeAngles;
-				pVehicleAnimating->GetAttachment( eyeAttachmentIndex, vehicleEyeOrigin, vehicleEyeAngles );
-
-				g_ClientVirtualReality.OverrideTorsoTransform( vehicleEyeOrigin, vehicleEyeAngles );
-			}
-		}
-#endif
 	}
 }
 
@@ -482,7 +452,7 @@ void CBasePlayer::EyePositionAndVectors( Vector *pPosition, Vector *pForward,
 	}
 	else
 	{
-		VectorCopy( BaseClass::EyePosition(), *pPosition );
+		VectorCopy( EyePosition(), *pPosition );
 		AngleVectors( EyeAngles(), pForward, pRight, pUp );
 	}
 }
@@ -513,7 +483,7 @@ void CBasePlayer::UpdateStepSound( surfacedata_t *psurface, const Vector &vecOri
 	float speed;
 	float velrun;
 	float velwalk;
-	int	fLadder;
+	bool fLadder;
 
 	if ( m_flStepSoundTime > 0 )
 	{
@@ -548,12 +518,7 @@ void CBasePlayer::UpdateStepSound( surfacedata_t *psurface, const Vector &vecOri
 	bool movingalongground = ( groundspeed > 0.0001f );
 	bool moving_fast_enough =  ( speed >= velwalk );
 
-#ifdef PORTAL
-	// In Portal we MUST play footstep sounds even when the player is moving very slowly
-	// This is used to count the number of footsteps they take in the challenge mode
-	// -Jeep
-	moving_fast_enough = true;
-#endif
+
 
 	// To hear step sounds you must be either on a ladder or moving along the ground AND
 	// You must be moving fast enough
@@ -563,7 +528,7 @@ void CBasePlayer::UpdateStepSound( surfacedata_t *psurface, const Vector &vecOri
 
 //	MoveHelper()->PlayerSetAnimation( PLAYER_WALK );
 
-	bWalking = speed < velrun;		
+	bWalking = speed < velrun;
 
 	VectorCopy( vecOrigin, knee );
 	VectorCopy( vecOrigin, feet );
@@ -580,11 +545,7 @@ void CBasePlayer::UpdateStepSound( surfacedata_t *psurface, const Vector &vecOri
 
 		SetStepSoundTime( STEPSOUNDTIME_ON_LADDER, bWalking );
 	}
-#ifdef CSTRIKE_DLL
-	else if ( enginetrace->GetPointContents( knee ) & MASK_WATER )  // we want to use the knee for Cstrike, not the waist
-#else
 	else if ( GetWaterLevel() == WL_Waist )
-#endif // CSTRIKE_DLL
 	{
 		static int iSkipStep = 0;
 
@@ -680,7 +641,7 @@ void CBasePlayer::PlayStepSound( Vector &vecOrigin, surfacedata_t *psurface, flo
 		return;
 
 	int nSide = m_Local.m_nStepside;
-	unsigned short stepSoundName = nSide ? psurface->sounds.stepleft : psurface->sounds.stepright;
+	unsigned short stepSoundName = nSide ? psurface->sounds.runStepLeft : psurface->sounds.runStepRight;
 	if ( !stepSoundName )
 		return;
 
@@ -698,10 +659,6 @@ void CBasePlayer::PlayStepSound( Vector &vecOrigin, surfacedata_t *psurface, flo
 	{
 		IPhysicsSurfaceProps *physprops = MoveHelper()->GetSurfaceProps();
 		const char *pSoundName = physprops->GetString( stepSoundName );
-
-		// Give child classes an opportunity to override.
-		pSoundName = GetOverrideStepSound( pSoundName );
-
 		if ( !CBaseEntity::GetParametersForSound( pSoundName, params, NULL ) )
 			return;
 
@@ -727,27 +684,13 @@ void CBasePlayer::PlayStepSound( Vector &vecOrigin, surfacedata_t *psurface, flo
 	EmitSound_t ep;
 	ep.m_nChannel = CHAN_BODY;
 	ep.m_pSoundName = params.soundname;
-#if defined ( TF_DLL ) || defined ( TF_CLIENT_DLL )
-	if( TFGameRules()->IsMannVsMachineMode() )
-	{
-		ep.m_flVolume = params.volume;
-	}
-	else
-	{
-		ep.m_flVolume = fvol;
-	}
-#else
 	ep.m_flVolume = fvol;
-#endif
 	ep.m_SoundLevel = params.soundlevel;
 	ep.m_nFlags = 0;
 	ep.m_nPitch = params.pitch;
 	ep.m_pOrigin = &vecOrigin;
 
 	EmitSound( filter, entindex(), ep );
-
-	// Kyle says: ugggh. This function may as well be called "PerformPileOfDesperateGameSpecificFootstepHacks".
-	OnEmitFootstepSound( params, vecOrigin, fvol );
 }
 
 void CBasePlayer::UpdateButtonState( int nUserCmdButtonMask )
@@ -818,6 +761,11 @@ void CBasePlayer::SetStepSoundTime( stepsoundtimes_t iStepSoundTime, bool bWalki
 Vector CBasePlayer::Weapon_ShootPosition( )
 {
 	return EyePosition();
+}
+
+bool CBasePlayer::Weapon_CanUse( CBaseCombatWeapon *pWeapon )
+{
+	return true;
 }
 
 void CBasePlayer::SetAnimationExtension( const char *pExtension )
@@ -935,12 +883,6 @@ void CBasePlayer::SimulatePlayerSimulatedEntities( void )
 			continue;
 		}
 
-#if defined( CLIENT_DLL )
-		if ( e->IsClientCreated() && prediction->InPrediction() && !prediction->IsFirstTimePredicted() )
-		{
-			continue;
-		}
-#endif
 		Assert( e->IsPlayerSimulated() );
 		Assert( e->GetSimulatingPlayer() == this );
 
@@ -963,13 +905,6 @@ void CBasePlayer::SimulatePlayerSimulatedEntities( void )
 			continue;
 		}
 
-#if defined( CLIENT_DLL )
-		if ( e->IsClientCreated() && prediction->InPrediction() && !prediction->IsFirstTimePredicted() )
-		{
-			continue;
-		}
-#endif
-
 		Assert( e->IsPlayerSimulated() );
 		Assert( e->GetSimulatingPlayer() == this );
 
@@ -985,7 +920,7 @@ void CBasePlayer::SimulatePlayerSimulatedEntities( void )
 //-----------------------------------------------------------------------------
 void CBasePlayer::ClearPlayerSimulationList( void )
 {
-	int c = m_SimulatedByThisPlayer.Size();
+	int c = m_SimulatedByThisPlayer.Count();
 	int i;
 
 	for ( i = c - 1; i >= 0; i-- )
@@ -1065,69 +1000,39 @@ float IntervalDistance( float x, float x0, float x1 )
 	return 0;
 }
 
-//Fixed several +use bugs
-//CBaseEntity *CBasePlayer::FindUseEntity()
-static float EstimatedDistanceSquared(const Vector &point, const CBaseEntity *pEntity)
+CBaseEntity *CBasePlayer::FindUseEntity()
 {
-	//Vector forward, up;
-	//EyeVectors( &forward, NULL, &up );
-	Vector nearestPoint;
- 	pEntity->CollisionProp()->CalcNearestPoint( point, &nearestPoint );
- 	return (nearestPoint - point).LengthSqr();
- }
+	Vector forward, up;
+	EyeVectors( &forward, NULL, &up );
 
-	//trace_t tr;
+	trace_t tr;
 	// Search for objects in a sphere (tests for entities that are not solid, yet still useable)
-	CBaseEntity *CBasePlayer::FindUseEntity()
- {
- 	Vector forward;
- 	EyeVectors( &forward, NULL, NULL );
 	Vector searchCenter = EyePosition();
 
 	// NOTE: Some debris objects are useable too, so hit those as well
 	// A button, etc. can be made out of clip brushes, make sure it's +useable via a traceline, too.
-	//int useableContents = MASK_SOLID | CONTENTS_DEBRIS | CONTENTS_PLAYERCLIP;
-	// Some debris objects are +usable, and clip brushes can be made into
- 	// +usable entities.
- 	int usableContents = MASK_SOLID | CONTENTS_DEBRIS | CONTENTS_PLAYERCLIP;
- 
- 	// However, we occasionally need to ignore clip brushes so that objects
- 	// inside of or beyond them can be +used.
- 	const int usableContentsIgnoreClip = usableContents & ~CONTENTS_PLAYERCLIP;
+	int useableContents = MASK_SOLID | CONTENTS_DEBRIS | CONTENTS_PLAYERCLIP;
 
-#ifdef CSTRIKE_DLL
-	//useableContents = MASK_NPCSOLID_BRUSHONLY | MASK_OPAQUE_AND_NPCS;
-	usableContents = MASK_NPCSOLID_BRUSHONLY | MASK_OPAQUE_AND_NPCS;
-#endif
 
-#ifdef HL1_DLL
-//	useableContents = MASK_SOLID;
-//#endif
-//#ifndef CLIENT_DLL
-	//CBaseEntity *pFoundByTrace = NULL;
-	usableContents = MASK_SOLID;
+
+#ifndef CLIENT_DLL
+	CBaseEntity *pFoundByTrace = NULL;
 #endif
 
 	// UNDONE: Might be faster to just fold this range into the sphere query
-	//CBaseEntity *pObject = NULL;
-	// First, try to hit an entity directly in front of the player.
- 	trace_t directTrace;
- 	UTIL_TraceLine( searchCenter, searchCenter + PLAYER_USE_RADIUS * forward, usableContents, this, COLLISION_GROUP_NONE, &directTrace );
+	CBaseEntity *pObject = NULL;
 
-	//float nearestDist = FLT_MAX;
+	float nearestDist = FLT_MAX;
 	// try the hit entity if there is one, or the ground entity if there isn't.
 	CBaseEntity *pNearest = NULL;
-	CBaseEntity *pObject = directTrace.m_pEnt;
- 	bool bUsable = IsUseableEntity( pObject, 0 );
 
-	//const int NUM_TANGENTS = 8;
+	const int NUM_TANGENTS = 8;
 	// trace a box at successive angles down
 	//							forward, 45 deg, 30 deg, 20 deg, 15 deg, 10 deg, -10, -15
-	//const float tangents[NUM_TANGENTS] = { 0, 1, 0.57735026919f, 0.3639702342f, 0.267949192431f, 0.1763269807f, -0.1763269807f, -0.267949192431f };
-	//for ( int i = 0; i < NUM_TANGENTS; i++ )
-	if ( !bUsable && (directTrace.contents & CONTENTS_PLAYERCLIP) )
+	const float tangents[NUM_TANGENTS] = { 0, 1, 0.57735026919f, 0.3639702342f, 0.267949192431f, 0.1763269807f, -0.1763269807f, -0.267949192431f };
+	for ( int i = 0; i < NUM_TANGENTS; i++ )
 	{
-		/*if ( i == 0 )
+		if ( i == 0 )
 		{
 			UTIL_TraceLine( searchCenter, searchCenter + forward * 1024, useableContents, this, COLLISION_GROUP_NONE, &tr );
 		}
@@ -1147,10 +1052,9 @@ static float EstimatedDistanceSquared(const Vector &point, const CBaseEntity *pE
 		{
 			pObject = pObject->GetMoveParent();
 			bUsable = IsUseableEntity(pObject, 0);
-		}*/
-		// We hit a non-usable clip brush. Try tracing again, ignoring clip
-		// brushes, so that objects inside of or beyond them can be +used.
-		/*if ( bUsable )
+		}
+
+		if ( bUsable )
 		{
 			Vector delta = tr.endpos - tr.startpos;
 			float centerZ = CollisionProp()->WorldSpaceCenter().z;
@@ -1176,149 +1080,74 @@ static float EstimatedDistanceSquared(const Vector &point, const CBaseEntity *pE
 				if ( sv_debug_player_use.GetBool() )
 				{
 					Msg( "Trace using: %s\n", pObject ? pObject->GetDebugName() : "no usable entity found" );
-				}*/
-		// NOTE: If a usable clip brush is behind a non-usable clip brush,
- 		// then we won't be able to +use it, unfortunately. This is difficult
- 		// to workaround. For example, the non-usable clip brush cannot be added
-		// to a list of ignored entities, because it is part of the worldspawn,
-		// and we cannot ignore that.
-		UTIL_TraceLine( searchCenter, searchCenter + PLAYER_USE_RADIUS * forward, usableContentsIgnoreClip, this, COLLISION_GROUP_NONE, &directTrace );
+				}
 
-				/*pNearest = pObject;
+				pNearest = pObject;
 				
 				// if this is directly under the cursor just return it now
 				if ( i == 0 )
 					return pObject;
 			}
-		}*/
-		pObject = directTrace.m_pEnt;
- 		bUsable = IsUseableEntity( pObject, 0 );
+		}
 	}
 
 	// check ground entity first
 	// if you've got a useable ground entity, then shrink the cone of this search to 45 degrees
 	// otherwise, search out in a 90 degree cone (hemisphere)
-	//if ( GetGroundEntity() && IsUseableEntity(GetGroundEntity(), FCAP_USE_ONGROUND) )
-	// If the object is not usable, determine if a move ancestor is.
- 	while ( pObject && !bUsable && pObject->GetMoveParent() )
+	if ( GetGroundEntity() && IsUseableEntity(GetGroundEntity(), FCAP_USE_ONGROUND) )
 	{
-		//pNearest = GetGroundEntity();
-		pObject = pObject->GetMoveParent();
- 		bUsable = IsUseableEntity( pObject, 0 );
+		pNearest = GetGroundEntity();
 	}
-	//if ( pNearest )
-	if ( bUsable )
+	if ( pNearest )
 	{
 		// estimate nearest object by distance from the view vector
-		//Vector point;
-		//pNearest->CollisionProp()->CalcNearestPoint( searchCenter, &point );
-		//nearestDist = CalcDistanceToLine( point, searchCenter, forward );
-		pNearest = pObject;
+		Vector point;
+		pNearest->CollisionProp()->CalcNearestPoint( searchCenter, &point );
+		nearestDist = CalcDistanceToLine( point, searchCenter, forward );
 		if ( sv_debug_player_use.GetBool() )
 		{
-			//Msg("Trace found %s, dist %.2f\n", pNearest->GetClassname(), nearestDist );
-			const float distSquared = EstimatedDistanceSquared( searchCenter, pNearest );
- 			Msg( "Line trace found usable entity: %s, distance: %.2f\n", pNearest->GetDebugName(), sqrt( distSquared ) );
+			Msg("Trace found %s, dist %.2f\n", pNearest->GetClassname(), nearestDist );
 		}
 	}
 
-	//for ( CEntitySphereQuery sphere( searchCenter, PLAYER_USE_RADIUS ); ( pObject = sphere.GetCurrentEntity() ) != NULL; sphere.NextEntity() )
-	else	
+	for ( CEntitySphereQuery sphere( searchCenter, PLAYER_USE_RADIUS ); ( pObject = sphere.GetCurrentEntity() ) != NULL; sphere.NextEntity() )
 	{
-		//if ( !pObject )
-		//	continue;
-		// Any objects directly in front of us weren't usable and close enough.
- 		// Next, determine if the ground entity is usable.
-		float nearestDistSquared = FLT_MAX;
+		if ( !pObject )
+			continue;
 
-		//if ( !IsUseableEntity( pObject, FCAP_USE_IN_RADIUS ) )
-		//	continue;
-		if ( GetGroundEntity() && IsUseableEntity( GetGroundEntity(), FCAP_USE_ONGROUND ) )
- 		{
- 			pNearest = GetGroundEntity();
- 			nearestDistSquared = EstimatedDistanceSquared( searchCenter, pNearest );
+		if ( !IsUseableEntity( pObject, FCAP_USE_IN_RADIUS ) )
+			continue;
 
 		// see if it's more roughly in front of the player than previous guess
-		//Vector point;
-		//pObject->CollisionProp()->CalcNearestPoint( searchCenter, &point );
-			if ( sv_debug_player_use.GetBool() )
- 			{
- 				Msg( "Ground query found usable entity: %s, distance: %.2f\n", pNearest->GetDebugName(), sqrt( nearestDistSquared ) );
- 			}
- 		}
+		Vector point;
+		pObject->CollisionProp()->CalcNearestPoint( searchCenter, &point );
 
-		//Vector dir = point - searchCenter;
-		//VectorNormalize(dir);
-		//float dot = DotProduct( dir, forward );
-		// Next, determine which of the reachable and usable objects in the cone
- 		// volume directly in front of player is closest, and whether or not any
- 		// is closer than the ground entity.
- 		for ( CEntitySphereQuery sphere( searchCenter, PLAYER_USE_RADIUS ); ( pObject = sphere.GetCurrentEntity() ) != NULL; sphere.NextEntity() )
- 		{
- 			if ( !IsUseableEntity( pObject, 0 ) )
- 				continue;
+		Vector dir = point - searchCenter;
+		VectorNormalize(dir);
+		float dot = DotProduct( dir, forward );
 
 		// Need to be looking at the object more or less
-		//if ( dot < 0.8 )
-			//continue;
-		// Determine if the object is nearer than the previous nearest object.
- 			Vector nearestPoint;
- 			pObject->CollisionProp()->CalcNearestPoint( searchCenter, &nearestPoint );
+		if ( dot < 0.8 )
+			continue;
 
-		//float dist = CalcDistanceToLine( point, searchCenter, forward );
-			Vector dir = nearestPoint - searchCenter;
- 			VectorNormalize(dir);
+		float dist = CalcDistanceToLine( point, searchCenter, forward );
 
-		//if ( sv_debug_player_use.GetBool() )
-		//{
-		//	Msg("Radius found %s, dist %.2f\n", pObject->GetClassname(), dist );
-		//}
-			// Need to be looking at the object more or less.
- 			// NOTE: If the closest point on the object happens to be off to the
- 			// side, even though the object is predominantly if front of the player,
- 			// then it will be rejected, unfortunately.
- 			if ( DotProduct( dir, forward ) < 0.8 )
- 				continue;
+		if ( sv_debug_player_use.GetBool() )
+		{
+			Msg("Radius found %s, dist %.2f\n", pObject->GetClassname(), dist );
+		}
 
-		/*if ( dist < nearestDist )
+		if ( dist < nearestDist )
 		{
 			// Since this has purely been a radius search to this point, we now
 			// make sure the object isn't behind glass or a grate.
 			trace_t trCheckOccluded;
-			UTIL_TraceLine( searchCenter, point, useableContents, this, COLLISION_GROUP_NONE, &trCheckOccluded );*/
-			const float distSquared = (nearestPoint - searchCenter).LengthSqr();
+			UTIL_TraceLine( searchCenter, point, useableContents, this, COLLISION_GROUP_NONE, &trCheckOccluded );
 
-			//if ( trCheckOccluded.fraction == 1.0 || trCheckOccluded.m_pEnt == pObject )
-			if ( sv_debug_player_use.GetBool() )
+			if ( trCheckOccluded.fraction == 1.0 || trCheckOccluded.m_pEnt == pObject )
 			{
-				//pNearest = pObject;
-				//nearestDist = dist;
-				Msg( "Cone query found usable entity: %s, distance: %.2f\n", pObject->GetDebugName(), sqrt( distSquared ) );
- 			}
- 
- 			if ( distSquared < nearestDistSquared )
- 			{
- 				// The object is inside the cone, but it may be blocked by another
- 				// object. Verify that we can trace to the object directly.
- 
- 				// NOTE: this traces to a particular point on the object's collision
- 				// prop. If the trace to that point happens to be blocked by another
- 				// object, even though other nearby visible points aren't, then we
- 				// won't be able to +use the object, unfortunately.
- 
- 				// We ignore clip brushes here so that objects in or behind clip
- 				// brushes can be +used. If the current object itself is a usable
- 				// clip brush, this trace will fail to hit it, but unless it is
- 				// blocked, the trace fraction will typically be 1.0 anyway, and
- 				// pNearest will be set to the usable clip brush object.
- 				trace_t tr;
- 				UTIL_TraceLine( searchCenter, nearestPoint, usableContentsIgnoreClip, this, COLLISION_GROUP_NONE, &tr );
- 
- 				if ( tr.fraction == 1.0 || tr.m_pEnt == pObject )
- 				{
- 					pNearest = pObject;
- 					nearestDistSquared = distSquared;
- 				}
+				pNearest = pObject;
+				nearestDist = dist;
 			}
 		}
 	}
@@ -1328,89 +1157,44 @@ static float EstimatedDistanceSquared(const Vector &point, const CBaseEntity *pE
 	{
 		// Haven't found anything near the player to use, nor any NPC's at distance.
 		// Check to see if the player is trying to select an NPC through a rail, fence, or other 'see-though' volume.
-		//trace_t trAllies;
-		//UTIL_TraceLine( searchCenter, searchCenter + forward * PLAYER_USE_RADIUS, MASK_OPAQUE_AND_NPCS, this, COLLISION_GROUP_NONE, &trAllies );
-		// If we haven't found an object that the player can use yet,
- 		// allow a player to use an NPC through 'see-through' volumes
- 		// (rails, fenches, windows, grates, etc.).
- 		UTIL_TraceLine( searchCenter, searchCenter + PLAYER_USE_RADIUS * forward, MASK_OPAQUE_AND_NPCS, this, COLLISION_GROUP_NONE, &directTrace );
- 		pObject = directTrace.m_pEnt;
+		trace_t trAllies;
+		UTIL_TraceLine( searchCenter, searchCenter + forward * PLAYER_USE_RADIUS, MASK_OPAQUE_AND_NPCS, this, COLLISION_GROUP_NONE, &trAllies );
 
-		//if ( trAllies.m_pEnt && IsUseableEntity( trAllies.m_pEnt, 0 ) && trAllies.m_pEnt->MyNPCPointer() && trAllies.m_pEnt->MyNPCPointer()->IsPlayerAlly( this ) )
-		if ( pObject && IsUseableEntity( pObject, 0 ) && pObject->MyNPCPointer() && pObject->MyNPCPointer()->IsPlayerAlly( this ) )
+		if ( trAllies.m_pEnt && IsUseableEntity( trAllies.m_pEnt, 0 ) && trAllies.m_pEnt->MyNPCPointer() && trAllies.m_pEnt->MyNPCPointer()->IsPlayerAlly( this ) )
 		{
 			// This is an NPC, take it!
-			//pNearest = trAllies.m_pEnt;
-			pNearest = pObject;
-
-			if ( sv_debug_player_use.GetBool() )
-			{
-				const float distSquared = EstimatedDistanceSquared( searchCenter, pNearest );
-				Msg( "Line trace found usable entity: %s, distance: %.2f\n", pNearest->GetDebugName(), sqrt( distSquared ) );
-			}
+			pNearest = trAllies.m_pEnt;
 		}
 	}
 
-	//if ( pNearest && pNearest->MyNPCPointer() && pNearest->MyNPCPointer()->IsPlayerAlly( this ) )
-	if ( pNearest == directTrace.m_pEnt && pNearest && pNearest->MyNPCPointer() && pNearest->MyNPCPointer()->IsPlayerAlly( this ) )
+	if ( pNearest && pNearest->MyNPCPointer() && pNearest->MyNPCPointer()->IsPlayerAlly( this ) )
 	{
-		//pNearest = DoubleCheckUseNPC( pNearest, searchCenter, forward );
-		// If about to select an NPC with a line trace, do a more thorough
-		// check to ensure that we're selecting the right one from a group.
-		// Lengthen trace slightly to account for the fact that we're
-		// tracing for hitboxes, which are usually farther away than OBBs.
-		trace_t tr;
-		UTIL_TraceLine( searchCenter, searchCenter + 1.1 * PLAYER_USE_RADIUS * forward, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr );
-		pObject = tr.m_pEnt;
-
-		if ( pObject != pNearest && pObject && pObject->MyNPCPointer() && pObject->MyNPCPointer()->IsPlayerAlly( this ) )
-		{
-			// Player is selecting a different NPC through some negative space
-			// in the first NPC's hitboxes (between legs, over shoulder, etc).
-			pNearest = tr.m_pEnt;
-			directTrace = tr;
-
-			if ( sv_debug_player_use.GetBool() )
-			{
-				const float distSquared = EstimatedDistanceSquared( searchCenter, pNearest );
-				Msg( "Hitbox line trace found usable entity: %s, distance: %.2f\n", pNearest->GetDebugName(), sqrt( distSquared ) );
-			}
-		}
+		pNearest = DoubleCheckUseNPC( pNearest, searchCenter, forward );
 	}
-#endif
-		
-	// Draw debug overlays and print debug messages.
+
 	if ( sv_debug_player_use.GetBool() )
 	{
-#ifndef CLIENT_DLL
 		if ( !pNearest )
 		{
-			//NDebugOverlay::Line( searchCenter, tr.endpos, 255, 0, 0, true, 30 );
-			//NDebugOverlay::Cross3D( tr.endpos, 16, 255, 0, 0, true, 30 );
-			NDebugOverlay::Line( searchCenter, directTrace.endpos, 255, 0, 0, true, 30 );
-			NDebugOverlay::Cross3D( directTrace.endpos, 16, 255, 0, 0, true, 30 );
+			NDebugOverlay::Line( searchCenter, tr.endpos, 255, 0, 0, true, 30 );
+			NDebugOverlay::Cross3D( tr.endpos, 16, 255, 0, 0, true, 30 );
 		}
-		//else if ( pNearest == pFoundByTrace )
-		else if ( pNearest == directTrace.m_pEnt )
+		else if ( pNearest == pFoundByTrace )
 		{
-			//NDebugOverlay::Line( searchCenter, tr.endpos, 0, 255, 0, true, 30 );
-			//NDebugOverlay::Cross3D( tr.endpos, 16, 0, 255, 0, true, 30 );
-			NDebugOverlay::Line( searchCenter, directTrace.endpos, 0, 255, 0, true, 30 );
-			NDebugOverlay::Cross3D( directTrace.endpos, 16, 0, 255, 0, true, 30 );
+			NDebugOverlay::Line( searchCenter, tr.endpos, 0, 255, 0, true, 30 );
+			NDebugOverlay::Cross3D( tr.endpos, 16, 0, 255, 0, true, 30 );
 		}
 		else
 		{
 			NDebugOverlay::Box( pNearest->WorldSpaceCenter(), Vector(-8, -8, -8), Vector(8, 8, 8), 0, 255, 0, true, 30 );
 		}
-	//}
+	}
 #endif
 
-	//if ( sv_debug_player_use.GetBool() )
-	//{
-		//Msg( "Radial using: %s\n", pNearest ? pNearest->GetDebugName() : "no usable entity found" );
-		Msg( "Using: %s\n", pNearest ? pNearest->GetDebugName() : "no usable entity found" );
+	if ( sv_debug_player_use.GetBool() )
+	{
+		Msg( "Radial using: %s\n", pNearest ? pNearest->GetDebugName() : "no usable entity found" );
 	}
-//and now all these changes are done. hopefully i didnt miss anything when adding this in.
 
 	return pNearest;
 }
@@ -1444,7 +1228,7 @@ void CBasePlayer::PlayerUse ( void )
 		EyeVectors( &forward, NULL, &up );
 
 		trace_t tr;
-		// Search for objects in a sphere (tests for entities that are not solid, yet still usable)
+		// Search for objects in a sphere (tests for entities that are not solid, yet still useable)
 		Vector searchCenter = EyePosition();
 
 		CUsePushFilter filter;
@@ -1688,11 +1472,6 @@ void CBasePlayer::CalcView( Vector &eyeOrigin, QAngle &eyeAngles, float &zNear, 
 
 	if ( !pVehicle )
 	{
-#if defined( CLIENT_DLL )
-		if( UseVR() )
-			g_ClientVirtualReality.CancelTorsoTransformOverride();
-#endif
-
 		if ( IsObserver() )
 		{
 			CalcObserverView( eyeOrigin, eyeAngles, fov );
@@ -1706,10 +1485,36 @@ void CBasePlayer::CalcView( Vector &eyeOrigin, QAngle &eyeAngles, float &zNear, 
 	{
 		CalcVehicleView( pVehicle, eyeOrigin, eyeAngles, zNear, zFar, fov );
 	}
-	// NVNT update fov on the haptics dll for input scaling.
+
 #if defined( CLIENT_DLL )
-	if(IsLocalPlayer() && haptics)
-		haptics->UpdatePlayerFOV(fov);
+	// Set the follow bone if necessary
+	FOR_EACH_VALID_SPLITSCREEN_PLAYER( hh )
+	{
+		ACTIVE_SPLITSCREEN_PLAYER_GUARD( hh );
+
+		static ConVarRef cvFollowBoneIndexVar( "cl_camera_follow_bone_index" );
+
+		CStudioHdr const* pHdr = GetModelPtr();
+
+		if ( pHdr &&
+			 cvFollowBoneIndexVar.IsValid() && 
+			 C_BasePlayer::GetLocalPlayer() == this )
+		{
+			int boneIdx = cvFollowBoneIndexVar.GetInt();
+			if ( boneIdx >= -1 && boneIdx <	pHdr->numbones() )
+			{
+				extern Vector g_cameraFollowPos;
+				if ( boneIdx == -1 )
+				{
+					VectorCopy( GetRenderOrigin(), g_cameraFollowPos );
+				}
+				else if ( pHdr->pBone( boneIdx )->flags & BONE_USED_BY_ANYTHING )
+				{
+					MatrixPosition( m_BoneAccessor.GetBone( boneIdx ), g_cameraFollowPos );
+				}
+			}
+		}
+	}
 #endif
 }
 
@@ -1736,19 +1541,17 @@ void CBasePlayer::CalcPlayerView( Vector& eyeOrigin, QAngle& eyeAngles, float& f
 	}
 #endif
 
-	VectorCopy( EyePosition(), eyeOrigin );
-#ifdef SIXENSE
-	if ( g_pSixenseInput->IsEnabled() )
+	// TrackIR
+	if ( IsHeadTrackingEnabled() )
 	{
+		VectorCopy( EyePosition() + GetEyeOffset(), eyeOrigin );
 		VectorCopy( EyeAngles() + GetEyeAngleOffset(), eyeAngles );
 	}
 	else
 	{
+		VectorCopy( EyePosition(), eyeOrigin );
 		VectorCopy( EyeAngles(), eyeAngles );
 	}
-#else
-	VectorCopy( EyeAngles(), eyeAngles );
-#endif
 
 #if defined( CLIENT_DLL )
 	if ( !prediction->InPrediction() )
@@ -1759,7 +1562,9 @@ void CBasePlayer::CalcPlayerView( Vector& eyeOrigin, QAngle& eyeAngles, float& f
 
 	// Snack off the origin before bob + water offset are applied
 	Vector vecBaseEyePosition = eyeOrigin;
+	QAngle baseEyeAngles = eyeAngles;
 
+	CalcViewBob( eyeOrigin );
 	CalcViewRoll( eyeAngles );
 
 	// Apply punch angle
@@ -1769,8 +1574,10 @@ void CBasePlayer::CalcPlayerView( Vector& eyeOrigin, QAngle& eyeAngles, float& f
 	if ( !prediction->InPrediction() )
 	{
 		// Shake it up baby!
-		vieweffects->CalcShake();
-		vieweffects->ApplyShake( eyeOrigin, eyeAngles, 1.0 );
+		GetViewEffects()->CalcShake();
+		GetViewEffects()->ApplyShake( eyeOrigin, eyeAngles, 1.0 );
+
+		// Tilting handled in CInput::AdjustAngles
 	}
 #endif
 
@@ -1805,6 +1612,14 @@ void CBasePlayer::CalcVehicleView(
 	eyeOrigin = m_vecVehicleViewOrigin;
 	eyeAngles = m_vecVehicleViewAngles;
 
+	// TrackIR
+	if ( IsHeadTrackingEnabled() )
+	{
+		eyeAngles += GetEyeAngleOffset();
+		eyeOrigin += GetEyeOffset();
+	}
+	// TrackIR 
+
 #if defined( CLIENT_DLL )
 
 	fov = GetFOV();
@@ -1825,8 +1640,8 @@ void CBasePlayer::CalcVehicleView(
 	if ( !prediction->InPrediction() )
 	{
 		// Shake it up baby!
-		vieweffects->CalcShake();
-		vieweffects->ApplyShake( eyeOrigin, eyeAngles, 1.0 );
+		GetViewEffects()->CalcShake();
+		GetViewEffects()->ApplyShake( eyeOrigin, eyeAngles, 1.0 );
 	}
 #endif
 
@@ -1913,6 +1728,9 @@ void CBasePlayer::CalcViewRoll( QAngle& eyeAngles )
 	eyeAngles[ROLL] += side;
 }
 
+void CBasePlayer::CalcViewBob( Vector& eyeOrigin )
+{
+}
 
 void CBasePlayer::DoMuzzleFlash()
 {
@@ -1979,7 +1797,7 @@ void CBasePlayer::SharedSpawn()
 	m_Local.m_flStepSize = sv_stepsize.GetFloat();
 	m_Local.m_bAllowAutoMovement = true;
 
-	m_nRenderFX = kRenderFxNone;
+	SetRenderFX( kRenderFxNone );
 	m_flNextAttack	= gpGlobals->curtime;
 	m_flMaxspeed		= 0.0f;
 
@@ -1995,11 +1813,6 @@ void CBasePlayer::SharedSpawn()
 	m_Local.m_flFallVelocity = 0;
 
 	SetBloodColor( BLOOD_COLOR_RED );
-	// NVNT inform haptic dll we have just spawned local player
-#ifdef CLIENT_DLL
-	if(IsLocalPlayer() &&haptics)
-		haptics->LocalPlayerReset();
-#endif
 }
 
 
@@ -2012,7 +1825,7 @@ int CBasePlayer::GetDefaultFOV( void ) const
 #if defined( CLIENT_DLL )
 	if ( GetObserverMode() == OBS_MODE_IN_EYE )
 	{
-		C_BasePlayer *pTargetPlayer = dynamic_cast<C_BasePlayer*>( GetObserverTarget() );
+		C_BasePlayer *pTargetPlayer = ToBasePlayer( GetObserverTarget() );
 
 		if ( pTargetPlayer && !pTargetPlayer->IsObserver() )
 		{
@@ -2022,8 +1835,6 @@ int CBasePlayer::GetDefaultFOV( void ) const
 #endif
 
 	int iFOV = ( m_iDefaultFOV == 0 ) ? g_pGameRules->DefaultFOV() : m_iDefaultFOV;
-	if ( iFOV > MAX_FOV )
-		iFOV = MAX_FOV;
 
 	return iFOV;
 }
@@ -2177,13 +1988,6 @@ void CBasePlayer::SetPlayerUnderwater( bool state )
 {
 	if ( m_bPlayerUnderwater != state )
 	{
-#if defined( WIN32 ) && !defined( _X360 ) 
-		// NVNT turn on haptic drag when underwater
-		if(state)
-			HapticSetDrag(this,1);
-		else
-			HapticSetDrag(this,0);
-#endif
 		m_bPlayerUnderwater = state;
 
 #ifdef CLIENT_DLL
@@ -2221,10 +2025,67 @@ bool fogparams_t::operator !=( const fogparams_t& other ) const
 		this->colorSecondaryLerpTo.Get() != other.colorSecondaryLerpTo.Get() ||
 		this->startLerpTo != other.startLerpTo ||
 		this->endLerpTo != other.endLerpTo ||
+		this->maxdensityLerpTo != other.maxdensityLerpTo ||
 		this->lerptime != other.lerptime ||
-		this->duration != other.duration )
+		this->duration != other.duration ||
+		this->HDRColorScale != other.HDRColorScale )
 		return true;
 
 	return false;
 }
 
+void CBasePlayer::IncrementEFNoInterpParity()
+{
+	// Only matters in multiplayer
+	if ( gpGlobals->maxClients == 1 )
+		return;
+	m_ubEFNoInterpParity = (m_ubEFNoInterpParity + 1) % NOINTERP_PARITY_MAX;
+}
+
+int CBasePlayer::GetEFNoInterpParity() const
+{
+	return (int)m_ubEFNoInterpParity;
+}
+
+void CBasePlayer::AddSplitScreenPlayer( CBasePlayer *pOther )
+{
+	CHandle< CBasePlayer > h;
+	h = pOther;
+	if ( m_hSplitScreenPlayers.Find( h ) == m_hSplitScreenPlayers.InvalidIndex() )
+	{
+		m_hSplitScreenPlayers.AddToTail( h );
+	}
+}
+
+void CBasePlayer::RemoveSplitScreenPlayer( CBasePlayer *pOther )
+{
+	CHandle< CBasePlayer > h;
+	h = pOther;
+	m_hSplitScreenPlayers.FindAndRemove( h );
+}
+
+CUtlVector< CHandle< CBasePlayer > > &CBasePlayer::GetSplitScreenPlayers()
+{
+	return m_hSplitScreenPlayers;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Strips off IN_xxx flags from the player's input
+//-----------------------------------------------------------------------------
+void CBasePlayer::ForceButtons( int nButtons )
+{
+	m_afButtonForced |= nButtons;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Re-enables stripped IN_xxx flags to the player's input
+//-----------------------------------------------------------------------------
+void CBasePlayer::UnforceButtons( int nButtons )
+{
+	m_afButtonForced &= ~nButtons;
+}
+
+CBaseEntity* CBasePlayer::GetSoundscapeListener()
+{
+	return this;
+}

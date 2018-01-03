@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Father Grigori, a benevolent monk who is the last remaining human
 //			in Ravenholm. He keeps to the rooftops and uses a big ole elephant
@@ -73,7 +73,7 @@ public:
 	bool PassesDamageFilter( const CTakeDamageInfo &info );
 	void OnKilledNPC( CBaseCombatCharacter *pKilled );
 
-	bool IsJumpLegal( const Vector &startPos, const Vector &apex, const Vector &endPos ) const;
+	bool IsJumpLegal( const Vector &startPos, const Vector &apex, const Vector &endPos, float maxUp, float maxDown, float maxDist ) const;
 	int SelectFailSchedule( int failedSchedule, int failedTask, AI_TaskFailureCode_t taskFailCode );
 
 	DECLARE_DATADESC();
@@ -90,10 +90,10 @@ private:
 		SCHED_MONK_NORMAL_RELOAD,
 	};
 
-	/*enum
+	enum
 	{
 		//TASK_MONK_FIRST_TASK = BaseClass::NEXT_TASK,
-	};*/
+	};
 
 	DEFINE_CUSTOM_AI;
 
@@ -347,7 +347,7 @@ Vector CNPC_Monk::GetActualShootTrajectory( const Vector &shootOrigin )
 //-----------------------------------------------------------------------------
 void CNPC_Monk::HandleAnimEvent( animevent_t *pEvent )
 {
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 		case NPC_EVENT_LEFTFOOT:
 			{
@@ -675,11 +675,11 @@ int CNPC_Monk::SelectFailSchedule( int failedSchedule, int failedTask, AI_TaskFa
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-bool CNPC_Monk::IsJumpLegal( const Vector &startPos, const Vector &apex, const Vector &endPos ) const
+bool CNPC_Monk::IsJumpLegal( const Vector &startPos, const Vector &apex, const Vector &endPos, float maxUp, float maxDown, float maxDist ) const
 {
 	if ( startPos.z - endPos.z < 0 )
 		return false;
-	return BaseClass::IsJumpLegal( startPos, apex, endPos );
+	return BaseClass::IsJumpLegal( startPos, apex, endPos, maxUp, maxDown, maxDist );
 }
 
 //-----------------------------------------------------------------------------

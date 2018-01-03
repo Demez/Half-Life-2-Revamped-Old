@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -50,7 +50,7 @@ public:
 	virtual void SetMouseCapture(VPANEL panel) = 0;
 
 	// returns the string name of a scan code
-	virtual void GetKeyCodeText(KeyCode code, OUT_Z_BYTECAP(buflen) char *buf, int buflen) = 0;
+	virtual void GetKeyCodeText(KeyCode code, char *buf, int buflen) = 0;
 
 	// focus
 	virtual VPANEL GetFocus() = 0;
@@ -93,9 +93,9 @@ public:
 	virtual int  GetEnglishIMEHandle() = 0;
 
 	// Returns the Language Bar label (Chinese, Korean, Japanese, Russion, Thai, etc.)
-	virtual void GetIMELanguageName( OUT_Z_BYTECAP(unicodeBufferSizeInBytes) wchar_t *buf, int unicodeBufferSizeInBytes ) = 0;
+	virtual void GetIMELanguageName( wchar_t *buf, int unicodeBufferSizeInBytes ) = 0;
 	// Returns the short code for the language (EN, CH, KO, JP, RU, TH, etc. ).
-	virtual void GetIMELanguageShortCode( OUT_Z_BYTECAP(unicodeBufferSizeInBytes) wchar_t *buf, int unicodeBufferSizeInBytes ) = 0;
+	virtual void GetIMELanguageShortCode( wchar_t *buf, int unicodeBufferSizeInBytes ) = 0;
 
 	struct LanguageItem
 	{
@@ -139,7 +139,7 @@ public:
 	virtual void OnIMERecomputeModes() = 0;
 
 	virtual int  GetCandidateListCount() = 0;
-	virtual void GetCandidate( int num, OUT_Z_BYTECAP(destSizeBytes) wchar_t *dest, int destSizeBytes ) = 0;
+	virtual void GetCandidate( int num, wchar_t *dest, int destSizeBytes ) = 0;
 	virtual int  GetCandidateListSelectedItem() = 0;
 	virtual int  GetCandidateListPageSize() = 0;
 	virtual int  GetCandidateListPageStart() = 0;
@@ -183,9 +183,9 @@ public:
 	virtual bool	ShouldModalSubTreeReceiveMessages() const = 0;
 
 	virtual VPANEL 	GetMouseCapture() = 0;
-};
 
-#define VGUI_INPUT_INTERFACE_VERSION "VGUI_Input005"
+	virtual VPANEL  GetMouseFocus() = 0;
+};
 
 } // namespace vgui
 

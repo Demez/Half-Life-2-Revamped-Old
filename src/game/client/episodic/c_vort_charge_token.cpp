@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -10,16 +10,16 @@
 #include "particles_attractor.h"
 #include "iefx.h"
 #include "dlight.h"
-#include "clienteffectprecachesystem.h"
+#include "ClientEffectPrecacheSystem.h"
 #include "c_te_effect_dispatch.h"
 #include "fx_quad.h"
 
 #include "c_ai_basenpc.h"
 
 // For material proxy
-#include "proxyentity.h"
-#include "materialsystem/imaterial.h"
-#include "materialsystem/imaterialvar.h"
+#include "ProxyEntity.h"
+#include "materialsystem/IMaterial.h"
+#include "materialsystem/IMaterialVar.h"
 
 #define NUM_INTERIOR_PARTICLES	8
 
@@ -478,7 +478,7 @@ void DispelCallback( const CEffectData &data )
 	}
 }
 
-DECLARE_CLIENT_EFFECT( "VortDispel", DispelCallback );
+DECLARE_CLIENT_EFFECT( VortDispel, DispelCallback );
 
 //-----------------------------------------------------------------------------
 // Purpose: Used for emissive lightning layer on vort

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -13,7 +13,6 @@
 #endif
 
 #include "inputsystem/InputEnums.h"
-#include "mathlib/mathlib.h"
 
 //-----------------------------------------------------------------------------
 // Button enum. "Buttons" are binary-state input devices (mouse buttons, keyboard keys)
@@ -177,21 +176,6 @@ enum ButtonCode_t
 
 	JOYSTICK_LAST = JOYSTICK_LAST_AXIS_BUTTON,
 
-#if !defined ( _X360 )
-	NOVINT_FIRST = JOYSTICK_LAST + 2, // plus 1 missing key. +1 seems to cause issues on the first button.
-	
-	NOVINT_LOGO_0 = NOVINT_FIRST,
-	NOVINT_TRIANGLE_0,
-	NOVINT_BOLT_0,
-	NOVINT_PLUS_0,
-	NOVINT_LOGO_1,
-	NOVINT_TRIANGLE_1,
-	NOVINT_BOLT_1,
-	NOVINT_PLUS_1,
-	
-	NOVINT_LAST = NOVINT_PLUS_1,
-#endif
-
 	BUTTON_CODE_LAST,
 	BUTTON_CODE_COUNT = BUTTON_CODE_LAST - KEY_FIRST + 1,
 
@@ -211,6 +195,7 @@ enum ButtonCode_t
 	KEY_XBUTTON_START,
 	KEY_XBUTTON_STICK1,
 	KEY_XBUTTON_STICK2,
+	KEY_XBUTTON_INACTIVE_START,
 
 	KEY_XSTICK1_RIGHT = JOYSTICK_FIRST_AXIS_BUTTON,	// XAXIS POSITIVE
 	KEY_XSTICK1_LEFT,							// XAXIS NEGATIVE
@@ -259,32 +244,14 @@ inline bool IsMouseCode( ButtonCode_t code )
 	return ( code >= MOUSE_FIRST ) && ( code <= MOUSE_LAST );
 }
 
-inline bool IsNovintCode( ButtonCode_t code )
-{
-#if !defined ( _X360 )
-	return ( ( code >= NOVINT_FIRST ) && ( code <= NOVINT_LAST ) );
-#else
-	return false;
-#endif
-}
-
-inline bool IsNovintButtonCode( ButtonCode_t code )
-{
-#if !defined ( _X360 )
-	return IsNovintCode( code );
-#else
-	return false;
-#endif
-}
-
 inline bool IsJoystickCode( ButtonCode_t code )
 {
-	return ( ( ( code >= JOYSTICK_FIRST ) && ( code <= JOYSTICK_LAST ) ) || IsNovintCode( code ) );
+	return ( code >= JOYSTICK_FIRST ) && ( code <= JOYSTICK_LAST );
 }
 
 inline bool IsJoystickButtonCode( ButtonCode_t code )
 {
-	return ( ( ( code >= JOYSTICK_FIRST_BUTTON ) && ( code <= JOYSTICK_LAST_BUTTON ) ) || IsNovintButtonCode( code ) );
+	return ( code >= JOYSTICK_FIRST_BUTTON ) && ( code <= JOYSTICK_LAST_BUTTON );
 }
 
 inline bool IsJoystickPOVCode( ButtonCode_t code )
@@ -349,7 +316,7 @@ inline ButtonCode_t ButtonCodeToJoystickButtonCode( ButtonCode_t code, int nDesi
 	if ( !IsJoystickCode( code ) || nDesiredJoystick == 0 )
 		return code;
 
-	nDesiredJoystick = ::clamp<int>( nDesiredJoystick, 0, MAX_JOYSTICKS - 1 );
+	nDesiredJoystick = clamp( nDesiredJoystick, 0, MAX_JOYSTICKS - 1 );
 
 	code = GetBaseButtonCode( code );
 

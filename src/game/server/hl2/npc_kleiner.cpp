@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Dr. Kleiner, a suave ladies man leading the fight against the evil 
 //			combine while constantly having to help his idiot assistant Gordon
@@ -56,7 +56,7 @@ Class_T	CNPC_Kleiner::Classify ( void )
 //-----------------------------------------------------------------------------
 void CNPC_Kleiner::HandleAnimEvent( animevent_t *pEvent )
 {
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 	case 1:
 	default:

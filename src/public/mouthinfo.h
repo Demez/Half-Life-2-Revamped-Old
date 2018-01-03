@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright (c) 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -78,7 +78,7 @@ public:
 
 public:
 							CMouthInfo( void ) { m_nVoiceSources = 0; m_needsEnvelope = false; }
-	virtual					~CMouthInfo( void ) { ClearVoiceSources(); }
+							~CMouthInfo( void ) { ClearVoiceSources(); }
 
 	int						GetNumVoiceSources( void );
 	CVoiceData				*GetVoiceSource( int number );
@@ -169,7 +169,11 @@ inline void CMouthInfo::RemoveSourceByIndex( int index )
 	if ( index < 0 || index >= m_nVoiceSources )
 		return;
 
-	m_VoiceSources[ index ] = m_VoiceSources[ --m_nVoiceSources ];
+	--m_nVoiceSources;
+	if ( m_nVoiceSources > 0 )
+	{
+		m_VoiceSources[ index ] = m_VoiceSources[ m_nVoiceSources ];
+	}
 }
 
 inline CVoiceData *CMouthInfo::AddSource( CAudioSource *source, bool bIgnorePhonemes )

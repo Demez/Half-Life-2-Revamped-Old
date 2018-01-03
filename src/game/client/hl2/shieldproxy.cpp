@@ -1,14 +1,14 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
 // $NoKeywords: $
 //=============================================================================//
 #include "cbase.h"
-#include "proxyentity.h"
-#include "materialsystem/imaterial.h"
-#include "materialsystem/imaterialvar.h"
-#include "materialsystem/imaterialsystem.h"
+#include "ProxyEntity.h"
+#include "materialsystem/IMaterial.h"
+#include "materialsystem/IMaterialVar.h"
+#include "materialsystem/IMaterialSystem.h"
 #include <KeyValues.h>
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -69,7 +69,7 @@ void CShieldProxy::OnBind( C_BaseEntity *pEnt )
 {
 	if (m_AlphaVar)
 	{
-		m_AlphaVar->SetFloatValue( pEnt->m_clrRender->a );
+		m_AlphaVar->SetFloatValue( pEnt->GetRenderAlpha() );
 	}
 
 	if( !m_pTextureScrollVar )

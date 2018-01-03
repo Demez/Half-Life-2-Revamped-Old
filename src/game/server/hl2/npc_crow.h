@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -148,7 +148,7 @@ public:
 
 	void InputFlyAway( inputdata_t &inputdata );
 	
-	void TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator );
+	void TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr );
 	void StartTargetHandling( CBaseEntity *pTargetEnt );
 
 	DEFINE_CUSTOM_AI;

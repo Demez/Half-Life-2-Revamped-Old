@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Client side implementation of the airboat.
 //
@@ -23,10 +23,8 @@
 #include "fx_water.h"
 #include "engine/ivdebugoverlay.h"
 #include "view.h"
-#include "clienteffectprecachesystem.h"
+#include "precache_register.h"
 #include "c_basehlplayer.h"
-#include "vgui_controls/Controls.h"
-#include "vgui/ISurface.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -80,7 +78,7 @@ public:
 public:
 
 	// C_BaseEntity
-	virtual void Simulate();
+	virtual bool Simulate();
 
 	// IClientVehicle
 	virtual void UpdateViewAngles( C_BasePlayer *pLocalPlayer, CUserCmd *pCmd );
@@ -91,7 +89,7 @@ public:
 	virtual int GetPrimaryAmmoCount() const;
 	virtual int GetJoystickResponseCurve() const;
 
-	int		DrawModel( int flags );
+	int		DrawModel( int flags, const RenderableInstance_t &instance );
 
 	// Draws crosshair in the forward direction of the boat
 	void DrawHudElements( );
@@ -243,19 +241,14 @@ void C_PropAirboat::DrawHudElements( )
 
 	MDLCACHE_CRITICAL_SECTION();
 
-	CHudTexture *pIcon = gHUD.GetIcon( IsX360() ? "crosshair_default" : "plushair" );
+	CHudTexture *pIcon = HudIcons().GetIcon( IsX360() ? "crosshair_default" : "plushair" );
 	if ( pIcon != NULL )
 	{
 		float x, y;
 		Vector screen;
 
-		int vx, vy, vw, vh;
-		vgui::surface()->GetFullscreenViewport( vx, vy, vw, vh );
-		float screenWidth = vw;
-		float screenHeight = vh;
-		
-		x = screenWidth/2;
-		y = screenHeight/2;
+		x = ScreenWidth()/2;
+		y = ScreenHeight()/2;
 
 		int eyeAttachmentIndex = LookupAttachment( "vehicle_driver_eyes" );
 		Vector vehicleEyeOrigin;
@@ -270,13 +263,13 @@ void C_PropAirboat::DrawHudElements( )
 		VectorMA( vehicleEyeOrigin, 100.0f, vecForward, vehicleEyeOrigin );
 
 		ScreenTransform( vehicleEyeOrigin, screen );
-		x += 0.5 * screen[0] * screenWidth + 0.5;
-		y -= 0.5 * screen[1] * screenHeight + 0.5;
+		x += 0.5 * screen[0] * ScreenWidth() + 0.5;
+		y -= 0.5 * screen[1] * ScreenHeight() + 0.5;
 
 		x -= pIcon->Width() / 2; 
 		y -= pIcon->Height() / 2; 
 		
-		pIcon->DrawSelf( x, y, gHUD.m_clrNormal );
+		pIcon->DrawSelf( x, y, GetHud().m_clrNormal );
 	}
 }
 
@@ -492,12 +485,12 @@ void C_PropAirboat::OnEnteredVehicle( C_BasePlayer *pPlayer )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void C_PropAirboat::Simulate()
+bool C_PropAirboat::Simulate()
 {
 	UpdateHeadlight();
 	UpdateWake();
 
-	BaseClass::Simulate();
+	return BaseClass::Simulate();
 }
 
 
@@ -602,13 +595,13 @@ void C_PropAirboat::DrawSegment( const BeamSeg_t &beamSeg, const Vector &vNormal
 
 	// Specify the points.
 	m_Mesh.Position3fv( vPoint1.Base() );
-	m_Mesh.Color4f( VectorExpand( beamSeg.m_vColor ), beamSeg.m_flAlpha );
+	m_Mesh.Color4f( beamSeg.m_color.r ,beamSeg.m_color.g ,beamSeg.m_color.b , beamSeg.m_color.a );
 	m_Mesh.TexCoord2f( 0, 0, beamSeg.m_flTexCoord );
 	m_Mesh.TexCoord2f( 1, 0, beamSeg.m_flTexCoord );
 	m_Mesh.AdvanceVertex();
 
 	m_Mesh.Position3fv( vPoint2.Base() );
-	m_Mesh.Color4f( VectorExpand( beamSeg.m_vColor ), beamSeg.m_flAlpha );
+	m_Mesh.Color4f( beamSeg.m_color.r ,beamSeg.m_color.g ,beamSeg.m_color.b , beamSeg.m_color.a );
 	m_Mesh.TexCoord2f( 0, 1, beamSeg.m_flTexCoord );
 	m_Mesh.TexCoord2f( 1, 1, beamSeg.m_flTexCoord );
 	m_Mesh.AdvanceVertex();
@@ -873,13 +866,13 @@ int C_PropAirboat::DrawWake( void )
 		float flLifePerc = RemapValClamped( ( pPoint->m_flDieTime - gpGlobals->curtime ), 0, WAKE_LIFETIME, 0.0f, 1.0f );
 
 		BeamSeg_t curSeg;
-		curSeg.m_vColor.x = curSeg.m_vColor.y = curSeg.m_vColor.z = 1.0f;
+		curSeg.m_color.r = curSeg.m_color.g = curSeg.m_color.b = 1.0f;
 
 		float flAlphaFade = flLifePerc;
 		float alpha = RemapValClamped( fabs( m_vecPhysVelocity.y ), 128, 600, 0.0f, 1.0f );
 
-		curSeg.m_flAlpha = 0.25f;
-		curSeg.m_flAlpha *= flAlphaFade * alpha;
+		curSeg.m_color.a = 0.25f;
+		curSeg.m_color.a *= flAlphaFade * alpha;
 
 		curSeg.m_vPos = pPoint->m_vecScreenPos;
 		
@@ -919,9 +912,9 @@ int C_PropAirboat::DrawWake( void )
 // Input  : flags - 
 // Output : int
 //-----------------------------------------------------------------------------
-int C_PropAirboat::DrawModel( int flags )
+int C_PropAirboat::DrawModel( int flags, const RenderableInstance_t &instance )
 {
-	if ( BaseClass::DrawModel( flags ) == false )
+	if ( BaseClass::DrawModel( flags, instance ) == false )
 		return 0;
 	
 	if ( !m_bReadyToDraw )

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:		Base combat character with no AI
 //
@@ -8,6 +8,7 @@
 #include "npc_playercompanion.h"
 #include "ai_behavior_holster.h"
 #include "ai_behavior_functank.h"
+#include "ai_behavior_passenger.h"
 #include "soundenvelope.h"
 
 extern ConVar npc_alyx_readiness;
@@ -95,7 +96,7 @@ public:
 	float	LengthOfLastCombat( void ) const;
 	// bool	IsNavigationUrgent();
 
-	void	TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator );
+	void	TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr );
 	bool	CanBeHitByMeleeAttack( CBaseEntity *pAttacker );
 	int		OnTakeDamage_Alive( const CTakeDamageInfo &info );
 	bool	FCanCheckAttacks();

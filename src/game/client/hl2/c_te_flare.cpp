@@ -1,11 +1,11 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:		Flare effects
 //
 // $NoKeywords: $
 //=============================================================================//
 #include "cbase.h"
-#include "clienteffectprecachesystem.h"
+#include "ClientEffectPrecacheSystem.h"
 #include "particles_simple.h"
 #include "iefx.h"
 #include "dlight.h"
@@ -308,7 +308,7 @@ void C_Flare::Update( float timeDelta )
 		{
 			Vector	smokeOrg = GetAbsOrigin();
 
-			Vector	flareScreenDir = ( smokeOrg - MainViewOrigin() );
+			Vector	flareScreenDir = ( smokeOrg - MainViewOrigin(engine->GetActiveSplitScreenPlayerSlot()) );
 			VectorNormalize( flareScreenDir );
 
 			smokeOrg = smokeOrg + ( flareScreenDir * 2.0f );

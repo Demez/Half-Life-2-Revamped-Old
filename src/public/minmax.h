@@ -1,10 +1,11 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
 // $NoKeywords: $
 //=============================================================================//
 
+#error use basetypes.h
 #ifndef MINMAX_H
 #define MINMAX_H
 

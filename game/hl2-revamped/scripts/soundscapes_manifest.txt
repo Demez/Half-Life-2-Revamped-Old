@@ -1,9 +1,13 @@
-soundscaples_manifest
+soundscapes_manifest
 {
 	"file"		"scripts/soundscapes.txt"
 
 	// List additional soundscape files here
-
+	
+	"file"		"scripts/soundscapes_lostcoast.txt"
+	"file"		"scripts/soundscapes_citadel_episodic.txt"
+	"file"		"scripts/soundscapes_city_episodic.txt"
+		
 	"file"		"scripts/soundscapes_canals.txt"
 	"file"		"scripts/soundscapes_klab.txt"
 	"file"		"scripts/soundscapes_elab.txt"
@@ -13,4 +17,10 @@ soundscaples_manifest
 	"file"		"scripts/soundscapes_coast.txt"
 	"file"		"scripts/soundscapes_prison.txt"
 	"file"		"scripts/soundscapes_trainyard.txt"
+
+	//episode 2
+	"file"		"scripts/soundscapes_silo.txt"
+	"file"		"scripts/soundscapes_outland.txt"	
+	"file"		"scripts/soundscapes_outland2.txt"
+
 }

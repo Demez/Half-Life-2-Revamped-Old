@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -6,8 +6,7 @@
 #include "keyvaluescompiler.h"
 #include "filesystem.h"
 #include "tier1/KeyValues.h"
-
-extern IFileSystem *g_pFullFileSystem;
+#include "tier2/tier2.h"
 
 bool CRunTimeKeyValuesStringTable::ReadStringTable( int numStrings, CUtlBuffer& buf )
 {
@@ -312,7 +311,7 @@ bool CCompiledKeyValuesReader::CreateInPlaceFromData( KeyValues& head, const Fil
 			int idx = helper.Find( search );
 			if ( idx == helper.InvalidIndex() )
 			{
-				return NULL;
+				return false;
 			}
 
 			KeyValues *parent = helper[ idx ].kv;

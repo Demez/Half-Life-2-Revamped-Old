@@ -239,14 +239,9 @@ criterion "ShotInGut" "shotloc" "gut" required weight 0
 
 criterion "EnemyIsMortar" "enemy" "func_tankmortar" required
 
-criterion "NotUsedVortResponse" "UsedVortResponse" "!=1" "required" weight 0
-criterion "IsVortLabUseDisable" "VortLab_Enable" "0" weight 2 required
-
 // Global states
 criterion "IsGordonCriminal" "gordon_precriminal" "0" required
 criterion "IsGordonPreCriminal" "gordon_precriminal" "1" required
-
-criterion "IsMap_d3_c17_09" "map" "d3_c17_09" "required"
 
 // Test rules
 #include "talker/interjections.txt" 

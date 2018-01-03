@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2003, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -12,9 +12,9 @@
 #endif
 
 
-#include "vgui_controls/Panel.h"
+#include "vgui_controls/panel.h"
 #include "tier1/utlstring.h"
-#include "materialsystem/MaterialSystemUtil.h"
+#include "materialsystem/materialsystemutil.h"
 #include "mathlib/vector.h"
 
 
@@ -35,8 +35,6 @@ class CVTFPreviewPanel : public vgui::Panel
 public:
 	// constructor
 	CVTFPreviewPanel( vgui::Panel *pParent, const char *pName );
-	virtual ~CVTFPreviewPanel();
-
 	void SetVTF( const char *pFullPath, bool bLoadImmediately = true );
 	const char *GetVTF() const;
 

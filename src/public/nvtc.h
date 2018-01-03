@@ -1,4 +1,3 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
 /*
  *   Copyright (c) 1997-8  S3 Inc.  All Rights Reserved.
  *
@@ -19,7 +18,13 @@
 #define NVTC_H
 
 #if defined( _WIN32 ) && !defined( _X360 )
+#if _MSC_VER >= 1400
+// This assumes that src\public is somewhere on the path
+// ddraw.h doesn't actually live in the system headers in VS2005.
+#include "..\dx9sdk\include\ddraw.h"
+#else
 #include <ddraw.h>
+#endif
 #endif
 
 // RGB encoding types

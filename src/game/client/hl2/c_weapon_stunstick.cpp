@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -8,8 +8,8 @@
 #include "iviewrender_beams.h"
 #include "beam_shared.h"
 #include "c_weapon__stubs.h"
-#include "materialsystem/imaterial.h"
-#include "clienteffectprecachesystem.h"
+#include "materialsystem/IMaterial.h"
+#include "ClientEffectPrecacheSystem.h"
 #include "beamdraw.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -26,7 +26,7 @@ public:
 	DECLARE_CLIENTCLASS();
 	DECLARE_PREDICTABLE();
 
-	int DrawModel( int flags )
+	int DrawModel( int flags, const RenderableInstance_t &instance )
 	{
 		//FIXME: This sucks, but I can't easily create temp ents...
 
@@ -56,7 +56,7 @@ public:
 			DrawHalo( pMaterial, vEnd, random->RandomFloat( 2.0f, 3.0f ), color );
 		}
 
-		return BaseClass::DrawModel( flags );
+		return BaseClass::DrawModel( flags, instance );
 	}
 
 	// Do part of our effect
@@ -145,7 +145,7 @@ public:
 	//-----------------------------------------------------------------------------
 	RenderGroup_t GetRenderGroup( void )
 	{
-		return RENDER_GROUP_TRANSLUCENT_ENTITY;
+		return RENDER_GROUP_TRANSLUCENT;
 	}
 
 private:

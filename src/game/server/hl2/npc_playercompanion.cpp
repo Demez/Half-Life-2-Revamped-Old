@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -150,7 +150,7 @@ bool CNPC_PlayerCompanion::CreateBehaviors()
 {
 #ifdef HL2_EPISODIC
 	AddBehavior( &m_FearBehavior );
-	AddBehavior( &m_PassengerBehavior );
+//	AddBehavior( &m_PassengerBehavior );
 #endif // HL2_EPISODIC	
 
 	AddBehavior( &m_ActBusyBehavior );
@@ -517,11 +517,11 @@ void CNPC_PlayerCompanion::DoCustomSpeechAI( void )
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
 	
 	// Don't allow this when we're getting in the car
-#ifdef HL2_EPISODIC
-	bool bPassengerInTransition = ( IsInAVehicle() && ( m_PassengerBehavior.GetPassengerState() == PASSENGER_STATE_ENTERING || m_PassengerBehavior.GetPassengerState() == PASSENGER_STATE_EXITING ) );
-#else
+//#ifdef HL2_EPISODIC
+//	bool bPassengerInTransition = ( IsInAVehicle() && ( m_PassengerBehavior.GetPassengerState() == PASSENGER_STATE_ENTERING || m_PassengerBehavior.GetPassengerState() == PASSENGER_STATE_EXITING ) );
+//#else
 	bool bPassengerInTransition = false;
-#endif
+//#endif
 
 	Vector vecEyePosition = EyePosition();
 	if ( bPassengerInTransition == false && pPlayer && pPlayer->FInViewCone( vecEyePosition ) && pPlayer->FVisible( vecEyePosition ) )
@@ -1386,7 +1386,7 @@ void CNPC_PlayerCompanion::HandleAnimEvent( animevent_t *pEvent )
 {
 #ifdef HL2_EPISODIC
 	// Create a flare and parent to our hand
-	if ( pEvent->event == AE_COMPANION_PRODUCE_FLARE )
+	if ( pEvent->Event() == AE_COMPANION_PRODUCE_FLARE )
 	{
 		m_hFlare = static_cast<CPhysicsProp *>(CreateEntityByName( "prop_physics" ));
 		if ( m_hFlare != NULL )
@@ -1403,7 +1403,7 @@ void CNPC_PlayerCompanion::HandleAnimEvent( animevent_t *pEvent )
 	}
 
 	// Start the flare up with proper fanfare
-	if ( pEvent->event == AE_COMPANION_LIGHT_FLARE )
+	if ( pEvent->Event() == AE_COMPANION_LIGHT_FLARE )
 	{
 		if ( m_hFlare != NULL )
 		{
@@ -1414,7 +1414,7 @@ void CNPC_PlayerCompanion::HandleAnimEvent( animevent_t *pEvent )
 	}
 
 	// Drop the flare to the ground
-	if ( pEvent->event == AE_COMPANION_RELEASE_FLARE )
+	if ( pEvent->Event() == AE_COMPANION_RELEASE_FLARE )
 	{
 		// Detach
 		m_hFlare->SetParent( NULL );
@@ -1444,7 +1444,7 @@ void CNPC_PlayerCompanion::HandleAnimEvent( animevent_t *pEvent )
 	}
 #endif // HL2_EPISODIC
 
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 	case EVENT_WEAPON_RELOAD:
 		if ( GetActiveWeapon() )
@@ -2907,7 +2907,7 @@ bool CNPC_PlayerCompanion::OverrideMove( float flInterval )
 			// Handle each type
 			if ( pEntity->m_iClassname == iszEnvFire )
 			{
-				Vector vMins, vMaxs;
+				/*Vector vMins, vMaxs;
 				if ( FireSystem_GetFireDamageDimensions( pEntity, &vMins, &vMaxs ) )
 				{
 					UTIL_TraceLine( WorldSpaceCenter(), pEntity->WorldSpaceCenter(), MASK_FIRE_SOLID, pEntity, COLLISION_GROUP_NONE, &tr );
@@ -2915,7 +2915,7 @@ bool CNPC_PlayerCompanion::OverrideMove( float flInterval )
 					{
 						GetLocalNavigator()->AddObstacle( pEntity->GetAbsOrigin(), ( ( vMaxs.x - vMins.x ) * 1.414 * 0.5 ) + 6.0, AIMST_AVOID_DANGER );
 					}
-				}
+				}*/
 			}
 #ifdef HL2_EPISODIC			
 			else if ( pEntity->m_iClassname == iszNPCTurretFloor )
@@ -3529,6 +3529,7 @@ void CNPC_PlayerCompanion::InputGiveWeapon( inputdata_t &inputdata )
 //------------------------------------------------------------------------------
 void CNPC_PlayerCompanion::InputClearAllOuputs( inputdata_t &inputdata )
 {
+	// Fix it later... [str]
 	datamap_t *dmap = GetDataDescMap();
 	while ( dmap )
 	{
@@ -3538,7 +3539,7 @@ void CNPC_PlayerCompanion::InputClearAllOuputs( inputdata_t &inputdata )
 			typedescription_t *dataDesc = &dmap->dataDesc[i];
 			if ( ( dataDesc->fieldType == FIELD_CUSTOM ) && ( dataDesc->flags & FTYPEDESC_OUTPUT ) )
 			{
-				CBaseEntityOutput *pOutput = (CBaseEntityOutput *)((int)this + (int)dataDesc->fieldOffset[0]);
+				CBaseEntityOutput *pOutput = (CBaseEntityOutput *)((int)this + (int)dataDesc->fieldOffset/*[TD_OFFSET_NORMAL]*/);
 				pOutput->DeleteAllElements();
 				/*
 				int nConnections = pOutput->NumberOfElements();

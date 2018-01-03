@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: The various ammo types for HL2	
 //
@@ -895,7 +895,7 @@ int CItem_AmmoCrate::OnTakeDamage( const CTakeDamageInfo &info )
 //-----------------------------------------------------------------------------
 void CItem_AmmoCrate::HandleAnimEvent( animevent_t *pEvent )
 {
-	if ( pEvent->event == AE_AMMOCRATE_PICKUP_AMMO )
+	if ( pEvent->Event() == AE_AMMOCRATE_PICKUP_AMMO )
 	{
 		if ( m_hActivator )
 		{

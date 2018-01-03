@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -8,9 +8,6 @@
 #include "usermessages.h"
 #include "shake.h"
 #include "voice_gamemgr.h"
-
-// NVNT include to register in haptic user messages
-#include "haptics/haptic_msgs.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -45,9 +42,4 @@ void RegisterUserMessages( void )
 	usermessages->Register( "LogoTimeMsg", 4 );
 	usermessages->Register( "AchievementEvent", -1 );
 	usermessages->Register( "UpdateJalopyRadar", -1 );
-
-#ifndef _X360
-	// NVNT register haptic user messages
-	RegisterHapticMessages();
-#endif
 }

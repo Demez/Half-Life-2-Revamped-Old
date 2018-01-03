@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -47,11 +47,19 @@ public:
 // NOTE: The #define trickery here is necessary for backwards compat:
 // this interface used to lie in the vstdlib library.
 //-----------------------------------------------------------------------------
-PLATFORM_INTERFACE ICommandLine *CommandLine_Tier0();
+PLATFORM_INTERFACE ICommandLine *CommandLine();
 
-#if !defined( VSTDLIB_BACKWARD_COMPAT )
-#define CommandLine CommandLine_Tier0
+
+//-----------------------------------------------------------------------------
+// Process related functions
+//-----------------------------------------------------------------------------
+PLATFORM_INTERFACE const tchar *Plat_GetCommandLine();
+#ifndef _WIN32
+// helper function for OS's that don't have a ::GetCommandLine() call
+PLATFORM_INTERFACE void Plat_SetCommandLine( const char *cmdLine );
 #endif
+PLATFORM_INTERFACE const char *Plat_GetCommandLineA();
+
 
 #endif // TIER0_ICOMMANDLINE_H
 

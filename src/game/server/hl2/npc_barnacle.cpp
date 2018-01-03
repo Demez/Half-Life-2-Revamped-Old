@@ -1,9 +1,9 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:		barnacle - stationary ceiling mounted 'fishing' monster	
 //
 // $Workfile:     $
-// $Date:         $
+// $Date:         $ 
 // $NoKeywords: $
 //=============================================================================//
 
@@ -35,7 +35,7 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-float GetCurrentGravity( void );
+extern ConVar	sv_gravity;
 ConVar	sk_barnacle_health( "sk_barnacle_health","0");
 
 static ConVar npc_barnacle_swallow( "npc_barnacle_swallow", "0", 0, "Use prototype swallow code." );
@@ -113,9 +113,7 @@ CNPC_Barnacle::CNPC_Barnacle(void)
 {
 	m_flRestUnitsAboveGround = 16.0f;
 	m_flNextBloodTime = -1.0f;
-#ifndef _XBOX
 	m_nBloodColor = BLOOD_COLOR_YELLOW;
-#endif
 	m_bPlayerWasStanding = false;
 }
 
@@ -164,9 +162,7 @@ BEGIN_DATADESC( CNPC_Barnacle )
 	DEFINE_FIELD( m_hLastSpitEnemy, FIELD_EHANDLE ),
 	DEFINE_FIELD( m_nShakeCount, FIELD_INTEGER ),
 	DEFINE_FIELD( m_flNextBloodTime, FIELD_TIME ),
-#ifndef _XBOX
 	DEFINE_FIELD( m_nBloodColor, FIELD_INTEGER ),
-#endif
 	DEFINE_FIELD( m_vecBloodPos, FIELD_POSITION_VECTOR ),
 	DEFINE_FIELD( m_flBarnaclePullSpeed, FIELD_FLOAT ),
 	DEFINE_FIELD( m_flLocalTimer, FIELD_TIME ),
@@ -231,17 +227,19 @@ void CNPC_Barnacle::ComputeWorldSpaceSurroundingBox( Vector *pVecWorldMins, Vect
 //=========================================================
 void CNPC_Barnacle::HandleAnimEvent( animevent_t *pEvent )
 {
-	if ( pEvent->event== AE_BARNACLE_PUKEGIB )
+	int nEvent = pEvent->Event();
+
+	if ( nEvent == AE_BARNACLE_PUKEGIB )
 	{
 		CGib::SpawnSpecificGibs( this, 1, 50, 1, "models/gibs/hgibs_rib.mdl");
 		return;
 	}
-	if ( pEvent->event == AE_BARNACLE_BITE )
+	if ( nEvent == AE_BARNACLE_BITE )
 	{
 		BitePrey();
 		return;
 	}
-	if ( pEvent->event == AE_BARNACLE_SPIT )
+	if ( nEvent == AE_BARNACLE_SPIT )
 	{
 		SpitPrey();
 		return;
@@ -893,7 +891,7 @@ void CNPC_Barnacle::PullEnemyTorwardsMouth( bool bAdjustEnemyOrigin )
 			{
 				// get us there in a second
 				Vector desiredVelocity;
-				float distToMove = min(distFromCenter, 24.0f * dt);
+				float distToMove = MIN(distFromCenter, 24.0f * dt);
 				desiredVelocity.x = vToCenter.x * distToMove;
 				desiredVelocity.y = vToCenter.y * distToMove;
 				desiredVelocity.z = 0;
@@ -1089,7 +1087,7 @@ void CNPC_Barnacle::LiftRagdoll( float flBiteZOffset )
 			/*
 			Vector pos[MAXSTUDIOBONES];
 			Quaternion q[MAXSTUDIOBONES];
-			matrix3x4_t pBoneToWorld[MAXSTUDIOBONES];
+			matrix3x4a_t pBoneToWorld[MAXSTUDIOBONES];
 			CalcPoseSingle( pStudioHdr, pos, q, pAnimating->GetSequence(), pAnimating->m_flCycle, pAnimating->GetPoseParameterArray(), BONE_USED_BY_ANYTHING );
 			Studio_BuildMatrices( pStudioHdr, vec3_angle, vec3_origin, pos, q, -1, pBoneToWorld, BONE_USED_BY_ANYTHING );
 
@@ -1099,7 +1097,7 @@ void CNPC_Barnacle::LiftRagdoll( float flBiteZOffset )
 			*/
 
 			// Get the current bone matrix
-			matrix3x4_t pBoneToWorld[MAXSTUDIOBONES];
+			matrix3x4a_t pBoneToWorld[MAXSTUDIOBONES];
 			pAnimating->SetupBones( pBoneToWorld, BONE_USED_BY_ANYTHING );
 
 			// Apply the forces to the ragdoll
@@ -1413,10 +1411,10 @@ void CNPC_Barnacle::AttachTongueToTarget( CBaseEntity *pTouchEnt, Vector vecGrab
 
 		CTraceFilterSkipTwoEntities traceFilter( this, pTouchEnt, COLLISION_GROUP_NONE );
 		trace_t placementTrace;
-		UTIL_TraceHull( origin, origin, pTouchEnt->WorldAlignMins(), pTouchEnt->WorldAlignMaxs(), MASK_NPCSOLID, &traceFilter, &placementTrace );
+		UTIL_TraceHull( origin, origin, pTouchEnt->WorldAlignMins(), pTouchEnt->WorldAlignMaxs(), GetAITraceMask(), &traceFilter, &placementTrace );
 		if ( placementTrace.startsolid )
 		{
-			UTIL_TraceHull( origin + Vector(0, 0, 24), origin, pTouchEnt->WorldAlignMins(), pTouchEnt->WorldAlignMaxs(), MASK_NPCSOLID, &traceFilter, &placementTrace );
+			UTIL_TraceHull( origin + Vector(0, 0, 24), origin, pTouchEnt->WorldAlignMins(), pTouchEnt->WorldAlignMaxs(), GetAITraceMask(), &traceFilter, &placementTrace );
 			if ( !placementTrace.startsolid )
 			{
 				pTouchEnt->SetAbsOrigin( placementTrace.endpos );
@@ -1677,10 +1675,8 @@ void CNPC_Barnacle::BitePrey( void )
 	// and hide it.
 	if ( enemyClass == CLASS_ANTLION )
 	{
-		
-#ifndef _XBOX
 		m_nBloodColor = pVictim->BloodColor(); 
-#endif
+
 		m_flNextBloodTime = 0.0f;
 		SprayBlood();
 
@@ -1736,9 +1732,7 @@ void CNPC_Barnacle::BitePrey( void )
 	m_flNextBloodTime = 0.0f;
 	
 	// NOTE: This was too confusing to people with the more recognizable blood -- jdw
-#ifndef _XBOX
 	m_nBloodColor = pVictim->BloodColor(); 
-#endif
 	CollisionProp()->NormalizedToWorldSpace( Vector( 0.5f, 0.5f, 0.0f ), &m_vecBloodPos );
 
 	// m_hRagdoll->SetOverlaySequence( ACT_DIE_BARNACLE_SWALLOW );
@@ -1763,13 +1757,8 @@ void CNPC_Barnacle::SprayBlood()
 	Vector jitterPos = RandomVector( -8, 8 );
 	jitterPos.z = 0.0f;
 
-#ifndef _XBOX
 	UTIL_BloodSpray( m_vecBloodPos + jitterPos, Vector( 0,0,-1),
 		m_nBloodColor, RandomInt( 4, 8 ), RandomInt(0,2) == 0 ? FX_BLOODSPRAY_ALL : FX_BLOODSPRAY_CLOUD );
-#else
-	UTIL_BloodSpray( m_vecBloodPos + jitterPos, Vector( 0,0,-1),
-		BLOOD_COLOR_YELLOW, RandomInt( 4, 8 ), RandomInt(0,2) == 0 ? FX_BLOODSPRAY_ALL : FX_BLOODSPRAY_CLOUD );
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1810,10 +1799,7 @@ void CNPC_Barnacle::SwallowPrey( void )
 
 #if HL2_EPISODIC
 		// digest poisonous things for just a moment before being killed by them (it looks wierd if it's instant)
-		// Parentheses were probably intended around the ?: part of the expression, but putting them there now
-		// would change the behavior which is undesirable, so parentheses were placed around the '+' to suppress
-		// compiler warnings.
-		m_flDigestFinish = ( gpGlobals->curtime + m_bSwallowingPoison ) ? 0.48f : 10.0f;
+		m_flDigestFinish = gpGlobals->curtime + m_bSwallowingPoison ? 0.48f : 10.0f;
 #else
 		m_flDigestFinish = gpGlobals->curtime + 10.0;
 #endif
@@ -1975,7 +1961,7 @@ void CNPC_Barnacle::UpdateTongue( void )
 
 	// Compute the rest length of the tongue based on the spring. 
 	// This occurs when mg == kx or x = mg/k
-	float flRestStretch = (BARNACLE_TONGUE_TIP_MASS * GetCurrentGravity()) / BARNACLE_TONGUE_SPRING_CONSTANT_HANGING;
+	float flRestStretch = (BARNACLE_TONGUE_TIP_MASS * sv_gravity.GetFloat()) / BARNACLE_TONGUE_SPRING_CONSTANT_HANGING;
 
 	// FIXME: HACK!!!! The code above doesn't quite make the tip end up in the right place.
 	// but it should. So, we're gonna hack it the rest of the way.
@@ -2063,11 +2049,7 @@ void CNPC_Barnacle::Event_Killed( const CTakeDamageInfo &info )
 	}
 
 	// Puke blood
-#ifdef _XBOX
-	UTIL_BloodSpray( GetAbsOrigin(), Vector(0,0,-1), BLOOD_COLOR_YELLOW, 8, FX_BLOODSPRAY_ALL );
-#else
 	UTIL_BloodSpray( GetAbsOrigin(), Vector(0,0,-1), BLOOD_COLOR_RED, 8, FX_BLOODSPRAY_ALL );
-#endif
 
 	// Put blood on the ground if near enough
 	trace_t bloodTrace;
@@ -2075,11 +2057,7 @@ void CNPC_Barnacle::Event_Killed( const CTakeDamageInfo &info )
 	
 	if ( bloodTrace.fraction < 1.0f )
 	{
-#ifdef _XBOX
-		UTIL_BloodDecalTrace( &bloodTrace, BLOOD_COLOR_YELLOW );
-#else
 		UTIL_BloodDecalTrace( &bloodTrace, BLOOD_COLOR_RED );
-#endif
 	}
 
 	EmitSound( "NPC_Barnacle.Die" );
@@ -2314,6 +2292,8 @@ void CNPC_Barnacle::Precache()
 
 	PrecacheModel( "models/props_junk/rock001a.mdl" );
 
+	UTIL_BloodSprayPrecache();
+
 	BaseClass::Precache();
 }	
 
@@ -2435,7 +2415,7 @@ CBaseEntity *CNPC_Barnacle::TongueTouchEnt ( float *pflLength )
 	int iMask = MASK_SOLID_BRUSHONLY;
 
 #ifdef HL2_EPISODIC
-	iMask = MASK_NPCSOLID;
+	iMask = GetAITraceMask();
 #endif
 
 	// trace once to hit architecture and see if the tongue needs to change position.

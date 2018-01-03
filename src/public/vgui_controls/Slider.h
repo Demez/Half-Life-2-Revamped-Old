@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -86,8 +86,6 @@ protected:
 	virtual void SendSliderMovedMessage();
 	virtual void SendSliderDragStartMessage();
 	virtual void SendSliderDragEndMessage();
-
-	void ClampRange();
 
 	bool _dragging;
 	int _nobPos[2];

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -14,14 +14,15 @@
 #endif
 
 #include <math.h>
-#include <stdlib.h>		// For rand(). We really need a library!
+#include <stdlib.h>		// for rand(). we really need a library!
 #include <float.h>
 #if !defined( _X360 )
-#include <xmmintrin.h>	// For SSE
+#include <xmmintrin.h>	// for sse
 #endif
-#include "basetypes.h"	// For vec_t, put this somewhere else?
+#include "tier0/basetypes.h"	// For vec_t, put this somewhere else?
 #include "tier0/dbg.h"
 #include "mathlib/math_pfns.h"
+#include "mathlib/vector.h"
 
 // forward declarations
 class Vector;
@@ -44,6 +45,7 @@ public:
 
 	// Initialization
 	void Init(vec_t ix=0.0f, vec_t iy=0.0f, vec_t iz=0.0f, vec_t iw=0.0f);
+	void Init( const Vector& src, vec_t iw=0.0f );
 
 	// Got any nasty NAN's?
 	bool IsValid() const;
@@ -78,6 +80,13 @@ public:
 	Vector4D&	operator/=(const Vector4D &v);		
 	Vector4D&	operator/=(float s);					
 
+	Vector4D	operator-( void ) const;
+	Vector4D	operator*( float fl ) const;
+	Vector4D	operator/( float fl ) const;
+	Vector4D	operator*( const Vector4D& v ) const;
+	Vector4D	operator+( const Vector4D& v ) const;
+	Vector4D	operator-( const Vector4D& v ) const;
+
 	// negate the Vector4D components
 	void	Negate(); 
 
@@ -91,9 +100,9 @@ public:
 	bool IsZero( float tolerance = 0.01f ) const
 	{
 		return (x > -tolerance && x < tolerance &&
-				y > -tolerance && y < tolerance &&
-				z > -tolerance && z < tolerance &&
-				w > -tolerance && w < tolerance);
+			y > -tolerance && y < tolerance &&
+			z > -tolerance && z < tolerance &&
+			w > -tolerance && w < tolerance);
 	}
 
 	// Get the distance from this Vector4D to the other one.
@@ -236,19 +245,25 @@ inline Vector4D::Vector4D(const Vector4D &vOther)
 //-----------------------------------------------------------------------------
 // initialization
 //-----------------------------------------------------------------------------
-
 inline void Vector4D::Init( vec_t ix, vec_t iy, vec_t iz, vec_t iw )
 { 
 	x = ix; y = iy; z = iz;	w = iw;
 	Assert( IsValid() );
 }
 
+inline void Vector4D::Init( const Vector& src, vec_t iw )
+{
+	x = src.x; y = src.y; z = src.z; w = iw;
+	Assert( IsValid() );
+}
+
+
 inline void Vector4D::Random( vec_t minVal, vec_t maxVal )
 {
-	x = minVal + ((vec_t)rand() / VALVE_RAND_MAX) * (maxVal - minVal);
-	y = minVal + ((vec_t)rand() / VALVE_RAND_MAX) * (maxVal - minVal);
-	z = minVal + ((vec_t)rand() / VALVE_RAND_MAX) * (maxVal - minVal);
-	w = minVal + ((vec_t)rand() / VALVE_RAND_MAX) * (maxVal - minVal);
+	x = minVal + ((vec_t)rand() / RAND_MAX) * (maxVal - minVal);
+	y = minVal + ((vec_t)rand() / RAND_MAX) * (maxVal - minVal);
+	z = minVal + ((vec_t)rand() / RAND_MAX) * (maxVal - minVal);
+	w = minVal + ((vec_t)rand() / RAND_MAX) * (maxVal - minVal);
 }
 
 inline void Vector4DClear( Vector4D& a )
@@ -409,6 +424,52 @@ inline Vector4D& Vector4D::operator*=(Vector4D const& v)
 	w *= v.w;
 	Assert( IsValid() );
 	return *this;
+}
+
+inline Vector4D Vector4D::operator-(void) const
+{ 
+	return Vector4D(-x,-y,-z,-w);				
+}
+
+inline Vector4D Vector4D::operator+(const Vector4D& v) const	
+{ 
+	Vector4D res;
+	Vector4DAdd( *this, v, res );
+	return res;	
+}
+
+inline Vector4D Vector4D::operator-(const Vector4D& v) const	
+{ 
+	Vector4D res;
+	Vector4DSubtract( *this, v, res );
+	return res;	
+}
+
+
+inline Vector4D Vector4D::operator*(float fl) const	
+{ 
+	Vector4D res;
+	Vector4DMultiply( *this, fl, res );
+	return res;	
+}
+
+inline Vector4D Vector4D::operator*(const Vector4D& v) const	
+{ 
+	Vector4D res;
+	Vector4DMultiply( *this, v, res );
+	return res;	
+}
+
+inline Vector4D Vector4D::operator/(float fl) const	
+{ 
+	Vector4D res;
+	Vector4DDivide( *this, fl, res );
+	return res;	
+}
+
+inline Vector4D operator*( float fl, const Vector4D& v )	
+{ 
+	return v * fl; 
 }
 
 inline Vector4D& Vector4D::operator/=(float fl)	
@@ -650,10 +711,10 @@ inline void Vector4DWeightMAD( vec_t w, Vector4DAligned const& vInA, Vector4DAli
 	vOutB.z += vInB.z * w;
 	vOutB.w += vInB.w * w;
 #else
-    __vector4 temp;
+	__vector4 temp;
 
-    temp = __lvlx( &w, 0 );
-    temp = __vspltw( temp, 0 );
+	temp = __lvlx( &w, 0 );
+	temp = __vspltw( temp, 0 );
 
 	vOutA.AsM128() = __vmaddfp( vInA.AsM128(), temp, vOutA.AsM128() );
 	vOutB.AsM128() = __vmaddfp( vInB.AsM128(), temp, vOutB.AsM128() );
@@ -666,16 +727,16 @@ inline void Vector4DWeightMADSSE( vec_t w, Vector4DAligned const& vInA, Vector4D
 
 #if !defined( _X360 )
 	// Replicate scalar float out to 4 components
-    __m128 packed = _mm_set1_ps( w );
+	__m128 packed = _mm_set1_ps( w );
 
 	// 4D SSE Vector MAD
 	vOutA.AsM128() = _mm_add_ps( vOutA.AsM128(), _mm_mul_ps( vInA.AsM128(), packed ) );
 	vOutB.AsM128() = _mm_add_ps( vOutB.AsM128(), _mm_mul_ps( vInB.AsM128(), packed ) );
 #else
-    __vector4 temp;
+	__vector4 temp;
 
-    temp = __lvlx( &w, 0 );
-    temp = __vspltw( temp, 0 );
+	temp = __lvlx( &w, 0 );
+	temp = __vspltw( temp, 0 );
 
 	vOutA.AsM128() = __vmaddfp( vInA.AsM128(), temp, vOutA.AsM128() );
 	vOutB.AsM128() = __vmaddfp( vInB.AsM128(), temp, vOutB.AsM128() );

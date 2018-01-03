@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,6 +13,7 @@
 #endif
 
 #include <vgui/VGUI.h>
+#include <vgui/MouseCode.h>
 
 #ifdef GetClassName
 #undef GetClassName
@@ -75,6 +76,9 @@ public:
 	virtual bool IsAutoDeleteSet() = 0;
 	// deletes this
 	virtual void DeletePanel() = 0;
+
+	// Mouse Codes...
+	virtual bool HandleMouseCode( MouseCode code ) = 0;
 
 	// interfaces
 	virtual void *QueryInterface(EInterfaceID id) = 0;

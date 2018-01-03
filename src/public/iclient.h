@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -13,9 +13,11 @@
 #include <inetmsghandler.h>
 #include "tier0/platform.h"
 #include "userid.h"
+#include "tier1/utlvector.h"
 
 class IServer;
 class INetMessage;
+struct NetMessageCvar_t;
 
 abstract_class IClient : public INetChannelHandler
 {
@@ -23,7 +25,7 @@ public:
 	virtual	~IClient() {}
 
 	// connect client
-	virtual void	Connect(const char * szName, int nUserID, INetChannel *pNetChannel, bool bFakePlayer, int clientChallenge ) = 0;
+	virtual void	Connect( const char * szName, int nUserID, INetChannel *pNetChannel, bool bFakePlayer, CUtlVector< NetMessageCvar_t > *pVecCvars = NULL ) = 0;
 
 	// set the client in a pending state waiting for a new game
 	virtual void	Inactivate( void ) = 0;
@@ -32,7 +34,7 @@ public:
 	virtual	void	Reconnect( void ) = 0;				// froce reconnect
 
 	// disconnects a client with a given reason
-	virtual void	Disconnect( PRINTF_FORMAT_STRING const char *reason, ... ) = 0;
+	virtual void	Disconnect( const char *reason, ... ) = 0;
 
 	virtual int				GetPlayerSlot() const = 0; // returns client slot (usually entity number-1)
 	virtual int				GetUserID() const = 0; // unique ID on this server 
@@ -60,9 +62,9 @@ public:
 	// execute a client command
 	virtual bool	ExecuteStringCommand( const char *s ) = 0;
 	// send client a network message
-	virtual bool	SendNetMsg(INetMessage &msg, bool bForceReliable = false) = 0;
+	virtual bool	SendNetMsg(INetMessage &msg, bool bForceReliable = false, bool bVoice = false ) = 0;
 	// send client a text message
-	virtual void	ClientPrintf (PRINTF_FORMAT_STRING const char *fmt, ...) = 0;
+	virtual void	ClientPrintf (const char *fmt, ...) = 0;
 
 		// client has established network channels, nothing else
 	virtual bool	IsConnected( void ) const = 0;
@@ -74,19 +76,28 @@ public:
 	virtual bool	IsFakeClient( void ) const = 0;
 	// returns true, if client is a HLTV proxy
 	virtual bool	IsHLTV( void ) const = 0;
-#if defined( REPLAY_ENABLED )
 	// returns true, if client is a Replay proxy
 	virtual bool	IsReplay( void ) const = 0;
-#else
-	// !KLUDGE! Reduce number of #ifdefs required
-	inline bool		IsReplay( void ) const { return false; }
-#endif
 	// returns true, if client hears this player
 	virtual bool	IsHearingClient(int index) const = 0;
 	// returns true, if client hears this player by proximity
 	virtual bool	IsProximityHearingClient(int index) const = 0;
 
 	virtual void	SetMaxRoutablePayloadSize( int nMaxRoutablePayloadSize ) = 0;
+
+	// returns true, if client is a split screen user
+	virtual bool	IsSplitScreenUser( void ) const = 0;
+
+	virtual bool	CheckConnect( void ) = 0;
+
+	virtual	bool	IsLowViolenceClient( void ) const = 0;
+
+	virtual IClient	*GetSplitScreenOwner() = 0;
+
+	// get the number of players on this client's machine
+	virtual int		GetNumPlayers() = 0;
+
+	virtual bool	IsHumanPlayer() const = 0;
 };
 
 #endif // ICLIENT_H

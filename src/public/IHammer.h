@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: The application object.
 //
@@ -51,6 +51,19 @@ public:
 	virtual const char *GetDefaultModFullPath() = 0;
 
 	virtual int MainLoop() = 0;
+
+	// When Foundry is using Hammer:
+	// - Hammer doesn't create its main window.
+	// - Select windows (like the object properties dialog) are parented to the game's window and share its message pump
+	// - A CMapView3D is created and renders only entities on top of the game's 3D window
+	virtual void InitFoundryMode( CreateInterfaceFn factory, void *hGameWnd, const char *szGameDir ) = 0;
+
+	// Called when the engine's window took the focus.
+	virtual void NoteEngineGotFocus() = 0;
+	
+	// Used in Foundry to show and hide the full Hammer UI.
+	virtual bool IsHammerVisible() = 0;
+	virtual void ToggleHammerVisible() = 0;
 };	
 
 #endif // IHAMMER_H

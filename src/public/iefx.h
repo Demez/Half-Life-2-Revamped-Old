@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -30,15 +30,16 @@ public:
 	// Retrieve decal texture index from decal by name
 	virtual	int				Draw_DecalIndexFromName	( char *name ) = 0;
 
-	// Apply decal
+	// Apply decal. See decal_private.h for flags (FDECAL_*)
+	// If normal is specified, don't decal surfaces antiparallel with normal
 	virtual	void			DecalShoot				( int textureIndex, int entity, 
 		const model_t *model, const Vector& model_origin, const QAngle& model_angles, 
-		const Vector& position, const Vector *saxis, int flags ) = 0;
+		const Vector& position, const Vector *saxis, int flags, const Vector *pNormal = NULL ) = 0;
 
-	// Apply colored decal
+	// Apply colored decal. See decal_private.h for flags (FDECAL_*)
 	virtual	void			DecalColorShoot				( int textureIndex, int entity, 
 		const model_t *model, const Vector& model_origin, const QAngle& model_angles, 
-		const Vector& position, const Vector *saxis, int flags, const color32 &rgbaColor  ) = 0;
+		const Vector& position, const Vector *saxis, int flags, const color32 &rgbaColor, const Vector *pNormal = NULL ) = 0;
 
 	virtual void			PlayerDecalShoot( IMaterial *material, void *userdata, int entity, const model_t *model, 
 		const Vector& model_origin, const QAngle& model_angles, 

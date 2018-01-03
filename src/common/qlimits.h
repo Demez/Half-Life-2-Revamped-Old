@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:
 //
@@ -24,7 +24,7 @@
 
 
 // Resource counts;
-#define MAX_MODEL_INDEX_BITS	12   // sent as a short
+#define MAX_MODEL_INDEX_BITS	10   // sent as a short
 #define	MAX_MODELS				(1<<MAX_MODEL_INDEX_BITS)
 
 #define MAX_GENERIC_INDEX_BITS	9

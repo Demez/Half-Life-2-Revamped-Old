@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -14,44 +14,13 @@
 
 #include <vgui/VGUI.h>
 #include <vgui_controls/ToggleButton.h>
-#include <vgui_controls/TextImage.h>
+
+class CheckImage;
 
 namespace vgui
 {
 
 class TextImage;
-
-//-----------------------------------------------------------------------------
-// Purpose: Check box image
-//-----------------------------------------------------------------------------
-class CheckImage : public TextImage
-{
-public:
-	CheckImage(CheckButton *CheckButton) : TextImage( "g" )
-	{
-		_CheckButton = CheckButton;
-
-		SetSize(20, 13);
-	}
-
-	virtual void Paint();
-
-	virtual void SetColor(Color color)
-	{
-		_borderColor1 = color;
-		_borderColor2 = color;
-		_checkColor = color;
-	}
-
-	Color _borderColor1;
-	Color _borderColor2;
-	Color _checkColor;
-
-	Color _bgColor;
-
-private:
-	CheckButton *_CheckButton;
-};
 
 //-----------------------------------------------------------------------------
 // Purpose: Tick-box button
@@ -67,6 +36,9 @@ public:
 	// Check the button
 	virtual void SetSelected(bool state );
 
+	// Left4Dead:
+	void SetCheckDrawMode( int mode );
+
 	// sets whether or not the state of the check can be changed
 	// if this is set to false, then no input in the code or by the user can change it's state
 	virtual void SetCheckButtonCheckable(bool state);
@@ -74,10 +46,6 @@ public:
 
 	Color GetDisabledFgColor() { return _disabledFgColor; }
 	Color GetDisabledBgColor() { return _disabledBgColor; }
-
-	CheckImage *GetCheckImage() { return _checkBoxImage; }
-
-	virtual void SetHighlightColor(Color fgColor);
 
 protected:
 	virtual void ApplySchemeSettings(IScheme *pScheme);
@@ -96,9 +64,9 @@ private:
 	enum { CHECK_INSET = 6 };
 	bool m_bCheckButtonCheckable;
 	CheckImage *_checkBoxImage;
+	Color _selectedFgColor;
 	Color _disabledFgColor;
 	Color _disabledBgColor;
-	Color _highlightFgColor;
 };
 
 } // namespace vgui

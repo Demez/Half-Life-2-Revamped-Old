@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -18,7 +18,7 @@ public:
 	void OnDataChanged( DataUpdateType_t updateType );
 	int DrawModel( int flags );
 	
-	RenderGroup_t	GetRenderGroup( void )	{ return RENDER_GROUP_TRANSLUCENT_ENTITY; }
+	RenderGroup_t	GetRenderGroup( void )	{ return RENDER_GROUP_TRANSLUCENT; }
 
 private:
 
@@ -54,7 +54,7 @@ void C_MortarShell::OnDataChanged( DataUpdateType_t updateType )
 	if ( updateType == DATA_UPDATE_CREATED )
 	{
 		m_flStarttime = gpGlobals->curtime;
-		AddToLeafSystem( RENDER_GROUP_TRANSLUCENT_ENTITY );
+		AddToLeafSystem( RENDER_GROUP_TRANSLUCENT );
 
 		m_pEmitter = CSimpleEmitter::Create( "C_EntityDissolve" );
 		m_pEmitter->SetSortOrigin( GetAbsOrigin() );

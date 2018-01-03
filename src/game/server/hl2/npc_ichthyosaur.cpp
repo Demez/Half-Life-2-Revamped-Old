@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:		Ichthyosaur - buh bum...  buh bum...
 //
@@ -1010,7 +1010,7 @@ int CNPC_Ichthyosaur::MeleeAttack1Conditions( float flDot, float flDist )
 //-----------------------------------------------------------------------------
 void CNPC_Ichthyosaur::HandleAnimEvent( animevent_t *pEvent )
 {
-	switch ( pEvent->event )
+	switch ( pEvent->Event() )
 	{
 	case ICH_AE_BITE:
 		Bite();

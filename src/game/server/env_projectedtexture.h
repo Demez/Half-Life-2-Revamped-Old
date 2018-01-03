@@ -19,6 +19,7 @@ public:
 
 	CEnvProjectedTexture();
 	bool KeyValue( const char *szKeyName, const char *szValue );
+	virtual bool GetKeyValue( const char *szKeyName, char *szValue, int iMaxLen );
 
 	// Always transmit to clients
 	virtual int UpdateTransmitState();
@@ -26,10 +27,8 @@ public:
 
 	void InputTurnOn( inputdata_t &inputdata );
 	void InputTurnOff( inputdata_t &inputdata );
-	//projtex caching
 	void InputAlwaysUpdateOn( inputdata_t &inputdata );
 	void InputAlwaysUpdateOff( inputdata_t &inputdata );
-	//
 	void InputSetFOV( inputdata_t &inputdata );
 	void InputSetTarget( inputdata_t &inputdata );
 	void InputSetCameraSpace( inputdata_t &inputdata );
@@ -44,37 +43,28 @@ public:
 
 	CNetworkHandle( CBaseEntity, m_hTargetEntity );
 
-//private:
+private:
 
 	CNetworkVar( bool, m_bState );
-	//projtex caching
-	CNetworkVar(bool, m_bAlwaysUpdate);
-	//
+	CNetworkVar( bool, m_bAlwaysUpdate );
 	CNetworkVar( float, m_flLightFOV );
 	CNetworkVar( bool, m_bEnableShadows );
-	//simple projection
-	//CNetworkVar(bool, m_bSimpleProjection);
-	//
+	CNetworkVar( bool, m_bSimpleProjection );
 	CNetworkVar( bool, m_bLightOnlyTarget );
 	CNetworkVar( bool, m_bLightWorld );
 	CNetworkVar( bool, m_bCameraSpace );
-	//projtex brightness
-	//CNetworkVar(float, m_flBrightnessScale);
-	//
-	//projtex Light Color
-	//CNetworkColor32(m_LightColor);
-	//
-	CNetworkVector( m_LinearFloatLightColor );
+	CNetworkVar( float, m_flBrightnessScale );
+	CNetworkColor32( m_LightColor );
+	CNetworkVar( float, m_flColorTransitionTime );
 	CNetworkVar( float, m_flAmbient );
 	CNetworkString( m_SpotlightTextureName, MAX_PATH );
 	CNetworkVar( int, m_nSpotlightTextureFrame );
 	CNetworkVar( float, m_flNearZ );
 	CNetworkVar( float, m_flFarZ );
 	CNetworkVar( int, m_nShadowQuality );
-	//projtex projectionsize
-	//CNetworkVar(float, m_flProjectionSize);
-	//projtex rotation
-	//CNetworkVar(float, m_flRotation);
+	CNetworkVar( float, m_flProjectionSize );
+	CNetworkVar( float, m_flRotation );
 };
+
 
 #endif	// ENV_PROJECTEDTEXTURE_H

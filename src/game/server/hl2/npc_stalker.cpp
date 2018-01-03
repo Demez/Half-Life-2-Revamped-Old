@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -1000,7 +1000,7 @@ void CNPC_Stalker::DrawAttackBeam(void)
 
 	CalcBeamPosition();
 
-	bool bInWater = (UTIL_PointContents ( tr.endpos ) & MASK_WATER)?true:false;
+	bool bInWater = (UTIL_PointContents ( tr.endpos, MASK_WATER ) & MASK_WATER)?true:false;
 	// ---------------------------------------------
 	//	Update the beam position
 	// ---------------------------------------------
@@ -1244,7 +1244,7 @@ int CNPC_Stalker::RangeAttack1Conditions( float flDot, float flDist )
 //-----------------------------------------------------------------------------
 void CNPC_Stalker::HandleAnimEvent( animevent_t *pEvent )
 {
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 		case NPC_EVENT_LEFTFOOT:
 			{
@@ -1380,8 +1380,8 @@ void CNPC_Stalker::AddZigZagToPath(void)
 
 		// Now make sure that we can still get to the zigzag position and the waypoint
 		AIMoveTrace_t moveTrace1, moveTrace2;
-		GetMoveProbe()->MoveLimit( NAV_GROUND, GetAbsOrigin(), zigZagPos, MASK_NPCSOLID, NULL, &moveTrace1);
-		GetMoveProbe()->MoveLimit( NAV_GROUND, zigZagPos, waypointPos, MASK_NPCSOLID, NULL, &moveTrace2);
+		GetMoveProbe()->MoveLimit( NAV_GROUND, GetAbsOrigin(), zigZagPos, GetAITraceMask(), NULL, &moveTrace1);
+		GetMoveProbe()->MoveLimit( NAV_GROUND, zigZagPos, waypointPos, GetAITraceMask(), NULL, &moveTrace2);
 		if ( !IsMoveBlocked( moveTrace1 ) && !IsMoveBlocked( moveTrace2 ) )
 		{
 			GetNavigator()->PrependWaypoint( zigZagPos, NAV_GROUND, bits_WP_TO_DETOUR );

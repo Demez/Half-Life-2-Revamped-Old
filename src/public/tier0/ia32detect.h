@@ -1,17 +1,17 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
 // $NoKeywords: $
 //
-//=============================================================================//
+//===========================================================================//
 #ifndef IA32DETECT_H
 #define IA32DETECT_H
 
-#ifdef PLATFORM_WINDOWS_PC
-#include <intrin.h>
+#ifdef COMPILER_MSVC64
+extern "C" void __cpuid(int* CPUInfo, int InfoType);
+#pragma intrinsic (__cpuid)
 #endif
-
 /*
     This section from http://iss.cs.cornell.edu/ia32.htm
 
@@ -129,12 +129,12 @@ public:
 
 		for (uint32 i = 1; i <= m; i++)
 		{
+
 #ifdef COMPILER_MSVC64
 			__cpuid((int *) (d + (i-1) * 4), i);
 
 #else
 			uint32 *t = d + (i - 1) * 4;
-
 			__asm
 			{
 				mov	eax, i;
@@ -238,24 +238,30 @@ private:
 	{
 		uint32 m;
 
-		int data[4 + 1];
+#ifdef COMPILER_MSVC64
+		int data[4];
 		tchar * s1;
-
+		
 		s1 = (tchar *) &data[1];
+		s1[12] = '\0';
 		__cpuid(data, 0);
-		data[4] = 0;
-		// Returns something like this:
-		//  data[0] = 0x0000000b
-		//  data[1] = 0x756e6547 	Genu
-		//  data[2] = 0x6c65746e 	ntel
-		//  data[3] = 0x49656e69 	ineI
-		//  data[4] = 0x00000000
-
 		m = data[0];
-		int t = data[2];
-		data[2] = data[3];
-		data[3] = t;
 		vendor_name = s1;
+#else
+		tchar s1[13];
+
+		s1[12] = '\0';
+		__asm
+		{
+			xor	eax, eax;
+			cpuid;
+			mov	m, eax;
+			mov dword ptr s1 + 0, ebx;
+			mov dword ptr s1 + 4, edx;
+			mov dword ptr s1 + 8, ecx;
+		}
+		vendor_name = s1;
+#endif
 		return m;
 	}
 

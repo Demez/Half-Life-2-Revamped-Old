@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -42,6 +42,8 @@ public:
 	// Retrieve sound spatialization info for the specified sound on this entity
 	// Return false to indicate sound is not audible
 	virtual bool			GetSoundSpatialization( SpatializationInfo_t& info ) = 0;
+
+	virtual bool			IsBlurred( void ) = 0;
 };
 
 

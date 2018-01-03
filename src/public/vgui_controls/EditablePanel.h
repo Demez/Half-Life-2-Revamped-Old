@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright � 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -36,6 +36,8 @@ public:
 	// the keyvalues outside of here if you want to prevent file accesses in the middle of the game.
 	virtual void LoadControlSettings(const char *dialogResourceName, const char *pathID = NULL, KeyValues *pPreloadedKeyValues = NULL, KeyValues *pConditions = NULL);
 	virtual void ApplySettings(KeyValues *inResourceData);
+
+	virtual void PerformLayout();
 
 	// sets the name of this dialog so it can be saved in the user config area
 	// use dialogID to differentiate multiple instances of the same dialog
@@ -93,7 +95,7 @@ public:
 	// Get the panel with the specified hotkey
 	virtual Panel *HasHotkey(wchar_t key);
 
-	virtual void OnKeyCodePressed( KeyCode code );
+	virtual void OnKeyCodeTyped( KeyCode code );
 
 	// Handle information requests
 	virtual bool RequestInfo(KeyValues *data);
@@ -155,7 +157,6 @@ private:
 	// the wide and tall to which all controls are locked - used for autolayout deltas
 	char *m_pszConfigName;
 	int m_iConfigID;
-	bool m_bShouldSkipAutoResize;
 };
 
 } // namespace vgui

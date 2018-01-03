@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -162,7 +162,7 @@ void CNPC_Barney::Weapon_Equip( CBaseCombatWeapon *pWeapon )
 //---------------------------------------------------------
 void CNPC_Barney::HandleAnimEvent( animevent_t *pEvent )
 {
-	switch( pEvent->event )
+	switch( pEvent->Event() )
 	{
 	case NPC_EVENT_LEFTFOOT:
 		{

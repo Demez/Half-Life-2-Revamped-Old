@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose:	Antlion Guard
 //
@@ -254,7 +254,7 @@ public:
 	virtual void	UpdateEfficiency( bool bInPVS )	{ SetEfficiency( ( GetSleepState() != AISS_AWAKE ) ? AIE_DORMANT : AIE_NORMAL ); SetMoveEfficiency( AIME_NORMAL ); }
 	virtual void	PrescheduleThink( void );
 	virtual void	GatherConditions( void );
-	virtual void	TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator );
+	virtual void	TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr );
 	virtual void	StartTask( const Task_t *pTask );
 	virtual void	RunTask( const Task_t *pTask );
 	virtual void	StopLoopingSounds();
@@ -615,7 +615,7 @@ impactdamagetable_t gAntlionGuardImpactDamageTable =
 	45,		// large mass in kg 
 	2,		// large mass scale (anything over 500kg does 4X as much energy to read from damage table)
 	1,		// large mass falling scale
-	0,		// my min velocity
+	0,		// my MIN velocity
 };
 
 //-----------------------------------------------------------------------------
@@ -1641,7 +1641,7 @@ void CNPC_AntlionGuard::Footstep( bool bHeavy )
 	}
 }
 
-float GetCurrentGravity( void );
+extern ConVar sv_gravity;
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -1665,7 +1665,7 @@ void CNPC_AntlionGuard::GetPhysicsShoveDir( CBaseEntity *pObject, float flMass, 
 		vecToss = VecCheckThrow( this, vecStart, vecTarget, flSpeed * 1.25f, 1.0f );
 		if ( vecToss == vec3_origin )
 		{
-			const float flGravity = GetCurrentGravity();
+			const float flGravity = sv_gravity.GetFloat();
 
 			vecToss = (vecTarget - vecStart);
 
@@ -1691,7 +1691,7 @@ void CNPC_AntlionGuard::GetPhysicsShoveDir( CBaseEntity *pObject, float flMass, 
 //-----------------------------------------------------------------------------
 void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 {
-	if ( pEvent->event == AE_ANTLIONGUARD_CHARGE_EARLYOUT )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_CHARGE_EARLYOUT )
 	{
 		// Robin: Removed this because it usually made him look less intelligent, not more.
 		//		  This code left here so we don't get warnings in the console.
@@ -1714,7 +1714,7 @@ void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_ANTLIONGUARD_SHOVE_PHYSOBJECT )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_SHOVE_PHYSOBJECT )
 	{
 		if ( m_hPhysicsTarget == NULL )
 		{
@@ -1839,7 +1839,7 @@ void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 	
-	if ( pEvent->event == AE_ANTLIONGUARD_CHARGE_HIT )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_CHARGE_HIT )
 	{
 		UTIL_ScreenShake( GetAbsOrigin(), 32.0f, 4.0f, 1.0f, 512, SHAKE_START );
 		EmitSound( "NPC_AntlionGuard.HitHard" );
@@ -1876,14 +1876,14 @@ void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_ANTLIONGUARD_SHOVE )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_SHOVE )
 	{
 		EmitSound("NPC_AntlionGuard.StepLight", pEvent->eventtime );
 		Shove();
 		return;
 	}
 
-	if ( pEvent->event == AE_ANTLIONGUARD_FOOTSTEP_LIGHT )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_FOOTSTEP_LIGHT )
 	{
 		if ( HasSpawnFlags(SF_ANTLIONGUARD_INSIDE_FOOTSTEPS) )
 		{
@@ -1904,7 +1904,7 @@ void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_ANTLIONGUARD_FOOTSTEP_HEAVY )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_FOOTSTEP_HEAVY )
 	{
 		if ( HasSpawnFlags(SF_ANTLIONGUARD_INSIDE_FOOTSTEPS) )
 		{
@@ -1925,7 +1925,7 @@ void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 	
-	if ( pEvent->event == AE_ANTLIONGUARD_VOICE_GROWL )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_VOICE_GROWL )
 	{
 		StartSounds();
 
@@ -1954,7 +1954,7 @@ void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 	}
 		
 
-	if ( pEvent->event == AE_ANTLIONGUARD_VOICE_BARK )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_VOICE_BARK )
 	{
 		StartSounds();
 
@@ -1970,7 +1970,7 @@ void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 	
-	if ( pEvent->event == AE_ANTLIONGUARD_VOICE_ROAR )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_VOICE_ROAR )
 	{
 		StartSounds();
 
@@ -1987,7 +1987,7 @@ void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_ANTLIONGUARD_VOICE_PAIN )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_VOICE_PAIN )
 	{
 		StartSounds();
 
@@ -2001,7 +2001,7 @@ void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_ANTLIONGUARD_VOICE_SQUEEZE )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_VOICE_SQUEEZE )
 	{	
 		StartSounds();
 
@@ -2018,7 +2018,7 @@ void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_ANTLIONGUARD_VOICE_SCRATCH )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_VOICE_SCRATCH )
 	{	
 		StartSounds();
 
@@ -2035,7 +2035,7 @@ void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 		
-	if ( pEvent->event == AE_ANTLIONGUARD_VOICE_GRUNT )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_VOICE_GRUNT )
 	{	
 		StartSounds();
 
@@ -2049,7 +2049,7 @@ void CNPC_AntlionGuard::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-	if ( pEvent->event == AE_ANTLIONGUARD_BURROW_OUT )
+	if ( pEvent->Event() == AE_ANTLIONGUARD_BURROW_OUT )
 	{
 		EmitSound( "NPC_Antlion.BurrowOut" );
 
@@ -2278,7 +2278,7 @@ int CNPC_AntlionGuard::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 //			*ptr - 
 //			bitsDamageType - 
 //-----------------------------------------------------------------------------
-void CNPC_AntlionGuard::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator )
+void CNPC_AntlionGuard::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vecDir, trace_t *ptr )
 {
 	CTakeDamageInfo info = inputInfo;
 
@@ -2298,7 +2298,7 @@ void CNPC_AntlionGuard::TraceAttack( const CTakeDamageInfo &inputInfo, const Vec
 		info.SetDamage( 1.0f );
 	}
 
-	BaseClass::TraceAttack( info, vecDir, ptr, pAccumulator );
+	BaseClass::TraceAttack( info, vecDir, ptr );
 }
 
 //-----------------------------------------------------------------------------
@@ -2508,7 +2508,7 @@ void CNPC_AntlionGuard::StartTask( const Task_t *pTask )
 	case TASK_ANTLIONGUARD_GET_CHASE_PATH_ENEMY_TOLERANCE:
 		{
 			// Chase the enemy, but allow local navigation to succeed if it gets within the goal tolerance
-			GetNavigator()->SetLocalSucceedOnWithinTolerance( true );
+//			GetNavigator()->SetLocalSucceedOnWithinTolerance( true );
 
 			if ( GetNavigator()->SetGoal( GOALTYPE_ENEMY ) )
 			{
@@ -2520,7 +2520,7 @@ void CNPC_AntlionGuard::StartTask( const Task_t *pTask )
 				TaskFail(FAIL_NO_ROUTE);
 			}
 
-			GetNavigator()->SetLocalSucceedOnWithinTolerance( false );
+//			GetNavigator()->SetLocalSucceedOnWithinTolerance( false );
 		}
 		break;
 
@@ -3726,7 +3726,7 @@ bool CNPC_AntlionGuard::IsUnreachable(CBaseEntity *pEntity)
 
 	// Note that it's ok to remove elements while I'm iterating
 	// as long as I iterate backwards and remove them using FastRemove
-	for (int i=m_UnreachableEnts.Size()-1;i>=0;i--)
+	for (int i=m_UnreachableEnts.Count()-1;i>=0;i--)
 	{
 		// Remove any dead elements
 		if (m_UnreachableEnts[i].hUnreachableEnt == NULL)

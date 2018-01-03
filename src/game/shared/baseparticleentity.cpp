@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//===== Copyright © 1996-2005, Valve Corporation, All rights reserved. ======//
 //
 // Purpose: 
 //
@@ -42,7 +42,7 @@ CBaseParticleEntity::~CBaseParticleEntity( void )
 #if defined( CLIENT_DLL )
 	if ( ToolsEnabled() && ( m_nToolParticleEffectId != TOOLPARTICLESYSTEMID_INVALID ) && clienttools->IsInRecordingMode() )
 	{
-		KeyValues *msg = new KeyValues( "ParticleSystem_Destroy" );
+		KeyValues *msg = new KeyValues( "OldParticleSystem_Destroy" );
 		msg->SetInt( "id", m_nToolParticleEffectId );
 		m_nToolParticleEffectId = TOOLPARTICLESYSTEMID_INVALID; 
 	}

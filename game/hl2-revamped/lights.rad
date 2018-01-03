@@ -181,20 +181,14 @@ forcetextureshadow props_wasteland/interior_fence003f.mdl
 forcetextureshadow props_wasteland/interior_fence004a.mdl
 forcetextureshadow props_wasteland/interior_fence004b.mdl
 
-//stuff from hl2
 forcetextureshadow props_foliage/cattails.mdl 
 forcetextureshadow props_foliage/shrub_01a.mdl
 forcetextureshadow props_foliage/oak_tree01.mdl
 forcetextureshadow props_foliage/ivy_01.mdl
-//
 forcetextureshadow props_c17/fence01a.mdl
 forcetextureshadow props_c17/fence01b.mdl
 forcetextureshadow props_c17/fence02a.mdl
 forcetextureshadow props_c17/fence03a.mdl
-//
 forcetextureshadow props_wasteland/powertower01.mdl
-//
 forcetextureshadow props_buildings/watertower_002a.mdl
-//
 forcetextureshadow props_canal/canal_bridge03b.mdl
-//

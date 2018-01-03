@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2002, Valve LLC, All rights reserved. ============
 //
 // Purpose: 
 //
@@ -13,7 +13,7 @@
 #include "ienginevgui.h"
 #include <vgui/ILocalize.h>
 #include <vgui/ISurface.h>
-#include <vgui/IVGui.h>
+#include <vgui/IVGUI.h>
 #include <vgui_controls/EditablePanel.h>
 #include <vgui_controls/Label.h>
 #include <vgui_controls/ImagePanel.h>
@@ -33,14 +33,14 @@ using namespace vgui;
 // Purpose: 
 //-----------------------------------------------------------------------------
 
-DECLARE_HUDELEMENT_DEPTH( CAchievementNotificationPanel, 100 );
+// DECLARE_HUDELEMENT_DEPTH( CAchievementNotificationPanel, 100 );
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 CAchievementNotificationPanel::CAchievementNotificationPanel( const char *pElementName ) : CHudElement( pElementName ), BaseClass( NULL, "AchievementNotificationPanel" )
 {
-	Panel *pParent = g_pClientMode->GetViewport();
+	Panel *pParent = GetClientMode()->GetViewport();
 	SetParent( pParent );
 
 	m_flHideTime = 0;
@@ -108,7 +108,7 @@ void CAchievementNotificationPanel::FireGameEvent( IGameEvent * event )
 			{				
 				Msg( "Steam not running, achievement progress notification not displayed\n" );
 			}
-			else 
+			else
 			{
 				// use Steam to show achievement progress UI
 				steamapicontext->SteamUserStats()->IndicateAchievementProgress( pchName, iCur, iMax );
@@ -138,7 +138,7 @@ void CAchievementNotificationPanel::FireGameEvent( IGameEvent * event )
 			Q_wcsncpy( szFmt, pchFmt, sizeof( szFmt ) );
 
 			g_pVGuiLocalize->ConstructString( szText, sizeof( szText ), szFmt, 3, szLocalizedName, szNumFound, szNumTotal );
-			AddNotification( pchName, g_pVGuiLocalize->Find( "#GameUI_Achievement_Progress" ), szText );
+			AddNotification( pchName, g_pVGuiLocalize->FindSafe( "#GameUI_Achievement_Progress" ), szText );
 		}
 	}
 }

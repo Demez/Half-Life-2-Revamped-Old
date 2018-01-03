@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -9,9 +9,9 @@
 #include "c_ai_basenpc.h"
 #include "engine/ivmodelinfo.h"
 #include "rope_physics.h"
-#include "materialsystem/imaterialsystem.h"
-#include "fx_line.h"
-#include "engine/ivdebugoverlay.h"
+#include "materialsystem/IMaterialSystem.h"
+#include "FX_Line.h"
+#include "engine/IVDebugOverlay.h"
 #include "bone_setup.h"
 #include "model_types.h"
 
@@ -56,7 +56,7 @@ public:
 	void	OnDataChanged( DataUpdateType_t updateType );
 	void	InitTonguePhysics( void );
 	void	ClientThink( void );
-	void	StandardBlendingRules( CStudioHdr *pStudioHdr, Vector pos[], Quaternion q[], float currentTime, int boneMask );
+	void	StandardBlendingRules( CStudioHdr *pStudioHdr, Vector pos[], QuaternionAligned q[], float currentTime, int boneMask );
 
 	void	SetVecTip( const float *pPosition );
 	void	SetAltitude( float flAltitude );
@@ -200,7 +200,7 @@ void C_NPC_Barnacle::ClientThink( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void C_NPC_Barnacle::StandardBlendingRules( CStudioHdr *hdr, Vector pos[], Quaternion q[], float currentTime, int boneMask )
+void C_NPC_Barnacle::StandardBlendingRules( CStudioHdr *hdr, Vector pos[], QuaternionAligned q[], float currentTime, int boneMask )
 {
 	BaseClass::StandardBlendingRules( hdr, pos, q, currentTime, boneMask );
 

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Projectile shot by mortar synth.
 //
@@ -94,7 +94,7 @@ void CGrenadeEnergy::Animate( void )
 
 	if (flLifeLeft < 0)
 	{
-		SetRenderColorA( 0 );
+		SetRenderAlpha( 0 );
 		SetThink(NULL);
 		UTIL_Remove(this);
 	}
@@ -109,7 +109,7 @@ void CGrenadeEnergy::Animate( void )
 
 	StudioFrameAdvance( );
 
-	SetRenderColorA( flLifeLeft );
+	SetRenderAlpha( flLifeLeft );
 }
 
 void CGrenadeEnergy::Event_Killed( const CTakeDamageInfo &info )

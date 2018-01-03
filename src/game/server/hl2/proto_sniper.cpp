@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -918,6 +918,9 @@ void CProtoSniper::Precache( void )
 	PrecacheScriptSound( "NPC_Sniper.Reload" );
 	PrecacheScriptSound( "NPC_Sniper.SonicBoom" );
 
+	PrecacheEffect("StriderTracer");
+	PrecacheEffect("CommandPointer");
+
 	BaseClass::Precache();
 }
 
@@ -1439,7 +1442,7 @@ int CProtoSniper::SelectSchedule ( void )
 	if( HasCondition( COND_SNIPER_SWEEP_TARGET ) )
 	{
 		// Sweep a target. Scripted by level designers!
-		if( ( m_hSweepTarget && m_hSweepTarget->HasSpawnFlags( SF_SNIPERTARGET_NOINTERRUPT ) ) || m_bSweepHighestPriority )
+		if( m_hSweepTarget && m_hSweepTarget->HasSpawnFlags( SF_SNIPERTARGET_NOINTERRUPT ) || m_bSweepHighestPriority )
 		{
 			return SCHED_PSNIPER_SWEEP_TARGET_NOINTERRUPT;
 		}
@@ -3261,7 +3264,7 @@ void CSniperBullet::BulletThink( void )
 				//Msg("-");
 				vecCursor += m_vecDir * STEP_SIZE;
 
-				if( UTIL_PointContents( vecCursor ) != CONTENTS_SOLID )
+				if( UTIL_PointContents( vecCursor , CONTENTS_SOLID) )
 				{
 					// Passed out of a solid! 
 					SetAbsOrigin( vecCursor );

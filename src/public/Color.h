@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright (c) 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -11,6 +11,8 @@
 #ifdef _WIN32
 #pragma once
 #endif
+
+#include "tier0/basetypes.h"
 
 //-----------------------------------------------------------------------------
 // Purpose: Basic handler for an rgb set of colors
@@ -93,6 +95,25 @@ public:
 	{
 		SetRawColor( rhs.GetRawColor() );
 		return *this;
+	}
+
+	Color &operator=( const color32 &rhs )
+	{
+		_color[0] = rhs.r;
+		_color[1] = rhs.g;
+		_color[2] = rhs.b;
+		_color[3] = rhs.a;
+		return *this;
+	}
+
+	color32 ToColor32() const
+	{
+		color32 newColor;
+		newColor.r = _color[0];
+		newColor.g = _color[1];
+		newColor.b = _color[2];
+		newColor.a = _color[3];
+		return newColor;
 	}
 
 private:

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // List of perforce files and operations
 //
@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "vgui_controls/Frame.h"
+#include "vgui_controls/frame.h"
 #include "tier1/utlvector.h"
 #include "tier1/utlstring.h"
 #include "p4lib/ip4.h"
