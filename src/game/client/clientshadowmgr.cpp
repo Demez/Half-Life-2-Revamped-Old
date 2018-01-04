@@ -135,13 +135,13 @@ ConVar r_flashlightdepthtexture( "r_flashlightdepthtexture", "1" );
 #if defined( _X360 )
 ConVar r_flashlightdepthreshigh( "r_flashlightdepthreshigh", "512" );
 #else
-ConVar r_flashlightdepthreshigh( "r_flashlightdepthreshigh", "8192" );
+ConVar r_flashlightdepthreshigh( "r_flashlightdepthreshigh", "2048" );
 #endif
 
 #if defined( _X360 )
 ConVar r_flashlightdepthres( "r_flashlightdepthres", "512" );
 #else
-ConVar r_flashlightdepthres( "r_flashlightdepthres", "8192" ); //1024
+ConVar r_flashlightdepthres( "r_flashlightdepthres", "1024" );
 #endif
 
 #if defined( _X360 )
@@ -770,7 +770,7 @@ void CTextureAllocator::GetTextureRect(TextureHandle_t handle, int& x, int& y, i
 //-----------------------------------------------------------------------------
 // Defines how big of a shadow texture we should be making per caster...
 //-----------------------------------------------------------------------------
-#define TEXEL_SIZE_PER_CASTER_SIZE	2.0f 
+#define TEXEL_SIZE_PER_CASTER_SIZE	4.0f 
 #define MAX_FALLOFF_AMOUNT 240
 #define MAX_CLIP_PLANE_COUNT 4
 #define SHADOW_CULL_TOLERANCE 0.5f

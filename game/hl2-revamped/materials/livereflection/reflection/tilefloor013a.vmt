@@ -1,0 +1,28 @@
+"lightmappedreflective"
+{
+	"$basetexture" "tile/tilefloor013a"	
+	"$surfaceprop" "tile"
+	//"$bumpmap" "tile/tilefloor013a_normal"
+	"$normalmap" "tile/tilefloor013a_normal"
+	//"$envmap" "env_cubemap"
+	//"$normalmapalphaenvmapmask" 1
+	//"$envmapcontrast" 1
+	//"$envmapsaturation" 1
+	//"$envmaptint" "[ .75 .75 .75]"
+	
+	"$translucent" 0
+	
+	"$refracttexture" "_rt_WaterRefraction"
+	"$refractamount" "0"
+	"$refracttint" "[1 1 1]"
+
+	"$reflecttexture" "_rt_WaterReflection"
+	"$reflectamount" "0" //"0.0625"
+	"$reflecttint" "[0.75 0.75 0.75]"
+	
+	"$fresnelpower" "0.1"
+	"$minreflectivity" "0.25"
+	"$maxreflectivity" "0.75"
+	
+	"$bumpframe" "0"
+}

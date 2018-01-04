@@ -16,6 +16,7 @@
 		"SteamAppId"		"630"			// Alien Swarm
 		"SearchPaths"
 		{
+			"Game"	"|gameinfo_path|custom/*"
 			"Game"	"|gameinfo_path|."
 
 			// Default ("./") path for ASW is "/steamapps/common/Alien Swarm", so we can easily go up and mount SFM content

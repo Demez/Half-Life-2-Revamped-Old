@@ -15,10 +15,15 @@
 
 //-----------------------------------------------------------------------------
 
-inline float round( float f )
+inline float V_round(float f)
 {
-	return (float)( (int)( f + 0.5 ) );
+	return (float)((int)(f + 0.5));
 }
+
+//inline float round( float f )
+//{
+//	return (float)( (int)( f + 0.5 ) );
+//}
 
 //-----------------------------------------------------------------------------
 // CAI_MoveSolver
@@ -133,7 +138,8 @@ bool CAI_MoveSolver::Solve( const AI_MoveSuggestion_t *pSuggestions, int nSugges
 
 		// Convert arc values to solution indices relative to right post. Right is angle down, left is angle up.
 		float halfSpan	= current.arc.span * 0.5;
-		int   center 	= round( ( halfSpan * NUM_SOLUTIONS ) / 360 );
+		int   center 	= V_round( ( halfSpan * NUM_SOLUTIONS ) / 360 );
+		//int   center 	= V_round( ( halfSpan * NUM_SOLUTIONS ) / 360 );
 		int   left		= ( current.arc.span * NUM_SOLUTIONS ) / 360;
 
 		float angRight   = current.arc.center - halfSpan;
