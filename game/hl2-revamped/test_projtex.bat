@@ -1,1 +1,0 @@
-@"D:\SteamLibrary\steamapps\common\Source SDK Base 2013 Singleplayer/hl2.exe" -noborder -windowed -dev -allowdebug -game D:\sourceengine\personal-projects\Half-Life-2-Revamped\game\hl2-revamped +map projtex_testroom_01 +god +sv_infinite_aux_power 1 +r_flashlightdrawfrustum 1

@@ -1,8 +1,8 @@
 versioninfo
 {
 	"editorversion" "400"
-	"editorbuild" "3927"
-	"mapversion" "6736"
+	"editorbuild" "7397"
+	"mapversion" "6737"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -26,7 +26,7 @@ viewsettings
 world
 {
 	"id" "0"
-	"mapversion" "6736"
+	"mapversion" "6737"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -65962,6 +65962,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2252.13 -1039.62 -3480"
@@ -65984,6 +65986,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_90degree01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2248.13 -1039.62 -3225"
@@ -66006,6 +66010,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_connector01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2248.13 -1039.62 -3599"
@@ -66028,6 +66034,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2252.13 -1039.62 -3529"
@@ -66050,6 +66058,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_connector01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2248.13 -1039.62 -3504"
@@ -66072,6 +66082,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2252.13 -1039.62 -3576"
@@ -66094,6 +66106,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2252.13 -1039.62 -3433"
@@ -66116,6 +66130,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_connector01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2248.13 -1039.62 -3408"
@@ -66138,6 +66154,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2252.13 -1039.62 -3384"
@@ -66160,6 +66178,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2252.13 -1039.62 -3337"
@@ -66182,6 +66202,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_connector01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2248.13 -1039.62 -3312"
@@ -66204,6 +66226,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2252.13 -1039.62 -3288"
@@ -66226,6 +66250,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_short.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2252.13 -1039.62 -3249"
@@ -66248,6 +66274,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2252.13 -1039.62 -3622"
@@ -66291,17 +66319,17 @@ entity
 	"targetname" "propeller_02_break_trigger"
 	connections
 	{
-		"OnTrigger" "propeller_02,Setbodygroup,0,0,-1"
-		"OnTrigger" "propeller_02_spinsensor_2,Kill,,0,-1"
-		"OnTrigger" "propeller_02_spinsensor_1,Kill,,0,-1"
-		"OnTrigger" "propeller_02_lever_01,Lock,,3,-1"
-		"OnTrigger" "propeller_02_blade_break_1,PlaySound,,3,-1"
-		"OnTrigger" "propeller_02_playermovement,Disable,,4,-1"
-		"OnTrigger" "propeller_02_hinge,Break,,2.95,-1"
-		"OnTrigger" "propeller_02_motor,Kill,,2.95,-1"
-		"OnTrigger" "propeller_02_lever_01,Close,,3,-1"
-		"OnTrigger" "propeller_02_thruster,Activate,,3,-1"
-		"OnTrigger" "propeller_02,EnableShadow,,3.5,-1"
+		"OnTrigger" "propeller_02Setbodygroup00-1"
+		"OnTrigger" "propeller_02_spinsensor_2Kill0-1"
+		"OnTrigger" "propeller_02_spinsensor_1Kill0-1"
+		"OnTrigger" "propeller_02_lever_01Lock3-1"
+		"OnTrigger" "propeller_02_blade_break_1PlaySound3-1"
+		"OnTrigger" "propeller_02_playermovementDisable4-1"
+		"OnTrigger" "propeller_02_hingeBreak2.95-1"
+		"OnTrigger" "propeller_02_motorKill2.95-1"
+		"OnTrigger" "propeller_02_lever_01Close3-1"
+		"OnTrigger" "propeller_02_thrusterActivate3-1"
+		"OnTrigger" "propeller_02EnableShadow3.5-1"
 	}
 	solid
 	{
@@ -66475,19 +66503,19 @@ entity
 	"wait" "-1"
 	connections
 	{
-		"OnClose" "propeller_02_physcannon_spin_rl_1,Enable,,0,-1"
-		"OnOpen" "propeller_02_physcannon_spin_rl_1,Disable,,0,-1"
-		"OnClose" "propeller_02_break_trigger,Disable,,0,-1"
-		"OnOpen" "propeller_02_break_trigger,Enable,,0,-1"
-		"OnClose" "propeller_02_backfire_timer_1,Disable,,0,-1"
-		"OnOpen" "propeller_02_backfire_timer_1,Enable,,0,-1"
-		"OnClose" "propeller_02_spindown_wav,PlaySound,,0,-1"
-		"OnClose" "propeller_02_spinning_wav,StopSound,,0,-1"
-		"OnClose" "propeller_02_spinup_wav,StopSound,,0,-1"
-		"OnOpen" "propeller_02_spinup_wav,PlaySound,,0,-1"
-		"OnOpen" "propeller_02_spinning_wav,PlaySound,,0,-1"
-		"OnClose" "propeller_02_motor,TurnOff,,0,-1"
-		"OnOpen" "propeller_02_motor,TurnOn,,0,-1"
+		"OnClose" "propeller_02_physcannon_spin_rl_1Enable0-1"
+		"OnOpen" "propeller_02_physcannon_spin_rl_1Disable0-1"
+		"OnClose" "propeller_02_break_triggerDisable0-1"
+		"OnOpen" "propeller_02_break_triggerEnable0-1"
+		"OnClose" "propeller_02_backfire_timer_1Disable0-1"
+		"OnOpen" "propeller_02_backfire_timer_1Enable0-1"
+		"OnClose" "propeller_02_spindown_wavPlaySound0-1"
+		"OnClose" "propeller_02_spinning_wavStopSound0-1"
+		"OnClose" "propeller_02_spinup_wavStopSound0-1"
+		"OnOpen" "propeller_02_spinup_wavPlaySound0-1"
+		"OnOpen" "propeller_02_spinning_wavPlaySound0-1"
+		"OnClose" "propeller_02_motorTurnOff0-1"
+		"OnOpen" "propeller_02_motorTurnOn0-1"
 	}
 	solid
 	{
@@ -66608,7 +66636,7 @@ entity
 	"UseRandomTime" "1"
 	connections
 	{
-		"OnTimer" "propeller_02_backfire_rl_1,Trigger,,0,-1"
+		"OnTimer" "propeller_02_backfire_rl_1Trigger0-1"
 	}
 	"origin" "-1922.14 -1289.98 -3660"
 	editor
@@ -66627,7 +66655,7 @@ entity
 	"targetname" "propeller_02_backfire_rl_1"
 	connections
 	{
-		"OnTrigger" "propeller_02_backfire_wav_1,PlaySound,,0,-1"
+		"OnTrigger" "propeller_02_backfire_wav_1PlaySound0-1"
 	}
 	"origin" "-1905.68 -1271.57 -3651"
 	editor
@@ -66703,6 +66731,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "0"
 	"model" "models/props_c17/TrapPropeller_Engine.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1911.68 -1312.02 -3655"
 	editor
@@ -66763,8 +66793,8 @@ entity
 	"threshold" "1000"
 	connections
 	{
-		"OnLessThan" "propeller_02,Setbodygroup,0,0,-1"
-		"OnGreaterThanOrEqualTo" "propeller_02,Setbodygroup,1,0,-1"
+		"OnLessThan" "propeller_02Setbodygroup00-1"
+		"OnGreaterThanOrEqualTo" "propeller_02Setbodygroup10-1"
 	}
 	"origin" "-1908.5 -1345.5 -3608"
 	editor
@@ -66877,6 +66907,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypole01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-4062.36 -574.769 -3137"
 	editor
@@ -66897,6 +66929,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypole01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1770.5 -1993.74 -3337"
 	editor
@@ -67134,6 +67168,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_interiors/LightBulb01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-3928.02 -438.316 -3257.17"
@@ -67201,6 +67237,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypole01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-3520 -72 -3585"
 	editor
@@ -67450,6 +67488,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_wasteland/rockcliff05e.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-6048 -240 -2879"
@@ -67471,6 +67511,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_wasteland/rockcliff05a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5801.07 -224.628 -3007"
@@ -68213,6 +68255,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypole01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-3360 -944 -3594"
 	editor
@@ -68386,6 +68430,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_corner.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3667.24 -879.975 -3360"
@@ -68407,6 +68453,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_end.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3649 -859 -3340"
@@ -68429,6 +68477,8 @@ entity
 	"fadescale" "1"
 	"lightingorigin" "ladder1_origin"
 	"model" "models/props_c17/metalladder002.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3634 -1176 -3435"
@@ -68792,6 +68842,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-3801.22 -65.1572 -3308"
 	editor
@@ -68810,6 +68862,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-3801.22 -193.157 -3308"
 	editor
@@ -68830,6 +68884,8 @@ entity
 	"fademindist" "1000"
 	"fadescale" "1"
 	"model" "models/props_c17/metalladder002.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3678 324 -3456"
@@ -68852,6 +68908,8 @@ entity
 	"fadescale" "1"
 	"lightingorigin" "ladder2_origin"
 	"model" "models/props_c17/metalladder002.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3012 -1352 -3367"
@@ -68873,6 +68931,8 @@ entity
 	"fademindist" "1000"
 	"fadescale" "1"
 	"model" "models/props_c17/metalladder002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3012 -1352 -3368"
@@ -69839,8 +69899,8 @@ entity
 	"targetname" "roofzombie_maker6"
 	connections
 	{
-		"OnSpawnNPC" "roofzombie6_sound,PlaySound,,0,-1"
-		"OnSpawnNPC" "roofzombie6_seq,BeginSequence,,0.3,-1"
+		"OnSpawnNPC" "roofzombie6_soundPlaySound0-1"
+		"OnSpawnNPC" "roofzombie6_seqBeginSequence0.3-1"
 	}
 	"origin" "-2496 -816 -3111"
 	editor
@@ -69864,7 +69924,7 @@ entity
 	"targetname" "roofzombie6_seq"
 	connections
 	{
-		"OnEndSequence" "roofzombie6,Kill,,0,-1"
+		"OnEndSequence" "roofzombie6Kill0-1"
 	}
 	"origin" "-2048 -1024 -3231"
 	editor
@@ -70819,6 +70879,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/wheel01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"spawnflags" "0"
 	"origin" "-2168 -1932.11 -3395.38"
@@ -72924,6 +72986,8 @@ entity
 	"fademindist" "500"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_corner.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1875.24 -1839.97 -3504"
@@ -72945,6 +73009,8 @@ entity
 	"fademindist" "500"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1953 -1855 -3484"
@@ -72966,6 +73032,8 @@ entity
 	"fademindist" "600"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1857 -1772 -3484"
@@ -72987,6 +73055,8 @@ entity
 	"fademindist" "600"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_short.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1857 -1692 -3484"
@@ -74044,6 +74114,8 @@ entity
 	"fademindist" "600"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1859.56 -1919 -3612"
@@ -75601,6 +75673,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/pulleywheels_small01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"spawnflags" "0"
 	"origin" "-2363.32 -814.063 -3435.88"
@@ -75622,6 +75696,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/pulleywheels_small01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"spawnflags" "0"
 	"origin" "-2366.49 -792.58 -3435.88"
@@ -75643,6 +75719,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/pulleywheels_small01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"spawnflags" "0"
 	"origin" "-2369.77 -771.838 -3435.88"
@@ -76997,8 +77075,8 @@ entity
 	"targetname" "roofzombie_maker7"
 	connections
 	{
-		"OnSpawnNPC" "roofzombie7_sound,PlaySound,,0.3,-1"
-		"OnSpawnNPC" "roofzombie7_seq,BeginSequence,,0.3,-1"
+		"OnSpawnNPC" "roofzombie7_soundPlaySound0.3-1"
+		"OnSpawnNPC" "roofzombie7_seqBeginSequence0.3-1"
 	}
 	"origin" "-3584 -1408 -3095"
 	editor
@@ -77168,7 +77246,7 @@ entity
 	"targetname" "roofzombie_maker8"
 	connections
 	{
-		"OnSpawnNPC" "roofzombie8_seq,BeginSequence,,0.3,-1"
+		"OnSpawnNPC" "roofzombie8_seqBeginSequence0.3-1"
 	}
 	"origin" "-3584 -1504 -3095"
 	editor
@@ -77192,7 +77270,7 @@ entity
 	"targetname" "roofzombie7_seq"
 	connections
 	{
-		"OnEndSequence" "roofzombie7,Kill,,0,-1"
+		"OnEndSequence" "roofzombie7Kill0-1"
 	}
 	"origin" "-2960 -1576 -3207"
 	editor
@@ -77216,7 +77294,7 @@ entity
 	"targetname" "roofzombie8_seq"
 	connections
 	{
-		"OnEndSequence" "roofzombie8,Kill,,0,-1"
+		"OnEndSequence" "roofzombie8Kill0-1"
 	}
 	"origin" "-2976 -1760 -3207"
 	editor
@@ -77236,7 +77314,7 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "roofzombie6_expl,Explode,,0,-1"
+		"OnTrigger" "roofzombie6_explExplode0-1"
 	}
 	solid
 	{
@@ -79524,6 +79602,8 @@ entity
 	"fademindist" "500"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_medium.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2049 -1855 -3484"
@@ -80016,6 +80096,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypole02b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1632 -1632 -3672"
 	editor
@@ -81279,6 +81361,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-1632 -680 -3656.1"
@@ -81300,6 +81384,8 @@ entity
 	"fademindist" "1000"
 	"fadescale" "1"
 	"model" "models/props_c17/metalladder002.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1052.25 -1404.25 -3664"
@@ -81321,6 +81407,8 @@ entity
 	"fademindist" "1000"
 	"fadescale" "1"
 	"model" "models/props_c17/metalladder002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1052.25 -1404.25 -3537"
@@ -81340,6 +81428,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/fence01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1120.22 -1275.93 -3655"
 	editor
@@ -81893,6 +81983,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/chimneypipe01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-952 -704 -3186"
 	editor
@@ -81911,6 +82003,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/chimneypipe01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-952 -512 -3186"
 	editor
@@ -82093,6 +82187,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-384 -1824 -3608.42"
@@ -82112,6 +82208,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-720 -1808 -3632.42"
@@ -82131,6 +82229,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/fence03a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1117 -1826 -3579"
 	editor
@@ -82149,6 +82249,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/fence01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1405 -1922 -3579"
 	editor
@@ -82167,6 +82269,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/fence01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1293 -1874 -3579"
 	editor
@@ -82185,6 +82289,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/fence01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-864 -1780 -3579"
 	editor
@@ -82203,6 +82309,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/fence01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-947 -1826 -3579"
 	editor
@@ -82551,8 +82659,8 @@ entity
 	"targetname" "roofzombie_maker9"
 	connections
 	{
-		"OnSpawnNPC" "roofzombie9_sound,PlaySound,,0.3,-1"
-		"OnSpawnNPC" "roofzombie9_seq,BeginSequence,,0.3,-1"
+		"OnSpawnNPC" "roofzombie9_soundPlaySound0.3-1"
+		"OnSpawnNPC" "roofzombie9_seqBeginSequence0.3-1"
 	}
 	"origin" "-800 -1528 -3231"
 	editor
@@ -82631,9 +82739,9 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "roofzombie_maker9,Enable,,2.5,-1"
-		"OnTrigger" "poisonzombie_maker2,Enable,,0,-1"
-		"OnTrigger" "poisonzombie_maker3,Enable,,0,-1"
+		"OnTrigger" "roofzombie_maker9Enable2.5-1"
+		"OnTrigger" "poisonzombie_maker2Enable0-1"
+		"OnTrigger" "poisonzombie_maker3Enable0-1"
 	}
 	solid
 	{
@@ -82899,6 +83007,8 @@ entity
 	"fademindist" "1400"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_short.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "6"
 	"origin" "-2252.13 -1039.62 -3662"
@@ -82942,7 +83052,7 @@ entity
 	"wait" "0.4"
 	connections
 	{
-		"OnTrigger" "ladder9_sound1,PlaySound,,0,-1"
+		"OnTrigger" "ladder9_sound1PlaySound0-1"
 	}
 	solid
 	{
@@ -83038,6 +83148,8 @@ entity
 	"fademindist" "1400"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3703.62 -1075.87 -3560"
@@ -83059,6 +83171,8 @@ entity
 	"fademindist" "1400"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_90degree01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3703.62 -1079.87 -3305"
@@ -83080,6 +83194,8 @@ entity
 	"fademindist" "1400"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_connector01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3703.62 -1079.87 -3584"
@@ -83101,6 +83217,8 @@ entity
 	"fademindist" "1400"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3703.62 -1075.87 -3513"
@@ -83122,6 +83240,8 @@ entity
 	"fademindist" "1400"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_connector01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3703.62 -1079.87 -3488"
@@ -83143,6 +83263,8 @@ entity
 	"fademindist" "1400"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3703.62 -1075.87 -3464"
@@ -83164,6 +83286,8 @@ entity
 	"fademindist" "1400"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3703.62 -1075.87 -3417"
@@ -83185,6 +83309,8 @@ entity
 	"fademindist" "1400"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_connector01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3703.62 -1079.87 -3392"
@@ -83206,6 +83332,8 @@ entity
 	"fademindist" "1400"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3703.62 -1075.87 -3368"
@@ -83227,6 +83355,8 @@ entity
 	"fademindist" "1400"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_short.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3703.62 -1075.87 -3329"
@@ -83268,7 +83398,7 @@ entity
 	"wait" "0.4"
 	connections
 	{
-		"OnTrigger" "ladder9_sound2,PlaySound,,0,-1"
+		"OnTrigger" "ladder9_sound2PlaySound0-1"
 	}
 	solid
 	{
@@ -83458,7 +83588,7 @@ entity
 	"wait" "0.4"
 	connections
 	{
-		"OnTrigger" "ladder10_sound1,PlaySound,,0,-1"
+		"OnTrigger" "ladder10_sound1PlaySound0-1"
 	}
 	solid
 	{
@@ -83554,6 +83684,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_short.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3031.62 -1251.87 -3592"
@@ -83575,6 +83707,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_90degree01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3031.62 -1255.87 -3345"
@@ -83596,6 +83730,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3031.62 -1251.87 -3553"
@@ -83617,6 +83753,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_connector01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3031.62 -1255.87 -3528"
@@ -83638,6 +83776,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3031.62 -1251.87 -3504"
@@ -83659,6 +83799,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3031.62 -1251.87 -3457"
@@ -83680,6 +83822,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_connector01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3031.62 -1255.87 -3432"
@@ -83701,6 +83845,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3031.62 -1251.87 -3408"
@@ -83722,6 +83868,8 @@ entity
 	"fademindist" "2000"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe02_straight01_short.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "2"
 	"solid" "0"
 	"origin" "-3031.62 -1251.87 -3369"
@@ -83763,7 +83911,7 @@ entity
 	"wait" "0.4"
 	connections
 	{
-		"OnTrigger" "ladder10_sound2,PlaySound,,0,-1"
+		"OnTrigger" "ladder10_sound2PlaySound0-1"
 	}
 	solid
 	{
@@ -84008,7 +84156,7 @@ entity
 	"TemplateName" "streetzombie_2"
 	connections
 	{
-		"OnSpawnNPC" "streetzombie_maker2_sched,StartSchedule,,0.2,-1"
+		"OnSpawnNPC" "streetzombie_maker2_schedStartSchedule0.2-1"
 	}
 	"origin" "-3392 -1384 -3591"
 	editor
@@ -84036,7 +84184,7 @@ entity
 	"TemplateName" "streetzombie_3"
 	connections
 	{
-		"OnSpawnNPC" "streetzombie_maker3_sched,StartSchedule,,0.2,-1"
+		"OnSpawnNPC" "streetzombie_maker3_schedStartSchedule0.2-1"
 	}
 	"origin" "-3072 -728 -3583"
 	editor
@@ -84064,7 +84212,7 @@ entity
 	"TemplateName" "streetzombie_1"
 	connections
 	{
-		"OnSpawnNPC" "streetzombie_maker1_sched,StartSchedule,,0.2,-1"
+		"OnSpawnNPC" "streetzombie_maker1_schedStartSchedule0.2-1"
 	}
 	"origin" "-3648 -592 -3575"
 	editor
@@ -84092,7 +84240,7 @@ entity
 	"TemplateName" "streetzombie_maker4_zombie"
 	connections
 	{
-		"OnSpawnNPC" "streetzombie_maker4_sched,StartSchedule,,0.2,-1"
+		"OnSpawnNPC" "streetzombie_maker4_schedStartSchedule0.2-1"
 	}
 	"origin" "-3200 -1848 -3624"
 	editor
@@ -84133,7 +84281,7 @@ entity
 	"targetname" "poisonzombie_maker1"
 	connections
 	{
-		"OnSpawnNPC" "poisonzombie_maker1_sched,StartSchedule,,0.3,-1"
+		"OnSpawnNPC" "poisonzombie_maker1_schedStartSchedule0.3-1"
 	}
 	"origin" "-2120 -552 -3647"
 	editor
@@ -84153,7 +84301,7 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "poisonzombie_maker1,Enable,,0,-1"
+		"OnTrigger" "poisonzombie_maker1Enable0-1"
 	}
 	solid
 	{
@@ -84351,7 +84499,7 @@ entity
 	"targetname" "poisonzombie_maker2"
 	connections
 	{
-		"OnSpawnNPC" "poisonzombie_maker2_sched,StartSchedule,,0.3,-1"
+		"OnSpawnNPC" "poisonzombie_maker2_schedStartSchedule0.3-1"
 	}
 	"origin" "-1104 -1696 -3759"
 	editor
@@ -84457,7 +84605,7 @@ entity
 	"targetname" "poisonzombie_maker3"
 	connections
 	{
-		"OnSpawnNPC" "poisonzombie_maker3_sched,StartSchedule,,0.3,-1"
+		"OnSpawnNPC" "poisonzombie_maker3_schedStartSchedule0.3-1"
 	}
 	"origin" "-1664 -776 -3655"
 	editor
@@ -84500,8 +84648,8 @@ hidden
 		"wait" "1"
 		connections
 		{
-			"OnEndTouch" "streetzombie_maker1,Disable,,0,-1"
-			"OnStartTouch" "streetzombie_maker1,Enable,,0,-1"
+			"OnEndTouch" "streetzombie_maker1Disable0-1"
+			"OnStartTouch" "streetzombie_maker1Enable0-1"
 		}
 		hidden
 		{
@@ -84602,8 +84750,8 @@ entity
 	"wait" "1"
 	connections
 	{
-		"OnEndTouch" "streetzombie_maker2,Disable,,0,-1"
-		"OnStartTouch" "streetzombie_maker2,Enable,,0,-1"
+		"OnEndTouch" "streetzombie_maker2Disable0-1"
+		"OnStartTouch" "streetzombie_maker2Enable0-1"
 	}
 	solid
 	{
@@ -84699,10 +84847,10 @@ entity
 	"wait" "1"
 	connections
 	{
-		"OnEndTouch" "streetzombie_maker4,Disable,,0,-1"
-		"OnStartTouch" "streetzombie_maker4,Enable,,0,-1"
-		"OnEndTouch" "streetzombie_maker3,Disable,,0,-1"
-		"OnStartTouch" "streetzombie_maker3,Enable,,0,-1"
+		"OnEndTouch" "streetzombie_maker4Disable0-1"
+		"OnStartTouch" "streetzombie_maker4Enable0-1"
+		"OnEndTouch" "streetzombie_maker3Disable0-1"
+		"OnStartTouch" "streetzombie_maker3Enable0-1"
 	}
 	solid
 	{
@@ -84797,7 +84945,7 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "poisonzombie_maker4,Enable,,0,-1"
+		"OnTrigger" "poisonzombie_maker4Enable0-1"
 	}
 	solid
 	{
@@ -84899,7 +85047,7 @@ entity
 	"targetname" "poisonzombie_maker4"
 	connections
 	{
-		"OnSpawnNPC" "poisonzombie_maker4_sched,StartSchedule,,0.3,-1"
+		"OnSpawnNPC" "poisonzombie_maker4_schedStartSchedule0.3-1"
 	}
 	"origin" "-1544 -1064 -3663"
 	editor
@@ -85142,7 +85290,7 @@ entity
 	"targetname" "roofzombie_maker10"
 	connections
 	{
-		"OnSpawnNPC" "roofzombie10_seq,BeginSequence,,0,-1"
+		"OnSpawnNPC" "roofzombie10_seqBeginSequence0-1"
 	}
 	"origin" "-3160 -624 -3311"
 	editor
@@ -85166,7 +85314,7 @@ entity
 	"targetname" "roofzombie10_seq"
 	connections
 	{
-		"OnEndSequence" "roofzombie10_sched,StartSchedule,,0,-1"
+		"OnEndSequence" "roofzombie10_schedStartSchedule0-1"
 	}
 	"origin" "-3384 -1176 -3351"
 	editor
@@ -85206,8 +85354,8 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "roofzombie_maker11,Enable,,0,-1"
-		"OnTrigger" "roofzombie_maker10,Enable,,0,-1"
+		"OnTrigger" "roofzombie_maker11Enable0-1"
+		"OnTrigger" "roofzombie_maker10Enable0-1"
 	}
 	solid
 	{
@@ -85309,7 +85457,7 @@ entity
 	"targetname" "roofzombie_maker11"
 	connections
 	{
-		"OnSpawnNPC" "roofzombie11_sched,StartSchedule,,0,-1"
+		"OnSpawnNPC" "roofzombie11_schedStartSchedule0-1"
 	}
 	"origin" "-3680 -1456 -3095"
 	editor
@@ -85545,8 +85693,8 @@ entity
 	"targetname" "streettram_path_02"
 	connections
 	{
-		"OnPass" "streettram_path_02_spark,SparkOnce,,0,-1"
-		"OnPass" "streettram_path_02_wav,PlaySound,,0,-1"
+		"OnPass" "streettram_path_02_sparkSparkOnce0-1"
+		"OnPass" "streettram_path_02_wavPlaySound0-1"
 	}
 	"origin" "-2128 -1992 -3391.88"
 	editor
@@ -85645,8 +85793,8 @@ entity
 	"targetname" "streettram_path_07"
 	connections
 	{
-		"OnPass" "streettram_path_07_wav,PlaySound,,0,-1"
-		"OnPass" "streettram_path_07_spark,SparkOnce,,0,-1"
+		"OnPass" "streettram_path_07_wavPlaySound0-1"
+		"OnPass" "streettram_path_07_sparkSparkOnce0-1"
 	}
 	"origin" "-2210 -1793 -3391.88"
 	editor
@@ -85767,6 +85915,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_medium.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2047 -1537 -3474"
@@ -85788,6 +85938,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_corner.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2092.76 -1552.03 -3494"
@@ -85809,6 +85961,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_short.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2111 -1583 -3474"
@@ -85830,6 +85984,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_corner.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2000 -1555 -3494"
@@ -85851,6 +86007,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_short.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1985 -1583 -3474"
@@ -85906,6 +86064,8 @@ entity
 	"fademindist" "1200"
 	"fadescale" "1"
 	"model" "models/props_c17/FurnitureBoiler001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3944 -34 -3283"
@@ -88488,13 +88648,13 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "rotating_catwalk_funcwall,Kill,,0.5,-1"
-		"OnTrigger" "rotating_catwalk,Open,,0.3,-1"
-		"OnTrigger" "fireescape2jump_wav,PlaySound,,0.3,-1"
-		"OnTrigger" "fireescape2jump_shake,StartShake,,0.3,-1"
-		"OnTrigger" "fireescape3jump_wav,PlaySound,,0.3,-1"
-		"OnTrigger" "catwalk_railing,EnableMotion,,0,-1"
-		"OnTrigger" "catwalk_breakable,Break,,0,-1"
+		"OnTrigger" "rotating_catwalk_funcwallKill0.5-1"
+		"OnTrigger" "rotating_catwalkOpen0.3-1"
+		"OnTrigger" "fireescape2jump_wavPlaySound0.3-1"
+		"OnTrigger" "fireescape2jump_shakeStartShake0.3-1"
+		"OnTrigger" "fireescape3jump_wavPlaySound0.3-1"
+		"OnTrigger" "catwalk_railingEnableMotion0-1"
+		"OnTrigger" "catwalk_breakableBreak0-1"
 	}
 	solid
 	{
@@ -89046,7 +89206,7 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "roofzombie7_expl,Explode,,0,-1"
+		"OnTrigger" "roofzombie7_explExplode0-1"
 	}
 	solid
 	{
@@ -94952,6 +95112,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-1072 -1920 -3631.42"
@@ -100385,6 +100547,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/chimneypipe02b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1431.86 -1292.3 -3392"
 	editor
@@ -100403,6 +100567,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/chimneypipe02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1443.86 -1360.3 -3428"
 	editor
@@ -100554,7 +100720,7 @@ entity
 	"targetname" "roofzombie9_seq"
 	connections
 	{
-		"OnEndSequence" "roofzombie9_sched,StartSchedule,,0,-1"
+		"OnEndSequence" "roofzombie9_schedStartSchedule0-1"
 	}
 	"origin" "-1312 -1440 -3447"
 	editor
@@ -102476,8 +102642,8 @@ entity
 	"wait" "-1"
 	connections
 	{
-		"OnOpen" "returndoor,Lock,,0,-1"
-		"OnOpen" "returndoor_unlock_trigger,Kill,,0.1,-1"
+		"OnOpen" "returndoorLock0-1"
+		"OnOpen" "returndoor_unlock_triggerKill0.1-1"
 	}
 	solid
 	{
@@ -103281,8 +103447,8 @@ entity
 	"targetname" "roofzombie78_conditions"
 	connections
 	{
-		"OnConditionsSatisfied" "roofzombie_maker8,Enable,,0.4,-1"
-		"OnConditionsSatisfied" "roofzombie_maker7,Enable,,0,-1"
+		"OnConditionsSatisfied" "roofzombie_maker8Enable0.4-1"
+		"OnConditionsSatisfied" "roofzombie_maker7Enable0-1"
 	}
 	"origin" "-3664 -1208 -3055"
 	editor
@@ -103308,20 +103474,20 @@ entity
 	"wait" "-1"
 	connections
 	{
-		"OnPressed" "street_lever,Lock,,0,-1"
-		"OnPressed" "street_lever_unlock_trigger,Kill,,0,-1"
-		"OnPressed" "streettram_largewheels_rot,StartForward,,0,-1"
-		"OnPressed" "streettram_smallwheels_03,StartForward,,0,-1"
-		"OnPressed" "streettram_smallwheels_02,StartForward,,0,-1"
-		"OnPressed" "streettram_smallwheels_01,StartForward,,0,-1"
-		"OnPressed" "streettram_smallwheels_09,StartForward,,0,-1"
-		"OnPressed" "streettram_smallwheels_08,StartForward,,0,-1"
-		"OnPressed" "streettram_smallwheels_07,StartForward,,0,-1"
-		"OnPressed" "streettram_smallwheels_06,StartForward,,0,-1"
-		"OnPressed" "streettram_smallwheels_05,StartForward,,0,-1"
-		"OnPressed" "streettram_smallwheels_04,StartForward,,0,-1"
-		"OnPressed" "streettram_tram,Resume,,0,-1"
-		"OnPressed" "streettram_wav,PlaySound,,0,-1"
+		"OnPressed" "street_leverLock0-1"
+		"OnPressed" "street_lever_unlock_triggerKill0-1"
+		"OnPressed" "streettram_largewheels_rotStartForward0-1"
+		"OnPressed" "streettram_smallwheels_03StartForward0-1"
+		"OnPressed" "streettram_smallwheels_02StartForward0-1"
+		"OnPressed" "streettram_smallwheels_01StartForward0-1"
+		"OnPressed" "streettram_smallwheels_09StartForward0-1"
+		"OnPressed" "streettram_smallwheels_08StartForward0-1"
+		"OnPressed" "streettram_smallwheels_07StartForward0-1"
+		"OnPressed" "streettram_smallwheels_06StartForward0-1"
+		"OnPressed" "streettram_smallwheels_05StartForward0-1"
+		"OnPressed" "streettram_smallwheels_04StartForward0-1"
+		"OnPressed" "streettram_tramResume0-1"
+		"OnPressed" "streettram_wavPlaySound0-1"
 	}
 	solid
 	{
@@ -103416,6 +103582,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/tram_leverbase01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-2096 -1548 -3503"
 	editor
@@ -103470,8 +103638,8 @@ entity
 	"wait" "1"
 	connections
 	{
-		"OnStartTouch" "street_lever,Unlock,,0,-1"
-		"OnEndTouch" "street_lever,Lock,,0,-1"
+		"OnStartTouch" "street_leverUnlock0-1"
+		"OnEndTouch" "street_leverLock0-1"
 	}
 	solid
 	{
@@ -103672,9 +103840,9 @@ entity
 	"TemplateName" "monk"
 	connections
 	{
-		"OnSpawnNPC" "monk_assault,BeginAssault,,0.5,-1"
-		"OnSpawnNPC" "monk_assault,Activate,,0.2,-1"
-		"OnSpawnNPC" "remove_monk_at_transition,Enable,,0,-1"
+		"OnSpawnNPC" "monk_assaultBeginAssault0.5-1"
+		"OnSpawnNPC" "monk_assaultActivate0.2-1"
+		"OnSpawnNPC" "remove_monk_at_transitionEnable0-1"
 	}
 	"origin" "-4152 -800 -3112"
 	editor
@@ -103840,9 +104008,9 @@ entity
 	"TemplateName" "last_fz_1"
 	connections
 	{
-		"OnSpawnNPC" "last_fz_1_timer,Enable,,0.2,-1"
-		"OnSpawnNPC" "last_fz_relationship,ApplyRelationship,,0.1,-1"
-		"OnSpawnNPC" "last_fz_1_sched,StartSchedule,,0.2,-1"
+		"OnSpawnNPC" "last_fz_1_timerEnable0.2-1"
+		"OnSpawnNPC" "last_fz_relationshipApplyRelationship0.1-1"
+		"OnSpawnNPC" "last_fz_1_schedStartSchedule0.2-1"
 	}
 	"origin" "-3425.68 -470.683 -3112"
 	editor
@@ -103871,7 +104039,7 @@ entity
 	"targetname" "last_fz_1"
 	connections
 	{
-		"OnDeath" "last_fz_1_counter,Add,1,0,-1"
+		"OnDeath" "last_fz_1_counterAdd10-1"
 	}
 	"origin" "-3425.68 -470.683 -3080"
 	editor
@@ -103943,8 +104111,8 @@ entity
 	"TemplateName" "last_fz_2"
 	connections
 	{
-		"OnSpawnNPC" "last_fz_2_sched,StartSchedule,,0.2,-1"
-		"OnSpawnNPC" "last_fz_relationship,ApplyRelationship,,0.1,-1"
+		"OnSpawnNPC" "last_fz_2_schedStartSchedule0.2-1"
+		"OnSpawnNPC" "last_fz_relationshipApplyRelationship0.1-1"
 	}
 	"origin" "-3361.68 -542.683 -3112"
 	editor
@@ -103973,7 +104141,7 @@ entity
 	"targetname" "last_fz_2"
 	connections
 	{
-		"OnDeath" "last_fz_1_counter,Add,1,0,-1"
+		"OnDeath" "last_fz_1_counterAdd10-1"
 	}
 	"origin" "-3361.68 -542.683 -3080"
 	editor
@@ -103993,9 +104161,9 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "last_fz_1_maker,Enable,,0,-1"
-		"OnTrigger" "last_fz_2_maker,Enable,,2,-1"
-		"OnTrigger" "monk_maker,Spawn,,0,-1"
+		"OnTrigger" "last_fz_1_makerEnable0-1"
+		"OnTrigger" "last_fz_2_makerEnable2-1"
+		"OnTrigger" "monk_makerSpawn0-1"
 	}
 	solid
 	{
@@ -104223,8 +104391,8 @@ entity
 	"UseRandomTime" "0"
 	connections
 	{
-		"OnTimer" "last_fz_1_sched,StartSchedule,,0,-1"
-		"OnTimer" "last_fz_2_sched,StartSchedule,,0,-1"
+		"OnTimer" "last_fz_1_schedStartSchedule0-1"
+		"OnTimer" "last_fz_2_schedStartSchedule0-1"
 	}
 	"origin" "-3384 -504 -3088"
 	editor
@@ -104245,10 +104413,10 @@ entity
 	"targetname" "last_fz_1_counter"
 	connections
 	{
-		"OnHitMax" "last_fz_1_sched,Kill,,0,-1"
-		"OnHitMax" "last_fz_2_sched,Kill,,0,-1"
-		"OnHitMax" "last_fz_1_timer,Kill,,0,-1"
-		"OnHitMax" "monk_roof_seq_trigger,Enable,,0.75,-1"
+		"OnHitMax" "last_fz_1_schedKill0-1"
+		"OnHitMax" "last_fz_2_schedKill0-1"
+		"OnHitMax" "last_fz_1_timerKill0-1"
+		"OnHitMax" "monk_roof_seq_triggerEnable0.75-1"
 	}
 	"origin" "-3384 -504 -3064"
 	editor
@@ -104307,10 +104475,10 @@ entity
 	"targetname" "monk_roof_seq_trigger"
 	connections
 	{
-		"OnTrigger" "monk_roof_scene,Start,,1,-1"
-		"OnTrigger" "monk_roof_seq,BeginSequence,,0.1,-1"
-		"OnTrigger" "monk_assault,Kill,,0.1,-1"
-		"OnTrigger" "monk_assault,Deactivate,,0,-1"
+		"OnTrigger" "monk_roof_sceneStart1-1"
+		"OnTrigger" "monk_roof_seqBeginSequence0.1-1"
+		"OnTrigger" "monk_assaultKill0.1-1"
+		"OnTrigger" "monk_assaultDeactivate0-1"
 	}
 	solid
 	{
@@ -104411,7 +104579,7 @@ entity
 	"targetname" "monk_roof_seq2"
 	connections
 	{
-		"OnBeginSequence" "monk,Kill,,0,-1"
+		"OnBeginSequence" "monkKill0-1"
 	}
 	"origin" "-4144 -792 -3120"
 	editor
@@ -104734,7 +104902,7 @@ entity
 	"wait" "0"
 	connections
 	{
-		"OnTrigger" "!activator,Kill,,0,-1"
+		"OnTrigger" "!activatorKill0-1"
 	}
 	solid
 	{
@@ -104974,11 +105142,11 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "crow4,FlyAway,,0,1"
-		"OnTrigger" "crow3,FlyAway,,0.1,1"
-		"OnTrigger" "crow2,FlyAway,,0.4,1"
-		"OnTrigger" "crow5,FlyAway,,0.6,1"
-		"OnTrigger" "crow1,FlyAway,,0.8,1"
+		"OnTrigger" "crow4FlyAway01"
+		"OnTrigger" "crow3FlyAway0.11"
+		"OnTrigger" "crow2FlyAway0.41"
+		"OnTrigger" "crow5FlyAway0.61"
+		"OnTrigger" "crow1FlyAway0.81"
 	}
 	solid
 	{
@@ -105154,8 +105322,8 @@ entity
 	"targetname" "monk_roof_scene"
 	connections
 	{
-		"OnCompletion" "monk_roof_seq2,BeginSequence,,0.1,-1"
-		"OnCompletion" "monk_roof_seq,CancelSequence,,0,-1"
+		"OnCompletion" "monk_roof_seq2BeginSequence0.1-1"
+		"OnCompletion" "monk_roof_seqCancelSequence0-1"
 	}
 	"origin" "-3816 -792 -3040"
 	editor
@@ -105430,13 +105598,13 @@ entity
 	"spawnflags" "0"
 	connections
 	{
-		"OnMapSpawn" "streettram_tram,SetSpeed,200,0,1"
-		"OnMapSpawn" "streettram_tram,StartForward,,0,1"
-		"OnMapSpawn" "streettram_tram,SetSpeed,75,6.9,1"
-		"OnMapSpawn" "streettram_tram,Stop,,7,1"
-		"OnMapSpawn" "d1_town_02_smokestacks,TurnOff,,0,-1"
-		"OnMapSpawn" "d1_town_03_smokestacks,TurnOn,,0,-1"
-		"OnMapSpawn" "side_alley_gate_rotate,Open,,0,-1"
+		"OnMapSpawn" "streettram_tramSetSpeed20001"
+		"OnMapSpawn" "streettram_tramStartForward01"
+		"OnMapSpawn" "streettram_tramSetSpeed756.91"
+		"OnMapSpawn" "streettram_tramStop71"
+		"OnMapSpawn" "d1_town_02_smokestacksTurnOff0-1"
+		"OnMapSpawn" "d1_town_03_smokestacksTurnOn0-1"
+		"OnMapSpawn" "side_alley_gate_rotateOpen0-1"
 	}
 	"origin" "-3632 -360 -3556"
 	editor
@@ -105599,8 +105767,8 @@ entity
 	"wait" "-1"
 	connections
 	{
-		"OnOpen" "side_alley_gate_door,Lock,,0,-1"
-		"OnFullyOpen" "side_alley_gate_nodelink,TurnOn,,0,-1"
+		"OnOpen" "side_alley_gate_doorLock0-1"
+		"OnFullyOpen" "side_alley_gate_nodelinkTurnOn0-1"
 	}
 	solid
 	{
@@ -106047,8 +106215,8 @@ entity
 	"wait" "1"
 	connections
 	{
-		"OnEndTouch" "side_alley_gate_lock,Lock,,0,-1"
-		"OnStartTouch" "side_alley_gate_lock,Unlock,,0,-1"
+		"OnEndTouch" "side_alley_gate_lockLock0-1"
+		"OnStartTouch" "side_alley_gate_lockUnlock0-1"
 	}
 	solid
 	{
@@ -106266,10 +106434,10 @@ entity
 	"wait" "-1"
 	connections
 	{
-		"OnFullyOpen" "side_alley_gate_door,Unlock,,0,-1"
-		"OnFullyOpen" "side_alley_gate_trigger,Kill,,0,-1"
-		"OnFullyOpen" "door_clip,Kill,,0,-1"
-		"OnFullyOpen" "side_alley_gate_door,Open,,0.01,-1"
+		"OnFullyOpen" "side_alley_gate_doorUnlock0-1"
+		"OnFullyOpen" "side_alley_gate_triggerKill0-1"
+		"OnFullyOpen" "door_clipKill0-1"
+		"OnFullyOpen" "side_alley_gate_doorOpen0.01-1"
 	}
 	solid
 	{
@@ -107168,7 +107336,7 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "lastroom_zombies_1_template,ForceSpawn,,0,-1"
+		"OnTrigger" "lastroom_zombies_1_templateForceSpawn0-1"
 	}
 	solid
 	{
@@ -107272,7 +107440,7 @@ entity
 	"targetname" "lastroom_zombies_1"
 	connections
 	{
-		"OnDeath" "lastroom_zombies_2_counter,Add,1,0,-1"
+		"OnDeath" "lastroom_zombies_2_counterAdd10-1"
 	}
 	"origin" "-3752 -280 -3320"
 	editor
@@ -107301,7 +107469,7 @@ entity
 	"targetname" "lastroom_zombies_2"
 	connections
 	{
-		"OnDeath" "lastroom_zombies_2_counter,Add,1,0,-1"
+		"OnDeath" "lastroom_zombies_2_counterAdd10-1"
 	}
 	"origin" "-3752 -344 -3320"
 	editor
@@ -107330,7 +107498,7 @@ entity
 	"targetname" "lastroom_zombies_3"
 	connections
 	{
-		"OnDeath" "lastroom_zombies_2_counter,Add,1,0,-1"
+		"OnDeath" "lastroom_zombies_2_counterAdd10-1"
 	}
 	"origin" "-3840 -232 -3320"
 	editor
@@ -107359,7 +107527,7 @@ entity
 	"targetname" "lastroom_zombies_5"
 	connections
 	{
-		"OnDeath" "lastroom_zombies_2_counter,Add,1,0,-1"
+		"OnDeath" "lastroom_zombies_2_counterAdd10-1"
 	}
 	"origin" "-3888 -176 -3320"
 	editor
@@ -107388,7 +107556,7 @@ entity
 	"targetname" "lastroom_zombies_4"
 	connections
 	{
-		"OnDeath" "lastroom_zombies_2_counter,Add,1,0,-1"
+		"OnDeath" "lastroom_zombies_2_counterAdd10-1"
 	}
 	"origin" "-3920 -352 -3320"
 	editor
@@ -107417,7 +107585,7 @@ entity
 	"targetname" "lastroom_zombies_6"
 	connections
 	{
-		"OnDeath" "lastroom_zombies_2_counter,Add,1,0,-1"
+		"OnDeath" "lastroom_zombies_2_counterAdd10-1"
 	}
 	"origin" "-3840 -328 -3320"
 	editor
@@ -107914,9 +108082,9 @@ entity
 	"targetname" "lastroom_zombies_2_trigger"
 	connections
 	{
-		"OnTrigger" "lastroom_zombies_2_template,ForceSpawn,,0.1,-1"
-		"OnTrigger" "lastroom_zombies_2_sched,StartSchedule,,0.5,-1"
-		"OnTrigger" "lastroom_zombies_2_counter,Kill,,0,-1"
+		"OnTrigger" "lastroom_zombies_2_templateForceSpawn0.1-1"
+		"OnTrigger" "lastroom_zombies_2_schedStartSchedule0.5-1"
+		"OnTrigger" "lastroom_zombies_2_counterKill0-1"
 	}
 	solid
 	{
@@ -108012,9 +108180,9 @@ entity
 	"targetname" "lastroom_zombies_2_counter"
 	connections
 	{
-		"OnHitMax" "lastroom_zombies_2_trigger,Kill,,0,-1"
-		"OnHitMax" "lastroom_zombies_2_sched,StartSchedule,,0.3,-1"
-		"OnHitMax" "lastroom_zombies_2_template,ForceSpawn,,0.1,-1"
+		"OnHitMax" "lastroom_zombies_2_triggerKill0-1"
+		"OnHitMax" "lastroom_zombies_2_schedStartSchedule0.3-1"
+		"OnHitMax" "lastroom_zombies_2_templateForceSpawn0.1-1"
 	}
 	"origin" "-3851.99 -329 -3228.95"
 	editor
@@ -108101,18 +108269,18 @@ entity
 	"targetname" "streettram_path_08"
 	connections
 	{
-		"OnPass" "streettram_tram,Stop,,0,-1"
-		"OnPass" "streettram_smallwheels_04,Stop,,0,-1"
-		"OnPass" "streettram_smallwheels_05,Stop,,0,-1"
-		"OnPass" "streettram_smallwheels_06,Stop,,0,-1"
-		"OnPass" "streettram_smallwheels_07,Stop,,0,-1"
-		"OnPass" "streettram_smallwheels_08,Stop,,0,-1"
-		"OnPass" "streettram_smallwheels_09,Stop,,0,-1"
-		"OnPass" "streettram_smallwheels_01,Stop,,0,-1"
-		"OnPass" "streettram_smallwheels_02,Stop,,0,-1"
-		"OnPass" "streettram_smallwheels_03,Stop,,0,-1"
-		"OnPass" "streettram_largewheels_rot,Stop,,0,-1"
-		"OnPass" "streettram_wav,StopSound,,0,-1"
+		"OnPass" "streettram_tramStop0-1"
+		"OnPass" "streettram_smallwheels_04Stop0-1"
+		"OnPass" "streettram_smallwheels_05Stop0-1"
+		"OnPass" "streettram_smallwheels_06Stop0-1"
+		"OnPass" "streettram_smallwheels_07Stop0-1"
+		"OnPass" "streettram_smallwheels_08Stop0-1"
+		"OnPass" "streettram_smallwheels_09Stop0-1"
+		"OnPass" "streettram_smallwheels_01Stop0-1"
+		"OnPass" "streettram_smallwheels_02Stop0-1"
+		"OnPass" "streettram_smallwheels_03Stop0-1"
+		"OnPass" "streettram_largewheels_rotStop0-1"
+		"OnPass" "streettram_wavStopSound0-1"
 	}
 	"origin" "-2296 -1243 -3410.88"
 	editor
@@ -109035,6 +109203,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-2555 -945 -3656.1"
@@ -109054,6 +109224,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-560 -2256 -3432.42"
@@ -110867,6 +111039,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/lamp_bell_on.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-2444.13 -1315.87 -3260"
 	editor
@@ -113650,7 +113824,7 @@ entity
 	"spawnflags" "1"
 	connections
 	{
-		"OnNewGame" "startobjects_template,ForceSpawn,,0,-1"
+		"OnNewGame" "startobjects_templateForceSpawn0-1"
 	}
 	"origin" "-3672.9 -457.209 -3550"
 	editor
@@ -113898,9 +114072,9 @@ entity
 	"threshold" "600"
 	connections
 	{
-		"OnGreaterThan" "propeller_02_physcannon_spin_rl_1,Enable,,0,-1"
-		"OnLessThan" "propeller_02_physcannon_spin_rl_1,Disable,,0,-1"
-		"OnGreaterThan" "propeller_02_physcannon_spin_rl_1,Trigger,,3,-1"
+		"OnGreaterThan" "propeller_02_physcannon_spin_rl_1Enable0-1"
+		"OnLessThan" "propeller_02_physcannon_spin_rl_1Disable0-1"
+		"OnGreaterThan" "propeller_02_physcannon_spin_rl_1Trigger3-1"
 	}
 	"origin" "-1884.5 -1345.5 -3608"
 	editor
@@ -113919,16 +114093,16 @@ entity
 	"targetname" "propeller_02_physcannon_spin_rl_1"
 	connections
 	{
-		"OnTrigger" "propeller_02,Setbodygroup,0,0,-1"
-		"OnTrigger" "propeller_02_spinsensor_1,Kill,,0,-1"
-		"OnTrigger" "propeller_02_spinsensor_2,Kill,,0,-1"
-		"OnTrigger" "propeller_02_lever_01,Close,,0.1,-1"
-		"OnTrigger" "propeller_02_playermovement,Disable,,3,-1"
-		"OnTrigger" "propeller_02_blade_break_1,PlaySound,,0.1,-1"
-		"OnTrigger" "propeller_02_lever_01,Lock,,0.1,-1"
-		"OnTrigger" "propeller_02_motor,Kill,,0,-1"
-		"OnTrigger" "propeller_02_hinge,Break,,0,-1"
-		"OnTrigger" "propeller_02,EnableShadow,,0,-1"
+		"OnTrigger" "propeller_02Setbodygroup00-1"
+		"OnTrigger" "propeller_02_spinsensor_1Kill0-1"
+		"OnTrigger" "propeller_02_spinsensor_2Kill0-1"
+		"OnTrigger" "propeller_02_lever_01Close0.1-1"
+		"OnTrigger" "propeller_02_playermovementDisable3-1"
+		"OnTrigger" "propeller_02_blade_break_1PlaySound0.1-1"
+		"OnTrigger" "propeller_02_lever_01Lock0.1-1"
+		"OnTrigger" "propeller_02_motorKill0-1"
+		"OnTrigger" "propeller_02_hingeBreak0-1"
+		"OnTrigger" "propeller_02EnableShadow0-1"
 	}
 	"origin" "-1904.49 -1443.14 -3663"
 	editor
@@ -114093,6 +114267,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_c17/LampFixture01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-3619.59 -1219.03 -3191.84"
@@ -114530,6 +114706,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypole01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-85.6896 -1856.58 -3601"
 	editor
@@ -114573,6 +114751,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_c17/LampFixture01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-3346.11 -1367.53 -3415.84"
@@ -114616,6 +114796,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_c17/LampFixture01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-1631.47 -1653.11 -3451.84"
@@ -114679,6 +114861,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_c17/LampFixture01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-1998.53 -1581.89 -3376.84"
@@ -115124,6 +115308,8 @@ entity
 	"fademindist" "800"
 	"fadescale" "1"
 	"model" "models/props_junk/garbage256_composite002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-3381 -1407 -3604"
 	editor
@@ -115143,6 +115329,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_junk/garbage256_composite002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-1918 -1990 -3661"
 	editor
@@ -115190,6 +115378,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_junk/garbage256_composite002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-2099 -774 -3652"
 	editor
@@ -115247,6 +115437,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_interiors/LightBulb01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-3928.02 -150.316 -3257.17"
@@ -115314,6 +115506,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_interiors/LightBulb01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-3680.02 312.684 -3257.17"
@@ -115427,6 +115621,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_interiors/LightBulb01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-3928.02 63.6836 -3377.17"
@@ -116994,6 +117190,8 @@ entity
 	"fademindist" "1200"
 	"fadescale" "1"
 	"model" "models/props_junk/garbage256_composite002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-3948 -868 -3581"
 	editor
@@ -122390,6 +122588,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/light_spotlight01_lamp.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1038.29 -1635.31 -3274.44"
@@ -122411,6 +122611,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/light_spotlight01_base.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-1033.29 -1636.18 -3273.94"
@@ -122431,6 +122633,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_junk/garbage256_composite002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-2236 -1873 -3661"
 	editor
@@ -122451,6 +122655,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/light_spotlight01_lamp.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2265 -2060 -3407.44"
@@ -122753,6 +122959,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-1047 -2600 -3383.42"
@@ -122870,6 +123078,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-320 -2624 -3383.42"
@@ -122889,6 +123099,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-512 -3072 -3335.42"
@@ -122908,6 +123120,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-1216 -3136 -3347.42"
@@ -122927,6 +123141,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_cliff_02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "192 -2368 -3319.42"
@@ -122946,6 +123162,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_cliff_02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-704 -2688 -3319.42"
@@ -122965,6 +123183,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_cliff_02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-1280 -1984 -3383.42"
@@ -122986,6 +123206,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/light_spotlight01_lamp.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1576 -760 -3530.44"
@@ -123037,6 +123259,8 @@ entity
 	"fademindist" "1700"
 	"fadescale" "1"
 	"model" "models/props_c17/fence03a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3327 -68 -3518"
@@ -123057,6 +123281,8 @@ entity
 	"fademindist" "1700"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-3328 -36 -3578.1"
@@ -123078,6 +123304,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/light_spotlight01_lamp.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3593.29 -520.31 -3242.44"
@@ -123330,6 +123558,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_interiors/LightBulb01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-3752.15 -280.684 -3505.17"
@@ -124337,7 +124567,7 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "roofzombie_maker6,Enable,,0,-1"
+		"OnTrigger" "roofzombie_maker6Enable0-1"
 	}
 	solid
 	{
@@ -127296,6 +127526,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/light_spotlight01_lamp.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-3126.29 -577.31 -3389.44"
@@ -128400,6 +128632,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/light_spotlight01_lamp.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-1908 -1613 -3362.44"
@@ -128938,7 +129172,7 @@ entity
 	"targetname" "remove_monk_at_transition"
 	connections
 	{
-		"OnTrigger" "monk,Kill,,0,-1"
+		"OnTrigger" "monkKill0-1"
 	}
 	solid
 	{
@@ -129034,7 +129268,7 @@ entity
 	"targetname" "remove_monk_at_transition"
 	connections
 	{
-		"OnTrigger" "monk,Kill,,0,-1"
+		"OnTrigger" "monkKill0-1"
 	}
 	solid
 	{
@@ -129141,14 +129375,14 @@ entity
 	"spawnflags" "0"
 	connections
 	{
-		"OnMapTransition" "tonemap_controller,SetAutoExposureMin,.5,0,-1"
-		"OnMapTransition" "tonemap_controller,SetTonemapRate,.35,0,-1"
-		"OnMapTransition" "tonemap_controller,SetBloomScale,.4,0,-1"
-		"OnMapSpawn" "tonemap_controller,SetAutoExposureMax,4,0,-1"
-		"OnMapSpawn" "tonemap_controller,SetAutoExposureMin,.5,0,-1"
-		"OnMapSpawn" "tonemap_controller,SetTonemapRate,.35,0,-1"
-		"OnMapSpawn" "tonemap_controller,SetBloomScale,.4,0,-1"
-		"OnMapTransition" "tonemap_controller,SetAutoExposureMax,4,0,-1"
+		"OnMapTransition" "tonemap_controllerSetAutoExposureMin.50-1"
+		"OnMapTransition" "tonemap_controllerSetTonemapRate.350-1"
+		"OnMapTransition" "tonemap_controllerSetBloomScale.40-1"
+		"OnMapSpawn" "tonemap_controllerSetAutoExposureMax40-1"
+		"OnMapSpawn" "tonemap_controllerSetAutoExposureMin.50-1"
+		"OnMapSpawn" "tonemap_controllerSetTonemapRate.350-1"
+		"OnMapSpawn" "tonemap_controllerSetBloomScale.40-1"
+		"OnMapTransition" "tonemap_controllerSetAutoExposureMax40-1"
 	}
 	"origin" "-3648 -392 -3560"
 	editor
@@ -129227,13 +129461,21 @@ cameras
 	}
 	camera
 	{
-		"position" "[-3254.13 -183.28 -3415.6]"
-		"look" "[-3314.65 -175.634 -3429.91]"
+		"position" "[-3914.04 -327.484 -3214.34]"
+		"look" "[-3874.76 -283.237 -3234.95]"
 	}
 }
-cordon
+cordons
 {
-	"mins" "(-2368 -1852 -3824)"
-	"maxs" "(-1552 -804 -2912)"
 	"active" "0"
+	cordon
+	{
+		"name" "cordon"
+		"active" "1"
+		box
+		{
+			"mins" "(-2368 -1852 -3824)"
+			"maxs" "(-1552 -804 -2912)"
+		}
+	}
 }

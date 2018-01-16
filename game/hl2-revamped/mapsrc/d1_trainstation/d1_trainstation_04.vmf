@@ -1,8 +1,8 @@
 versioninfo
 {
 	"editorversion" "400"
-	"editorbuild" "6440"
-	"mapversion" "2683"
+	"editorbuild" "7397"
+	"mapversion" "2693"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -170,7 +170,7 @@ viewsettings
 world
 {
 	"id" "0"
-	"mapversion" "2683"
+	"mapversion" "2693"
 	"classname" "worldspawn"
 	"defaultteam" "0"
 	"detailmaterial" "detail/detailsprites"
@@ -58271,6 +58271,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/dome_terminal_02.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4128 -4576 544"
@@ -58388,6 +58390,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypole02b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-4219.99 -4376.07 -3.00407e-005"
 	editor
@@ -58504,6 +58508,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypole02b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-5481.76 -5007.67 -3.00407e-005"
 	editor
@@ -58620,6 +58626,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypolemount01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-4181.43 -4386.45 342"
 	editor
@@ -58842,6 +58850,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "rope_elevator_5"
+	"targetpoint" "0 0 0"
 	"texture" "materials/cable/cable.vmt"
 	"TextureScroll" "0"
 	"TouchType" "0"
@@ -58878,6 +58887,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "rope_elevator_3"
+	"targetpoint" "0 0 0"
 	"texture" "materials/cable/cable.vmt"
 	"TextureScroll" "0"
 	"TouchType" "0"
@@ -58914,6 +58924,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "rope_elevator_1"
+	"targetpoint" "0 0 0"
 	"texture" "materials/cable/cable.vmt"
 	"TextureScroll" "0"
 	"TouchType" "0"
@@ -58971,9 +58982,9 @@ entity
 	"targetname" "logic_beams_elevator_1"
 	connections
 	{
-		"OnTrigger" "rope_elevator_1,Toggle,,0,-1"
-		"OnTrigger" "rope_elevator_3,Toggle,,0,-1"
-		"OnTrigger" "rope_elevator_5,Toggle,,0,-1"
+		"OnTrigger" "rope_elevator_1Toggle0-1"
+		"OnTrigger" "rope_elevator_3Toggle0-1"
+		"OnTrigger" "rope_elevator_5Toggle0-1"
 	}
 	"origin" "-7788.15 -3898.83 631"
 	editor
@@ -61788,6 +61799,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/RooftopCluser02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2850 -4970 667.97"
@@ -61808,6 +61821,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/powerbox02c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7576.86 -4217.89 -190"
 	editor
@@ -61827,6 +61842,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/pipesystem03b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7590.08 -4220.89 -189"
 	editor
@@ -61846,6 +61863,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/powerbox03a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7596.08 -4220.89 -199"
 	editor
@@ -61865,6 +61884,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/pipesystem02e.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7584.08 -4222.89 -197"
 	editor
@@ -61884,6 +61905,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/powerbox02d.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7601.08 -4218.89 -187"
 	editor
@@ -61903,6 +61926,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/pipesystem03b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7612.08 -4220.89 -186"
 	editor
@@ -61922,6 +61947,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/pipesystem03a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7612.08 -4220.89 -191"
 	editor
@@ -61941,6 +61968,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/powerbox02c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7609.86 -4217.89 -208"
 	editor
@@ -61960,6 +61989,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/pipesystem02b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7608.08 -4221.89 -241"
 	editor
@@ -61979,6 +62010,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/pipesystem03d.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7601.63 -4220.89 -212"
 	editor
@@ -61998,6 +62031,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/powerbox02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7593.08 -4217.89 -220"
 	editor
@@ -62017,6 +62052,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/pipesystem02c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7589.08 -4220.89 -250"
 	editor
@@ -62036,6 +62073,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/pipesystem02c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7592.08 -4220.89 -250"
 	editor
@@ -62055,6 +62094,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/pipesystem02c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7596.08 -4220.89 -250"
 	editor
@@ -62074,6 +62115,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/pipesystem01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7624.08 -4221.89 -237"
 	editor
@@ -62093,6 +62136,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/pipesystem02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7629.08 -4221.89 -243"
 	editor
@@ -62112,6 +62157,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/powerbox02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7626.08 -4216.89 -193"
 	editor
@@ -62131,6 +62178,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_lab/pipesystem02b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7628.5 -4222.65 -180.619"
 	editor
@@ -62178,6 +62227,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight001b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-7133.31 -3858.69 743"
@@ -62229,6 +62280,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_interiors/LightBulb01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-3367.85 -3688.02 510.825"
@@ -62317,6 +62370,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_interiors/LightBulb01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-3131.15 -3555.98 462.825"
@@ -62419,7 +62474,7 @@ entity
 	"wait" "-1"
 	connections
 	{
-		"OnFullyClosed" "trigger_elevator_go_down,Disable,,0,1"
+		"OnFullyClosed" "trigger_elevator_go_downDisable01"
 	}
 	solid
 	{
@@ -62517,7 +62572,7 @@ entity
 	"wait" ".01"
 	connections
 	{
-		"OnTrigger" "!activator,SetLightingOriginHack,lighting_elevator,0,-1"
+		"OnTrigger" "!activatorSetLightingOriginHacklighting_elevator0-1"
 	}
 	solid
 	{
@@ -62609,18 +62664,21 @@ entity
 	"id" "650558"
 	"classname" "env_projectedtexture"
 	"angles" "90 0 0"
+	"brightnessscale" "1.0"
 	"cameraspace" "0"
+	"colortransitiontime" "0.5"
 	"enableshadows" "1"
-	"farz" "750.0"
-	"lightcolor" "255 249 221 150"
-	"lightfov" "140"
+	"farz" "300"
+	"lightcolor" "255 249 221 300"
+	"lightfov" "130"
 	"lightonlytarget" "0"
 	"lightworld" "1"
 	"nearz" "5"
 	"parentname" "tracktrain_elevator"
 	"shadowquality" "1"
-	"spawnflags" "1"
+	"spawnflags" "3"
 	"targetname" "projtex_elevator"
+	"texturename" "effects/flashlight001"
 	"origin" "-7744 -3960 504"
 	editor
 	{
@@ -62676,7 +62734,7 @@ entity
 	"wait" "1"
 	connections
 	{
-		"OnStartTouch" "!activator,SetLightingOriginHack,,0,-1"
+		"OnStartTouch" "!activatorSetLightingOriginHack0-1"
 	}
 	solid
 	{
@@ -63204,6 +63262,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_interiors/attic_beam001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3458 -3584 700"
@@ -65163,6 +65223,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_interiors/attic_beam001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3724 -3584 700"
@@ -65217,6 +65279,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneytoppipe_cluster01c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4832 -3900 792"
@@ -65240,6 +65304,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneytoppipe_cluster02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4852 -3952 784"
@@ -65263,6 +65329,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneytoppipe_cluster02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4860 -3518 784"
@@ -65286,6 +65354,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/roof_vent004.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5072 -3996 674"
@@ -65309,6 +65379,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/Dome004.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5312 -4415 631"
@@ -65332,6 +65404,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneytoppipe_cluster01c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5220 -3888 896"
@@ -65355,6 +65429,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneytoppipe_cluster02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5240 -3940 888"
@@ -65378,6 +65454,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneytoppipe_cluster02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5896 -3940 920"
@@ -65401,6 +65479,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneytoppipe_cluster01c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5876 -3888 928"
@@ -73581,7 +73661,7 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "roof_crow_template_1,ForceSpawn,,0,-1"
+		"OnTrigger" "roof_crow_template_1ForceSpawn0-1"
 	}
 	solid
 	{
@@ -73902,7 +73982,7 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "gunship_template,ForceSpawn,,0,1"
+		"OnTrigger" "gunship_templateForceSpawn01"
 	}
 	solid
 	{
@@ -74021,6 +74101,8 @@ entity
 	"fademindist" "2830"
 	"fadescale" "1"
 	"model" "models/props_wasteland/exterior_fence002d.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-7936 -4731 140.074"
@@ -74042,6 +74124,8 @@ entity
 	"fademindist" "3082"
 	"fadescale" "1"
 	"model" "models/props_wasteland/exterior_fence002d.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-8192.41 -4730.97 140.074"
@@ -74063,6 +74147,8 @@ entity
 	"fademindist" "3334"
 	"fadescale" "1"
 	"model" "models/props_wasteland/exterior_fence002d.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-8448 -4731 140.074"
@@ -74084,6 +74170,8 @@ entity
 	"fademindist" "3587"
 	"fadescale" "1"
 	"model" "models/props_wasteland/exterior_fence002d.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-8704 -4731 140.074"
@@ -74105,6 +74193,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/exterior_fence002d.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-6272 -5516 76.074"
@@ -74126,6 +74216,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/exterior_fence002d.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-6016 -5516 76.074"
@@ -74149,6 +74241,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_vehicles/truck001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-8287.6 -4266.61 -4.81007"
@@ -74172,6 +74266,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_vehicles/van001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-8128 -4263 -29.5398"
@@ -74195,6 +74291,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_vehicles/van001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-6592 -5360 50.4602"
@@ -74218,6 +74316,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_vehicles/van001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-7576 -4660 -29.5398"
@@ -79173,6 +79273,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/Combine_Citadel001b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "861.65 5457.94 1672.91"
 	editor
@@ -79656,6 +79758,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/Dome005.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4440 -3760 608.281"
@@ -80605,6 +80709,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_poplar_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-5376 -5760 -0.0490036"
@@ -80626,6 +80732,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_poplar_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-5664 -5760 -0.0490036"
@@ -80647,6 +80755,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_poplar_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-6144 -5472 -0.0490036"
@@ -80668,6 +80778,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/lamppost03a_off.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-7200 -5088 63.951"
@@ -80689,6 +80801,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/lamppost03a_off.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-6272 -5400 -0.0490036"
@@ -80710,6 +80824,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/lamppost03a_off.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-5152 -4512 -0.0490036"
@@ -80731,6 +80847,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/lamppost03a_off.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-4304 -4096 -0.0490036"
@@ -80752,6 +80870,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-4028 -4036 -6.049"
@@ -80773,6 +80893,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-4030 -4412 -6.049"
@@ -80794,6 +80916,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-4624 -4720 -6.049"
@@ -80815,6 +80939,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-4704 -4128 -6.049"
@@ -80836,6 +80962,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-5184 -4976 -6.049"
@@ -81339,6 +81467,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_buildings/row_hill_cluster.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-3229.97 4656.1 -2021"
@@ -81363,6 +81493,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_buildings/row_upscale.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-3402.38 4774.79 -2030"
@@ -81387,6 +81519,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_buildings/row_res_2.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-3432.38 4642.79 -2021.75"
@@ -81407,6 +81541,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/substation_stripebox01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6576 -4912 30.0945"
 	editor
@@ -81425,6 +81561,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/substation_stripebox01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6576 -4816 30.0945"
 	editor
@@ -81444,6 +81582,8 @@ entity
 	"fademindist" "1807"
 	"fadescale" "1"
 	"model" "models/props_c17/substation_transformer01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6832.58 -4849.81 12.004"
 	editor
@@ -81463,6 +81603,8 @@ entity
 	"fademindist" "1811"
 	"fadescale" "1"
 	"model" "models/props_c17/utilityconnecter006c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6890.58 -4805.81 166.003"
 	editor
@@ -81482,6 +81624,8 @@ entity
 	"fademindist" "1756"
 	"fadescale" "1"
 	"model" "models/props_c17/utilityconnecter006c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6832.58 -4805.81 166.003"
 	editor
@@ -81501,6 +81645,8 @@ entity
 	"fademindist" "1700"
 	"fadescale" "1"
 	"model" "models/props_c17/utilityconnecter006c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6773.58 -4805.81 166.003"
 	editor
@@ -81520,6 +81666,8 @@ entity
 	"fademindist" "1902"
 	"fadescale" "1"
 	"model" "models/props_c17/substation_transformer01c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6958.58 -4878.81 118.003"
 	editor
@@ -81540,6 +81688,8 @@ entity
 	"fademindist" "1889"
 	"fadescale" "1"
 	"model" "models/props_wasteland/exterior_fence002d.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-6943.41 -4748.97 20.074"
@@ -81561,6 +81711,8 @@ entity
 	"fademindist" "1650"
 	"fadescale" "1"
 	"model" "models/props_wasteland/exterior_fence002d.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-6687.41 -4748.97 20.074"
@@ -81582,6 +81734,8 @@ entity
 	"fademindist" "1415"
 	"fadescale" "1"
 	"model" "models/props_wasteland/exterior_fence002d.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-6430 -4748 20.074"
@@ -81605,6 +81759,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_c17/utilitypole02b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-6288 -4762 64.4945"
@@ -81628,6 +81784,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_c17/utilitypole02b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-6959.64 -4952.13 -64"
@@ -81648,6 +81806,8 @@ entity
 	"fademindist" "1777"
 	"fadescale" "1"
 	"model" "models/props_c17/substation_transformer01e.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6832.58 -4815.81 91.0035"
 	editor
@@ -81666,6 +81826,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/substation_stripebox01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6416 -4816 30.0945"
 	editor
@@ -84281,6 +84443,8 @@ entity
 	"fademindist" "3039"
 	"fadescale" "1"
 	"model" "models/props_combine/CombineInnerwallCluster1024_003a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-7952 -5612 643.908"
@@ -84302,6 +84466,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/CombineInnerwallCluster1024_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-8080 -6412 903.91"
@@ -84585,6 +84751,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_03b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-5984 -4800 1.34437"
@@ -84620,6 +84788,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_03b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-5984 -5392 1.34437"
@@ -84641,6 +84811,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_03b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-4832 -4816 1.34437"
@@ -84676,6 +84848,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_03b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-5072 -4320 1.34437"
@@ -84697,6 +84871,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_03b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-4912 -4288 1.34437"
@@ -85978,6 +86154,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-6199 -4922 0.46747"
@@ -85997,6 +86175,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypolemount01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6326 -4740 342"
 	editor
@@ -86239,6 +86419,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypolemount01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6360 -5479 465"
 	editor
@@ -86321,6 +86503,8 @@ entity
 	"fademindist" "2008"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypolemount01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7140 -4708 339"
 	editor
@@ -86410,6 +86594,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypolemount01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7835.85 -4379.85 251"
 	editor
@@ -86500,6 +86686,8 @@ entity
 	"fademindist" "3600"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypolemount01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-8705.86 -4137.84 251"
 	editor
@@ -86586,6 +86774,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypolemount01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6914 -4953 292"
 	editor
@@ -86824,6 +87014,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_buildings/project_building01_skybox.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-3771.49 4534.86 -2015.75"
@@ -86848,6 +87040,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_interiors/attic_beam001b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3924 -3588 700"
@@ -86872,6 +87066,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_interiors/attic_beam001b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3240 -3584 700"
@@ -86896,6 +87092,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneysmokestack_cluster01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5328 -3956 852"
@@ -86919,6 +87117,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/AntennaClusters01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4604 -5060 736"
@@ -86940,6 +87140,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_rooftop/RooftopCluser06a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-3820 -4796 704"
@@ -86963,6 +87165,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/AntennaClusters01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5348 -6192 996"
@@ -86986,6 +87190,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/AntennaClusters01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5624 -6244 996"
@@ -87009,6 +87215,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/AntennaClusters01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-6296 -6164 996"
@@ -87032,6 +87240,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/AntennaClusters01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4792 -5736 996"
@@ -87055,6 +87265,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/AntennaClusters01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4684 -6572 996"
@@ -87076,6 +87288,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_rooftop/RooftopCluser06a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-4388 -5152 696"
@@ -87097,6 +87311,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_rooftop/RooftopCluser06a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-5032 -5464 704"
@@ -92408,6 +92624,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/roof_vent002.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4666 -3636 602"
@@ -92431,6 +92649,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/roof_vent004.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4923 -3841 682"
@@ -92454,6 +92674,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/roof_vent001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4946 -3860 682"
@@ -92477,6 +92699,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/roof_vent003.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5281 -3789 828"
@@ -92500,6 +92724,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/roof_vent004.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5355 -3851 826"
@@ -92523,6 +92749,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/roof_vent004.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-6141 -4034.63 768"
@@ -92546,6 +92774,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/roof_vent001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-6164 -4053.63 768"
@@ -92569,6 +92799,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/RooftopCluser02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4310 -5234 795.97"
@@ -94050,6 +94282,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/RooftopCluser02a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5454 -5446 507.97"
@@ -94718,6 +94952,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneysmokestack_cluster01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5479.9 -5261.17 421.972"
@@ -94741,6 +94977,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneysmokestack_cluster01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-6824.27 -5581.17 677.972"
@@ -94764,6 +95002,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneysmokestack_cluster01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-7392 -4848 613.972"
@@ -94787,6 +95027,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/AntennaClusters01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-7168 -6016 836"
@@ -94963,6 +95205,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/AntennaClusters01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5360 -3728 884"
@@ -94986,6 +95230,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/AntennaClusters01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5520 -3488 996"
@@ -95097,6 +95343,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneysmokestack_cluster01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-9536 -5568 741.972"
@@ -95117,6 +95365,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_rooftop/attic_window.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-3584 -3868 581.12"
 	editor
@@ -95248,6 +95498,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_rooftop/attic_window.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-4060 -3584 581.12"
 	editor
@@ -95737,6 +95989,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_rooftop/attic_window.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-3872 -3804 581.12"
 	editor
@@ -96226,6 +96480,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_rooftop/attic_window.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-3296 -3804 581.12"
 	editor
@@ -97156,6 +97412,8 @@ entity
 	"fadescale" "1"
 	"model" "models/combine_apc.mdl"
 	"origin" "-7460.07 -5402.32 83"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"targetname" "apc"
@@ -97215,8 +97473,8 @@ entity
 	"targetname" "apc_path_2"
 	connections
 	{
-		"OnPass" "apc_driver,SetDriversMaxSpeed,0.5,0,-1"
-		"OnPass" "apc_driver,SetDriversMinSpeed,0.2,0,-1"
+		"OnPass" "apc_driverSetDriversMaxSpeed0.50-1"
+		"OnPass" "apc_driverSetDriversMinSpeed0.20-1"
 	}
 	"origin" "-5696 -4928 72"
 	editor
@@ -97256,8 +97514,8 @@ entity
 	"targetname" "apc_path_4"
 	connections
 	{
-		"OnPass" "apc_driver,SetDriversMinSpeed,0.6,0,-1"
-		"OnPass" "apc_driver,SetDriversMaxSpeed,1,0,-1"
+		"OnPass" "apc_driverSetDriversMinSpeed0.60-1"
+		"OnPass" "apc_driverSetDriversMaxSpeed10-1"
 	}
 	"origin" "-5856 -4656 72"
 	editor
@@ -97276,7 +97534,7 @@ entity
 	"targetname" "apc_relay_start_apc_moving"
 	connections
 	{
-		"OnTrigger" "apc_driver,GotoPathCorner,apc_path_start,0,-1"
+		"OnTrigger" "apc_driverGotoPathCornerapc_path_start0-1"
 	}
 	"origin" "-7488 -5376 256"
 	editor
@@ -97973,9 +98231,9 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "apc_relay_start_apc_moving,Trigger,,0,1"
-		"OnTrigger" "street_cop_template_1,ForceSpawn,,0,1"
-		"OnTrigger" "apc2_relay_start_apc2_moving,Trigger,,3,1"
+		"OnTrigger" "apc_relay_start_apc_movingTrigger01"
+		"OnTrigger" "street_cop_template_1ForceSpawn01"
+		"OnTrigger" "apc2_relay_start_apc2_movingTrigger31"
 	}
 	solid
 	{
@@ -98190,10 +98448,10 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "npc_windowscanner,SetFollowTarget,!player,0,1"
-		"OnTrigger" "npc_windowscanner,SetDistanceOverride,0,0,1"
-		"OnTrigger" "trigger_scanner_inspect2,Disable,,0,-1"
-		"OnTrigger" "trigger_scanner_inspect1,Disable,,0,-1"
+		"OnTrigger" "npc_windowscannerSetFollowTarget!player01"
+		"OnTrigger" "npc_windowscannerSetDistanceOverride001"
+		"OnTrigger" "trigger_scanner_inspect2Disable0-1"
+		"OnTrigger" "trigger_scanner_inspect1Disable0-1"
 	}
 	solid
 	{
@@ -98375,7 +98633,7 @@ entity
 	"targetname" "gunship_2_path_4"
 	connections
 	{
-		"OnPass" "prop_pathboards,EnableMotion,,0,-1"
+		"OnPass" "prop_pathboardsEnableMotion0-1"
 	}
 	"origin" "-5760 -4139 1097"
 	editor
@@ -98516,7 +98774,7 @@ entity
 	"targetname" "gunship_2_path_12"
 	connections
 	{
-		"OnPass" "gunship2,Kill,,0,-1"
+		"OnPass" "gunship2Kill0-1"
 	}
 	"origin" "1152 -8448 201"
 	editor
@@ -98556,7 +98814,7 @@ entity
 	"targetname" "gunship_path_5"
 	connections
 	{
-		"OnPass" "gunship,Kill,,0,-1"
+		"OnPass" "gunshipKill0-1"
 	}
 	"origin" "-9224 -7690 1141"
 	editor
@@ -99111,6 +99369,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneysmokestack_cluster01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-8952 -4312 773.972"
@@ -99312,6 +99572,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/chimneysmokestack_cluster01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-8392 -4032 613.972"
@@ -100350,7 +100612,7 @@ entity
 	"targetname" "door_knockout_1"
 	connections
 	{
-		"OnFullyOpen" "kickdoor_player_clip,Disable,,0,1"
+		"OnFullyOpen" "kickdoor_player_clipDisable01"
 	}
 	"origin" "-7436 -4023 438"
 	editor
@@ -106565,6 +106827,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_cagedlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7846 -3960 152"
 	editor
@@ -106584,6 +106848,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_cagedlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7846 -3960 -105.75"
 	editor
@@ -106651,16 +106917,16 @@ entity
 	"targetname" "elevator_path_3"
 	connections
 	{
-		"OnPass" "prop_elevatordoor,SetAnimation,open,1.5,-1"
-		"OnPass" "door_elevator_bottomsliding,Open,,2,-1"
-		"OnPass" "shake_elevator_stop_1,StartShake,,0,-1"
-		"OnPass" "shake_elevator_move_1,StopShake,,0,-1"
-		"OnPass" "sound_elevator_ding,PlaySound,,1,-1"
-		"OnPass" "door_elevator_R,Open,,1.5,-1"
-		"OnPass" "door_elevator_L,Open,,1.5,-1"
-		"OnPass" "lcs_alyxgreet03,Start,,0.5,-1"
-		"OnPass" "sound_apc_alarm,StopSound,,0,-1"
-		"OnPass" "door_elevator_clip_lower,Disable,,2.1,-1"
+		"OnPass" "prop_elevatordoorSetAnimationopen1.5-1"
+		"OnPass" "door_elevator_bottomslidingOpen2-1"
+		"OnPass" "shake_elevator_stop_1StartShake0-1"
+		"OnPass" "shake_elevator_move_1StopShake0-1"
+		"OnPass" "sound_elevator_dingPlaySound1-1"
+		"OnPass" "door_elevator_ROpen1.5-1"
+		"OnPass" "door_elevator_LOpen1.5-1"
+		"OnPass" "lcs_alyxgreet03Start0.5-1"
+		"OnPass" "sound_apc_alarmStopSound0-1"
+		"OnPass" "door_elevator_clip_lowerDisable2.1-1"
 	}
 	"origin" "-7740 -3960 -192"
 	editor
@@ -109443,7 +109709,7 @@ entity
 	"wait" "1"
 	connections
 	{
-		"OnTrigger" "npc_windowscanner,SetFollowTarget,target_scanner_inspection2,0.1,-1"
+		"OnTrigger" "npc_windowscannerSetFollowTargettarget_scanner_inspection20.1-1"
 	}
 	solid
 	{
@@ -109552,9 +109818,9 @@ entity
 	"weapondrawn" "0"
 	connections
 	{
-		"OnStunnedPlayer" "!player,SetHealth,100,0,-1"
-		"OnStunnedPlayer" "counter_knockout_hitcount,Add,1,0,-1"
-		"OnDamaged" "npc_knockout_cop1,SetHealth,10,0,1"
+		"OnStunnedPlayer" "!playerSetHealth1000-1"
+		"OnStunnedPlayer" "counter_knockout_hitcountAdd10-1"
+		"OnDamaged" "npc_knockout_cop1SetHealth1001"
 	}
 	"origin" "-7460 -3996 385"
 	editor
@@ -109587,9 +109853,9 @@ entity
 	"weapondrawn" "0"
 	connections
 	{
-		"OnStunnedPlayer" "!player,SetHealth,100,0,-1"
-		"OnStunnedPlayer" "counter_knockout_hitcount,Add,1,0,-1"
-		"OnDamaged" "npc_knockout_cop2,SetHealth,10,0,1"
+		"OnStunnedPlayer" "!playerSetHealth1000-1"
+		"OnStunnedPlayer" "counter_knockout_hitcountAdd10-1"
+		"OnDamaged" "npc_knockout_cop2SetHealth1001"
 	}
 	"origin" "-7520 -4056 387"
 	editor
@@ -109644,9 +109910,9 @@ entity
 	"weapondrawn" "0"
 	connections
 	{
-		"OnStunnedPlayer" "!player,SetHealth,100,0,-1"
-		"OnStunnedPlayer" "counter_knockout_hitcount,Add,1,0,-1"
-		"OnDamaged" "npc_knockout_cop_kickdoor,SetHealth,0,10,1"
+		"OnStunnedPlayer" "!playerSetHealth1000-1"
+		"OnStunnedPlayer" "counter_knockout_hitcountAdd10-1"
+		"OnDamaged" "npc_knockout_cop_kickdoorSetHealth0101"
 	}
 	"origin" "-7025 -3993 385"
 	editor
@@ -109664,8 +109930,8 @@ entity
 	"spawnflags" "5"
 	connections
 	{
-		"OnMapSpawn" "npc_windowscanner,SetDistanceOverride,16,1,1"
-		"OnMapSpawn" "npc_windowscanner,SetFollowTarget,target_scanner_inspection1,1.1,-1"
+		"OnMapSpawn" "npc_windowscannerSetDistanceOverride1611"
+		"OnMapSpawn" "npc_windowscannerSetFollowTargettarget_scanner_inspection11.1-1"
 	}
 	"origin" "-3584 -3968 752"
 	editor
@@ -109687,8 +109953,8 @@ entity
 	"wait" "1"
 	connections
 	{
-		"OnTrigger" "npc_windowscanner,SetFollowTarget,target_scanner_inspection1,0.1,-1"
-		"OnTrigger" "npc_windowscanner,SetDistanceOverride,16,0,1"
+		"OnTrigger" "npc_windowscannerSetFollowTargettarget_scanner_inspection10.1-1"
+		"OnTrigger" "npc_windowscannerSetDistanceOverride1601"
 	}
 	solid
 	{
@@ -109815,9 +110081,9 @@ entity
 	"targetname" "lcs_knockout_kickdoor"
 	connections
 	{
-		"OnCompletion" "npc_kickdoor_policer,SetPoliceGoal,kickdoor_police_goal,0,-1"
-		"OnTrigger1" "door_knockout_2,Unlock,,0,-1"
-		"OnTrigger2" "door_knockout_2,Open,,0,-1"
+		"OnCompletion" "npc_kickdoor_policerSetPoliceGoalkickdoor_police_goal0-1"
+		"OnTrigger1" "door_knockout_2Unlock0-1"
+		"OnTrigger2" "door_knockout_2Open0-1"
 	}
 	"origin" "-7128 -3984 444"
 	editor
@@ -110255,7 +110521,7 @@ entity
 			"plane" "(-7112 -4000 704) (-7112 -4000 736) (-7112 -3904 736)"
 			"material" "PROPS/METALDUCT003A"
 			"uaxis" "[0 1 0 128] 0.25"
-			"vaxis" "[0 0 1 0] -0.25"
+			"vaxis" "[0 0 -1 0] -0.25"
 			"rotation" "0"
 			"lightmapscale" "16"
 			"smoothing_groups" "0"
@@ -110319,8 +110585,8 @@ entity
 			"id" "92659"
 			"plane" "(-7124 -4024 704) (-7124 -4024 736) (-7116 -4020 736)"
 			"material" "PROPS/METALDUCT003A"
-			"uaxis" "[0.894427 0.447214 0 -40.8786] 0.25"
-			"vaxis" "[0 0 1 0] -0.25"
+			"uaxis" "[1 0 0 128] 0.25"
+			"vaxis" "[0 0 -1 0] -0.25"
 			"rotation" "0"
 			"lightmapscale" "16"
 			"smoothing_groups" "0"
@@ -110374,8 +110640,8 @@ entity
 			"id" "92664"
 			"plane" "(-7116 -4020 704) (-7116 -4020 736) (-7112 -4012 736)"
 			"material" "PROPS/METALDUCT003A"
-			"uaxis" "[0.447214 0.894427 0 79.8573] 0.25"
-			"vaxis" "[0 0 1 0] -0.25"
+			"uaxis" "[0 1 0 128] 0.25"
+			"vaxis" "[0 0 -1 0] -0.25"
 			"rotation" "0"
 			"lightmapscale" "16"
 			"smoothing_groups" "0"
@@ -110385,8 +110651,8 @@ entity
 			"id" "92665"
 			"plane" "(-7112 -4000 704) (-7112 -4012 704) (-7112 -4012 736)"
 			"material" "PROPS/METALDUCT003A"
-			"uaxis" "[0 1 0 86.7734] 0.25"
-			"vaxis" "[0 0 1 0] -0.25"
+			"uaxis" "[0 1 0 128] 0.25"
+			"vaxis" "[0 0 -1 0] -0.25"
 			"rotation" "0"
 			"lightmapscale" "16"
 			"smoothing_groups" "0"
@@ -110396,8 +110662,8 @@ entity
 			"id" "92666"
 			"plane" "(-7124 -4024 704) (-7136 -4024 704) (-7136 -4024 736)"
 			"material" "PROPS/METALDUCT003A"
-			"uaxis" "[1 0 0 -80.7754] 0.25"
-			"vaxis" "[0 0 1 0] -0.25"
+			"uaxis" "[1 0 0 128] 0.25"
+			"vaxis" "[0 0 -1 0] -0.25"
 			"rotation" "0"
 			"lightmapscale" "16"
 			"smoothing_groups" "0"
@@ -110428,8 +110694,8 @@ entity
 			"id" "92668"
 			"plane" "(-7264 -4024 704) (-7264 -4024 736) (-7136 -4024 736)"
 			"material" "PROPS/METALDUCT003A"
-			"uaxis" "[1 0 0 -128] 0.25"
-			"vaxis" "[0 0 1 0] -0.25"
+			"uaxis" "[1 0 0 128] 0.25"
+			"vaxis" "[0 0 -1 0] -0.25"
 			"rotation" "0"
 			"lightmapscale" "16"
 			"smoothing_groups" "0"
@@ -111610,7 +111876,7 @@ entity
 	"spawnobject" "0"
 	connections
 	{
-		"OnBreak" "stairwell_counter,Add,1,0,-1"
+		"OnBreak" "stairwell_counterAdd10-1"
 	}
 	solid
 	{
@@ -113511,10 +113777,10 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "!player,SetHealth,100,0,-1"
-		"OnTrigger" "npc_windowscanner,SetFollowTarget,target_scanner_inspection_final,0,-1"
-		"OnTrigger" "gordon_criminal_global,TurnOn,,0,-1"
-		"OnTrigger" "achivement_escape_raid,FireEvent,,1,-1"
+		"OnTrigger" "!playerSetHealth1000-1"
+		"OnTrigger" "npc_windowscannerSetFollowTargettarget_scanner_inspection_final0-1"
+		"OnTrigger" "gordon_criminal_globalTurnOn0-1"
+		"OnTrigger" "achivement_escape_raidFireEvent1-1"
 	}
 	solid
 	{
@@ -113929,6 +114195,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_pipes002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7000 -3832 744"
 	editor
@@ -113947,6 +114215,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_pipes001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6989 -3787 612"
 	editor
@@ -113965,6 +114235,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/pipecluster002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7103 -4061 738"
 	editor
@@ -113983,6 +114255,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_switchbox001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7153.88 -3783.1 585.434"
 	editor
@@ -114001,6 +114275,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_conduit001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-6990.88 -3782.1 629.434"
 	editor
@@ -114019,6 +114295,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_switchbox001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7338 -3938 459"
 	editor
@@ -114767,7 +115045,7 @@ entity
 	"spawnobject" "0"
 	connections
 	{
-		"OnBreak" "stairwell_counter,Add,1,0,-1"
+		"OnBreak" "stairwell_counterAdd10-1"
 	}
 	solid
 	{
@@ -115464,6 +115742,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/pipecluster002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7624 -4100 496"
 	editor
@@ -115757,9 +116037,9 @@ entity
 	"wait" "1"
 	connections
 	{
-		"OnTrigger" "portal_attic2_window2,Close,,0,-1"
-		"OnTrigger" "portal_attic2_window1,Close,,0,-1"
-		"OnTrigger" "portal_attic1,Open,,0,-1"
+		"OnTrigger" "portal_attic2_window2Close0-1"
+		"OnTrigger" "portal_attic2_window1Close0-1"
+		"OnTrigger" "portal_attic1Open0-1"
 	}
 	solid
 	{
@@ -115855,9 +116135,9 @@ entity
 	"wait" "1"
 	connections
 	{
-		"OnTrigger" "portal_attic2_window2,Open,,0,-1"
-		"OnTrigger" "portal_attic2_window1,Open,,0,-1"
-		"OnTrigger" "portal_attic1,Close,,0,-1"
+		"OnTrigger" "portal_attic2_window2Open0-1"
+		"OnTrigger" "portal_attic2_window1Open0-1"
+		"OnTrigger" "portal_attic1Close0-1"
 	}
 	solid
 	{
@@ -116148,14 +116428,14 @@ entity
 	"targetname" "relay_elevator_1"
 	connections
 	{
-		"OnTrigger" "prop_elevatordoor,SetAnimation,open,1.5,-1"
-		"OnTrigger" "door_elevator_topsliding,Open,,2,-1"
-		"OnTrigger" "door_elevator_L,Open,,1.5,-1"
-		"OnTrigger" "door_elevator_R,Open,,1.5,-1"
-		"OnTrigger" "sound_elevator_ding,PlaySound,,1,-1"
-		"OnTrigger" "tracktrain_elevator,Stop,,0,-1"
-		"OnTrigger" "door_elevator_clip,Disable,,2,-1"
-		"OnTrigger" "elevator_link,TurnOn,,1.5,-1"
+		"OnTrigger" "prop_elevatordoorSetAnimationopen1.5-1"
+		"OnTrigger" "door_elevator_topslidingOpen2-1"
+		"OnTrigger" "door_elevator_LOpen1.5-1"
+		"OnTrigger" "door_elevator_ROpen1.5-1"
+		"OnTrigger" "sound_elevator_dingPlaySound1-1"
+		"OnTrigger" "tracktrain_elevatorStop0-1"
+		"OnTrigger" "door_elevator_clipDisable2-1"
+		"OnTrigger" "elevator_linkTurnOn1.5-1"
 	}
 	"origin" "-7760 -3960.09 448.31"
 	editor
@@ -116258,7 +116538,7 @@ entity
 	"targetname" "trigger_elevator_alyxinside"
 	connections
 	{
-		"OnTrigger" "trigger_elevator_go_down,Enable,,0,-1"
+		"OnTrigger" "trigger_elevator_go_downEnable0-1"
 	}
 	solid
 	{
@@ -116356,8 +116636,8 @@ entity
 	"targetname" "lcs_alyxgreet02"
 	connections
 	{
-		"OnTrigger1" "tracktrain_elevator,StartForward,,1.5,-1"
-		"OnTrigger1" "elevator_link,TurnOff,,1.5,-1"
+		"OnTrigger1" "tracktrain_elevatorStartForward1.5-1"
+		"OnTrigger1" "elevator_linkTurnOff1.5-1"
 	}
 	"origin" "-7480 -3960 456"
 	editor
@@ -118032,6 +118312,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/AntennaClusters01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1984 -4608 707"
@@ -118056,6 +118338,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/AntennaClusters01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1696 -4608 707"
@@ -118078,6 +118362,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-3264 -4416 -6.04901"
@@ -118115,6 +118401,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-2238 -4540 -6.04901"
@@ -118189,6 +118477,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_buildings/row_res_2.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-3301.83 4915.95 -2048"
@@ -118212,6 +118502,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_buildings/row_upscale.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-3259.83 4883.95 -2033.75"
@@ -118252,8 +118544,8 @@ entity
 	"targetname" "apc_path_7"
 	connections
 	{
-		"OnPass" "apc,TurnOff,,1,-1"
-		"OnPass" "apc_driver,Kill,,1,-1"
+		"OnPass" "apcTurnOff1-1"
+		"OnPass" "apc_driverKill1-1"
 	}
 	"origin" "-7024 -4608 72"
 	editor
@@ -118349,6 +118641,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypole02b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2613.2 -4429.3 -3.00407e-005"
 	editor
@@ -118483,6 +118777,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/utilitypolemount01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1136 -4004 363"
 	editor
@@ -118699,8 +118995,8 @@ entity
 	"wait" "1"
 	connections
 	{
-		"OnTrigger" "portal_endsection,Open,,0,-1"
-		"OnTrigger" "street_cop_template_2,ForceSpawn,,0,1"
+		"OnTrigger" "portal_endsectionOpen0-1"
+		"OnTrigger" "street_cop_template_2ForceSpawn01"
 	}
 	solid
 	{
@@ -118796,7 +119092,7 @@ entity
 	"wait" "1"
 	connections
 	{
-		"OnTrigger" "portal_endsection,Close,,0,-1"
+		"OnTrigger" "portal_endsectionClose0-1"
 	}
 	solid
 	{
@@ -119186,6 +119482,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-2496 -4032 -6.04901"
@@ -119208,6 +119506,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-871 -4488 -6.04901"
@@ -119230,6 +119530,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_foliage/tree_deciduous_01a-lod.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "0"
 	"origin" "-295 -3936 -6.04901"
@@ -119282,6 +119584,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/AntennaClusters01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1504 -3868 820"
@@ -119575,6 +119879,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/pipecluster002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7483 -4144 -128"
 	editor
@@ -119593,6 +119899,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_conduit001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7375.86 -4222.1 -146.545"
 	editor
@@ -119611,6 +119919,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_pipes002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7459 -4129 -119.835"
 	editor
@@ -119658,6 +119968,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/pipecluster001c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7320 -4040 -174.891"
 	editor
@@ -119676,6 +119988,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/pipecluster001c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7692 -4204 -111"
 	editor
@@ -119694,6 +120008,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/pipecluster001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7631 -4219 -185"
 	editor
@@ -119954,6 +120270,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_rooftop/attic_window.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2944 -3868 581.12"
 	editor
@@ -120475,8 +120793,8 @@ entity
 	"targetname" "door_secret_2"
 	connections
 	{
-		"OnPass" "secret_door,Stop,,0,-1"
-		"OnPass" "secret_door,Resume,,1.5,-1"
+		"OnPass" "secret_doorStop0-1"
+		"OnPass" "secret_doorResume1.5-1"
 	}
 	"origin" "-7709 -4138 -196"
 	editor
@@ -120804,6 +121122,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/antenna01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-4438 -3737 860"
@@ -120827,6 +121147,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_buildings/project_building01_skybox.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-3650.49 4512.86 -2015.75"
@@ -120851,6 +121173,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_buildings/project_building01_skybox.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-3062 4755 -2019.75"
@@ -120875,6 +121199,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_buildings/buildingskybox_002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-3489 4264 -1914.75"
@@ -120899,6 +121225,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/Roof_Dish001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-5282 -3634 831"
@@ -120922,6 +121250,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/Roof_Dish001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4874 -3032 864"
@@ -120945,6 +121275,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_rooftop/antenna01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-4916 -3026 986"
@@ -120968,6 +121300,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_interiors/LightBulb01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-7360 -4016.59 462.825"
@@ -121035,6 +121369,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-7571.51 -3875.14 501.069"
@@ -121075,6 +121411,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-7571.51 -3875.14 -122.931"
@@ -121171,6 +121509,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_interiors/LightBulb01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-7664 -4095.98 -161.175"
@@ -121241,6 +121581,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_interiors/LightBulb01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-8016 -4103.98 -177.175"
@@ -121307,6 +121649,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_cagedlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7846 -3960 598.25"
 	editor
@@ -121329,6 +121673,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_buildings/buildingskybox_002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-4088 4800 -1938.75"
@@ -121351,6 +121697,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/CombineInnerwallCluster1024_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-7808 -7424 647.91"
@@ -121369,6 +121717,7 @@ entity
 	"angles" "80 165 0"
 	"color" "128 128 128"
 	"distance" "75"
+	"enableshadowsfromlocallights" "1"
 	"origin" "-3328.7 -3515.08 649"
 	editor
 	{
@@ -122445,11 +122794,11 @@ entity
 	"targetname" "logic_fade_view"
 	connections
 	{
-		"OnTrigger" "blackout_viewcontroller,Enable,,2,-1"
-		"OnTrigger" "blackout_viewcontroller,SetParentAttachment,vehicle_driver_eyes,1.1,-1"
-		"OnTrigger" "blackout_viewcontroller,SetParent,blackout,1,-1"
-		"OnTrigger" "fade,Fade,,0,-1"
-		"OnTrigger" "zoom,Zoom,,0,-1"
+		"OnTrigger" "blackout_viewcontrollerEnable2-1"
+		"OnTrigger" "blackout_viewcontrollerSetParentAttachmentvehicle_driver_eyes1.1-1"
+		"OnTrigger" "blackout_viewcontrollerSetParentblackout1-1"
+		"OnTrigger" "fadeFade0-1"
+		"OnTrigger" "zoomZoom0-1"
 	}
 	"origin" "-7562 -4020 424"
 	editor
@@ -122523,7 +122872,7 @@ entity
 	"targetname" "blackout"
 	connections
 	{
-		"OnAnimationDone" "trigger_knockout_teleport,Enable,,0,-1"
+		"OnAnimationDone" "trigger_knockout_teleportEnable0-1"
 	}
 	"origin" "-7544.35 -3981.39 386"
 	editor
@@ -122898,7 +123247,7 @@ entity
 	"spawnflags" "1"
 	connections
 	{
-		"OnMapSpawn" "ss_DoorBracer_Struggle,BeginSequence,,0,-1"
+		"OnMapSpawn" "ss_DoorBracer_StruggleBeginSequence0-1"
 	}
 	"origin" "-3214.69 -3577.21 393"
 	editor
@@ -122917,13 +123266,13 @@ entity
 	"targetname" "kickdown_relay"
 	connections
 	{
-		"OnTrigger" "spawn_door_bracer_fake,ForceSpawn,,0,-1"
-		"OnTrigger" "citizen_DoorBracer,SetHealth,5,0.1,-1"
-		"OnTrigger" "logic_doorBracer_BustThru,Trigger,,0.1,-1"
-		"OnTrigger" "attic_cops_template,ForceSpawn,,0,-1"
-		"OnTrigger" "attic_cop_chase_schedule,StartSchedule,,2,-1"
-		"OnTrigger" "door_bracerProp,Kill,,0.1,-1"
-		"OnTrigger" "sound_door_kick_in,PlaySound,,0,-1"
+		"OnTrigger" "spawn_door_bracer_fakeForceSpawn0-1"
+		"OnTrigger" "citizen_DoorBracerSetHealth50.1-1"
+		"OnTrigger" "logic_doorBracer_BustThruTrigger0.1-1"
+		"OnTrigger" "attic_cops_templateForceSpawn0-1"
+		"OnTrigger" "attic_cop_chase_scheduleStartSchedule2-1"
+		"OnTrigger" "door_bracerPropKill0.1-1"
+		"OnTrigger" "sound_door_kick_inPlaySound0-1"
 	}
 	"origin" "-3205.77 -3553.42 393"
 	editor
@@ -123336,8 +123685,8 @@ entity
 	"targetname" "apc2_path_10"
 	connections
 	{
-		"OnPass" "apc2_driver,Kill,,1,-1"
-		"OnPass" "apc2,TurnOff,,1,-1"
+		"OnPass" "apc2_driverKill1-1"
+		"OnPass" "apc2TurnOff1-1"
 	}
 	"origin" "-6784 -4576 37"
 	editor
@@ -123376,7 +123725,7 @@ entity
 	"targetname" "apc2_relay_start_apc2_moving"
 	connections
 	{
-		"OnTrigger" "apc2_driver,GotoPathCorner,apc2_path_start,0,-1"
+		"OnTrigger" "apc2_driverGotoPathCornerapc2_path_start0-1"
 	}
 	"origin" "-439.889 -3647.54 192"
 	editor
@@ -123421,6 +123770,8 @@ entity
 	"fadescale" "1"
 	"model" "models/combine_apc.mdl"
 	"origin" "-467.82 -3621.22 19"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"targetname" "apc2"
@@ -123517,7 +123868,7 @@ entity
 	"Template02" "street_cop_2"
 	connections
 	{
-		"OnEntitySpawned" "street_cop_chase,StartSchedule,,0.1,-1"
+		"OnEntitySpawned" "street_cop_chaseStartSchedule0.1-1"
 	}
 	"origin" "-2498.74 -3849 72.6541"
 	editor
@@ -123582,7 +123933,7 @@ entity
 	"Template01" "street_cop_3"
 	connections
 	{
-		"OnEntitySpawned" "street_cop_chase_2,StartSchedule,,0.1,-1"
+		"OnEntitySpawned" "street_cop_chase_2StartSchedule0.1-1"
 	}
 	"origin" "-7456 -5190.08 135.654"
 	editor
@@ -123933,9 +124284,9 @@ entity
 	"weapondrawn" "0"
 	connections
 	{
-		"OnStunnedPlayer" "!player,SetHealth,100,0,-1"
-		"OnStunnedPlayer" "counter_knockout_hitcount,Add,1,0,-1"
-		"OnDamaged" "npc_knockout_cop_kickdoor,SetHealth,0,10,1"
+		"OnStunnedPlayer" "!playerSetHealth1000-1"
+		"OnStunnedPlayer" "counter_knockout_hitcountAdd10-1"
+		"OnDamaged" "npc_knockout_cop_kickdoorSetHealth0101"
 	}
 	"origin" "-7025 -3993 521"
 	editor
@@ -124152,7 +124503,7 @@ entity
 	"targetname" "stairwell_counter"
 	connections
 	{
-		"OnHitMax" "stairwell_nodes,TurnOn,,0,-1"
+		"OnHitMax" "stairwell_nodesTurnOn0-1"
 	}
 	"origin" "-7158.62 -3873 483.371"
 	editor
@@ -124447,6 +124798,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_buildings/project_building01_skybox.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-4016 4696 -2039.75"
@@ -124470,6 +124823,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_buildings/buildingskybox_002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-4032 4552 -1962.75"
@@ -125147,9 +125502,9 @@ entity
 	"weapondrawn" "0"
 	connections
 	{
-		"OnStunnedPlayer" "!player,SetHealth,100,0,-1"
-		"OnStunnedPlayer" "counter_knockout_hitcount,Add,1,0,-1"
-		"OnDamaged" "npc_knockout_cop_kickdoor,SetHealth,0,10,1"
+		"OnStunnedPlayer" "!playerSetHealth1000-1"
+		"OnStunnedPlayer" "counter_knockout_hitcountAdd10-1"
+		"OnDamaged" "npc_knockout_cop_kickdoorSetHealth0101"
 	}
 	"origin" "-7084 -4076 521"
 	editor
@@ -125194,10 +125549,10 @@ entity
 	"targetname" "ss_DoorBracer_BustThru"
 	connections
 	{
-		"OnBeginSequence" "ss_DoorBracer_Struggle,Kill,,0.1,-1"
-		"_OnScriptEvent01" "hurt_Cit_DoorBracer,Hurt,,0,-1"
-		"OnBeginSequence" "door_bracerProp,SetAnimation,doorBracer_BustThru,0,-1"
-		"OnBeginSequence" "ss_DoorBracer_Struggle,CancelSequence,,0,-1"
+		"OnBeginSequence" "ss_DoorBracer_StruggleKill0.1-1"
+		"_OnScriptEvent01" "hurt_Cit_DoorBracerHurt0-1"
+		"OnBeginSequence" "door_bracerPropSetAnimationdoorBracer_BustThru0-1"
+		"OnBeginSequence" "ss_DoorBracer_StruggleCancelSequence0-1"
 	}
 	"origin" "-3035 -3578.2 414"
 	editor
@@ -125225,8 +125580,8 @@ entity
 	"targetname" "ss_DoorBracer_Struggle"
 	connections
 	{
-		"OnBeginSequence" "ss_DoorBracer_Struggle,BeginSequence,,1.75,-1"
-		"OnBeginSequence" "door_bracerProp,SetAnimation,doorBracer_Struggle,0,-1"
+		"OnBeginSequence" "ss_DoorBracer_StruggleBeginSequence1.75-1"
+		"OnBeginSequence" "door_bracerPropSetAnimationdoorBracer_Struggle0-1"
 	}
 	"origin" "-3039 -3578.2 401"
 	editor
@@ -125246,8 +125601,8 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnStartTouch" "kickdown_relay,Trigger,,0,-1"
-		"OnStartTouch" "ss_DoorBracer_Struggle,Kill,,2,-1"
+		"OnStartTouch" "kickdown_relayTrigger0-1"
+		"OnStartTouch" "ss_DoorBracer_StruggleKill2-1"
 	}
 	solid
 	{
@@ -127066,7 +127421,7 @@ entity
 	"spawnflags" "1"
 	connections
 	{
-		"OnTrigger" "!player,SetHealth,100,0,-1"
+		"OnTrigger" "!playerSetHealth1000-1"
 	}
 	solid
 	{
@@ -127188,9 +127543,9 @@ entity
 	"weapondrawn" "0"
 	connections
 	{
-		"OnStunnedPlayer" "!player,SetHealth,100,0,-1"
-		"OnStunnedPlayer" "counter_knockout_hitcount,Add,1,0,-1"
-		"OnDamaged" "npc_kickdoor_policer,SetHealth,0,10,1"
+		"OnStunnedPlayer" "!playerSetHealth1000-1"
+		"OnStunnedPlayer" "counter_knockout_hitcountAdd10-1"
+		"OnDamaged" "npc_kickdoor_policerSetHealth0101"
 	}
 	"origin" "-6960 -4040 385"
 	editor
@@ -127260,9 +127615,9 @@ entity
 	"targetname" "lcs_knockout_kickdoor_2"
 	connections
 	{
-		"OnTrigger1" "door_knockout_1,Open,,0.1,-1"
-		"OnCompletion" "npc_knockout_cop2,SetPoliceGoal,kickdoor_police_goal_2,0,-1"
-		"OnTrigger1" "door_knockout_1,Unlock,,0,-1"
+		"OnTrigger1" "door_knockout_1Open0.1-1"
+		"OnCompletion" "npc_knockout_cop2SetPoliceGoalkickdoor_police_goal_20-1"
+		"OnTrigger1" "door_knockout_1Unlock0-1"
 	}
 	"origin" "-7412 -3956 444"
 	editor
@@ -127296,14 +127651,14 @@ entity
 	"spawnflags" "1"
 	connections
 	{
-		"OnTrigger" "global_gordon_invulnerable,TurnOn,,0,1"
-		"OnTrigger" "window_player_clip,Enable,,0,1"
-		"OnTrigger" "npc_windowscanner,Kill,,0,-1"
-		"OnTrigger" "street_cop_3,Kill,,0,-1"
-		"OnTrigger" "street_cop_2,Kill,,0,-1"
-		"OnTrigger" "street_cop_1,Kill,,0,-1"
-		"OnTrigger" "relay_knockout_start,Trigger,,0,1"
-		"OnTrigger" "npc_knockout_cop_upstairs_template,ForceSpawn,,0,1"
+		"OnTrigger" "global_gordon_invulnerableTurnOn01"
+		"OnTrigger" "window_player_clipEnable01"
+		"OnTrigger" "npc_windowscannerKill0-1"
+		"OnTrigger" "street_cop_3Kill0-1"
+		"OnTrigger" "street_cop_2Kill0-1"
+		"OnTrigger" "street_cop_1Kill0-1"
+		"OnTrigger" "relay_knockout_startTrigger01"
+		"OnTrigger" "npc_knockout_cop_upstairs_templateForceSpawn01"
 	}
 	solid
 	{
@@ -127625,18 +127980,18 @@ entity
 	"targetname" "logic_kill_cops"
 	connections
 	{
-		"OnTrigger" "teleport_last_cop,Teleport,,7,-1"
-		"OnTrigger" "npc_knockout_cop2,Kill,,0,-1"
-		"OnTrigger" "npc_knockout_cop_kickdoor,Kill,,0,-1"
-		"OnTrigger" "npc_kickdoor_policer,Kill,,0,-1"
-		"OnTrigger" "npc_knockout_cop_upstairs,Kill,,0,-1"
-		"OnTrigger" "npc_knockout_cop1,Kill,,0,-1"
-		"OnTrigger" "template_ragdoll_cop_3,ForceSpawn,,5,-1"
-		"OnTrigger" "template_ragdoll_cop_2,ForceSpawn,,2,-1"
-		"OnTrigger" "template_ragdoll_cop_1,ForceSpawn,,1.5,-1"
-		"OnTrigger" "template_ragdoll_cop_6,ForceSpawn,,3,-1"
-		"OnTrigger" "template_ragdoll_cop_5,ForceSpawn,,4.2,-1"
-		"OnTrigger" "template_ragdoll_cop_4,ForceSpawn,,0,-1"
+		"OnTrigger" "teleport_last_copTeleport7-1"
+		"OnTrigger" "npc_knockout_cop2Kill0-1"
+		"OnTrigger" "npc_knockout_cop_kickdoorKill0-1"
+		"OnTrigger" "npc_kickdoor_policerKill0-1"
+		"OnTrigger" "npc_knockout_cop_upstairsKill0-1"
+		"OnTrigger" "npc_knockout_cop1Kill0-1"
+		"OnTrigger" "template_ragdoll_cop_3ForceSpawn5-1"
+		"OnTrigger" "template_ragdoll_cop_2ForceSpawn2-1"
+		"OnTrigger" "template_ragdoll_cop_1ForceSpawn1.5-1"
+		"OnTrigger" "template_ragdoll_cop_6ForceSpawn3-1"
+		"OnTrigger" "template_ragdoll_cop_5ForceSpawn4.2-1"
+		"OnTrigger" "template_ragdoll_cop_4ForceSpawn0-1"
 	}
 	"origin" "-7480 -3960 472"
 	editor
@@ -127658,7 +128013,7 @@ entity
 	"targetname" "lcs_alyxgreet00"
 	connections
 	{
-		"OnCompletion" "mic_alyx,Disable,,0,-1"
+		"OnCompletion" "mic_alyxDisable0-1"
 	}
 	"origin" "-7496 -3960 472"
 	editor
@@ -127679,7 +128034,7 @@ entity
 	"Template01" "ragdoll_cop_3"
 	connections
 	{
-		"OnEntitySpawned" "physexp_ragdoll_cop_3,Explode,,0,-1"
+		"OnEntitySpawned" "physexp_ragdoll_cop_3Explode0-1"
 	}
 	"origin" "-7594.33 -3900.85 418.155"
 	editor
@@ -127795,9 +128150,9 @@ entity
 	"targetname" "ss_alyx_intro_bendover"
 	connections
 	{
-		"OnEndSequence" "trigger_doll,Enable,,0,-1"
-		"OnEndSequence" "tonemap_controller,SetTonemaprate,0.25,0,-1"
-		"OnEndSequence" "tonemap_controller,SetBloomScale,0.2,0,-1"
+		"OnEndSequence" "trigger_dollEnable0-1"
+		"OnEndSequence" "tonemap_controllerSetTonemaprate0.250-1"
+		"OnEndSequence" "tonemap_controllerSetBloomScale0.20-1"
 	}
 	"origin" "-7517.75 -4001.52 384"
 	editor
@@ -127817,7 +128172,7 @@ entity
 	"Template01" "ragdoll_cop_2"
 	connections
 	{
-		"OnEntitySpawned" "physexp_ragdoll_cop_2,Explode,,0,-1"
+		"OnEntitySpawned" "physexp_ragdoll_cop_2Explode0-1"
 	}
 	"origin" "-7485.83 -4058.98 423.974"
 	editor
@@ -127897,7 +128252,7 @@ entity
 	"Template01" "ragdoll_cop_1"
 	connections
 	{
-		"OnEntitySpawned" "physexp_ragdoll_cop_1,Explode,,0,-1"
+		"OnEntitySpawned" "physexp_ragdoll_cop_1Explode0-1"
 	}
 	"origin" "-7470.24 -4154 415.497"
 	editor
@@ -127941,7 +128296,7 @@ entity
 	"Template01" "ragdoll_cop_6"
 	connections
 	{
-		"OnEntitySpawned" "physexp_ragdoll_cop_6,Explode,,0,-1"
+		"OnEntitySpawned" "physexp_ragdoll_cop_6Explode0-1"
 	}
 	"origin" "-7588.75 -4220.17 409.402"
 	editor
@@ -128021,7 +128376,7 @@ entity
 	"Template01" "ragdoll_cop_5"
 	connections
 	{
-		"OnEntitySpawned" "physexp_ragdoll_cop_5,Explode,,0,-1"
+		"OnEntitySpawned" "physexp_ragdoll_cop_5Explode0-1"
 	}
 	"origin" "-7696.15 -4257.56 409.402"
 	editor
@@ -128065,7 +128420,7 @@ entity
 	"Template01" "ragdoll_cop_4"
 	connections
 	{
-		"OnEntitySpawned" "physexp_ragdoll_cop_4,Explode,,0,-1"
+		"OnEntitySpawned" "physexp_ragdoll_cop_4Explode0-1"
 	}
 	"origin" "-7613.44 -4092.28 407.649"
 	editor
@@ -128128,9 +128483,9 @@ entity
 	"targetname" "counter_knockout_hitcount"
 	connections
 	{
-		"OnHitMax" "relay_knockout_player,Trigger,,0,1"
-		"OnHitMax" "relay_knockout_failsafe,Disable,,0.1,1"
-		"OnHitMax" "relay_knockout_failsafe,Kill,,0,1"
+		"OnHitMax" "relay_knockout_playerTrigger01"
+		"OnHitMax" "relay_knockout_failsafeDisable0.11"
+		"OnHitMax" "relay_knockout_failsafeKill01"
 	}
 	"origin" "-7512 -4024 500"
 	editor
@@ -128150,8 +128505,8 @@ entity
 	"targetname" "relay_knockout_failsafe"
 	connections
 	{
-		"OnTrigger" "sound_knockout_failsafe,PlaySound,,30,1"
-		"OnTrigger" "relay_knockout_player,Trigger,,30,1"
+		"OnTrigger" "sound_knockout_failsafePlaySound301"
+		"OnTrigger" "relay_knockout_playerTrigger301"
 	}
 	"origin" "-7512 -4008 500"
 	editor
@@ -128204,10 +128559,10 @@ entity
 	"targetname" "relay_knockout_start"
 	connections
 	{
-		"OnTrigger" "lcs_knockout_kickdoor,Start,,1,1"
-		"OnTrigger" "sound_knockout_copspeech1,PlaySound,,0,1"
-		"OnTrigger" "sound_knockout_copspeech2,PlaySound,,0.5,1"
-		"OnTrigger" "lcs_knockout_kickdoor_2,Start,,0,-1"
+		"OnTrigger" "lcs_knockout_kickdoorStart11"
+		"OnTrigger" "sound_knockout_copspeech1PlaySound01"
+		"OnTrigger" "sound_knockout_copspeech2PlaySound0.51"
+		"OnTrigger" "lcs_knockout_kickdoor_2Start0-1"
 	}
 	"origin" "-7512 -4040 472"
 	editor
@@ -128228,19 +128583,19 @@ entity
 	"targetname" "relay_knockout_player"
 	connections
 	{
-		"OnTrigger" "mic_alyx,Enable,,0,-1"
-		"OnTrigger" "npc_knockout_cop_upstairs,Kill,,3,-1"
-		"OnTrigger" "logic_fade_view,Trigger,,0.1,-1"
-		"OnTrigger" "sound_knockout_copspeech_done,PlaySound,,2,-1"
-		"OnTrigger" "relationship_cops_hate_player,RevertRelationship,,0,-1"
-		"OnTrigger" "global_gordon_invulnerable,TurnOff,,0.3,-1"
-		"OnTrigger" "door_knockout_2,Close,,1.1,-1"
-		"OnTrigger" "door_knockout_2,Lock,,1,-1"
-		"OnTrigger" "relay_knockout_alyxrescue,Trigger,,3.5,-1"
-		"OnTrigger" "logic_kill_cops,Trigger,,0.2,-1"
-		"OnTrigger" "lcs_alyxgreet00,Start,,0.4,-1"
-		"OnTrigger" "template_alyx,ForceSpawn,,0.2,-1"
-		"OnTrigger" "breakable_alyxwindow,Break,,0.5,-1"
+		"OnTrigger" "mic_alyxEnable0-1"
+		"OnTrigger" "npc_knockout_cop_upstairsKill3-1"
+		"OnTrigger" "logic_fade_viewTrigger0.1-1"
+		"OnTrigger" "sound_knockout_copspeech_donePlaySound2-1"
+		"OnTrigger" "relationship_cops_hate_playerRevertRelationship0-1"
+		"OnTrigger" "global_gordon_invulnerableTurnOff0.3-1"
+		"OnTrigger" "door_knockout_2Close1.1-1"
+		"OnTrigger" "door_knockout_2Lock1-1"
+		"OnTrigger" "relay_knockout_alyxrescueTrigger3.5-1"
+		"OnTrigger" "logic_kill_copsTrigger0.2-1"
+		"OnTrigger" "lcs_alyxgreet00Start0.4-1"
+		"OnTrigger" "template_alyxForceSpawn0.2-1"
+		"OnTrigger" "breakable_alyxwindowBreak0.5-1"
 	}
 	"origin" "-7512 -4024 472"
 	editor
@@ -128261,7 +128616,7 @@ entity
 	"targetname" "relay_knockout_alyxrescue"
 	connections
 	{
-		"OnTrigger" "lcs_alyxgreet01,Start,,5.5,-1"
+		"OnTrigger" "lcs_alyxgreet01Start5.5-1"
 	}
 	"origin" "-7512 -4008 472"
 	editor
@@ -128284,11 +128639,11 @@ entity
 	"targetname" "trigger_knockout_teleport"
 	connections
 	{
-		"OnStartTouch" "trigger_knockout_teleport,Disable,,0,-1"
-		"OnStartTouch" "blackout_viewcontroller,Disable,,0,-1"
-		"OnStartTouch" "blackout_viewcontroller,Kill,,0.2,-1"
-		"OnStartTouch" "blackout,Kill,,0.2,-1"
-		"OnStartTouch" "alyx,StartScripting,,0,-1"
+		"OnStartTouch" "trigger_knockout_teleportDisable0-1"
+		"OnStartTouch" "blackout_viewcontrollerDisable0-1"
+		"OnStartTouch" "blackout_viewcontrollerKill0.2-1"
+		"OnStartTouch" "blackoutKill0.2-1"
+		"OnStartTouch" "alyxStartScripting0-1"
 	}
 	solid
 	{
@@ -128591,13 +128946,13 @@ entity
 	"targetname" "trigger_elevator_go_down"
 	connections
 	{
-		"OnTrigger" "prop_elevatordoor,SetAnimation,close,0,-1"
-		"OnTrigger" "door_elevator_L,Close,,0,-1"
-		"OnTrigger" "door_elevator_R,Close,,0,-1"
-		"OnTrigger" "door_elevator_topsliding,Close,,0,-1"
-		"OnTrigger" "lcs_alyxgreet02,Start,,0.5,-1"
-		"OnStartTouch" "speaker_alyxfollow1,TurnOff,,0,-1"
-		"OnStartTouch" "speaker_alyxfollow1,Kill,,0.1,-1"
+		"OnTrigger" "prop_elevatordoorSetAnimationclose0-1"
+		"OnTrigger" "door_elevator_LClose0-1"
+		"OnTrigger" "door_elevator_RClose0-1"
+		"OnTrigger" "door_elevator_topslidingClose0-1"
+		"OnTrigger" "lcs_alyxgreet02Start0.5-1"
+		"OnStartTouch" "speaker_alyxfollow1TurnOff0-1"
+		"OnStartTouch" "speaker_alyxfollow1Kill0.1-1"
 	}
 	solid
 	{
@@ -128695,14 +129050,14 @@ entity
 	"targetname" "lcs_alyxgreet01"
 	connections
 	{
-		"OnTrigger1" "zoom2,UnZoom,,3,-1"
-		"OnTrigger1" "zoom2,Zoom,,0,-1"
-		"OnTrigger1" "blackout,SetAnimation,exit1,0,-1"
-		"OnTrigger2" "relay_elevator_1,Trigger,,0,-1"
-		"OnTrigger3" "ss_alyx_intro_bendover,BeginSequence,,0,-1"
-		"OnCompletion" "speaker_alyxfollow1,TurnOn,,6,-1"
-		"OnTrigger1" "zoom,UnZoom,,3,-1"
-		"OnStart" "sound_apc_alarm,PlaySound,,8,-1"
+		"OnTrigger1" "zoom2UnZoom3-1"
+		"OnTrigger1" "zoom2Zoom0-1"
+		"OnTrigger1" "blackoutSetAnimationexit10-1"
+		"OnTrigger2" "relay_elevator_1Trigger0-1"
+		"OnTrigger3" "ss_alyx_intro_bendoverBeginSequence0-1"
+		"OnCompletion" "speaker_alyxfollow1TurnOn6-1"
+		"OnTrigger1" "zoomUnZoom3-1"
+		"OnStart" "sound_apc_alarmPlaySound8-1"
 	}
 	"origin" "-7496 -3960 456"
 	editor
@@ -128724,10 +129079,10 @@ entity
 	"targetname" "lcs_alyxgreet03"
 	connections
 	{
-		"OnTrigger1" "secret_door,StartForward,,0.1,-1"
-		"OnTrigger2" "door_inside_secret,Open,,0,-1"
-		"OnTrigger1" "door_secret_1,EnablePath,,0,-1"
-		"OnCompletion" "speaker_alyxfollow2,TurnOn,,8,-1"
+		"OnTrigger1" "secret_doorStartForward0.1-1"
+		"OnTrigger2" "door_inside_secretOpen0-1"
+		"OnTrigger1" "door_secret_1EnablePath0-1"
+		"OnCompletion" "speaker_alyxfollow2TurnOn8-1"
 	}
 	"origin" "-7464 -3960 456"
 	editor
@@ -128789,8 +129144,8 @@ entity
 	"targetname" "trigger_kill_nag1"
 	connections
 	{
-		"OnTrigger" "speaker_alyxfollow2,TurnOff,,0,-1"
-		"OnTrigger" "speaker_alyxfollow2,Kill,,0.1,-1"
+		"OnTrigger" "speaker_alyxfollow2TurnOff0-1"
+		"OnTrigger" "speaker_alyxfollow2Kill0.1-1"
 	}
 	solid
 	{
@@ -129146,8 +129501,8 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "music,PlaySound,,0,1"
-		"OnTrigger" "music,Kill,,0.1,1"
+		"OnTrigger" "musicPlaySound01"
+		"OnTrigger" "musicKill0.11"
 	}
 	solid
 	{
@@ -129406,7 +129761,7 @@ entity
 	"targetname" "door_secret_0"
 	connections
 	{
-		"OnPass" "secret_door,Stop,,0,-1"
+		"OnPass" "secret_doorStop0-1"
 	}
 	"origin" "-7714 -4138 -196"
 	editor
@@ -129479,6 +129834,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeCluster16d_002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-7872 -4120 -136"
 	editor
@@ -129497,6 +129854,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe01_lcurve01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-7906 -4099.7 -162"
@@ -129516,6 +129875,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe01_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-7864.55 -4101.47 -162"
@@ -129535,6 +129896,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe01_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-7817 -4101.46 -162"
@@ -129554,6 +129917,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe01_lcurve01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-7775.32 -4099.7 -161.872"
@@ -129573,6 +129938,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe01_lcurve01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-7764.74 -4099.7 -170.625"
@@ -129592,6 +129959,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe01_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-7806.42 -4101.46 -170.754"
@@ -129611,6 +129980,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe01_straight01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-7853.97 -4101.47 -170.754"
@@ -129630,6 +130001,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/pipe01_lcurve01_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-7895.42 -4099.7 -170.754"
@@ -129782,6 +130155,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_switchbox001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-8101 -4159 -143.11"
 	editor
@@ -129999,7 +130374,7 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "autosave,Save,,0,-1"
+		"OnTrigger" "autosaveSave0-1"
 	}
 	solid
 	{
@@ -130581,33 +130956,30 @@ entity
 		"logicalpos" "[9000 9000]"
 	}
 }
-hidden
+entity
 {
-	entity
+	"id" "669362"
+	"classname" "env_sprite"
+	"disablereceiveshadows" "0"
+	"framerate" "10.0"
+	"GlowProxySize" "3"
+	"HDRColorScale" ".6"
+	"maxdxlevel" "0"
+	"mindxlevel" "0"
+	"model" "materials/Sprites/light_glow03.vmt"
+	"parentname" "tracktrain_elevator"
+	"renderamt" "255"
+	"rendercolor" "254 216 146"
+	"renderfx" "0"
+	"rendermode" "9"
+	"scale" ".75"
+	"origin" "-7744 -3959 502"
+	editor
 	{
-		"id" "669362"
-		"classname" "env_sprite"
-		"disablereceiveshadows" "0"
-		"framerate" "10.0"
-		"GlowProxySize" "3"
-		"HDRColorScale" ".6"
-		"maxdxlevel" "0"
-		"mindxlevel" "0"
-		"model" "materials/Sprites/light_glow03.vmt"
-		"parentname" "tracktrain_elevator"
-		"renderamt" "255"
-		"rendercolor" "254 216 146"
-		"renderfx" "0"
-		"rendermode" "9"
-		"scale" ".75"
-		"origin" "-7744 -3959 502"
-		editor
-		{
-			"color" "20 140 20"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-			"logicalpos" "[9000 9500]"
-		}
+		"color" "20 140 20"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[9000 9500]"
 	}
 }
 entity
@@ -130619,8 +130991,8 @@ entity
 	"StartDisabled" "0"
 	connections
 	{
-		"OnTrigger" "door_inside_secret,Close,,0,1"
-		"OnTrigger" "door_inside_secret,Lock,,0.1,1"
+		"OnTrigger" "door_inside_secretClose01"
+		"OnTrigger" "door_inside_secretLock0.11"
 	}
 	solid
 	{
@@ -131337,7 +131709,7 @@ entity
 	"targetname" "trigger_pclip_secret_door"
 	connections
 	{
-		"OnTrigger" "pclip_secret_door,Kill,,0,-1"
+		"OnTrigger" "pclip_secret_doorKill0-1"
 	}
 	solid
 	{
@@ -131592,15 +131964,15 @@ entity
 	"spawnflags" "0"
 	connections
 	{
-		"OnMapTransition" "tonemap_controller,SetAutoExposureMin,.5,0,-1"
-		"OnMapTransition" "tonemap_controller,SetTonemapRate,.35,0,-1"
-		"OnMapTransition" "tonemap_controller,SetBloomScale,.4,0,-1"
-		"OnMapSpawn" "tonemap_controller,SetAutoExposureMax,4,0,-1"
-		"OnMapSpawn" "tonemap_controller,SetAutoExposureMin,.5,0,-1"
-		"OnMapSpawn" "tonemap_controller,SetTonemapRate,.35,0,-1"
-		"OnMapSpawn" "tonemap_controller,SetBloomScale,.4,0,-1"
-		"OnMapSpawn" "prop_elevator,SetLightingOriginHack,lighting_elevator,0,-1"
-		"OnMapTransition" "tonemap_controller,SetAutoExposureMax,4,0,-1"
+		"OnMapTransition" "tonemap_controllerSetAutoExposureMin.50-1"
+		"OnMapTransition" "tonemap_controllerSetTonemapRate.350-1"
+		"OnMapTransition" "tonemap_controllerSetBloomScale.40-1"
+		"OnMapSpawn" "tonemap_controllerSetAutoExposureMax40-1"
+		"OnMapSpawn" "tonemap_controllerSetAutoExposureMin.50-1"
+		"OnMapSpawn" "tonemap_controllerSetTonemapRate.350-1"
+		"OnMapSpawn" "tonemap_controllerSetBloomScale.40-1"
+		"OnMapSpawn" "prop_elevatorSetLightingOriginHacklighting_elevator0-1"
+		"OnMapTransition" "tonemap_controllerSetAutoExposureMax40-1"
 	}
 	"origin" "-7573.01 -3988.36 408"
 	editor
@@ -150662,17 +151034,21 @@ cameras
 	}
 	camera
 	{
-		"position" "[-7540.19 -3936.14 485.606]"
-		"look" "[-7582.67 -3749.17 523.57]"
+		"position" "[-7546.37 -3926.13 468.268]"
+		"look" "[-7643.21 -4074.11 385.047]"
 	}
 }
-cordon
+cordons
 {
-	"mins" "(-7828 -4348 356)"
-	"maxs" "(-7396 -3836 716)"
 	"active" "0"
-}
-quickhide
-{
-	"count" "3"
+	cordon
+	{
+		"name" "cordon"
+		"active" "1"
+		box
+		{
+			"mins" "(-7828 -4348 356)"
+			"maxs" "(-7396 -3836 716)"
+		}
+	}
 }

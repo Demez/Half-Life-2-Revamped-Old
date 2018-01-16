@@ -157,6 +157,7 @@ public:
 
 	virtual float GetShadowDepthBias() const = 0;
 	virtual float GetShadowSlopeScaleDepthBias() const = 0;
+	virtual float GetShadowFilterSize() const = 0;
 
 	virtual bool PreferZPrepass() const = 0;
 

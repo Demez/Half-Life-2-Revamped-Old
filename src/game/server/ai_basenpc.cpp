@@ -6719,6 +6719,7 @@ void CAI_BaseNPC::SetupVPhysicsHull()
 	if ( pPhysObj )
 	{
 		float mass = Studio_GetMass(GetModelPtr());
+		// can crash here
 		if ( mass > 0 )
 		{
 			pPhysObj->SetMass( mass );

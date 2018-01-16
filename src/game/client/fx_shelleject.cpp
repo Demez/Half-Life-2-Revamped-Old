@@ -20,7 +20,8 @@ void ShellEjectCallback( const CEffectData &data )
 	IClientRenderable *pRenderable = data.GetRenderable();
 	if ( pRenderable )
 	{
-		DevWarning( "Unhandled ShellEject effect\n" );
+		//DevWarning( "Unhandled ShellEject effect\n" );
+		tempents->EjectBrass( data.m_vOrigin, data.m_vAngles, pRenderable->GetRenderAngles(), 0 );
 	}
 }
 
@@ -35,7 +36,8 @@ void RifleShellEjectCallback( const CEffectData &data )
 	IClientRenderable *pRenderable = data.GetRenderable();
 	if ( pRenderable )
 	{
-		DevWarning( "Unhandled RifleShellEject effect\n" );
+		//DevWarning( "Unhandled RifleShellEject effect\n" );
+		tempents->EjectBrass(data.m_vOrigin, data.m_vAngles, pRenderable->GetRenderAngles(), 1);
 	}
 }
 
@@ -50,7 +52,8 @@ void ShotgunShellEjectCallback( const CEffectData &data )
 	IClientRenderable *pRenderable = data.GetRenderable();
 	if ( pRenderable )
 	{
-		DevWarning( "Unhandled ShotgunShellEject effect\n" );
+		//DevWarning( "Unhandled ShotgunShellEject effect\n" );
+		tempents->EjectBrass(data.m_vOrigin, data.m_vAngles, pRenderable->GetRenderAngles(), 2);
 	}
 }
 

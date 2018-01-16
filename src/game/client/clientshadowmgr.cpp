@@ -135,13 +135,13 @@ ConVar r_flashlightdepthtexture( "r_flashlightdepthtexture", "1" );
 #if defined( _X360 )
 ConVar r_flashlightdepthreshigh( "r_flashlightdepthreshigh", "512" );
 #else
-ConVar r_flashlightdepthreshigh( "r_flashlightdepthreshigh", "2048" );
+ConVar r_flashlightdepthreshigh( "r_flashlightdepthreshigh", "4096" );
 #endif
 
 #if defined( _X360 )
 ConVar r_flashlightdepthres( "r_flashlightdepthres", "512" );
 #else
-ConVar r_flashlightdepthres( "r_flashlightdepthres", "1024" );
+ConVar r_flashlightdepthres( "r_flashlightdepthres", "2048" );
 #endif
 
 #if defined( _X360 )
@@ -902,6 +902,35 @@ public:
 		r_shadows_gamecontrol.SetValue( bDisabled != 1 );
 	}
 
+	//City17: Handle changing depth texture modes.
+	void DetermineMaxDepthTextureRTs(int m_nDepthTextureMode)
+	{
+		if (m_nMaxDepthTextureShadows == 7 && m_nDepthTextureMode == 2)
+			return;
+
+		if (m_nMaxDepthTextureShadows == 1 && m_nDepthTextureMode == 1)
+			return;
+
+		if (m_nMaxDepthTextureShadows == 0 && m_nDepthTextureMode == 0)
+			return;
+
+		if (m_nDepthTextureMode == 2)
+		{
+			m_nMaxDepthTextureShadows = 7;
+		}
+		else if (m_nDepthTextureMode == 1)
+		{
+			m_nMaxDepthTextureShadows = 1;
+		}
+		else
+		{
+			m_nMaxDepthTextureShadows = 0;
+		}
+
+		ShutdownDepthTextureShadows();
+		InitDepthTextureShadows();
+	}
+
 	// Toggle shadow casting from world light sources
 	virtual void SetShadowFromWorldLightsEnabled( bool bEnable );
 	void SuppressShadowFromWorldLights( bool bSuppress );
@@ -1403,6 +1432,7 @@ void CClientShadowMgr::CalculateRenderTargetsAndSizes( void )
 	{
 		char defaultRes[] = "2048";
 		m_nDepthTextureResolution = atoi( CommandLine()->ParmValue( "-sfm_shadowmapres", defaultRes ) );
+		//m_nDepthTextureResolutionHigh = atoi( CommandLine()->ParmValue( "-sfm_shadowmapres", defaultRes ) );
 	}
 	m_nMaxDepthTextureShadows = bTools ? MAX_DEPTH_TEXTURE_SHADOWS_TOOLS : MAX_DEPTH_TEXTURE_SHADOWS;	// Just one shadow depth texture in games, more in tools
 }
@@ -1532,6 +1562,21 @@ static void ShadowRestoreFunc( int nChangeFlags )
 	s_ClientShadowMgr.RestoreRenderState();
 }
 
+//c17 shadowmaps
+//City17: Convar for depth texture mode, with callback.
+void DynamicShadowModeCallBack(IConVar *var, const char *pOldValue, float flOldValue)
+{
+	ConVar *convar = static_cast< ConVar * >(var);
+
+	if (!convar)
+		return;
+
+	s_ClientShadowMgr.DetermineMaxDepthTextureRTs(convar->GetInt());
+}
+
+ConVar r_dynamic_shadow_mode("r_dynamic_shadow_mode", "2", FCVAR_ARCHIVE | FCVAR_CLIENTDLL, "Determines what lights are allowed to cast dynamic shadows. 2 = All, 1 = Flashlight Only, and 0 = None.", true, 0, true, 2, DynamicShadowModeCallBack);
+ConVar r_dynamicshadows_use_c17_improvements("r_dynamicshadows_use_c17_improvements", "1", FCVAR_ARCHIVE, "Some older GPUs have driver issues that make shadows turn white. Setting this to 0 will disable our improvments for compatibility reasons.");
+
 //-----------------------------------------------------------------------------
 // Initialization, shutdown
 //-----------------------------------------------------------------------------
@@ -1572,7 +1617,9 @@ void CClientShadowMgr::InitRenderTargets()
 	if ( m_DepthTextureCache.Count() )
 	{
 		bool bTools = CommandLine()->CheckParm( "-tools" ) != NULL;
+		//int nNumShadows = bTools ? MAX_DEPTH_TEXTURE_SHADOWS_TOOLS : MAX_DEPTH_TEXTURE_SHADOWS;
 		int nNumShadows = bTools ? MAX_DEPTH_TEXTURE_SHADOWS_TOOLS : MAX_DEPTH_TEXTURE_SHADOWS;
+		//m_nLowResStart = bTools ? MAX_DEPTH_TEXTURE_HIGHRES_SHADOWS_TOOLS : MAX_DEPTH_TEXTURE_HIGHRES_SHADOWS;
 		m_nLowResStart = bTools ? MAX_DEPTH_TEXTURE_HIGHRES_SHADOWS_TOOLS : MAX_DEPTH_TEXTURE_HIGHRES_SHADOWS;
 
 		if ( m_nLowResStart > nNumShadows )
@@ -1628,7 +1675,7 @@ void CClientShadowMgr::InitDepthTextureShadows()
  
 	// SAUL: set m_nDepthTextureResolution to the depth resolution we want
 	m_nDepthTextureResolution = r_flashlightdepthres.GetInt();
-	//projtex 4k
+	// projtex 4k
 	//m_nDepthTextureResolutionHigh = r_flashlightdepthreshigh.GetInt();
 
 	if ( m_bDepthTextureActive )
@@ -1659,6 +1706,7 @@ void CClientShadowMgr::InitDepthTextureShadows()
 		//m_DummyColorTexture.InitRenderTarget( m_nDepthTextureResolution, m_nDepthTextureResolution, RT_SIZE_OFFSCREEN, nullFormat, MATERIAL_RT_DEPTH_NONE, false, "_rt_ShadowDummy" );
 		// SAUL: we want to create a render target of specific size, so use RT_SIZE_NO_CHANGE
 		m_DummyColorTexture.InitRenderTarget( m_nDepthTextureResolution, m_nDepthTextureResolution, RT_SIZE_NO_CHANGE, nullFormat, MATERIAL_RT_DEPTH_NONE, false, "_rt_ShadowDummy" );
+		//m_DummyColorTexture.InitRenderTarget(m_nDepthTextureResolutionHigh, m_nDepthTextureResolutionHigh, RT_SIZE_NO_CHANGE, nullFormat, MATERIAL_RT_DEPTH_NONE, false, "_rt_ShadowDummy");
 #endif
 
 		// Create some number of depth-stencil textures
@@ -1667,6 +1715,7 @@ void CClientShadowMgr::InitDepthTextureShadows()
 		for( int i=0; i < m_nMaxDepthTextureShadows; i++ )
 		{
 			CTextureReference depthTex;	// Depth-stencil surface
+			CTextureReference depthTexHigh;	// Depth-stencil surface
 			bool bFalse = false;
 
 			char strRTName[64];
@@ -1681,12 +1730,11 @@ void CClientShadowMgr::InitDepthTextureShadows()
 			depthTex.InitRenderTargetSurface( 1, 1, dstFormat, false );
 #else
 			//depthTex.InitRenderTarget( nTextureResolution, nTextureResolution, RT_SIZE_OFFSCREEN, dstFormat, MATERIAL_RT_DEPTH_NONE, false, strRTName );
-			// SAUL: we want to create a *DEPTH TEXTURE* of specific size, so use RT_SIZE_NO_CHANGE and MATERIAL_RT_DEPTH_ONLY
-			//depthTex.InitRenderTarget( m_nDepthTextureResolution, m_nDepthTextureResolution, RT_SIZE_NO_CHANGE, dstFormat, MATERIAL_RT_DEPTH_ONLY, false, strRTName );
 			depthTex.InitRenderTarget( nTextureResolution, nTextureResolution, RT_SIZE_NO_CHANGE, dstFormat, MATERIAL_RT_DEPTH_ONLY, false, strRTName );
 #endif
 			// SAUL: ensure the depth texture size wasn't changed
 			Assert(depthTex->GetActualWidth() == m_nDepthTextureResolution);
+			//Assert(depthTexHigh->GetActualWidth() == m_nDepthTextureResolutionHigh);
 
 			m_DepthTextureCache.AddToTail( depthTex );
 			m_DepthTextureCacheLocks.AddToTail( bFalse );
@@ -5723,6 +5771,16 @@ void CClientShadowMgr::ComputeShadowDepthTextures( const CViewSetup &viewSetup )
 
 			DrawFrustum( shadowView.origin, shadow.m_WorldToShadow );
 		}
+
+		/*static ConVar r_flashlightdrawuberfrustrum("r_flashlightdrawuberfrustrum", "0");
+
+		if ( r_flashlightdrawuberfrustrum.GetBool() );
+		{	
+			if ( flashlightState.m_bUberlight )
+			{
+				DrawUberlightRig( shadowView.origin, shadow.m_WorldToShadow, flashlightState );
+			}
+		}*/
 
 		if ( bDebugFrustumBBox )
 		{

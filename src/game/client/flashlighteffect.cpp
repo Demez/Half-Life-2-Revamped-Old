@@ -46,7 +46,6 @@ static ConVar r_flashlightambient( "r_flashlightambient", "0.0", FCVAR_CHEAT );
 static ConVar r_flashlightshadowatten( "r_flashlightshadowatten", "0.35", FCVAR_CHEAT );
 static ConVar r_flashlightladderdist( "r_flashlightladderdist", "40.0", FCVAR_CHEAT );
 static ConVar r_flashlight_topdown( "r_flashlight_topdown", "0" );
-static ConVar r_flashlight_filter("r_flashlight_filter", "1", FCVAR_CHEAT);
 
 static ConVar r_flashlightnearoffsetscale( "r_flashlightnearoffsetscale", "1.0", FCVAR_CHEAT );
 static ConVar r_flashlighttracedistcutoff( "r_flashlighttracedistcutoff", "128" );
@@ -91,7 +90,9 @@ CFlashlightEffect::CFlashlightEffect(int nEntIndex, const char *pszTextureName, 
 	m_bIsOn = false;
 
 	UpdateFlashlightTexture( pszTextureName );
-	m_MuzzleFlashTexture.Init( "effects/muzzleflash_light", TEXTURE_GROUP_OTHER, true );
+	//m_MuzzleFlashTexture.Init( "effects/muzzleflash_light", TEXTURE_GROUP_OTHER, true );
+	// there now it can shut up
+	m_MuzzleFlashTexture.Init("effects/flashlight001", TEXTURE_GROUP_OTHER, true);
 }
 
 
@@ -240,8 +241,8 @@ void CFlashlightEffect::UpdateLightTopDown(const Vector &vecPos, const Vector &v
 	state.m_flShadowAtten = r_flashlightshadowatten.GetFloat();
 	state.m_flShadowSlopeScaleDepthBias = g_pMaterialSystemHardwareConfig->GetShadowSlopeScaleDepthBias();
 	state.m_flShadowDepthBias = g_pMaterialSystemHardwareConfig->GetShadowDepthBias();
-	state.m_flShadowFilterSize = r_flashlight_filter.GetFloat();
-
+	//state.m_flShadowFilterSize = g_pMaterialSystemHardwareConfig->GetShadowFilterSize();
+	//m_flShadowFilterSize
 	if( m_FlashlightHandle == CLIENTSHADOW_INVALID_HANDLE )
 	{
 		m_FlashlightHandle = g_pClientShadowMgr->CreateFlashlight( state );
@@ -420,7 +421,7 @@ bool CFlashlightEffect::UpdateDefaultFlashlightState( FlashlightState_t& state, 
 
 	bool bFlicker = false;
 
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 	C_BaseHLPlayer *pPlayer = (C_BaseHLPlayer *)C_BasePlayer::GetLocalPlayer();
 	if ( pPlayer )
 	{
@@ -466,7 +467,7 @@ bool CFlashlightEffect::UpdateDefaultFlashlightState( FlashlightState_t& state, 
 			bFlicker = true;
 		}
 	}
-#endif // HL2_EPISODIC
+//#endif // HL2_EPISODIC
 
 	if ( bFlicker == false )
 	{

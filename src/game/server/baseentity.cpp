@@ -8146,6 +8146,7 @@ HSCRIPT CBaseEntity::GetScriptInstance()
 		m_hScriptInstance = g_pScriptVM->RegisterInstance( GetScriptDesc(), this );
 		g_pScriptVM->SetInstanceUniqeId( m_hScriptInstance, STRING(m_iszScriptId) );
 	}
+	// game also crashes here whenever the player has to go back to a previous map
 	return m_hScriptInstance;
 }
 

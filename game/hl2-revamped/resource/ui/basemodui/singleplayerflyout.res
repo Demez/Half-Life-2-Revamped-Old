@@ -33,8 +33,8 @@
 		"navUp"					"BtnDeveloperCommentaries"
 		"navDown"				"BtnLoadGame"
 		"labelText"				"#HL2PORTUI_Singleplayer_StartNewGame"
-		"tooltiptext"			"#HL2PORTUI_Singleplayer_StartNewGame"
-		"disabled_tooltiptext"	"#HL2PORTUI_Singleplayer_StartNewGame"
+		"tooltiptext"				"#HL2PORTUI_Singleplayer_StartNewGame"
+		"disabled_tooltiptext"		"#HL2PORTUI_Singleplayer_StartNewGame"
 		"style"					"FlyoutMenuButton"
 		"command"				"StartNewGame"
 	}
@@ -56,8 +56,8 @@
 		"navUp"					"BtnNewGame"
 		"navDown"				"BtnDeveloperCommentaries"
 		"labelText"				"#HL2PORTUI_Singleplayer_LoadGame"
-		"tooltiptext"			"#HL2PORTUI_Singleplayer_LoadGame_Tip"
-		"disabled_tooltiptext"	"#HL2PORTUI_Singleplayer_LoadGame_Tip_Disabled"
+		"tooltiptext"				"#HL2PORTUI_Singleplayer_LoadGame_Tip"
+		"disabled_tooltiptext"		"#HL2PORTUI_Singleplayer_LoadGame_Tip_Disabled"
 		"style"					"FlyoutMenuButton"
 		"command"				"LoadGame"
 	}

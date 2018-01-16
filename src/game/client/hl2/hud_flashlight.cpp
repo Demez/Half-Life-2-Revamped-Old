@@ -53,9 +53,9 @@ private:
 
 using namespace vgui;
 
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 DECLARE_HUDELEMENT( CHudFlashlight );
-#endif // HL2_EPISODIC
+//#endif // HL2_EPISODIC
 
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
@@ -104,7 +104,7 @@ void CHudFlashlight::SetFlashlightState( bool flashlightOn )
 //-----------------------------------------------------------------------------
 void CHudFlashlight::Paint()
 {
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 	C_BaseHLPlayer *pPlayer = (C_BaseHLPlayer *)C_BasePlayer::GetLocalPlayer();
 	if ( !pPlayer )
 		return;
@@ -158,5 +158,5 @@ void CHudFlashlight::Paint()
 		surface()->DrawFilledRect( xpos, ypos, xpos + m_flBarChunkWidth, ypos + m_flBarHeight );
 		xpos += (m_flBarChunkWidth + m_flBarChunkGap);
 	}
-#endif // HL2_EPISODIC
+//#endif // HL2_EPISODIC
 }

@@ -108,6 +108,8 @@ static ConVar m_mouseaccel1( "m_mouseaccel1", "0", FCVAR_ARCHIVE, "Windows mouse
 static ConVar m_mouseaccel2( "m_mouseaccel2", "0", FCVAR_ARCHIVE, "Windows mouse acceleration secondary threshold (4x movement).", true, 0, false, 0.0f );
 static ConVar m_mousespeed( "m_mousespeed", "1", FCVAR_ARCHIVE, "Windows mouse speed factor (range 1 to 20).", true, 1, true, 20 );
 
+//static ConVar m_rawinput("m_rawinput", "0", FCVAR_ARCHIVE, "Use Raw Input for mouse input. DOESNT WORK YET.");
+
 ConVar cl_mouselook( "cl_mouselook", "1", FCVAR_ARCHIVE | FCVAR_NOT_CONNECTED | FCVAR_USERINFO | FCVAR_SS, "Set to 1 to use mouse for look, 0 for keyboard look. Cannot be set while connected to a server." );
 
 ConVar cl_mouseenable( "cl_mouseenable", "1", FCVAR_RELEASE );
@@ -140,6 +142,10 @@ void CInput::ActivateMouse (void)
 			GetPerUser( hh ).m_flAccumulatedMouseXMovement = 0;
 			GetPerUser( hh ).m_flAccumulatedMouseYMovement = 0;
 		}
+
+		// clear raw mouse accumulated data
+		//int rawX, rawY;
+		//inputsystem->GetRawMouseAccumulators(rawX, rawY);
 	}
 }
 
@@ -328,6 +334,16 @@ void CInput::GetAccumulatedMouseDeltasAndResetAccumulators( int nSlot, float *mx
 
 	*mx = user.m_flAccumulatedMouseXMovement;
 	*my = user.m_flAccumulatedMouseYMovement;
+
+	/*if (m_rawinput.GetBool())
+	{
+		int rawMouseX, rawMouseY;
+		if (inputsystem->GetRawMouseAccumulators(rawMouseX, rawMouseY))
+		{
+			*mx = (float)rawMouseX;
+			*my = (float)rawMouseY;
+		}
+	}*/
 
 	user.m_flAccumulatedMouseXMovement = 0;
 	user.m_flAccumulatedMouseYMovement = 0;
@@ -531,6 +547,11 @@ void CInput::AccumulateMouse( int nSlot )
 		return;
 	}
 
+	/*if ( m_rawinput.GetBool() )
+	{
+		return;
+	}*/
+
 	int w, h;
 	engine->GetScreenSize( w, h );
 
@@ -725,4 +746,8 @@ void CInput::ClearStates (void)
 		GetPerUser().m_flAccumulatedMouseXMovement = 0;
 		GetPerUser().m_flAccumulatedMouseYMovement = 0;
 	}
+
+	// clear raw mouse accumulated data
+	//int rawX, rawY;
+	//inputsystem->GetRawMouseAccumulators(rawX, rawY);
 }

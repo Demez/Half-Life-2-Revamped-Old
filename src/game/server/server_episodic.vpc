@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------------
 
 $Macro SRCDIR		"..\.."
-$Macro GAMENAME 	"episodic" [!$SOURCESDK]
-$Macro GAMENAME 	"mod_episodic" [$SOURCESDK]
+$Macro GAMENAME 	"episodic-revamped" [!$SOURCESDK]
+$Macro GAMENAME 	"episodic-revamped" [$SOURCESDK]
 
 $Include "$SRCDIR\game\server\server_base.vpc"
 
@@ -19,7 +19,7 @@ $Configuration
 	}
 }
 
-$Project "Server (Episodic)"
+$Project "Server (Episodic-revamped)"
 {
 	$Folder	"Source Files"
 	{
@@ -50,9 +50,9 @@ $Project "Server (Episodic)"
 
 		$Folder	"HL2 DLL"
 		{
-			$File	"$SRCDIR\game\shared\episodic\achievements_ep1.cpp"
-			$File	"$SRCDIR\game\shared\episodic\achievements_ep2.cpp"
-			$File	"$SRCDIR\game\shared\episodic\achievements_epx.cpp"
+			//$File	"$SRCDIR\game\shared\episodic\achievements_ep1.cpp"
+			//$File	"$SRCDIR\game\shared\episodic\achievements_ep2.cpp"
+			//$File	"$SRCDIR\game\shared\episodic\achievements_epx.cpp"
 			$File	"hl2\ai_allymanager.cpp"
 			$File	"hl2\ai_behavior_actbusy.cpp"
 			$File	"hl2\ai_behavior_actbusy.h"
@@ -149,7 +149,7 @@ $Project "Server (Episodic)"
 			$File	"$SRCDIR\game\shared\episodic\npc_advisor_shared.h"
 			$File	"episodic\npc_advisor.cpp"
 			$File	"hl2\npc_alyx_episodic.cpp"
-			$File	"hl2\npc_alyx_episodic.h"
+			//$File	"hl2\npc_alyx_episodic.h"
 			$File	"hl2\npc_antlion.cpp"
 			$File	"hl2\npc_antlion.h"
 			$File	"hl2\npc_antlionguard.cpp"
@@ -266,19 +266,21 @@ $Project "Server (Episodic)"
 			$File	"episodic\weapon_striderbuster.h"
 			$File	"hl2\weapon_stunstick.cpp"
 			$File	"hl2\weapon_stunstick.h"
-			$File	"episodic\ep1_gamestats.h"
-			$File	"episodic\ep2_gamestats.h"
-			$File	"episodic\ep1_gamestats.cpp" \
-					"episodic\ep2_gamestats.cpp"
-			{
-				$Configuration
-				{
-					$Compiler
-					{
-						$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
-					}
-				}
-			}
+			
+			//$File	"episodic\ep1_gamestats.h"
+			//$File	"episodic\ep2_gamestats.h"
+			//$File	"episodic\ep1_gamestats.cpp" \
+			//		"episodic\ep2_gamestats.cpp"
+			//{
+			//	$Configuration
+			//	{
+			//		$Compiler
+			//		{
+			//			$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+			//		}
+			//	}
+			//}
+			
 			$File	"hl2\func_bulletshield.cpp"
 			$File	"hl2\func_bulletshield.h"
 			$File	"episodic\npc_puppet.cpp"

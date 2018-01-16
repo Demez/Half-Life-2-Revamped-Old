@@ -647,8 +647,14 @@ void C_ClientRagdoll::Release( void )
 	}
 	ClientEntityList().RemoveEntity( GetClientHandle() );
 
-	partition->Remove( PARTITION_CLIENT_SOLID_EDICTS | PARTITION_CLIENT_RESPONSIVE_EDICTS | PARTITION_CLIENT_NON_STATIC_EDICTS, CollisionProp()->GetPartitionHandle() );
+	//idk does this work?
+	if (CollisionProp()->GetPartitionHandle() != PARTITION_INVALID_HANDLE)
+	{
+		partition->Remove(PARTITION_CLIENT_SOLID_EDICTS | PARTITION_CLIENT_RESPONSIVE_EDICTS | PARTITION_CLIENT_NON_STATIC_EDICTS, CollisionProp()->GetPartitionHandle());
+	}
+	// now it crashes here
 	RemoveFromLeafSystem();
+	//
 
 	BaseClass::Release();
 }
@@ -4170,9 +4176,23 @@ void C_BaseAnimating::FireEvent( const Vector& origin, const QAngle& angles, int
 
 	// Eject brass
 	case CL_EVENT_EJECTBRASS1:
-		if ( m_Attachments.Count() > 0 )
+		/*if ( m_Attachments.Count() > 0 )
 		{
-			DevWarning( "Unhandled eject brass animevent\n" );
+			DevWarning( "Unhandled eject brass animevent. FIX THIS LAZY ASS\n" );
+		}
+		break;*/
+		if (m_Attachments.Count() > 0)
+		{
+			if (MainViewOrigin(GET_ACTIVE_SPLITSCREEN_SLOT()).DistToSqr(GetAbsOrigin()) < (256 * 256))
+			{
+				Vector attachOrigin;
+				QAngle attachAngles; 
+
+				if( GetAttachment( 2, attachOrigin, attachAngles ) )
+				{
+					tempents->EjectBrass( attachOrigin, attachAngles, GetAbsAngles(), atoi( options ) );
+				}
+			}
 		}
 		break;
 

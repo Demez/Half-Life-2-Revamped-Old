@@ -1,7 +1,7 @@
 "GameInfo"
 {
-	"game"		"HL2 ASW Engine"			// Game title in Steam
-	"title"		"Half Life 2"			// Change me!
+	"game"		"Half-Life 2: Revamped"			// Game title in Steam
+	"title"		"Half-Life 2: Revamped"			// Change me!
 	"type"		"singleplayer_only"
 	"icon"		"icon"					// Icon in Steam
 
@@ -16,23 +16,15 @@
 		"SteamAppId"		"630"			// Alien Swarm
 		"SearchPaths"
 		{
-			"Game"	"|gameinfo_path|custom/*"
 			"Game"	"|gameinfo_path|."
 
 			// Default ("./") path for ASW is "/steamapps/common/Alien Swarm", so we can easily go up and mount SFM content
-			
-			//i just mount the extracted vpk2 files from a different folder
-			//"Game" "D:\sourceengine\sourcegamefiles\Half Life 2 Episode 2"
-			//"Game" "D:\sourceengine\sourcegamefiles\Half Life 2 Episode 1"
-			//"Game" "D:\sourceengine\sourcegamefiles\Half Life 2"
-			//"Game" "D:\sourceengine\sourcegamefiles\Files\half life 2 with episodes"
-			//"Game" "D:\sourceengine\sourcegamefiles\Files\hl2sounds"
 
-			// TODO: Better solution if possible. MUST BE ON THE SAME HARD DRIVE AS REACTIVE DROP
-			"Game"	"../SourceFilmmaker/game/hl2"			// This is workaround for hl2 and episodic content mounting
+			// TODO: Remove need for SFM
+			"Game"	"D:\SteamLibrary\steamapps\common\SourceFilmmaker/game/hl2"			// This is workaround for hl2 and episodic content mounting
 
-			"Game"	"../Half-Life 2/ep2"				// This is workaround for ep2 maps mounting
-			"Game"	"../Half-Life 2/episodic"			// This is workaround for ep1 maps mounting
+			//"Game"	"../Half-Life 2/ep2"				// This is workaround for ep2 maps mounting
+			//"Game"	"../Half-Life 2/episodic"			// This is workaround for ep1 maps mounting
 			"Game"	"../Half-Life 2/hl2"				// This is workaround for hl2 maps mounting
 			
 			//Only if you have Reactive Drop and SFM installed on another hard drive
@@ -44,9 +36,6 @@
 			//"Game"	"|all_source_engine_paths|ep2"			// Episode 2 Folder
 			//"Game"	"|all_source_engine_paths|episodic"		// Episode 1 Folder
 			//"Game"	"|all_source_engine_paths|hl2"			// Half-Life 2 Folder
-
-			// Base ASW stuff.
-			"Game"	"C:\Program Files (x86)\Steam\steamapps\common\Alien Swarm\swarm_base"					// ASW Base Folder
 
 			"Game"	"platform"
 		}

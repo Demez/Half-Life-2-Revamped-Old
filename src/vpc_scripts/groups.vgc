@@ -8,7 +8,7 @@ $Group "game"
 $Group "shaders"
 {
 	"shaderlib"
-//	"game_shader"
+	"game_shader_dx9"
 }
 
 $Group "everything"
@@ -17,5 +17,5 @@ $Group "everything"
 	"server"
 	"missionchooser"
 	"shaderlib"
-//	"game_shader"
+	"game_shader_dx9"
 }

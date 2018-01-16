@@ -35,6 +35,21 @@ BEGIN_DATADESC( CEnvProjectedTexture )
 	DEFINE_KEYFIELD( m_flProjectionSize, FIELD_FLOAT, "projection_size" ),
 	DEFINE_KEYFIELD( m_flRotation, FIELD_FLOAT, "projection_rotation" ),
 
+	// uberlight
+
+	/*DEFINE_FIELD( m_bUberlight, FIELD_BOOLEAN ),
+	DEFINE_KEYFIELD( m_fNearEdge, FIELD_FLOAT, "uberlight_near" ),
+	DEFINE_KEYFIELD( m_fFarEdge, FIELD_FLOAT, "uberlight_far" ),
+	DEFINE_KEYFIELD( m_fCutOn, FIELD_FLOAT, "uberlight_cuton" ),
+	DEFINE_KEYFIELD( m_fCutOff, FIELD_FLOAT, "uberlight_cutoff" ),
+	DEFINE_KEYFIELD( m_fShearx, FIELD_FLOAT, "uberlight_shearx" ),
+	DEFINE_KEYFIELD( m_fSheary, FIELD_FLOAT, "uberlight_sheary" ),
+	DEFINE_KEYFIELD( m_fWidth, FIELD_FLOAT, "uberlight_width" ),
+	DEFINE_KEYFIELD( m_fWedge, FIELD_FLOAT, "uberlight_wedge" ),
+	DEFINE_KEYFIELD( m_fHeight, FIELD_FLOAT, "uberlight_height" ),
+	DEFINE_KEYFIELD( m_fHedge, FIELD_FLOAT, "uberlight_hedge" ),
+	DEFINE_KEYFIELD( m_fRoundness, FIELD_FLOAT, "uberlight_roundness" ),*/
+
 	DEFINE_INPUTFUNC( FIELD_VOID, "TurnOn", InputTurnOn ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "TurnOff", InputTurnOff ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "AlwaysUpdateOn", InputAlwaysUpdateOn ),
@@ -48,6 +63,9 @@ BEGIN_DATADESC( CEnvProjectedTexture )
 	DEFINE_INPUTFUNC( FIELD_COLOR32, "LightColor", InputSetLightColor ),
 	DEFINE_INPUTFUNC( FIELD_FLOAT, "Ambient", InputSetAmbient ),
 	DEFINE_INPUTFUNC( FIELD_STRING, "SpotlightTexture", InputSetSpotlightTexture ),
+	// uberlight
+	/*DEFINE_INPUTFUNC( FIELD_VOID, "EnableUberLight", InputEnableUberLight ),
+	DEFINE_INPUTFUNC( FIELD_VOID, "DisableUberLight", InputDisableUberLight ),*/
 	DEFINE_THINKFUNC( InitialThink ),
 END_DATADESC()
 
@@ -88,6 +106,9 @@ CEnvProjectedTexture::CEnvProjectedTexture( void )
 	m_bLightWorld = true;
 	m_bCameraSpace = false;
 
+	// uberlight
+	//m_bUberlight = false;
+
 	Q_strcpy( m_SpotlightTextureName.GetForModify(), "effects/flashlight_border" );
 	Q_strcpy( m_SpotlightTextureName.GetForModify(), "effects/flashlight001" );
 
@@ -101,6 +122,19 @@ CEnvProjectedTexture::CEnvProjectedTexture( void )
 	m_nShadowQuality = 0;
 	m_flProjectionSize = 500.0f;
 	m_flRotation = 0.0f;
+
+	// uberlight
+	/*m_fNearEdge = 0.f;
+	m_fFarEdge = 0.f;
+	m_fCutOn = 0.f;
+	m_fCutOff = 0.f;
+	m_fShearx = 0.f;
+	m_fSheary = 0.f;
+	m_fWidth = 0.f;
+	m_fWedge = 0.f;
+	m_fHeight = 0.f;
+	m_fHedge = 0.f;
+	m_fRoundness = 0.f;*/
 }
 
 void UTIL_ColorStringToLinearFloatColor( Vector &color, const char *pString )
@@ -238,6 +272,9 @@ void CEnvProjectedTexture::Activate( void )
 	m_bState = ( ( GetSpawnFlags() & ENV_PROJECTEDTEXTURE_STARTON ) != 0 );
 	m_bAlwaysUpdate = ( ( GetSpawnFlags() & ENV_PROJECTEDTEXTURE_ALWAYSUPDATE ) != 0 );
 
+	// uberlight
+	//m_bUberlight = HasSpawnFlags( ENV_PROJECTEDTEXTURE_UBERLIGHT );
+
 	SetThink( &CEnvProjectedTexture::InitialThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
@@ -254,6 +291,16 @@ int CEnvProjectedTexture::UpdateTransmitState()
 	return SetTransmitState( FL_EDICT_ALWAYS );
 }
 
+// uberlight
+/*void CEnvProjectedTexture::InputEnableUberLight(inputdata_t &inputdata)
+{
+	m_bUberlight = true;
+}
+
+void CEnvProjectedTexture::InputDisableUberLight(inputdata_t &inputdata)
+{
+	m_bUberlight = false;
+}*/
 
 // Console command for creating env_projectedtexture entities
 void CC_CreateFlashlight( const CCommand &args )

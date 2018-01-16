@@ -400,11 +400,11 @@ CHL2_Player::CHL2_Player()
 	CSuitPowerDevice SuitDeviceSprint( bits_SUIT_DEVICE_SPRINT, 12.5f );				// 100 units in 8 seconds
 #endif
 
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 	CSuitPowerDevice SuitDeviceFlashlight( bits_SUIT_DEVICE_FLASHLIGHT, 1.111 );	// 100 units in 90 second
-#else
-	CSuitPowerDevice SuitDeviceFlashlight( bits_SUIT_DEVICE_FLASHLIGHT, 2.222 );	// 100 units in 45 second
-#endif
+//#else
+//	CSuitPowerDevice SuitDeviceFlashlight( bits_SUIT_DEVICE_FLASHLIGHT, 2.222 );	// 100 units in 45 second
+//#endif
 CSuitPowerDevice SuitDeviceBreather( bits_SUIT_DEVICE_BREATHER, 6.7f );		// 100 units in 15 seconds (plus three padded seconds)
 
 
@@ -722,9 +722,9 @@ void CHL2_Player::PreThink(void)
 		return;
 	}
 
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 	CheckFlashlight();
-#endif	// HL2_EPISODIC
+//#endif	// HL2_EPISODIC
 
 	// So the correct flags get sent to client asap.
 	//
@@ -1127,9 +1127,9 @@ void CHL2_Player::Spawn(void)
 	InitSprinting();
 
 	// Setup our flashlight values
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 	m_HL2Local.m_flFlashBattery = 100.0f;
-#endif 
+//#endif 
 
 	GetPlayerProxy();
 
@@ -3241,7 +3241,7 @@ void CHL2_Player::UpdateClientData( void )
 	}
 
 	// Update Flashlight
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 	if ( Flashlight_UseLegacyVersion() == false )
 	{
 		if ( FlashlightIsOn() && sv_infinite_aux_power.GetBool() == false )
@@ -3266,7 +3266,7 @@ void CHL2_Player::UpdateClientData( void )
 	{
 		m_HL2Local.m_flFlashBattery = -1.0f;
 	}
-#endif // HL2_EPISODIC
+//#endif // HL2_EPISODIC
 
 	BaseClass::UpdateClientData();
 }

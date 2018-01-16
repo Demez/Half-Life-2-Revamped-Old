@@ -17,6 +17,7 @@
 		// This is the name of the .res file to load up and apply to the vgui panel
 		"resfile"		"scripts/screens/vgui_test_screen.res"
 	}
+
 	"teleport_countdown_screen"
 	{
 		// Defined in c_info_teleporter_countdown.cpp
@@ -29,12 +30,31 @@
 		// This is the name of the .res file to load up and apply to the vgui panel
 		"resfile"		"scripts/screens/teleport_countdown_screen.res"
 	}
-	"jalopy_radar_panel"
+
+	"slideshow_display_screen"
 	{
-		"type"			"jalopy_radar_panel"
-		"pixelswide"		"128"
-		"pixelshigh"		"128"
-		"resfile"		"scripts/screens/jalopy_radar_panel.res"
+		"type"		"slideshow_display_screen"
+		"pixelswide"	256
+		"pixelshigh"	128
+		"acceptsinput"  0
+		"resfile"	"scripts/screens/slideshow_display_screen.res"
 	}
 
+	"neurotoxin_countdown_screen"
+	{
+		"type"		"neurotoxin_countdown_screen"
+		"pixelswide"	256
+		"pixelshigh"	128
+		"acceptsinput"  0
+		"resfile"	"scripts/screens/neurotoxin_countdown_screen.res"
+	}
+
+	"portal_stats_display_screen"
+	{
+		"type"		"portal_stats_display_screen"
+		"pixelswide"	512
+		"pixelshigh"	256
+		"acceptsinput"  0
+		"resfile"	"scripts/screens/portal_stats_display_screen.res"
+	}
 }

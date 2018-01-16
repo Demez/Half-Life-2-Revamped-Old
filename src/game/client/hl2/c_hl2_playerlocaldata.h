@@ -43,9 +43,9 @@ public:
 	bool	m_bAutoAimTarget;
 	// this was moved up
 	Vector	m_vecLocatorOrigin;
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 	float	m_flFlashBattery;
-#endif
+//#endif
 
 	// Ladder related data
 	EHANDLE			m_hLadder;

@@ -33,7 +33,7 @@ $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	".\;$BASE;$SRCDIR\game\shared;.\game_controls"
+		$AdditionalIncludeDirectories	".\;$BASE;$SRCDIR\game\shared;.\game_controls;.\vgui;.\gameui"
 		$PreprocessorDefinitions		"$BASE;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead" 
 		$PreprocessorDefinitions		"$BASE;fopen=dont_use_fopen"
 		$Create/UsePrecompiledHeader	"Use Precompiled Header (/Yu)"
@@ -52,6 +52,284 @@ $Project
 {
 	$Folder	"Source Files"
 	{
+		$Folder "VGUI"
+			{
+				$Folder "BaseUI"
+				{
+					$Folder "Headers"
+					{
+					$File	"gameui\backgroundmenubutton.h" \
+							"gameui\basepanel.h" \
+							"gameui\basesavegamedialog.h" \
+							"gameui\bitmapimagepanel.h" \
+							"gameui\commandcheckbutton.h" \
+							"gameui\contentcontroldialog.h" \
+							"gameui\createmultiplayergamebotpage.h" \
+							"gameui\createmultiplayergamedialog.h" \
+							"gameui\createmultiplayergamegameplaypage.h" \
+							"gameui\createmultiplayergameserverpage.h" \
+							"gameui\customtabexplanationdialog.h" \
+							"gameui\cvarnegatecheckbutton.h" \
+							"gameui\cvarslider.h" \
+							"gameui\cvartextentry.h" \
+							"gameui\cvartogglecheckbutton.h" \
+							"gameui\engineinterface.h" \
+							"gameui\gameconsole.h" \
+							"gameui\gameconsoledialog.h" \
+							"gameui\gameui_interface.h" \
+							"gameui\gameui_util.h" \
+							"gameui\keytogglecheckbutton.h" \
+							"gameui\labeledcommandcombobox.h" \
+							"gameui\loadingdialog.h" \
+							"gameui\loadingtippanel.h" \
+							"gameui\modinfo.h" \
+							"gameui\mousemessageforwardingpanel.h" \
+							"gameui\multiplayeradvanceddialog.h" \
+							"gameui\optionsdialog.h" \
+							"gameui\optionsmousedialog.h" \
+							"gameui\optionssubaudio.h" \
+							"gameui\optionssubdifficulty.h" \
+							"gameui\optionssubgame.h" \
+							"gameui\optionssubkeyboard.h" \
+							"gameui\optionssubmouse.h" \
+							"gameui\optionssubmultiplayer.h" \
+							"gameui\optionssubportal.h" \
+							"gameui\optionssubvideo.h" \
+							"gameui\optionssubvoice.h" \
+							"gameui\panellistpanel.h" \
+							"gameui\playerlistdialog.h" \
+							"gameui\rungameengine.h" \
+							"gameui\scriptobject.h" \
+							"gameui\sys_utils.h" \
+							"gameui\textentrybox.h" \
+							"gameui\urlbutton.h" \
+							"gameui\vcontrolslistpanel.h" \
+							"gameui\vguisystemmoduleloader.h"
+					}
+					$File	"gameui\backgroundmenubutton.cpp" \
+							"gameui\basesavegamedialog.cpp" \
+							"gameui\bitmapimagepanel.cpp" \
+							"gameui\commandcheckbutton.cpp" \
+							"gameui\contentcontroldialog.cpp" \
+							"gameui\createmultiplayergamebotpage.cpp" \
+							"gameui\createmultiplayergamedialog.cpp" \
+							"gameui\createmultiplayergamegameplaypage.cpp" \
+							"gameui\createmultiplayergameserverpage.cpp" \
+							"gameui\customtabexplanationdialog.cpp" \
+							"gameui\cvarnegatecheckbutton.cpp" \
+							"gameui\cvarslider.cpp" \
+							"gameui\cvartextentry.cpp" \
+							"gameui\cvartogglecheckbutton.cpp" \
+							"gameui\gameconsole.cpp" \
+							"gameui\gameconsoledialog.cpp" \
+							"gameui\gameui_interface.cpp" \
+							"gameui\gameui_util.cpp" \
+							"gameui\keytogglecheckbutton.cpp" \
+							"gameui\labeledcommandcombobox.cpp" \
+							"gameui\loadingdialog.cpp" \
+							"gameui\loadingtippanel.cpp" \
+							"gameui\logofile.cpp" \
+							"gameui\modinfo.cpp" \
+							"gameui\mousemessageforwardingpanel.cpp" \
+							"gameui\multiplayeradvanceddialog.cpp" \
+							"gameui\optionsdialog.cpp" \
+							"gameui\optionsmousedialog.cpp" \
+							"gameui\optionssubaudio.cpp" \
+							"gameui\optionssubdifficulty.cpp" \
+							"gameui\optionssubgame.cpp" \
+							"gameui\optionssubkeyboard.cpp" \
+							"gameui\optionssubmouse.cpp" \
+							"gameui\optionssubmultiplayer.cpp" \
+							"gameui\optionssubportal.cpp" \
+							"gameui\optionssubvideo.cpp" \
+							"gameui\optionssubvoice.cpp" \
+							"gameui\panellistpanel.cpp" \
+							"gameui\playerlistdialog.cpp" \
+							"gameui\rungameengine.cpp" \
+							"gameui\scriptobject.cpp" \
+							"gameui\sys_utils.cpp" \
+							"gameui\textentrybox.cpp" \
+							"gameui\urlbutton.cpp" \
+							"gameui\vcontrolslistpanel.cpp" \
+							"gameui\vguisystemmoduleloader.cpp"
+							{
+								$Configuration
+								{
+									$Compiler
+									{
+										$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+									}
+								}
+							}
+					
+					$Folder "External"
+					{
+						$File	"$SRCDIR\common\language.cpp"
+						{
+							$Configuration
+							{
+								$Compiler
+								{
+									$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+								}
+							}
+						}
+					}
+				}
+				
+				$Folder "GameUI"
+				{
+					$Folder "Generic"
+					{
+						$Folder "Headers"
+						{
+						$File	"gameui\shared\vdropdownmenu.h" \
+								"gameui\shared\vflyoutmenu.h" \
+								"gameui\shared\vfooterpanel.h" \
+								"gameui\shared\vgenericconfirmation.h" \
+								"gameui\shared\vgenericpanellist.h" \
+								"gameui\shared\vgenericwaitscreen.h" \
+								"gameui\shared\vhybridbutton.h" \
+								"gameui\shared\vingamemainmenu.h" \
+								"gameui\shared\vloadingprogress.h" \
+								"gameui\shared\vmainmenu.h" \
+								"gameui\shared\vslidercontrol.h" \
+								"gameui\shared\vspinnercontrol.h" \
+								"gameui\shared\vtransitionscreen.h"
+						}
+						$File	"gameui\shared\vdropdownmenu.cpp" \
+								"gameui\shared\vflyoutmenu.cpp" \
+								"gameui\shared\vfooterpanel.cpp" \
+								"gameui\shared\vgenericconfirmation.cpp" \
+								"gameui\shared\vgenericpanellist.cpp" \
+								"gameui\shared\vgenericwaitscreen.cpp" \
+								"gameui\shared\vhybridbutton.cpp" \
+								"gameui\shared\vingamemainmenu.cpp" \
+								"gameui\shared\vloadingprogress.cpp" \
+								"gameui\shared\vmainmenu.cpp" \
+								"gameui\shared\vmenubackground.cpp" \
+								"gameui\shared\vslidercontrol.cpp" \
+								"gameui\shared\vspinnercontrol.cpp" \
+								"gameui\shared\vtransitionscreen.cpp"
+							{
+								$Configuration
+								{
+									$Compiler
+									{
+										$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+									}
+								}
+							}
+					}
+					
+					$Folder "Settings"
+					{
+						$Folder "Headers"
+						{
+						$File	"gameui\shared\vachievements.h" \
+								"gameui\shared\vaudio.h" \
+								"gameui\shared\vcontrolleroptions.h" \
+								"gameui\shared\vcontrolleroptionsbuttons.h" \
+								"gameui\shared\vcontrolleroptionssticks.h" \
+								"gameui\shared\vgameoptions.h" \
+								"gameui\shared\vkeyboard.h" \
+								"gameui\shared\vkeyboardmouse.h" \
+								//"gameui\shared\vmouse.h" \
+								"gameui\shared\voptions.h" \
+								"gameui\shared\vvideo.h"
+						}
+
+					$File	"gameui\shared\vachievements.cpp" \
+							"gameui\shared\vaudio.cpp" \
+							"gameui\shared\vcontrolleroptions.cpp" \
+							"gameui\shared\vcontrolleroptionsbuttons.cpp" \
+							"gameui\shared\vcontrolleroptionssticks.cpp" \
+							"gameui\shared\vgameoptions.cpp" \
+							"gameui\shared\uiavatarimage.cpp" \
+							"gameui\shared\vkeyboard.cpp" \
+							"gameui\shared\vkeyboardmouse.cpp" \
+							//"gameui\shared\vmouse.cpp" \
+							"gameui\shared\voptions.cpp" \
+							"gameui\shared\vvideo.cpp"
+						{
+							$Configuration
+							{
+								$Compiler
+								{
+									$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+								}
+							}
+						}
+					}
+					
+					$Folder "SP"
+					{	
+						$Folder "Headers"
+						{
+							$File	"gameui\shared\vgameplaysettings.h"
+							$File	"gameui\shared\vloadgamedialog.h"
+							$File	"gameui\shared\vsavegamedialog.h"
+							$File	"gameui\shared\vsingleplayer.h"
+						}
+						$File	"gameui\shared\vgameplaysettings.cpp" \
+								"gameui\shared\vloadgamedialog.cpp" \
+								"gameui\shared\vsavegamedialog.cpp" \
+								"gameui\shared\vsingleplayer.cpp"
+							{
+								$Configuration
+								{
+									$Compiler
+									{
+										$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+									}
+								}
+							}
+					}
+					
+					$Folder "VGUI"
+					{
+						$File	"vgui/nb_button.cpp"
+						$File	"vgui/nb_button.h"
+						$File	"vgui/nb_header_footer.cpp"
+						$File	"vgui/nb_header_footer.h"
+						$File	"vgui/nb_horiz_list.cpp"
+						$File	"vgui/nb_horiz_list.h"			
+					}
+					
+					//$Folder "Headers"
+					//{
+					$File	"gameui\shared\basemodframe.h" \
+							"gameui\shared\basemodpanel.h" \
+							"gameui\shared\basemodui.h" \
+							"gameui\shared\gamemodes.h" \
+							"gameui\shared\ui_defines.h" \
+							"gameui\shared\uiavatarimage.h" \
+							"gameui\shared\uigamedata.h" \
+							"gameui\shared\vachievements.h" \
+							"gameui\shared\vattractscreen.h"
+					//}
+					
+					$File	"gameui\shared\basemodframe.cpp" \
+							"gameui\shared\basemodpanel.cpp" \
+							"gameui\shared\gamemodes.cpp" \
+							"gameui\shared\uiavatarimage.cpp" \
+							"gameui\shared\uigamedata.cpp" \
+							"gameui\shared\uigamedata_storage.cpp" \
+							"gameui\shared\vattractscreen.cpp" \
+							"gameui\shared\vvideo.cpp"
+						{
+							$Configuration
+							{
+								$Compiler
+								{
+									$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+								}
+							}
+						}
+				}
+				$File	"vgui_game_viewport.h"
+			}
+			
 		$File	"$SRCDIR\game\shared\ai_criteria.cpp"
 		$File	"$SRCDIR\game\shared\ai_criteria.h"
 		$File	"$SRCDIR\game\shared\ai_responsesystem.cpp"
@@ -307,6 +585,16 @@ $Project
 		$File	"in_main.cpp"
 		$File	"initializer.cpp"
 		$File	"IsNPCProxy.cpp"
+		$File	"../../common/language.cpp"
+		{
+			$Configuration
+			{
+				$Compiler
+				{
+					$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+				}
+			}
+		}
 		$File	"lampbeamproxy.cpp"
 		$File	"lamphaloproxy.cpp"
 		$File	"$SRCDIR\game\shared\mapentities_shared.cpp"

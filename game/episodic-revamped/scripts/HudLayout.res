@@ -143,7 +143,7 @@
 		"digit_xpos" "36"
 		"digit_ypos" "-1"
 	}
-
+	
 	HudPosture	[$WIN32]
 	{
 		"fieldName" 		"HudPosture"
@@ -170,7 +170,7 @@
 		"icon_xpos"	"10"
 		"icon_ypos" 	"2"
 	}
-
+	
 	HudSuitPower	[$WIN32]
 	{
 		"fieldName" "HudSuitPower"
@@ -199,7 +199,7 @@
 		"text2_gap" "10"
 
 		"PaintBackgroundType"	"2"
-	}
+	}	
 	HudSuitPower	[$X360]
 	{
 		"fieldName" "HudSuitPower"
@@ -254,7 +254,7 @@
 		"BarChunkWidth" "2"
 		"BarChunkGap" "1"
 	}
-
+	
 	HudLocator
 	{
 		"fieldName" "HudLocator"
@@ -268,7 +268,7 @@
 		"wide"	"64"
 		"tall"  "24"
 	}
-
+	
 	HudDamageIndicator
 	{
 		"fieldName" "HudDamageIndicator"
@@ -296,7 +296,6 @@
 		"DashHeight" "6"	[$X360]		
 		"BorderThickness" "88"
 	}
-
 	HudWeaponSelection
 	{
 		"fieldName" "HudWeaponSelection"
@@ -319,11 +318,20 @@
 		"SelectionGrowTime"	"0.4"
 		"TextYPos" "64"
 	}
-
+	
 	HudCrosshair
 	{
 		"fieldName" "HudCrosshair"
 		"visible" "1"
+		"enabled" "1"
+		"wide"	 "640"
+		"tall"	 "480"
+	}
+
+	HudPortalCrosshair
+	{
+		"fieldName" "HudPortalCrosshair"
+		"visible" "0"
 		"enabled" "1"
 		"wide"	 "640"
 		"tall"	 "480"
@@ -422,8 +430,8 @@
 		"enabled" "1"
 		"xpos"	"0"
 		"ypos"	"0"
-		"wide"	 "4"
-		"tall"	 "4"
+		"wide"	 "0"
+		"tall"	 "0"
 	}
 
 	HudHistoryResource	[$WIN32]
@@ -436,8 +444,7 @@
 		"wide"	 "248"
 		"tall"	 "320"
 
-		"history_gap"	"56" [!$OS]
-		"history_gap"	"64" [$OSX]
+		"history_gap"	"56"
 		"icon_inset"	"38"
 		"text_inset"	"36"
 		"NumberFont"	"HudNumbersSmall"
@@ -543,7 +550,6 @@
 		"PaintBackgroundType"	"2"
 	}
 
-
 	HudSquadStatus	[$WIN32]
 	{
 		"fieldName"	"HudSquadStatus"
@@ -567,7 +573,7 @@
 		"fieldName"	"HudSquadStatus"
 		"visible"	"1"
 		"enabled" "1"
-		"xpos"	"r182"
+		"xpos"	"r166"
 		"ypos"	"348"
 		"wide"	"134"
 		"tall"	"62"
@@ -689,6 +695,7 @@
 		"LeftTitleY"	"422"
 		"RightTitleY"	"422"
 	}
+	
 	"HudChatHistory"
 	{
 		"ControlName"		"RichText"
@@ -708,6 +715,24 @@
 		"maxchars"		"-1"
 	}
 
+	HudBonusProgress
+	{
+		"fieldName"		"HudBonusProgress"
+		"xpos"	"r208"
+		"ypos"	"416"
+		"wide"	"115"
+		"tall"  "36"
+		"visible" "1"
+		"enabled" "1"
+
+		"PaintBackgroundType"	"2"
+		
+		"text_xpos" "8"
+		"text_ypos" "20"
+		"digit_xpos" "50"
+		"digit_ypos" "2"
+	}
+
 	AchievementNotificationPanel	
 	{
 		"fieldName"				"AchievementNotificationPanel"
@@ -718,5 +743,18 @@
 		"wide"					"f10"	[$WIN32]
 		"wide"					"f60"	[$X360]
 		"tall"					"100"
+	}
+	
+	CHudVote
+	{
+		"fieldName"		"CHudVote"
+		"xpos"			"10"			
+		"ypos"			"c-80"
+		"wide"			"210"
+		"tall"			"200"
+		"visible"		"1"
+		"enabled"		"1"
+		"bgcolor_override"	"0 0 0 0"
+		"PaintBackgroundType"	"0" // rounded corners
 	}
 }

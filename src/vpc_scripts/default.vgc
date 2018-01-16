@@ -1,9 +1,9 @@
 $Games
 {
-	"REACTIVEDROP"
-	"SWARM"
+	//"REACTIVEDROP"
+	//"SWARM"
 	"HL2"
-	//"EPISODIC"
+	"EPISODIC"
 }
 
 $Conditional	"SOURCESDK" "1"

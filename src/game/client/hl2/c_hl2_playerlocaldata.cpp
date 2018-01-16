@@ -27,9 +27,9 @@ BEGIN_RECV_TABLE_NOBASE( C_HL2PlayerLocalData, DT_HL2Local )
 	RecvPropBool( RECVINFO(m_bAutoAimTarget) ),
 	// this was moved up
 	RecvPropVector( RECVINFO(m_vecLocatorOrigin) ),
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 	RecvPropFloat( RECVINFO(m_flFlashBattery) ),
-#endif
+//#endif
 END_RECV_TABLE()
 
 BEGIN_PREDICTION_DATA_NO_BASE( C_HL2PlayerLocalData )
@@ -47,8 +47,8 @@ C_HL2PlayerLocalData::C_HL2PlayerLocalData()
 	m_hLadder = NULL;
 	// this was moved up
 	m_vecLocatorOrigin = vec3_origin;
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 	m_flFlashBattery = 0.0f;
-#endif
+//#endif
 }
 
