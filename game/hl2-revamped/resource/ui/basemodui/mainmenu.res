@@ -45,8 +45,8 @@
 
 		// main pic, vertically centered
 		"picoffsetx"			100
-		"picwidth"				150
-		"picheight"				150
+		"picwidth"				156
+		"picheight"				156
 
 		// menu text, underneath pic
 		"menutitlex"			100
@@ -89,7 +89,7 @@
 			"id"				"BtnMultiplayer"
 			"name"				"#HL2PORTUI_MainMenu_Coop"
 			"image"				"vgui/hl2/menu_mode_coop"
-			"command"			"FlmCooplyout"
+			"command"			"FlmCFlyout"
 			"menutitle"			"#HL2PORTUI_MainMenu_Coop"
 			"menuhint"			"#L4D360UI_MainMenu_CoOp_Tip"
 		}
