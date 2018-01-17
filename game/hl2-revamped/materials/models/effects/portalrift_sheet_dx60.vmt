@@ -1,0 +1,18 @@
+"Rift_dx6"
+{
+	"$model" 1
+	"$basetexture" "_rt_Camera"
+	"$translucent" 1
+	"$texture2" "models/effects/dx7portalrift"
+
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$texture2"
+			"animatedtextureframenumvar" "$frame2"
+			"animatedtextureframerate" 15
+		}
+	}
+}
+

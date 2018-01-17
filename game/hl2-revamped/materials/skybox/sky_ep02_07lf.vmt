@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "nature/blue_sky01"
+	"$nofog" 1
+	$ignorez 1
+	$hdrbasetexture "nature/blue_sky01"
+}

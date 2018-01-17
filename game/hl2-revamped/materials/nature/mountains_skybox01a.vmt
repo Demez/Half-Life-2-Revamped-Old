@@ -1,0 +1,6 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"nature/mountains_skybox01a"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+}

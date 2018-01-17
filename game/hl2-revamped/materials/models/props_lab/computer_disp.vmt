@@ -1,0 +1,6 @@
+"UnLitGeneric"
+{
+	"$basetexture" "models/props_lab/computer_disp"
+//	"$selfillum" "1"
+	"$model" "1"
+}

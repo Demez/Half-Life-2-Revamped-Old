@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "metal/bunker_metaltruss01"
+	"%compilepassbullets" 1
+	"$alphatest" 1
+	"$surfaceprop" "metal"
+	"$nocull" 1
+	"$nodecal" "1"
+}

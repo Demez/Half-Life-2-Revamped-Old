@@ -1,0 +1,39 @@
+"LightmappedGeneric"
+{
+	"LightmappedGeneric_DX6"
+	{
+		"$fallbackmaterial" "nature/water_movingplane_dx70"
+	}
+
+	"$basetexture" "dev/water_moving"
+	"$bumpmap" "dev/water_normal"
+//	"$selfillum" "1"
+	"$translucent" "1"
+	"$surfaceprop" "water"
+	"$envmap" "env_cubemap"
+//	"$envmaptint" "[1 .9 .8]"
+//	"$envmapcontrast" "1"
+	"%keywords" "wasteland"
+	"%compilewater" 1
+	"$abovewater" 1
+	"$bottommaterial" "nature/water_movingplane_beneath"
+	"$normalmapalphaenvmapmask" 1
+	
+	"$bumpframe" 0	// Needed for dx7 
+
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedtextureframerate" 21.00
+		}
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$bumpmap"
+			"animatedtextureframenumvar" "$bumpframe"
+			"animatedtextureframerate" 21.00
+		}
+	}
+}

@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Tile/tilefloor001c"
+	"$surfaceprop" "tile"
+	"%keywords" "c17skyscraper"
+	//"$bumpmap" "tile/tilefloor001b_normal"
+	//"$envmap" "env_cubemap"
+	//"$normalmapalphaenvmapmask" 1
+	//"$envmapcontrast" 1
+	//"$envmapsaturation" 1
+	//"$envmaptint" "[ .9 .9 .9]"
+	//"$fresnelreflection" 0.25
+}

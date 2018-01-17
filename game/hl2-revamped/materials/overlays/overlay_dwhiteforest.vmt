@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "overlays/overlay_DWhiteForest"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+	"$decal"	1
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+}

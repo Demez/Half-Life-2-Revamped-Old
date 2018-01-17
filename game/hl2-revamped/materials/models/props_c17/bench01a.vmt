@@ -1,0 +1,15 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitMaskedEnvMappedTexture
+	"$basetexture" "Models/props_c17/bench01a"
+	"$envmapmask" "Models/props_c17/bench01a_mask"
+	//"$envmap" "environment maps/envmap001a"
+	//"$envmapsphere" 1
+	"$envmap" "env_cubemap"
+	"$multipass" 1
+	"$surfaceprop" "wood"
+}
+
+
+
+

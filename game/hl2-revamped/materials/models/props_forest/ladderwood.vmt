@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\props_forest/LadderWood"
+	"$detail" "detail\wood_detail_01"
+	"$detailscale" "2.563"
+	"$detailblendfactor" .8
+	"$detailblendmode" "0"
+}

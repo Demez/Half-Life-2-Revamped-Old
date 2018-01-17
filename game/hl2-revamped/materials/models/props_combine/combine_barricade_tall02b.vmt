@@ -1,0 +1,19 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_combine/combine_barricade_tall02b"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .76 .9 1 ]"
+	"$basealphaenvmapmask" 1
+
+	"VertexLitGeneric_DX8"
+	{
+		"$envmaptint" "[ .25 .35 .4 ]"
+	}
+
+
+
+}
+

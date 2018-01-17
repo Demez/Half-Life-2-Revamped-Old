@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_interiors/LightBulb01a"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "Models/props_interiors/LightBulb01a_mask"
+	"$envmaptint" "[ .4 .4 .4]"
+	"$envmapcontrast" "1"
+	"$envmapsaturation" "[.5 .5 .5]"
+	"$surfaceprop" "glass"
+	"$selfillum" 1	
+	
+}
+
+

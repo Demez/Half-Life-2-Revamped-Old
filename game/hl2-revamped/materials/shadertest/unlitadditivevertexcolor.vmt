@@ -1,0 +1,16 @@
+"UnlitGeneric"
+{
+	"$additive" 1
+	"$vertexcolor" 1
+
+	"Proxies"
+	{
+		"Sine"
+		{
+			"resultVar" "$COLOR"
+			"sineperiod" 2.00
+			"sinemin" 0
+			"sinemax" 1
+		}
+	}
+}

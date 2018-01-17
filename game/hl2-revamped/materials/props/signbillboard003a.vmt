@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "props/signbillboard003a"
+	"$surfaceprop" "metal"
+	"%keywords" "wasteland"
+	"$alphatest" 1
+	"$nomip" 1
+}

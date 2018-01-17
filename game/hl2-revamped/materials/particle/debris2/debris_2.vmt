@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	$basetexture "particle/debris2/debris_2"
+	$vertexcolor 1
+	$vertexalpha 1
+	$translucent 1
+//	$additive 1
+}

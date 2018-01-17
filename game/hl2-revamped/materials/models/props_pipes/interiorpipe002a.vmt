@@ -1,0 +1,11 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	// Original shader: BaseTimesLightmap
+	"$basetexture" "Models/props_pipes/InteriorPipe002a"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmaptint" "[ .25 .25 .25 ]"
+	"$bumpmap"	"models/props_pipes/InteriorPipe002a_normal"
+}

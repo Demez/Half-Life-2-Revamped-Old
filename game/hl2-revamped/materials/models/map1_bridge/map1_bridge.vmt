@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/map1_bridge/map1_bridge"
+	"$surfaceprop"	"metal"
+	"$detail" "detail\noise_detail_01"
+//	"$seamless_detail" "1"
+//	"$seamless_scale" ".006"
+	"$detailscale" "4"
+	"$detailblendfactor" .5
+	"$detailblendmode" 0
+}

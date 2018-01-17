@@ -1,0 +1,13 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Wood/wooddoor045b"
+	"$surfaceprop" "wood"
+	"$bumpmap" "Wood/wooddoor045b_normal"
+	"%keywords" "c17downtown"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" .2
+	"$envmaptint" "[ .25 .25 .25 ]"
+}

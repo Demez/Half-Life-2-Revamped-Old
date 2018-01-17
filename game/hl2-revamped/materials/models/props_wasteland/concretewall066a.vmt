@@ -1,0 +1,12 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Concrete/concretewall066a"
+	"$surfaceprop" "concrete"
+	"%keywords" "coastline"
+
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "19.740"
+	"$detailblendfactor" 1
+	"$detailblendmode" 0
+
+}

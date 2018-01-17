@@ -1,0 +1,12 @@
+"VertexLitGeneric"
+{
+        "$basetexture" "models\props_trainstation\Traincar_bars001"
+        "$surfaceprop" "metal"
+	"$envmap" "Environment Maps\train_01"
+	"$basealphaenvmapmask" 1
+	"$envmaptint" "[ .75 .75 .75]"
+	"$multipass" 1
+}
+
+
+

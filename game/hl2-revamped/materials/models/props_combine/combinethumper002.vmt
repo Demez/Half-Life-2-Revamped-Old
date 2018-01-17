@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_combine/CombineThumper002"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .5 .5 .5]"
+	"$envmapmask" "Models/props_combine/CombineThumper002_mask"
+	"$selfillum" 1
+}
+
+

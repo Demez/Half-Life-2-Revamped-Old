@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "shadertest/LightmappedSelfIlluminatedTexture"
+	"$envmap" "shadertest/shadertest_env"
+	"$selfillum" 1
+	"$detail" "shadertest/shadertestdetail"
+}

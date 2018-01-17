@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmap
+	"$basetexture" "Props/signbillboard002a"
+	"$surfaceprop" "wood"
+}

@@ -1,0 +1,11 @@
+"screenspace_general"
+{
+	"$additive" 0
+	"$basetexture" "_rt_SmallFB1"
+	"$ignorez" 1
+	"$linearread_basetexture" 1
+	"$linearwrite" 1
+	"$writealpha" 1
+	"$copyalpha" 1
+	"$PIXSHADER" "blurentity_ps20"
+}

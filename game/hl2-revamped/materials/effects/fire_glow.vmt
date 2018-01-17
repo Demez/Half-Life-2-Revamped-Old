@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"effects/fire_glow"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+	"$selfillum"	1
+}

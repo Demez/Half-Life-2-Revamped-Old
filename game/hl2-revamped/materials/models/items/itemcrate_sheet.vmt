@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "Models/Items/itemcrate_sheet"
+	//"$selfillum" 1
+}

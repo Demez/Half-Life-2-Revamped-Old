@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "nature/cliff04a"
+	"$surfaceprop" "concrete"
+	"%keywords" "ep2"
+	"$detail" "detail\rock_detail_01"
+	"$detailscale" "8"
+	"$detailblendfactor" 1
+	"$detailblendmode" 0
+}

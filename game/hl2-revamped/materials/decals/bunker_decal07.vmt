@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+	"$baseTexture" "decals/bunker_decal07"
+	"$decal" 1
+	"$decalscale" 0.25
+	"$translucent" 1
+}

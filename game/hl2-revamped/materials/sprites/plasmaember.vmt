@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	// Original shader: AddTexture
+	"$additive" 1
+	"$basetexture" "sprites/plasmaember"
+}

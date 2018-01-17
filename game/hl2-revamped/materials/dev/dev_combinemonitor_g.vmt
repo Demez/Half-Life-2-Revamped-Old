@@ -1,0 +1,45 @@
+"Unlittwotexture"
+//"UnlitGeneric"
+
+{
+	"$basetexture" "_rt_Camera"
+	"%tooltexture" "dev/dev_monitor"
+	"$surfaceprop" "glass"
+	"$additive" "1"
+
+//	"$texture2"	"models/props_combine/shieldwall_tint"
+	"$texture2"	"dev/dev_combinescanline"
+//	"$texture2"	"engine/camerarendertarget"
+
+	"Proxies"
+	{
+
+		"Sine"
+		{
+			"resultVar" "$color[1]"
+			"sineperiod" 1
+			"sinemin" .1
+			"sinemax" 0
+		}
+		"Sine"
+		{
+			"resultVar" "$color[2]"
+			"sineperiod" .01
+			"sinemin" .1
+			"sinemax" 0
+		}
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" .06
+			"texturescrollangle" -90
+		}
+
+
+	}
+
+
+
+
+}

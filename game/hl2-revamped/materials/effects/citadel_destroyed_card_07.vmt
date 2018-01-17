@@ -1,0 +1,7 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"effects/citadel_destroyed_card_07"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+	"$decal"	1
+}

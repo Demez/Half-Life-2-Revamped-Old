@@ -1,0 +1,33 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "shadertest/LightmappedTexture"
+	"$basetexturetransform" "center 0 0 scale 1 10 rotate 30 translate .2 .3"
+	"Proxies"
+	{
+		// Color green + blue is sinusoidal
+		"Sine"
+		{
+			"resultVar" "$color[2]"
+			"sineperiod" 1.00
+			"sinemin" 0
+			"sinemax" 1
+		}
+
+		"Sine"
+		{
+			"resultVar" "$color[1]"
+			"sineperiod" 1.00
+			"sinemin" 0
+			"sinemax" 1
+		}
+
+		// Alpha is sinusoidal
+		"Sine"
+		{
+			"resultVar" "$alpha"
+			"sineperiod" 10.00
+			"sinemin" 0.2
+			"sinemax" 1
+		}
+	}
+}

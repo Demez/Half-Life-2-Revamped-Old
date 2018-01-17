@@ -1,0 +1,13 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Dev/water_normal"
+	"$surfaceprop" "water"
+	"Proxies"
+	{
+		"MaterialModify"
+		{
+			// fixme!  This has to be here, or material loading barfs.
+			"dummy" 0
+		}
+	}
+}

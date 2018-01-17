@@ -1,0 +1,12 @@
+"UnlitGeneric"
+{
+	"$baseTexture" "_rt_SmallFB1"
+	"$ignorez" 0
+	"$writez" 0
+	"$vertexalpha" 1
+	"$vertexcolor" 1
+	"$alphatest" 0
+	"$translucent" 1
+	"$alphatestreference" 0
+}
+

@@ -1,0 +1,16 @@
+"SpriteCard"
+{
+	$BASETEXTURE "particle/midSideSprites/midSideSprites"
+	
+	// Set this if you always want "additive over" blending (ONE:INVSRCALPHA)
+	$ADDOVERBLEND 1
+	
+// RAMPTEXTURE and POWERFUNCTION are mutually exclusive:	
+//	$RAMPTEXTURE "particle/fireGradient"
+//	$POWERFUNCTION "[0.8 2.5 5]"
+	
+//	$OVERBRIGHTFACTOR 1.5
+//	$EXTRACTGREENALPHA 1
+	$ADDBASETEXTURE2 0.1
+	$DEPTHBLEND 1
+}

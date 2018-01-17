@@ -1,0 +1,5 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"lights/lightpanel_01"
+	"$surfaceprop"	"plastic"
+}

@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/seesawBridge/metaltruss023a"
+	"$alphatest" "1"
+}

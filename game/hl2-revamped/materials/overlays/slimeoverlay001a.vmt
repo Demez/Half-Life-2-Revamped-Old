@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "overlays/slimeoverlay001a"
+	"$translucent" 1
+	"$decal" 1
+	$vertexalpha 1
+}

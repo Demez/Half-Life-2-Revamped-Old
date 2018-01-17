@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\props_silo/BarrelWarning"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_silo/BarrelWarning_REF"
+	 "$envmapcontrast" .9
+	 "$envmapsaturation" 1
+}

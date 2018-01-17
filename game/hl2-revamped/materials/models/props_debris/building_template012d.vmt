@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Building_Template/Building_Template012d"
+	"$basealphaenvmapmask" "1"
+	"$surfaceprop" "concrete"
+	"$envmap" "env_cubemap"
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .5 .5 .5]"
+}

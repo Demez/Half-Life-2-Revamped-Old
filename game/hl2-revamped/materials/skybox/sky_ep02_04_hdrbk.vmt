@@ -1,0 +1,11 @@
+"sky"
+{
+	"$hdrcompressedTexture" "skybox/sky_ep02_04_hdrbk"
+	"$nofog" "1"
+	"$ignorez" "1"
+	"$basetexture" "skybox/sky_ep02_04bk"
+
+	// NOTE: The 1.8618 is because I took a 512 and clamped it to 275 high and then scaled it to 256,
+	//       so 512 / 275 = 1.8618
+	"$basetexturetransform" "center 0 0 scale 1 1.8618 rotate 0 translate 0 0"
+}

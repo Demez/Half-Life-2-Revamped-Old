@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_combine/tprotato2_sheet"
+	"$surfaceprop" "metal"
+	"$selfillum" "1"
+}

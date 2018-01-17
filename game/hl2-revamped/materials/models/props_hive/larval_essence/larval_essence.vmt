@@ -1,0 +1,18 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/Props_hive/larval_essence/larval_essence"
+	"$surfaceprop"	"default"
+	"$bumpmap"	"Models/Props_hive/larval_essence/larval_essence_normal"
+//	"$additive"	1
+
+	"$selfillum"	1
+	"$selfIllumFresnel" "1"
+	"$selfIllumFresnelMinMaxExp" "[.2 8 10]" // 0.0 1.0 1.0 is the default
+	"$selfillumtint"	"[3 3 3]"
+
+	//phong properties
+	"$phong"	"1"
+	"$phongboost"	"5"
+	"$phongexponent"	"20"
+	"$phongfresnelranges"	"[.1 .5 1]"
+} 

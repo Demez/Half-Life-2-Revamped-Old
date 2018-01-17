@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+     "$basetexture" "models\props_rooftop\rooftop01a"
+     "$surfaceprop" "metal"
+	 "$translucent" 1
+	 "$alphatest" 1
+     "$nodecal" 1
+}

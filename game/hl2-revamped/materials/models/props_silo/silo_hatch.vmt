@@ -1,0 +1,19 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models\props_silo\silo_hatch"
+	"$bumpmap" "Models\props_silo\silo_hatch_normal" //normalmap (make sure to include the specular mask in the alpha channel 
+	"$phong" "1" //this turns on the phong effect
+	"$phongexponent" "1" 	
+	"$phongboost" "1" //use this to increase/decrease the highlight intensity 
+	"$phongfresnelranges" "[.3 .8 2]" 
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .25 .25 .25 ]"
+	"$normalmapalphaenvmapmask" 1
+	//"$nofog" "1" 
+
+
+}
+
+
+
+

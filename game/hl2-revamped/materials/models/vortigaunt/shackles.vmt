@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/vortigaunt/shackles"
+	"$surfaceprop"	"default"
+	"$envmap"	"env_cubemap"
+	"$envmaptint"	"[.25 .25 .25]"
+}

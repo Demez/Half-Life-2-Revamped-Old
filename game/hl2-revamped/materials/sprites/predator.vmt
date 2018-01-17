@@ -1,0 +1,6 @@
+"predator"
+{
+	"$color" "[1 0 0]"
+	"$model" "0"
+	"$refractionAmount" "[.005 .005]"
+}

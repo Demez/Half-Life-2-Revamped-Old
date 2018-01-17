@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/Items/CombineRifle_ammo"
+	"$surfaceprop"	"default"
+	"$selfillum" 1
+	"$bumpmap"	"Models/Items/CombineRifle_ammo_normal"
+	"$phongwarptexture" "Models/Items/CombineRifle_ammo_warp"
+	"$model" "1"
+	"$phong" "1"
+	"$phongboost" "2"
+	"$phongexponent" 8						
+	"$phongfresnelranges"	"[.5 1 2]"
+}

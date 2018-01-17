@@ -1,0 +1,7 @@
+"sky"
+{
+	"$hdrbaseTexture" "space/starfield_01"
+	"$nofog" "1"
+//	"$ignorez" "1"
+	"$basetexture" "space/starfield_01"
+}

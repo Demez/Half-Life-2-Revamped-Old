@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "concrete/indust_concretewall01b"
+	"$surfaceprop" "concrete"
+	"%keywords" "ep2"
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "7.792"
+	"$detailblendfactor" .7
+	"$detailblendmode" 0
+}

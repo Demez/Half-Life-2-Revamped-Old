@@ -1,0 +1,65 @@
+"Water"
+// Branched from water_canals_city, with different fog and reflection tint settings.
+{
+	"Water_DX60"
+	{
+		"$fallbackmaterial" "nature/water_canals_city_murky_dx70"
+	}
+	"Water_DX80"
+	{
+		"$refractamount" ".23"
+	}
+	"Water_DX81"
+	{
+		"$refractamount" ".23"
+	}
+	"$abovewater" 1
+	"%compilewater" 1
+	"$forceexpensive" 1
+	"$reflectentities" 0
+	"$envmap" "env_cubemap"
+	"%tooltexture" "dev/water_normal"
+	"$refracttexture" "_rt_WaterRefraction"
+	"$refractamount" "2"
+	//"$refracttint" "[.6 .58 .55]"
+
+	"$reflecttexture" "_rt_WaterReflection"
+	"$reflectamount" "1"
+	//"$reflecttint" "[.8 .75 .68]"
+
+	"$scale" "[1 1]"
+
+	"$bumpmap" "dev/water_dudv"
+	"$normalmap" "dev/water_normal"
+
+	"$surfaceprop" "water"
+	"$bottommaterial" "nature/water_canals_city_beneath"
+	"$bumpframe" "0"
+
+	"$fogenable" 1
+	"$fogcolor" "{50 40 25}"
+	"$fogstart" "0"
+	"$fogend" "120"
+
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$normalmap"
+			"animatedtextureframenumvar" "$bumpframe"
+			"animatedtextureframerate" 30.00
+		}
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$bumptransform"
+			"texturescrollrate" .05
+			"texturescrollangle" 45.00
+		}
+
+		"WaterLOD"
+		{
+		}
+	}
+}
+

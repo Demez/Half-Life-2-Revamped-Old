@@ -1,0 +1,7 @@
+"vertextexturetest"
+{
+	"$basetexture" "debug/debugempty"
+	"$basetexture2" "debug/debugluxels"
+	"$basetexture3" "brick/brickfloor001a"
+	"$basetexture4" "brick/brickwall001a"
+}

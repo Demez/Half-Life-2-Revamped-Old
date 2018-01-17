@@ -1,0 +1,15 @@
+"VertexLitGeneric"
+{
+
+
+	"$basetexture" "Models/combine_helicopter/helicopter_bomb01"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .5 .5 .5]"
+	"$envmapmask" "Models/combine_helicopter/helicopter_bomb01_mask"
+	"$selfillum" 1
+}
+
+
+
+

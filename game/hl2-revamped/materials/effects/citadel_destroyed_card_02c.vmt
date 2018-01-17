@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"effects/citadel_destroyed_card_02c"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+	"srgb?$color" "[ 1.2 1.2 1.2]"
+}

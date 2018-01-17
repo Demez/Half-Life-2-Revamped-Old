@@ -1,0 +1,24 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/Effects/slimebubble_sheet"
+	"$nocull" "1"	
+	"$translucent" "1"
+	"$alphatest" "1"
+	"$model" "1"
+	"$no_fullbright" 1
+
+	"Proxies"
+	{
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" .9
+			"texturescrollangle" -90
+		}
+
+
+	}
+
+}
+

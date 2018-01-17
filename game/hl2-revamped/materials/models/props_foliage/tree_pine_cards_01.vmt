@@ -1,0 +1,12 @@
+"UnlitGeneric"
+{
+	
+	
+	//"$alphatest" "1"
+	"$translucent" "1"
+	"$basetexture" "models/props_foliage/tree_pine_cards_01"
+	"$model" 1
+	"$nocull" 1
+	"$nodecal" 1
+}
+

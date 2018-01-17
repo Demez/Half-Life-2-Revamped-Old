@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_silo/rocket_body"
+	"$bumpmap" "Models/props_silo/rocket_body_normal" //normalmap (make sure to include the specular mask in the alpha channel 
+	"$phong" "1" //this turns on the phong effect
+	"$phongalbedotint" "1"
+	"$phongexponenttexture" "Models/props_silo/rocket_body_exponent"
+//	"$phongexponent" "20" //change this number to make the specular highlight bigger or smaller (larger numbers give you a smaller highlight)
+	"$phongboost" "1" //use this to increase/decrease the highlight intensity 
+	"$phongfresnelranges" "[2 7 75]" 	//was.6 3 15
+
+}
+

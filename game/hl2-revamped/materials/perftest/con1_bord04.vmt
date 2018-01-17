@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmap
+	"$basetexture" "PerfTest/con1_bord04"
+	"$surfaceprop" "tile"
+}

@@ -1,0 +1,7 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"overlays/sign_generic_cluster01"
+	"$surfaceprop"	"metal"
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+}

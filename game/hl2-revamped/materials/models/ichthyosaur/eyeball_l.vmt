@@ -1,0 +1,5 @@
+"eyes"
+{
+	"$basetexture" "models/ichthyosaur/eyeball_l"
+	"$iris" "models/ichthyosaur/iris_l"
+}

@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\props_silo/de_train_signalbox"
+	
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "5.545"
+	"$detailblendfactor" .6
+	"$detailblendmode" 0
+}

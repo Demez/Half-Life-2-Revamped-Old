@@ -1,0 +1,13 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	"$basetexture" "Tile/tilewall009b"
+	"$surfaceprop" "tile"
+	"%keywords" "c17downtown,c17sewers"
+	"$bumpmap" "tile/tilewall009b_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" .8
+	"$envmaptint" "[ .25 .25 .25 ]"
+}

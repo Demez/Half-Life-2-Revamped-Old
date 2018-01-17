@@ -1,0 +1,17 @@
+"UnLitGeneric"
+{
+	"$model" "1"
+	"$basetexture" "models/props_lab/warp_sheet"
+//	"$selfillum" "1"
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" .5
+			"texturescrollangle" 90
+		}
+	}
+
+
+}

@@ -9,6 +9,7 @@ $Macro GAMENAME 	"hl2-revamped" [!$SOURCESDK]
 $Macro GAMENAME 	"hl2-revamped" [$SOURCESDK]
 
 $Include "$SRCDIR\game\server\server_base.vpc"
+//$Include "$SRCDIR\game\server\server_deferred_base.vpc"
 
 $Configuration
 {

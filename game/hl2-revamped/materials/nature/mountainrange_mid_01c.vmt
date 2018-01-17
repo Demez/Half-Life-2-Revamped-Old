@@ -1,0 +1,6 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"nature/mountainrange_mid_01c"
+	"$surfaceprop"	"rock"
+	"$translucent"	1
+}

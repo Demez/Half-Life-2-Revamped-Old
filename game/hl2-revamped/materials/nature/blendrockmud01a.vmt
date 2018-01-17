@@ -1,0 +1,12 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/rockfloor002a"
+	"$basetexture2" "nature/mudfloor06a"
+	"%tooltexture" "nature/blendrocksand08b_tooltexture"
+	"%keywords" "wasteland"
+	"$surfaceprop" "dirt"
+	"$surfaceprop2" "rock"
+	"$blendmodulatetexture" "nature/rockblendtexture001a"
+	"%detailtype" "canal_reeds2"
+}
+

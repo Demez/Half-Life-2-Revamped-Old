@@ -1,0 +1,11 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_combine/breendesk_sheet"
+	"$bumpmap" "models/props_combine/breendesk_normal"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmapcontrast" ".6"
+	"$envmaptint" "[ .80 .80 .80 ]"
+	"$normalmapalphaenvmapmask" 1
+}

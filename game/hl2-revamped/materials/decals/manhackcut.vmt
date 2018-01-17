@@ -1,0 +1,5 @@
+"DecalModulate"
+{
+	"$basetexture" "Decals/manhackcut"
+	"$decalscale" 0.10
+}

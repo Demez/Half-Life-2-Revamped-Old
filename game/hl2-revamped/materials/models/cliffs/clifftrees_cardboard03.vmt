@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\Cliffs/Clifftrees_cardboard03"
+	"$alphatest" 1
+	"$nocull" 1	
+//	"$translucent" 1
+	"$model" 1
+}

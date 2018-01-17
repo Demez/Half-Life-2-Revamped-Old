@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/map12a_hangar/CB5"
+	"$selfillum" "1"
+	"$selfillumtint" "[0.6 0.375 0.2]"
+}

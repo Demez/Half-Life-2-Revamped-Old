@@ -9,6 +9,7 @@ $Macro GAMENAME 	"hl2-revamped" [!$SOURCESDK]
 $Macro GAMENAME 	"hl2-revamped" [$SOURCESDK]
 
 $Include "$SRCDIR\game\client\client_hl2_base.vpc"
+//$Include "$SRCDIR\game\client\client_deferred_base.vpc"
 
 $Project "Client (HL2-revamped)"
 {

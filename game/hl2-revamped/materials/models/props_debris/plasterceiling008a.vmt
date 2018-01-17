@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Plaster/plasterceiling008a"
+	"$surfaceprop" "plaster"
+	"%keywords" "c17skyscraper"
+	"$bumpmap" "Plaster/plasterceiling008a_normal"
+}

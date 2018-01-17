@@ -1,0 +1,23 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/headcrab/allinonebacup2"
+	"$bumpmap" "models/headcrab/allinonebacup2_normal"
+	"$surfaceprop" "flesh"
+	"$model" "1"
+	"$halflambert" "1"
+
+	//phong parameters
+
+	"$phong" "1"
+	"$phongboost" "2"
+	"$phongexponent" "12" 
+	//"$phongexponenttexture" "Models/headcrab/allinonebacup2_phong"
+	//"$phongalbedotint" "1"										
+	"$phongfresnelranges"	"[.05 .5 1]"
+	
+	//rimlight parameters	
+
+	"$rimlight" "1"
+	"$rimlightexponent" "20"
+//	"$rimlightboost" "1"
+}

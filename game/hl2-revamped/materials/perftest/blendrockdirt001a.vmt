@@ -1,0 +1,8 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "PerfTest/rockwall002a"
+	"$basetexture2" "PerfTest/dirtfloor006a"
+	"%tooltexture" "PerfTest/rockwall002a"
+	"%detailtype" "PerfTest1"
+	"%keywords" "wasteland"
+}

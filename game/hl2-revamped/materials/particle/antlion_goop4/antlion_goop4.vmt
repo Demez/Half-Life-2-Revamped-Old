@@ -1,0 +1,7 @@
+"unlitgeneric"
+{
+	"$basetexture" "particle\antlion_goop4\antlion_goop4"
+	$vertexcolor 1
+	$vertexalpha 1
+	$translucent 1
+}

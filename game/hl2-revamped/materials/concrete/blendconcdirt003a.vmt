@@ -1,0 +1,11 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/dirtfloor012a"
+	"$basetexture2" "concrete/concretefloor037b"
+	"%tooltexture" "concrete/blendconcdirt003a_tooltexture"
+	"$surfaceprop" "dirt"
+	"$surfaceprop2" "concrete"
+	"$basetexturetransform" "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+        "$basetexturetransform2" "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+	"%keywords" "coastline"
+}

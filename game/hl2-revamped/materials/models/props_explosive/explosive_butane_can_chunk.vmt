@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_explosive/explosive_butane_can_chunk"	
+//	"$bumpmap"	      "Models/props_explosive/gas_cannister_normal"
+
+//	"$phong" "1" //this turns on the phong effect
+//	"$phongexponent"  "20"
+//	"$phongboost" ".2" //use this to increase/decrease the highlight intensity 
+//	"$phongfresnelranges" "[.1 .5 1]" //this are the highlight intensities at different incidence angles from the camera (first value is perpendicular to the camera and the 3rd value is away from the camera)
+
+}

@@ -1,0 +1,15 @@
+"UnlitGeneric"
+{
+	"$basetexture" "shadertest/UnlitAdditiveTexture"
+
+	"Proxies"
+	{
+		"Sine"
+		{
+			"resultVar" "$COLOR"
+			"sineperiod" 2.00
+			"sinemin" 0
+			"sinemax" 1
+		}
+	}
+}

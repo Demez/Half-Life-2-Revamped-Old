@@ -1,0 +1,15 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Brick/brickwall049c"
+			"$surfaceprop" "brick"
+
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "7.740"
+	"$detailblendfactor" .8
+
+	"$detailblendmode" 0
+	"%keywords" "c17industrial,wasteland"
+	"$bumpmap" "Brick/brickwall049c_normal"
+	"$parallaxmap" "Brick/brickwall049c_height"
+	"$parallaxmapscale" ".005"
+}

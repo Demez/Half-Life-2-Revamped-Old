@@ -1,0 +1,12 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "concrete\concretefloor025a"
+	"$surfaceprop" "concrete"
+	
+        "$detail" "detail\noise_detail_01"
+	"$detailscale" "7.345"
+	"$detailblendfactor" .6
+	"$detailblendmode" 0
+	"%keywords" "c17industrial,wasteland"
+	"$bumpmap" "concrete\concretefloor025a_normal"
+}

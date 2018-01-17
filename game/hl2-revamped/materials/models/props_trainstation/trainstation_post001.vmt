@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_trainstation/trainstation_post001"
+	"$surfaceprop" "metal"
+}

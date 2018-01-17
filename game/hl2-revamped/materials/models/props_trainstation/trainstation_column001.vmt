@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_trainstation/trainstation_column001"
+	"$surfaceprop" "metal"
+	"$translucent" 1
+    	 "$alphatest" 1
+}

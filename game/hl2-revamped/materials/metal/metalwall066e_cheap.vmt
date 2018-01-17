@@ -1,0 +1,23 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Metal/metalwall066e"
+	"$surfaceprop"  "metal"
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "4.283"
+	"$detailblendfactor" .8
+	"$detailblendmode" "0"
+
+	"%keywords" "c17industrial,wasteland"
+
+	"LightmappedGeneric_DX9"
+	{
+		"$envmap" "env_cubemap"
+		"$normalmapalphaenvmapmask" 1
+		"$envmapcontrast" 1
+		"$envmapsaturation" 1
+		"$envmaptint" "[ .56 .56 .56 ]"
+		"$bumpmap" "Metal/metalwall066e_normal"
+	}
+
+}

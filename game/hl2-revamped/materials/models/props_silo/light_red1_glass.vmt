@@ -1,0 +1,9 @@
+VertexLitGeneric
+{
+	"$basetexture"	"models\props_silo\light_red1_glass"
+	"$translucent" "1" 
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_silo\light_red1_glass_ref"
+	"$envmaptint" "[1 .05 .05]"
+	"$nocull" "1"
+}

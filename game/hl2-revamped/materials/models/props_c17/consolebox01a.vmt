@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/props_c17/consolebox01a"
+	"$surfaceprop" "metal"
+	"$selfillum" 1
+}
+

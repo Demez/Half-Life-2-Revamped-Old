@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"nature/groundplane_01a"
+	"$surfaceprop"	"no_decal"
+	"$nofog" 1
+	$ignorez 1
+}

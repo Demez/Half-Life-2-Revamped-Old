@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "nature/mountain001"
+	"$translucent" 1
+	"%compilepassbullets" 1
+	"$nodecal" 1
+
+}

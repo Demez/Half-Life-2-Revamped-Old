@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_lab/cactus_sheet"
+//	"$selfillum" "1"
+}

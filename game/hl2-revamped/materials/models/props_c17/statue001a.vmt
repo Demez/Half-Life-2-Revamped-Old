@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_c17/statue001a"
+	"$surfaceprop" "concrete"
+	"$envmap" "env_cubemap"
+	"$basealphaenvmapmask" 1
+}

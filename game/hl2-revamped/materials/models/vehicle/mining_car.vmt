@@ -1,0 +1,15 @@
+"VertexLitGeneric"
+{
+	"<dx90"
+	{
+		"$fallbackmaterial" "Models/vehicle/mining_car_dx8"
+	}
+	"$basetexture" "Models/vehicle/mining_car"
+	"$basemapalphaphongmask" "1"				// phong mask in base map...no need for useless flat normal map
+	
+	"$phong" "1" //this turns on the phong effect 
+	"$phongexponent" "20" //change this number to make the specular highlight bigger or smaller (larger numbers give you a smaller highlight) 
+	"$phongboost" "0.5" //use this to increase/decrease the highlight intensity 
+	"$phongfresnelranges" "[2 2 25]" //this are the highlight intensities at different incidence angles from the camera (first value is toward the camera and the 3rd value is perpendicular to the camera) 
+	//"$halflambert" "1"
+}

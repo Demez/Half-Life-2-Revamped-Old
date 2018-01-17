@@ -1,0 +1,9 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+//	"$baseTexture" "Models/Combine_Advisor/lens"
+	"$bumpmap" "models/combine_advisor/lens_normal"
+	"$envmap" "env_cubemap"
+	"$envmapcontrast" .5
+	"$envmaptint" "[ .00 .00 .00 ]"
+}

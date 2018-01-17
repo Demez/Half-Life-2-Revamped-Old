@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\props_forest/FenceBarbedWire_Wire2"
+	"$alphatest" 1
+	"$nocull" 1	
+	"$model" 1
+}

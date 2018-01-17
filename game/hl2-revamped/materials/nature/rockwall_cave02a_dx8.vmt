@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+
+	"$basetexture" "nature/rockwall_cave02a_dx8"
+	"$surfaceprop" "concrete"
+	"$seamless_scale" 0.005
+	"%keywords" "ep2"
+}

@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_c17/FurnitureMetal001a"
+	//"$envmap" "env_cubemap"
+	//"$basealphaenvmapmask" 1
+	
+}
+
+

@@ -1,0 +1,11 @@
+VertexLitGeneric
+{
+	"$basetexture"	"models\gantry_crane\crane_controls"
+	"$bumpmap" 	"Models/gantry_crane\crane_controls_norm"
+	"$phong" "1" 
+	"$phongexponenttexture" 	"Models/gantry_crane\crane_controls_exponent"
+//	"$phongexponent"   "20"
+	"$phongboost" "0.2" 
+	"$phongfresnelranges" "[0.2 0.8 1]"
+
+}

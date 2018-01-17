@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/Items/combine_rifle_cartridge01"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .5 .5 .5]"
+	"$envmapmask" "Models/Items/combine_rifle_cartridge01_mask"
+	"$selfillum" 1
+}
+
+

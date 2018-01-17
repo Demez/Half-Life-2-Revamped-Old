@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Wood/woodwall023a"
+	"$surfaceprop" "wood"
+	"%keywords" "wasteland"
+	"$basealphaenvmapmask" 1
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .5 .5 .5]"
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+}

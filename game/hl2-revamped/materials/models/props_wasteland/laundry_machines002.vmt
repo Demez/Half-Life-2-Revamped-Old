@@ -1,0 +1,9 @@
+
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_wasteland/laundry_machines002"
+	"$envmap" "env_cubemap"
+	"$surfaceprop" "metal"
+	"$envmapmask" "Models/props_wasteland/laundry_machines002_mask"
+}
+

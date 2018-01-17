@@ -1,0 +1,13 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Nature/rockfloor003a"
+	"$surfaceprop" "concrete"
+	"%keywords" "wasteland"
+	"$bumpmap" "Nature/rockfloor003a_normal"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .56 .56 .56 ]"
+	"$envmap" "env_cubemap"
+}

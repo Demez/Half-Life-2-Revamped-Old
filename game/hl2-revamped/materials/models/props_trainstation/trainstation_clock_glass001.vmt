@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_trainstation/trainstation_clock_glass001"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	//"$surfaceprop" "glass"
+	"$envmapmask" "Models/props_trainstation/trainstation_clock_glass001_mask"
+	"$translucent" 1
+	//"$envmaptint" "[ 0.75 0.75 0.75 ]"
+}

@@ -902,35 +902,6 @@ public:
 		r_shadows_gamecontrol.SetValue( bDisabled != 1 );
 	}
 
-	//City17: Handle changing depth texture modes.
-	void DetermineMaxDepthTextureRTs(int m_nDepthTextureMode)
-	{
-		if (m_nMaxDepthTextureShadows == 7 && m_nDepthTextureMode == 2)
-			return;
-
-		if (m_nMaxDepthTextureShadows == 1 && m_nDepthTextureMode == 1)
-			return;
-
-		if (m_nMaxDepthTextureShadows == 0 && m_nDepthTextureMode == 0)
-			return;
-
-		if (m_nDepthTextureMode == 2)
-		{
-			m_nMaxDepthTextureShadows = 7;
-		}
-		else if (m_nDepthTextureMode == 1)
-		{
-			m_nMaxDepthTextureShadows = 1;
-		}
-		else
-		{
-			m_nMaxDepthTextureShadows = 0;
-		}
-
-		ShutdownDepthTextureShadows();
-		InitDepthTextureShadows();
-	}
-
 	// Toggle shadow casting from world light sources
 	virtual void SetShadowFromWorldLightsEnabled( bool bEnable );
 	void SuppressShadowFromWorldLights( bool bSuppress );
@@ -1562,21 +1533,6 @@ static void ShadowRestoreFunc( int nChangeFlags )
 	s_ClientShadowMgr.RestoreRenderState();
 }
 
-//c17 shadowmaps
-//City17: Convar for depth texture mode, with callback.
-void DynamicShadowModeCallBack(IConVar *var, const char *pOldValue, float flOldValue)
-{
-	ConVar *convar = static_cast< ConVar * >(var);
-
-	if (!convar)
-		return;
-
-	s_ClientShadowMgr.DetermineMaxDepthTextureRTs(convar->GetInt());
-}
-
-ConVar r_dynamic_shadow_mode("r_dynamic_shadow_mode", "2", FCVAR_ARCHIVE | FCVAR_CLIENTDLL, "Determines what lights are allowed to cast dynamic shadows. 2 = All, 1 = Flashlight Only, and 0 = None.", true, 0, true, 2, DynamicShadowModeCallBack);
-ConVar r_dynamicshadows_use_c17_improvements("r_dynamicshadows_use_c17_improvements", "1", FCVAR_ARCHIVE, "Some older GPUs have driver issues that make shadows turn white. Setting this to 0 will disable our improvments for compatibility reasons.");
-
 //-----------------------------------------------------------------------------
 // Initialization, shutdown
 //-----------------------------------------------------------------------------
@@ -1715,7 +1671,6 @@ void CClientShadowMgr::InitDepthTextureShadows()
 		for( int i=0; i < m_nMaxDepthTextureShadows; i++ )
 		{
 			CTextureReference depthTex;	// Depth-stencil surface
-			CTextureReference depthTexHigh;	// Depth-stencil surface
 			bool bFalse = false;
 
 			char strRTName[64];

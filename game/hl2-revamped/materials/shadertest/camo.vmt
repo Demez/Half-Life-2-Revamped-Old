@@ -1,0 +1,6 @@
+"Camo"
+{
+	"$basetexture" "shadertest/Camo"
+	"$envmap" "shadertest/Camo_env"
+	"$envmapmask" "shadertest/camo_envmask"
+}

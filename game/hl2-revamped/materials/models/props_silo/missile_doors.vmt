@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/props_silo/missile_doors"
+	"$bumpmap"	   "models/props_silo/missile_doors_normal"
+
+	"$phong" "1" //this turns on the phong effect
+	"$phongexponent"  "20"
+	"$phongboost" ".25" //use this to increase/decrease the highlight intensity 
+	"$phongfresnelranges" "[1 1 1]" //this are the highlight intensities at different incidence angles from the camera (first value is perpendicular to the camera and the 3rd value is away from the camera)
+}

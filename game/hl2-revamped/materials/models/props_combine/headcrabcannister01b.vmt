@@ -1,0 +1,18 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	//"$baseTexture" "Models/props_combine/headcrabcannister01b"
+	//"$envmap" "env_cubemap"
+	//"$basealphaenvmapmask" 1
+	//"$envmaptint" "[ .01 .01 .01 ]"
+
+	"$baseTexture" "Models/props_combine/headcrabcannister01b"
+	"$surfaceprop" "metal"
+	"$bumpmap" "models/props_combine/headcrabcannister01b_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .56 .67 .75 ]"
+}
+

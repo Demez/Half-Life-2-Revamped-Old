@@ -1,0 +1,6 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"nature/rockfloor002c"
+	"$surfaceprop"	"rock"
+	"$translucent"	1
+}

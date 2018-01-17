@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"effects/citadel_destroyed_card_02a"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+	//"$selfillum"	1
+}

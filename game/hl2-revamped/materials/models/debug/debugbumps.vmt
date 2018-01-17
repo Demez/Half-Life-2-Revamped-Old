@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Dev/reflectivity_20b"
+	"$bumpmap" "models/ihvtest/outin_normal"
+	"$phong"     "1"
+	"$phongexponent"   "9"
+	"$phongboost"   "1"
+	"$phongfresnelranges"   "[.4 0.8 1]"
+}

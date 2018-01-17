@@ -1,0 +1,44 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Metal/metalwall101a"
+	"$surfaceprop" "metal"
+	"%keywords" "borealis"
+
+	// NOTE: Even though env_cubemap is here, it will turned off for DX6
+	// because $multipass 1 isn't defined
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .42 .53 .64 ]"
+
+	"LightmappedGeneric_HDR_DX9"
+	{
+		"$bumpmap" "metal/metalwall101a_normal"
+	//	"$parallaxmap" "Metal/metalwall101a_height"
+	//	"$parallaxmapscale" ".0125"
+		"$normalmapalphaenvmapmask" 1
+		"$envmaptint" "[ .09 .1 .12]"
+	}
+
+	"LightmappedGeneric_DX9"
+	{
+		"$bumpmap" "metal/metalwall101a_normal"
+	//	"$parallaxmap" "Metal/metalwall101a_height"
+	//	"$parallaxmapscale" ".08"
+		"$normalmapalphaenvmapmask" 1
+		"$envmaptint" "[ .09 .1 .12]"
+	}
+
+	"LightmappedGeneric_DX8"
+	{
+		"$bumpmap" "metal/metalwall101a_normal"
+		"$nodiffusebumplighting" 1
+		"$normalmapalphaenvmapmask" 1
+	}
+
+	"LightmappedGeneric_NoBump_DX8"
+	{
+		"$basetexture" "metal/citadel_metalwall101a"
+		"$basealphaenvmapmask" 1
+	}
+}
+

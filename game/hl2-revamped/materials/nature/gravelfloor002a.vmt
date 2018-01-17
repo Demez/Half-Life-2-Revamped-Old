@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Nature/gravelfloor002a"
+	"$surfaceprop" "dirt"
+	//"$bumpmap" "Nature/gravelfloor002a_normal"
+	//"$parallaxmap" "Nature/gravelfloor002a_height"
+	//"$parallaxmapscale" ".0125"
+}

@@ -1,0 +1,25 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "metal/metalwall076a"
+	"$basealphaenvmapmask" 1
+	"$surfaceprop" "metal"
+	"%keywords" "combine"
+
+	// NOTE: Even though env_cubemap is here, it will turned off for DX6
+	// because $multipass 1 isn't defined
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ 0.55 0.55 0.75 ]"
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	
+	"LightmappedGeneric_hdr_dx9"
+	{
+		// put HDR override stuff here
+		"$envmaptint" "[ .09 .1 .12]"
+	}
+
+	"LightmappedGeneric_dx9"
+	{
+		"$envmaptint" "[ .09 .1 .12]"
+	}
+}

@@ -1,0 +1,40 @@
+"Refract"
+{
+	"Refract_dx60"
+	{
+		"$fallbackmaterial" 	"models/props_combine/tprings_globe_dx60"
+	}
+
+ 	"$model" 1
+	"$bluramount" 0
+ 	"$refractamount" ".1"
+//	"$REFRACTTINT" "{230 240 250}"
+	"$refracttinttexture" 	"models/props_combine/tprings_globe"
+	"$scale" "[1 1]"
+
+	"$dudvmap" "dev/water_dudv"
+	"$normalmap" "dev/water_normal"
+
+
+	"$envmap" "env_cubemap"
+	"$envmapcontrast" "1"
+//	"$envmaptint" "[.5 .5 .5]"
+	"$envmapsaturation" "[1 1 1]"
+	"$bumpframe" "0"
+
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$normalmap" 
+			"animatedtextureframenumvar" "$bumpframe"
+			"animatedtextureframerate" 29.00
+		}
+		"TextureScroll"
+		{
+			"texturescrollvar" "$bumptransform"
+			"texturescrollrate" .2
+			"texturescrollangle" 90
+		}
+	}
+}

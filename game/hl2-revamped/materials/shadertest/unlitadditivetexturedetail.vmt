@@ -1,0 +1,23 @@
+"UnlitGeneric"
+{
+	"$basetexture" "shadertest/UnlitAdditiveTexture"
+	"$additive" 1
+	"$detail" "shadertest/shadertestdetail"
+
+	"$temp" "[0 0]"
+	"Proxies"
+	{
+		// Texture rotates as we move!!
+		"PlayerPosition"
+		{
+			"resultVar" "$temp"
+			"scale"	0.02
+		}
+
+		"TextureTransform"
+		{
+			"rotateVar" "$temp"
+			"resultVar" "$basetexturetransform"
+		}
+	}
+}

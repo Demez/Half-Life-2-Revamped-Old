@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	"%compilepassbullets" 1
+	"$alphatest" 1
+	"$basetexture" "Metal/metaltruss012a"
+	"$surfaceprop" "metal"
+	"%keywords" "c17industrial,wasteland"
+}

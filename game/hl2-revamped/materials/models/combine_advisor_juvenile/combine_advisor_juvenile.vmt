@@ -1,0 +1,16 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/Combine_advisor_juvenile/Combine_advisor_juvenile"
+	"$bumpmap" 	"Models/Combine_advisor_juvenile/Combine_advisor_juvenile_normal"
+	"$surfaceprop"	"default"
+	"$model"	1
+	//phong properties
+	"$phong"	"1"
+	"$phongboost"	"3"
+	"$phongexponenttexture" 	"Models/Combine_advisor_juvenile/Combine_advisor_juvenile_phong"
+	//"$phongexponent"	"6"
+	"$phongfresnelranges"	"[.1 .5 1.5]"
+	"$rimlight"	"1"
+	"$rimlightexponent"	"1"
+	"$lightwarptexture" "Models/Combine_advisor_juvenile/Combine_advisor_juvenile_warp"
+}

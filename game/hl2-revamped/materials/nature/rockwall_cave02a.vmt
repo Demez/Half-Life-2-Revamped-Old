@@ -1,0 +1,25 @@
+"LightmappedGeneric"
+{
+
+	"<dx90"
+	{
+		"$fallbackmaterial" "nature/rockwall_cave02a_dx8"
+	}
+
+	"$basetexture" "nature/rockwall_cave02a"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "Nature/rockwall_cave_02a_height-ssbump"
+	"$ssbump" "1"
+	"$normalmapalphaenvmapmask" 1
+	"$envmaptint" "[ .2 .2 .2 ]"
+	"$envmap" "cubemaps/cubemap_cave01"
+	"%keywords" "ep2"
+	"$seamless_scale" 0.005
+
+	"LightmappedGeneric_hdr_dx9"
+	{
+	"$envmaptint" "[ .2 .2 .2 ]"
+	"$envmap" "cubemaps/cubemap_cave01"
+	}
+
+}

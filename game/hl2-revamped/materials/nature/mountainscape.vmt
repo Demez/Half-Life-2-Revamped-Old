@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"skybox/mountainscape"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+}

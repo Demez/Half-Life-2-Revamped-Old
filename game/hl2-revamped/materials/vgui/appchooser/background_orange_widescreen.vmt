@@ -1,0 +1,12 @@
+"screenspace_general"
+{
+	// NOTE: DO NOT change anything in here without talking to Alex or Brian! This has
+	//       to match some other materials hidden in source code that are necessary for
+	//       the 360's loading screens.
+	"$basetexture" "vgui/appchooser/background_orange_widescreen"
+	"$ignorez" 1
+	"$linearread_basetexture" "1"
+	"$X360APPCHOOSER" "1"
+	"$PIXSHADER" "appchooser360movie_ps20b"
+	"$nolod" "1"
+}

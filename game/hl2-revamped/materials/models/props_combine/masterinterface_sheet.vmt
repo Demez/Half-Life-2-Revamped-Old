@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	// Original shader: BaseTimesLightmap
+	"$basetexture" "Models/props_combine/masterinterface_sheet"
+	"$surfaceprop" "metal"
+	"$selfillum" "1"
+}

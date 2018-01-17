@@ -1,0 +1,16 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/Advisorpod_crash/Advisor_Pod_crash"
+	"$bumpmap" "Models/Advisorpod_crash/Advisor_Pod_crash_normal"
+	"$surfaceprop"	"metalpanel"
+	"$nodecal" "1"
+	"$model" "1"
+
+// -- From here down is new stuff which will only be applied if $phong is set to 1 --
+
+	"$phong" "1"
+	"$phongboost"	"1"
+	"$phongfresnelranges"	"[1 0.4 2]"
+
+
+}

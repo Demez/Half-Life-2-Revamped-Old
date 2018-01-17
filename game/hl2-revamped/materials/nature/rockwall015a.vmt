@@ -1,0 +1,14 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Nature/rockwall015a"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "Nature/rockwall015a_normal"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .56 .56 .56 ]"
+	"$envmap" "env_cubemap"
+	//"$parallaxmap" "Nature/rockwall015a_height"
+	//"$parallaxmapscale" ".3548"
+}

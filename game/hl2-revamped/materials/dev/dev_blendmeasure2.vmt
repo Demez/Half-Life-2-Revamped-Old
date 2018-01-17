@@ -1,0 +1,7 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "dev/dev_measurewall01d"
+	"$basetexture2" "dev/dev_measurewall01a"
+	"%tooltexture" "dev/dev_measurewall01d"
+	"%keywords" "dev"
+}

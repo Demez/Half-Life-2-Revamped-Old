@@ -1,0 +1,26 @@
+"Unlittwotexture"
+{
+	"$baseTexture" "effects/screen_monitor_blank"
+	"$texture2" "Models/props_lab/security_noise"
+	"%tooltexture" "effects/screen_monitor_blank"
+	"$selfillum" 1
+	"$surfaceprop" "glass"
+	"Proxies"
+	{
+		//"TextureScroll"
+		//{
+		//	"texturescrollvar" "$basetexturetransform"
+		//	"texturescrollrate" .01
+		//	"texturescrollangle" 0
+		//}
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" 14
+			"texturescrollangle" 70
+		}
+	}
+
+
+}
+

@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_combine/Combine_Train001"
+	"$surfaceprop" "metal"
+	"$nocull" 1
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .5 .5 .5]"
+	"$basealphaenvmapmask" 1
+
+}

@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	// Original shader: DecalBaseTimesLightmapAlphaBlend
+	"$translucent" 1
+	"$basetexture" "props/decal_prison01b"
+	"$decal" 1
+	"$decalscale" 0.25
+	"%keywords" "wasteland"
+}

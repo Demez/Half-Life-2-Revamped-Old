@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+	// Original shader: DecalBaseTimesLightmapAlphaBlend
+	"$translucent" 1
+	"$basetexture" "Decals/decalmetalvent006a"
+	"$decal" 1
+	"$decalscale" 1
+	"%keywords" "airexchange,c17industrial,wasteland"
+}

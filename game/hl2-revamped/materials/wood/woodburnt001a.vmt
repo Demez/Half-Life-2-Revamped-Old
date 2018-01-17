@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmapSelfIllum
+	"$basetexture" "Wood/woodburnt001a"
+	"$selfillum" 1
+	"$surfaceprop" "wood"
+	"%keywords" "c17skyscraper"
+}

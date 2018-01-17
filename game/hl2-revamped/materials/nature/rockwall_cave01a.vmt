@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Nature/rockwall_cave01a"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "Nature/rockwall_cave_02a_height-ssbump"
+        "$ssbump" "1"
+	"$normalmapalphaenvmapmask" 1
+	"$envmaptint" "[ .09 .09 .09 ]"
+	"$envmap" "env_cubemap"
+}

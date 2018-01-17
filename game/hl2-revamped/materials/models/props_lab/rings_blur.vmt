@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/props_lab/rings_blur"
+	"$selfillum" "1"
+}

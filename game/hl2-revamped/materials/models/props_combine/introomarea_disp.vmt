@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_combine/introomarea_disp"
+	"$surfaceprop" "metal"
+	"$translucent" "1"
+	"$additive" "1"
+	"$selfillum" "1"
+}

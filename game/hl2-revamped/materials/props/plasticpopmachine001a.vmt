@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmapSelfIllum
+	"$basetexture" "Props/plasticpopmachine001a"
+	"$selfillum" 1
+	"$surfaceprop" "plastic"
+}

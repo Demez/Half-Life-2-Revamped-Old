@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitMaskedEnvMappedTexture
+	"$basetexture" "models/Synth/backcyl"
+	"$envmapmask" "models/Synth/backcylmask"
+	"$envmap" "env_cubemap"
+	//"$envmapsphere" 1
+	"$multipass" 1
+}

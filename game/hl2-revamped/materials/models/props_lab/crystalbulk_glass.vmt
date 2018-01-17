@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_lab/crystalbulk_glass"
+	"$envmapmask" "models/props_lab/crystalbulk_glassmask"
+	"$envmap" "env_cubemap"
+	"$additive" "1"
+	"$nocull" "1"
+}

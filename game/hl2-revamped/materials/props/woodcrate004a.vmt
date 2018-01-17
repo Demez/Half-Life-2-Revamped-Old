@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmap
+	"$basetexture" "Props/woodcrate004a"
+	"$surfaceprop" "wood_panel"
+}

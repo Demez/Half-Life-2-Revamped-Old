@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_silo/silo_workspace1_sheet"
+	"$surfaceprop"	"default"
+	"$selfillum"	1
+	"$model"	1
+}

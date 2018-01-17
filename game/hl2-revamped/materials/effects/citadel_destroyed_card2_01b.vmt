@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"Effects/citadel_destroyed_card2_01b"
+	"$surfaceprop"	"no_decal"
+	"$translucent"	1
+	"$alphatest" 1
+	"$nofog" 1
+	$ignorez 1
+}

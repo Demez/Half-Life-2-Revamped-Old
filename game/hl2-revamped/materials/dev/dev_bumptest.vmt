@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "dev/dev_bumptest"
+	"$bumpmap" "dev/dev_bumptest_normal"
+	"$surfaceprop" "concrete"
+}

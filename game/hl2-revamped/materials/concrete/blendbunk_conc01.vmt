@@ -1,0 +1,9 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "concrete/concretefloor_bunker02a"
+	"$basetexture2" "concrete/concretefloor_bunker02b"
+	"$surfaceprop" "dirt"
+	"$blendmodulatetexture" "nature/blendtexture01"
+	"$bumpmap" "concrete/concretefloor_bunker02_normal"
+
+}

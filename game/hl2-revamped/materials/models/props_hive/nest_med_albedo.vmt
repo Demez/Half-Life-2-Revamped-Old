@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/Props_hive/nest_med_albedo"
+	"$bumpmap" "Models/Props_hive/nest_med_normal"
+//	"$surfaceprop"	"Wood_lowdensity"
+	"$phong" "1"
+	"$phongexponent" 15
+//	"$lightwarptexture" "Models/Props_hive/nest_lightwarp"
+	"$phongboost"	"3"
+	"$phongfresnelranges"	"[0.1 0.5 1]"
+	"$selfillum" 1
+	"$nodecal"	1
+}

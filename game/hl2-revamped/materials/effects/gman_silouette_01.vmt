@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"effects/gman_silouette_01"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+}

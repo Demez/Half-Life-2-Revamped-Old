@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmap
+	"%compileSlime" 1
+	"$basetexture" "Dev/dev_slime"
+	"$surfaceprop" "slime"
+}
+

@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "metal/forest_metal01f"
+	"$surfaceprop"	"metal"
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "4.283"
+	"$detailblendfactor" .8
+	"$detailblendmode" "0"
+	"%keywords" 	"ep2"
+}

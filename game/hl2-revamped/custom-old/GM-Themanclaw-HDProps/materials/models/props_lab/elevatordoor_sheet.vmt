@@ -1,9 +1,0 @@
-"VertexLitGeneric"
-{
-	"$baseTexture" "Models/props_lab/elevatordoor_sheet"
-	"$bumpmap" "Models/props_lab/elevatordoor_sheet_normal"
-	"$phong" "1"
-	"$phongboost" "1"
-	"$phongexponent" "15"
-	"$phongfresnelranges"	"[.1 .8 1.2]"
-}

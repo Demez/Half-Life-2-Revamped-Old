@@ -1,0 +1,29 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "shadertest/LightmappedSelfIlluminatedTexture"
+	"$envmapmode" 1
+	"$envmap" "shadertest/shadertest_env"
+	"$envmapmask" "shadertest/LightmappedGeneric_envmask"
+	"$envmapmaskscale" 4
+	"$selfillum" 1
+
+	"Proxies"
+	{
+		// Tints are sinusoidal
+		"Sine"
+		{
+			"sineperiod" 10.00
+			"sinemin" 0
+			"sinemax" 1
+			"resultVar"	"$envmaptint[0]" 
+		}
+
+		"Sine"
+		{
+			"sineperiod" 1.00
+			"sinemin" 0
+			"sinemax" 1
+			"resultVar"	"$selfillumtint[2]" 
+		}
+	}
+}

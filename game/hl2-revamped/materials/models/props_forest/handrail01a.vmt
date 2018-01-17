@@ -1,0 +1,23 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_forest/Handrail01a"
+	"$surfaceprop" "wood"
+  	//"$envmap" "env_cubemap"
+	//"$envmapmask" "Models/props_interiors/Handrail01a_mask"
+	//"$envmaptint" "[ .5 .5 .5]"
+     "$nocull" 1
+	//"$envmapcontrast" "1"
+	//"$envmapsaturation" "[.8 .8 .8]"
+	//"$translucent" 1
+	//"nomip" "1"
+
+	"$AlphaTest" "1"
+	"$AlphaTestReference" "0.15"
+	"$AllowAlphaToCoverage" "1"
+}
+
+
+
+
+
+

@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+
+	"$basetexture" "..\..\hl2\materials\Nature\rockwall011d"
+	"$surfaceprop" "rock"
+}
+

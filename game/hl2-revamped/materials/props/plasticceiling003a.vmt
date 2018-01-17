@@ -1,0 +1,15 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+
+	"$basetexture" "Props/plasticceiling003a"
+	"$bumpmap" "props/plasticceiling003a_normal"
+	"$normalmapalpha" "1"
+	"$surfaceprop" "plastic"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .36 .36 .36 ]"
+	"$envmapcontrast" ".6"
+	"$envmapsaturation" "[.5 .5 .5]"
+	"%keywords" "borealis"
+	"$normalmapalphaenvmapmask" 1
+}

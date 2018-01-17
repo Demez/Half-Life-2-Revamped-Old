@@ -1,0 +1,15 @@
+"BaseTimesMod2xEnvMap"
+{
+	"$basetexture" "dev/dev_camo"
+	"$envmap" "dev/dev_camoenvmap"
+	"Proxies"
+	{
+		"Camo"
+		{
+			"camopatterntexture" "hl2/materials/dev/dev_camo.tga"
+			"camoboundingboxmin" "[ 0.00 0.00 0.00 ]"
+			"camoboundingboxmax" "[ 1.00 1.00 1.00 ]"
+			"surfaceprop" "concrete"
+		}
+	}
+}

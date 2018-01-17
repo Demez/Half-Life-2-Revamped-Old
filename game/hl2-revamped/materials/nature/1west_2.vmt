@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"nature/1west_2"
+	"$surfaceprop"	"no_decal"
+	"$translucent"	1
+}

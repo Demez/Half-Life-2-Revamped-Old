@@ -1,0 +1,8 @@
+
+
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "Models/props_debris/Rebar_SmallNorm01"
+	"$surfaceprop" "iron"
+}

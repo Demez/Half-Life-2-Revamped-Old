@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/props_radiostation/radio_antenna01"
+	"$envmap"  "env_cubemap"
+	"$basealphaenvmapmask" 1
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "8"
+	"$detailblendfactor" .7
+	"$detailblendmode" 0
+	"$envmaptint" "[ .3 .3 .3 ]"
+}

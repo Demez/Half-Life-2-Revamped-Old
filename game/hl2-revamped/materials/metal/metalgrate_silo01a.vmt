@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$AlphaTest" "1"
+	"$AlphaTestReference" "0.25"
+
+	"$basetexture" "Metal/metalgrate_silo01a"
+	"%compilepassbullets" 1
+	"$surfaceprop" "metalgrate"
+	"%keywords" "c17industrial,silo"
+}

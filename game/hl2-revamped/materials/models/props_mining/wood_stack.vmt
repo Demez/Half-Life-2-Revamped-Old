@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_mining/wood_stack"
+
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "10.3974"
+	"$detailblendfactor" .65
+	"$detailblendmode" 0
+}

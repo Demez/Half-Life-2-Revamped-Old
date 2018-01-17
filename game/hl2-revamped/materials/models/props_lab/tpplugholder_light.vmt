@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_lab/tpplugholder_light"
+	"$surfaceprop"	"metal"
+}

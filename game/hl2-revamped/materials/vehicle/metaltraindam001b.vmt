@@ -1,0 +1,6 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"vehicle/metaltraindam001b"
+	"$surfaceprop"	"metal"
+	"$bumpmap"	"vehicle/metaltraindam001b_normal"
+}

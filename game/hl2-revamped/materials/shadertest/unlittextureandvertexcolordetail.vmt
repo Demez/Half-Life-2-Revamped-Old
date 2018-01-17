@@ -1,0 +1,17 @@
+"UnlitGeneric"
+{
+	"$basetexture" "shadertest/UnlitAdditiveTextureAndVertexColor"
+	"$vertexcolor" 1
+	"$detail" "shadertest/shadertestdetail"
+
+	"Proxies"
+	{
+		"Sine"
+		{
+			"resultVar" "$alpha"
+			"sineperiod" 2.00
+			"sinemin" 0
+			"sinemax" 1
+		}
+	}
+}

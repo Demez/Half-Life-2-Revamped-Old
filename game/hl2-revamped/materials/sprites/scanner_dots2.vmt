@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "sprites/scanner_dots2"
+	"$translucent" 1
+	"$spritesize" 140
+	"$nofog" 1
+}

@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_mining/elevator_cage02"
+	"$surfaceprop"	"metal"
+}

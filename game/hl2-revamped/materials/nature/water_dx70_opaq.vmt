@@ -1,0 +1,56 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "dev/water"
+	"$scale" "[1 1]"
+//	"$mycolor" "{160 187 201}"
+	"$color" "{160 187 201}"
+
+	"%compilewater" 1
+
+	// This is needed for physics, etc.
+	"$surfaceprop" "water"
+
+	// You must have this. . this is a material that is practically identical
+	// to this one in most cases.  It must have $reflecttexture disabled, and
+	// you can set for params uniquely for underwater.
+	"$bottommaterial" "nature/water_dx70_beneath"
+
+	// This is needed for the proxy below which animates the normal map, etc.
+	"$bumpframe" "0"
+
+	"$fogenable" 0
+
+	"$abovewater" 1	
+
+	"$texoffset" "[0 0]"
+
+	// The water generally looks better if we scale it down a bit
+	"$texscale" "0.5"
+
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedtextureframerate" 20.00
+		}
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texoffset"
+			"texturescrollrate" .025
+			"texturescrollangle" 45.00
+		}
+
+		"TextureTransform"
+		{
+			"translateVar" "$texoffset"
+			"scaleVar" "$texscale"
+			"resultVar" "$basetexturetransform"
+		}
+
+
+
+	}
+}

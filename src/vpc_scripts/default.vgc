@@ -2,6 +2,7 @@ $Games
 {
 	//"REACTIVEDROP"
 	//"SWARM"
+	"HL2DEFERRED"
 	"HL2"
 	"EPISODIC"
 }

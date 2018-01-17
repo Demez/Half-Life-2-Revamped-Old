@@ -1,0 +1,12 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Metal/metaldoor001a"
+	"$bumpmap" "Metal/metaldoor001a_normal"
+	"$surfaceprop"  "metal"
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "4.283"
+	"$detailblendfactor" .65
+	"$detailblendmode" "0"
+
+	"%keywords" "c17downtown"
+}

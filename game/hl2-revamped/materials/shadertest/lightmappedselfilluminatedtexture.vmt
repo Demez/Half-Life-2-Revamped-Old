@@ -1,0 +1,51 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "shadertest/LightmappedSelfIlluminatedTexture"
+	"$selfillum" 1
+
+	"$temp" 0
+	"$one" 1
+
+	"$tempvec" "[0 0]"
+
+	"Proxies"
+	{
+		// Texture scrolls sinusoidally
+		"Sine"
+		{
+			"resultVar" "$tempvec[1]"
+			"sineperiod" 10.00
+			"sinemin" 0.4
+			"sinemax" 0.6
+		}
+
+		"TextureTransform"
+		{
+			"translateVar" "$tempvec"
+			"resultVar" "$basetexturetransform"
+		}
+
+		// Color green is sinusoidal
+		"Sine"
+		{
+			"resultVar" "$color[1]"
+			"sineperiod" 10.00
+			"sinemin" 0
+			"sinemax" 1
+		}
+
+		// Self Illum tint gets less red as we move
+		"PlayerSpeed"
+		{
+			"resultVar" "$temp"
+			"scale" 0.01
+		}
+
+		"Subtract"
+		{
+			"srcVar1"	"$one"
+			"srcVar2"	"$temp"
+			"resultVar"	"$selfillumtint[0]" 
+		}
+	}
+}

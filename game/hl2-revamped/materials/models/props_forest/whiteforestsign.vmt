@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_forest/whiteForestSign"
+	"$surfaceprop"	"metal"
+	"$model"	1
+}

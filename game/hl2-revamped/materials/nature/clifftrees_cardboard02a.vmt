@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "nature/Clifftrees_cardboard02a"
+	"$nocull" 1	
+	"$AlphaTest" "1"
+	"$AlphaTestReference" "0.5"
+}

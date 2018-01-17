@@ -108,11 +108,7 @@
 #endif
 // UI
 #ifdef GAMEUI_EMBEDDED
-#if defined( HL2_CLIENT_DLL )
-#include "hl2/gameui/hl2/basemodpanel.h"
-#else
-#error "GAMEUI_EMBEDDED"
-#endif
+#include "gameui/shared/basemodpanel.h"
 #endif
 
 #ifdef DEMOPOLISH_ENABLED
@@ -138,6 +134,12 @@
 
 #include "tier1/UtlDict.h"
 #include "keybindinglistener.h"
+
+#ifdef DEFERRED
+// @Deferred - Biohazard
+// For cookie string table
+#include "deferred/deferred_shared_common.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -1883,6 +1885,11 @@ void CHLClient::ResetStringTablePointers()
 	g_pStringTableMaterials = NULL;
 	g_pStringTableInfoPanel = NULL;
 	g_pStringTableClientSideChoreoScenes = NULL;
+
+#ifdef DEFERRED
+	// @Deferred - Biohazard
+	g_pStringTable_LightCookies = NULL;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -2152,6 +2159,15 @@ void CHLClient::InstallStringTableCallback( const char *tableName )
 		networkstringtable->SetAllowClientSideAddString( g_pStringTableExtraParticleFiles, true );
 		// When the particle system list changes, we need to know immediately
 		g_pStringTableExtraParticleFiles->SetStringChangedCallback( NULL, OnPrecacheParticleFile );
+#ifdef DEFERRED
+	}
+	// @Deferred - Biohazard
+	else if (!Q_strcasecmp(tableName, COOKIE_STRINGTBL_NAME))
+	{
+		g_pStringTable_LightCookies = networkstringtable->FindTable(tableName);
+
+		g_pStringTable_LightCookies->SetStringChangedCallback(NULL, OnCookieTableChanged);
+#endif
 	}
 	else
 	{

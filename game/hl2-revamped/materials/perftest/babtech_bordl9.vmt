@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmap
+	"$basetexture" "PerfTest/babtech_bordl9"
+	"$surfaceprop" "metal"
+}

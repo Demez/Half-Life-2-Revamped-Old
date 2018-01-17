@@ -1,0 +1,13 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmapAlphaBlend
+// Uncomment this if you add an alpha channel to the base texture
+//	"$translucent" 1
+	"$basetexture" "Metal/metaldoor028a"
+	"$surfaceprop"  "metal"
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "4.283"
+	"$detailblendfactor" .65
+	"$detailblendmode" "0"
+
+}

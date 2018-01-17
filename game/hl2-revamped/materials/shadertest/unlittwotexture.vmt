@@ -1,0 +1,56 @@
+"UnlitTwoTexture"
+{
+	"$baseTexture" "shadertest/LightmappedTranslucentTexture"
+	"$texture2" "shadertest/LightmappedTranslucentTexture"
+	"$texture2scale" 10.0
+//	"$translucent" 1
+	"$temp" 0
+	"$abstmp" 0
+	"$scale" 0.001
+	"$one" 1
+
+	"Proxies"
+	{
+		// Alpha is sinusoidal
+		"GaussianNoise"
+		{
+			"resultVar" "$temp"
+			"halfwidth" 1.0
+		}
+		"Abs"
+		{
+			"srcVar1" "$temp"
+			"resultVar" "$abstmp"
+		}
+		"Exponential"
+		{
+			"srcVar1" "$abstmp"
+			"resultVar" "$abstmp"
+		}
+		"Subtract"
+		{
+			"srcVar1" "$abstmp"
+			"srcVar2" "$one"
+			"resultVar" "$abstmp"
+		}
+		"Multiply"
+		{
+			"srcVar1" "$temp"
+			"srcVar2" "$abstmp"
+			"resultVar" "$temp"
+		}
+		"Multiply"
+		{
+			"srcVar1" "$temp"
+			"srcVar2" "$scale"
+			"resultVar" "$texture2offset[0]"
+		}
+
+		// Alpha is sinusoidal
+		"LinearRamp"
+		{
+			"resultVar" "$texture2offset[1]"
+			"rate" 0.02
+		}
+	}
+}

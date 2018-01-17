@@ -1,0 +1,17 @@
+"UnlitGeneric"
+{
+ 	"$model" 1
+	"$REFRACTTINT" "{230 240 250}"
+	"$basetexture" 	"models/props_combine/tprings_globe_dx70"
+	"$additive" 1
+
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" .2
+			"texturescrollangle" 90
+		}
+	}
+}

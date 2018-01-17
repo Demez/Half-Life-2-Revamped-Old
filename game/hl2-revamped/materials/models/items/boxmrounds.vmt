@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "Models/Items/BoxMRounds"
+	"$normalmapalphaenvmapmask" 1
+	"$bumpmap" "Models/items/boxMrounds_normal"
+	"$envmap" "env_cubemap"
+	//"$envmaptint" "[0.4 0.5 0.4]"
+	//"$envmapcontrast" 1
+}

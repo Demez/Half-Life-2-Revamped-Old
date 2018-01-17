@@ -1,0 +1,18 @@
+"Cloud"
+{
+	"$baseTexture" "nature/forest_clouds001a"
+	"$cloudalphatexture" "shadertest/cloudalpha"
+	"$cloudscale" "[ 2.00 2.00 2.00 ]"
+	"$maskscale" "[ 1 1 1 ]"
+	"%tooltexture" "nature/cloud001d"
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$baseTextureTransform"
+			"texturescrollrate" 0.01
+			"texturescrollangle" 0.05
+		}
+	}
+}
+

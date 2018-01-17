@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_lab/crematorcase_sheet"
+	"$selfillum" "1"
+	"$nodecal" "1"
+}

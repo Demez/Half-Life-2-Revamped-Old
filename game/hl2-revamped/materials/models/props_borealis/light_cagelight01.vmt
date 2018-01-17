@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_borealis/light_cagelight01"
+	"$surfaceprop" "glass"
+	"$selfillum" 1
+}
+
+

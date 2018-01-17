@@ -1,0 +1,16 @@
+"UnlitGeneric"
+{
+	"$basetexture" "shadertest/UnlitAdditiveAlphaTestedTexture"
+	"$alphatested" 1
+
+	"Proxies"
+	{
+		"Sine"
+		{
+			"resultVar" "$ALPHA"
+			"sineperiod" 2.00
+			"sinemin" 0
+			"sinemax" 1
+		}
+	}
+}

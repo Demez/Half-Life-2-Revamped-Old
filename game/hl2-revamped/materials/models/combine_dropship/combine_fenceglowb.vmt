@@ -1,0 +1,27 @@
+"UnlitTwoTexture"
+//"Modulate"
+{
+	"$baseTexture" "Models/combine_dropship/combine_fenceglowb"
+	"$Texture2" "Models/combine_dropship/combine_fenceglow2"
+//	"$nocull" "1"	
+	"$nodecal" "1"
+	"$additive" "1"
+//	"$translucent" "1"
+//	"$no_fullbright" 1
+	"$model" "1"
+	"$nofog" "1"
+//	"$MOD2X" "1"
+	
+
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" -9
+			"texturescrollangle" 0
+		}
+
+}
+
+}

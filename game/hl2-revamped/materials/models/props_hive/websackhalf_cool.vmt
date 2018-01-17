@@ -1,0 +1,47 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_hive/webSackHalf_cool"
+	"$surfaceprop"	"antlion_eggshell"
+	"$bumpmap"	"Models/props_hive/webSackHalf_normal"
+	"$envmap"	"env_cubemap"
+	"$normalmapalphaenvmapmask" "1"
+	"$envmaptint" "[.1 .1 .1]"
+	"$halflambert" "1"
+	"$nodecal" "1"
+
+	"$selfillum" "1"
+	"$selfIllumFresnel" "1"
+	"$selfIllumFresnelMinMaxExp" "[0.2 2.5 8]" // 0.0 1.0 1.0 is the default
+	//"$selfillumtint"	"[1 1 1.2]" // This is animated with the proxy below
+
+	//phong properties
+	//"$phong"	"1"
+	//"$phongboost"	"5"
+	//"$phongexponent" "50"
+	//"$phongfresnelranges"	"[.1 .5 1]"
+
+	"Proxies"
+	{
+		"Sine"
+		{
+			"sineperiod" "2.5"
+			"sinemin" ".4"
+			"sinemax" "1"
+			"resultVar" "$selfillumtint[0]"
+		}
+		"Sine"
+		{
+			"sineperiod" "2.5"
+			"sinemin" ".4"
+			"sinemax" "1"
+			"resultVar" "$selfillumtint[1]"
+		}
+		"Sine"
+		{
+			"sineperiod" "2.5"
+			"sinemin" ".6"
+			"sinemax" "2"
+			"resultVar" "$selfillumtint[2]"
+		}
+	}
+}

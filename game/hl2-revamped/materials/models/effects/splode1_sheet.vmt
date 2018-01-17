@@ -1,0 +1,13 @@
+"Modulate"
+{
+	"$baseTexture" "Models/Effects/splode1_sheet"
+	"$nocull" "1"
+	"$mod2x" "1"	
+//	"$additive" "1"
+//	"$translucent" "1"
+	"$model" "1"
+	
+
+
+}
+

@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "glass/glasswindow069a"
+	"$envmap" "env_cubemap"
+	"$surfaceprop" "glass"
+	"$bumpmap" "glass/glasswindow069a_normal"	
+	"$normalmapalphaenvmapmask" 1
+	"%keywords" "c17skyscraper"
+}

@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"skybox/vista_card_12"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+}

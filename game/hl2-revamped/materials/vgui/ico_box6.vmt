@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "vgui\ico_box6"
+	"$translucent" 1
+	"$ignorez" 1
+}

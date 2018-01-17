@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture"			"models/props_wasteland/powertower01"
+	"$alphatest"				1
+	"$nocull"					1
+}

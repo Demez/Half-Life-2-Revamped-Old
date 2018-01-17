@@ -1,0 +1,9 @@
+"UnLitGeneric"
+{
+
+	"$basetexture" "Models/props_combine/cit_cloud001b"
+	"%keywords" "combine"
+	"$nofog" "1"
+	"$model" "1"
+	"$translucent" "1"
+}

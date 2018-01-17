@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/Combine_Advisor/hose"
+	"$envmapmask" "Models/Combine_Advisor/mask"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .5 .5 .5]"
+	"$surfaceprop" "metal"
+}

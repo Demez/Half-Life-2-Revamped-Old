@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "overlays/it_poster013"
+	"$translucent" "1"
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+	"$decal" "1"
+	"$decalscale" "0.250"
+}

@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "models/Gibs/HGibs/scapula"
+	"$bumpmap" "models/gibs/hgibs/scapula_normal"
+//	"$envmap" "env_cubemap"
+//	"$normalalphaenvmapmask" 1
+//	"$envmapcontrast" 1
+}

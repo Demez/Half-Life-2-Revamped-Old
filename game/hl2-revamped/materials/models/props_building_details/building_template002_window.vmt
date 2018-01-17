@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_building_details/building_template002_Window"
+	"$surfaceprop" "wood"
+}

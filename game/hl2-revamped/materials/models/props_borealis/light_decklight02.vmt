@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/props_borealis/light_decklight"
+	"$envmapmask" "Models/props_borealis/light_decklight_mask"
+	"$envmap" "env_cubemap"	
+	"$surfaceprop" "glass"
+	"$translucent" 1
+	"$nocull" 1
+}
+

@@ -1,0 +1,6 @@
+"Sprite"
+{
+	"$basetexture" "sprites/greenspit1"
+	"$color" "[ 1.00 1.00 1.00 ]"
+	"$spriterendermode" 4
+}

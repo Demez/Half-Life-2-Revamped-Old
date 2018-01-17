@@ -1,0 +1,12 @@
+
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_borealis/borealis_door001a"
+	"$envmap" "env_cubemap"
+	"$nocull" 1
+	"$translucent" 1
+	//"$envmapmask" "Models/props_borealis/borealis_door001a_mask"
+	"$envmaptint" "[ .001 .001 .001 ]"
+}
+
+

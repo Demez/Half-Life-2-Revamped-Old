@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"nature/scenic_3_alpha"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+}

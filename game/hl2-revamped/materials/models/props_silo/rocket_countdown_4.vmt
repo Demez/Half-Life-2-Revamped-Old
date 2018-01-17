@@ -1,0 +1,16 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"Models/props_silo/rocket_countdown"
+	"$surfaceprop"	"default"
+	"$model" "1"
+	"Proxies"
+		{
+			"MaterialModifyAnimated"
+			{
+				"animatedtexturevar" "$basetexture"
+				"animatedtextureframenumvar" "$frame"
+				"animatedtextureframerate" 100
+			}
+		}
+}
+

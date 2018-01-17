@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_citizen_tech/transponder"
+	"$surfaceprop"	"Metal_Box"
+	"$bumpmap"	"Models/props_citizen_tech/transponder_normal"
+	"$selfillum"	1
+	"$model"	1
+	//phong properties
+	"$phong"	"1"
+	"$phongboost"	"1"
+	"$phongexponent"	"10"
+	"$phongfresnelranges"	"[.1 .5 1]"
+}

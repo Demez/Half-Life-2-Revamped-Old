@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_outland/troughmetal01"
+	"$surfaceprop"	"metal"
+
+	"$detail" "detail\PLASTER_detail_01"
+	"$detailscale" "6.545"
+	"$detailblendfactor" .9
+	"$detailblendmode" 0
+}

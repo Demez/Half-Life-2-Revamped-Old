@@ -1,0 +1,39 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/sandfloor009b"
+	"$basetexture2" "nature/sandfloor009a"
+
+	"$detail" "overlays/macro01a"
+	"$detailscale" .1
+
+	"%tooltexture" "nature/blendsandsand008b_tooltexture"
+	
+        "$basetexturetransform" "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+        "$basetexturetransform2" "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+
+//	"%detailtype" "coastline_grass01"
+	"$surfaceprop" "antlionsand"
+//	"$bumpbasetexture2withbumpmap" "0"
+//	"$bumpmap" "nature/sandfloor009b_normal"
+	"%keywords" "coastline"
+
+        // If this param exists, VRAD will lay down this texture (has to be run through VBSP
+	// if you change it though).
+//	$macro_texture	"overlays/macro_coast02_001a"
+
+	// Stuff only used for preview mode.
+//	$preview_mode 0
+//	$world_mins		"[0 0 0]"
+//	$world_maxs		"[1 1 1]"
+//	"Proxies"
+//	{
+//		"WorldDims"
+//		{
+//		}
+
+//	"$normalmapalphaenvmapmask" 1
+//	"$envmapcontrast" 1
+//	"$envmapsaturation" 1
+//	"$envmaptint" "[ .75 .75 .75]"
+//	"$envmap" "env_cubemap"
+}

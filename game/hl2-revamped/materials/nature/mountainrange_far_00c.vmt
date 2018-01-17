@@ -1,0 +1,14 @@
+"unlitgeneric"
+{
+	"$basetexture"	"nature/mountainrange_far_00c_dark"
+	"$surfaceprop"	"no_decal"
+	"$translucent"	1
+	"$nofog" 1
+	$ignorez 1
+
+ 	"ldr"
+ 	{
+  	"$basetexture"	"nature/mountainrange_far_00c"
+ 	}
+
+}

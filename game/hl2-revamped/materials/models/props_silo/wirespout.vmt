@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\props_silo/wirespout"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_silo/wirespout_ref"
+}

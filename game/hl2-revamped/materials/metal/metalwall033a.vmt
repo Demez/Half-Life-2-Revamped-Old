@@ -1,0 +1,14 @@
+"LightmappedGeneric"
+{
+	// Original shader: CubicEnvMapBlendMaskedBaseTimesLightmap
+	"$basealphaenvmapmask" 1
+	"$basetexture" "Metal/metalwall033a"
+	"$envmap" "env_cubemap"
+	"$surfaceprop"  "metal"
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "4.283"
+	"$detailblendfactor" .8
+	"$detailblendmode" "0"
+
+	"%keywords" "c17industrial,combine"
+}

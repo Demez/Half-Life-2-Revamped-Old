@@ -1,0 +1,8 @@
+
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "Models/props_c17/Concrete_Barrier002"
+	"$surfaceprop" "concrete"
+	
+}

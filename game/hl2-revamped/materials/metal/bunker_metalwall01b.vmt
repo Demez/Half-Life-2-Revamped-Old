@@ -1,0 +1,16 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "metal/bunker_metalwall01b"
+	"$bumpmap" "metal/bunker_metalwall01_normal"
+	"$envmaptint" "[ .004 .004 .004 ]"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" .95
+	"$envmapsaturation" 1
+	"$surfaceprop"	"metal"
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "4.283"
+	"$detailblendfactor" .8
+	"$detailblendmode" "0"
+	"%keywords" 	"ep2"
+}

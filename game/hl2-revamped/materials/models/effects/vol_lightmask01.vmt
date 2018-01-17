@@ -1,0 +1,23 @@
+"unlittwotexture"
+{
+	"$baseTexture" "Models/Effects/vol_lightmask01"
+	"$texture2" "Models/Effects/dust01" 
+	"$nocull" 1	
+	"$additive" 1
+//	"$translucent" 1
+	"$model" 1
+	"$no_fullbright" 1
+
+	"Proxies"
+	{
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" 0.02
+			"texturescrollangle" -135
+		}	
+
+	}
+}
+

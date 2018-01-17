@@ -1,0 +1,12 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{	
+	"$basetexture" "Models/props_junk/Vent001"
+	"$surfaceprop" "metal"
+	"$bumpmap" "Models/props_junk/Vent001_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .42 .42 .42 ]"
+}

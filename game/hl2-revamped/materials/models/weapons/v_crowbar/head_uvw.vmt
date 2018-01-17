@@ -1,0 +1,17 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "models/Weapons/v_crowbar/head"
+	"$bumpmap" "models/Weapons/v_crowbar/head_normal"
+//	"$envmap" "Environment Maps/specular"
+//	"$envmaptint" "[ .64 .64 .64 ]"
+//	"$envmap" "env_cubemap"
+//	"$normalmapalphaenvmapmask" 1
+
+// -- From here down is new stuff which will only be applied if $phong is set to 1 --
+	"$phong" "1"
+//	"$lightwarptexture" "models/alyx/skin_lightwarp"
+	"$phongexponent" "15"
+	"$phongboost"	"2"
+	"$phongfresnelranges"	"[.3 0.4 1]"
+
+}

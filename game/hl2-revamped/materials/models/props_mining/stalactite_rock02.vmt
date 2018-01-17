@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	 "Models/props_mining/stalactite_rock02"
+	"$envmap" "cubemaps/cubemap_cave01"
+	"$basealphaenvmapmask" 1
+	"$envmaptint" "[.4 .4 .4]"
+}

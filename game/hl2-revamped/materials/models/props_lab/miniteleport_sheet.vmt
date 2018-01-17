@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_lab/miniteleport_sheet"
+	"$selfillum" "1"
+}

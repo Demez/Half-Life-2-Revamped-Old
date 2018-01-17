@@ -1,0 +1,8 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"nature/mountainrange_far_01d"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+	"$decal"	1
+	"360?$color2" "[ 0.5 0.6 0.8 ]"
+}

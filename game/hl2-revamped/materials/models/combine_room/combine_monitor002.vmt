@@ -1,0 +1,21 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	//"$baseTexture" "Models/Combine_Room/combine_monitor002"
+	//"$surfaceprop" "metal"
+	//"$envmap" "Environment Maps/envmapcombine"
+	//"$envmap" "env_cubemap"
+	//"$envmaptint" "[ .04 .04 .04 ]"
+
+	"$baseTexture" "Models/Combine_Room/combine_monitor002"
+	"$surfaceprop" "metal"
+	"$bumpmap" "models/Combine_Room/combine_monitor002_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .56 .67 .75 ]"
+
+
+}
+

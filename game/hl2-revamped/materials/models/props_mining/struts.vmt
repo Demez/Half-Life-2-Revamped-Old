@@ -1,0 +1,23 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_mining/struts"
+//	"$bumpmap" "Models/props_mining/struts_normal" //normalmap (make sure to include the specular mask in the alpha channel 
+//	"$phong" "1" //this turns on the phong effect
+//	"$phongexponent" "20" //change this number to make the specular highlight bigger or smaller (larger numbers give you a smaller highlight)
+//	"$phongboost" "0.6" //use this to increase/decrease the highlight intensity 
+//	"$phongfresnelranges" "[1 7 75]" //this are the highlight intensities at different incidence angles from the camera (first value is perpendicular to the camera and the 3rd value is away from the camera)
+//	"$halflambert" "1"
+//	"bumpalphaenvmapmask" 1
+//	"$envmap" "env_cubemap"
+//	"$envmapmask" "models\props_silo\rocket_spec"
+//	"$envmap"  "env_cubemap"
+//	"$basealphaenvmapmask" 1
+	"$detail" "detail\noise_detail_01"
+	"$seamless_detail" "1"
+	"$seamless_scale" ".006"
+	"$detailscale" "8.788"
+	"$detailblendfactor" .7
+	"$detailblendmode" 0
+//	"$envmaptint" "[ .5 .5 .5 ]"
+}
+

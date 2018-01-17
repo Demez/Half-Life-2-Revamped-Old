@@ -1,0 +1,24 @@
+"UnLitTwoTexture"
+{
+	"$baseTexture" "Models/props_lab/eyescanner_disp"
+	"$model" 1
+	"$surfaceprop" "glass"
+	"$texture2" "dev/dev_scanline"
+
+	"Proxies"
+	{
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" 60
+			"texturescrollangle" 90
+		}
+
+		"MaterialModify"
+		{
+			// fixme!  This has to be here, or material loading barfs.
+			"dummy" 0
+		}
+	}
+}

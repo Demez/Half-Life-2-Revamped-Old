@@ -1,0 +1,11 @@
+"UnlitGeneric"
+{	
+	// Original shader: SingleColor
+	"$color" "[ 1.00 1.00 1.00 ]"
+	"$alpha" 1
+	//"$ignorez" 1
+	//"$nocull" 1
+	"$translucent" 1
+	"$alphatest" 1 //hacky way to prevent writing depth to dest alpha instead of the silhoutte
+	"%noToolTexture" 1
+}

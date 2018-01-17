@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/Items/Grenade2"
+	"$selfillum" 1
+}

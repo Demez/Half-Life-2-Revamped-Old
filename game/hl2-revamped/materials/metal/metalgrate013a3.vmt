@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Metal/metalgrate013a"
+	"%compilepassbullets" 1
+	"$surfaceprop" "metalgrate"
+	"%keywords" "airexchange,c17industrial,combine,wasteland"
+
+	"$AlphaTest" "1"
+	"$AlphaTestReference" "0.35"
+	"$AllowAlphaToCoverage" "1"
+}

@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\props_silo/launch_button02"
+
+	"$selfillum" "1"
+
+}

@@ -1,0 +1,7 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"metal/forest_metal_06a"
+	"$surfaceprop"	"metal"
+	"$bumpmap"	"metal/forest_metal06a_bump-ssbump"
+	"$ssbump" "1"
+}

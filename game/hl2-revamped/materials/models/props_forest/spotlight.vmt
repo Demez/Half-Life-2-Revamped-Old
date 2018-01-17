@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\props_forest/spotlight"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_forest/spotlight_ref"
+}

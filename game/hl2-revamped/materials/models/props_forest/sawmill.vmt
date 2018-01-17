@@ -1,0 +1,16 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_forest/sawmill"
+//	"$bumpmap" "Models/props_forest/sawmill_normal" 
+//	"$phong" "1" //this turns on the phong effect
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[.35 .35 .35]"
+	"$basealphaenvmapmask" 1
+//	"$envmapmask" "Models/props_forest/sawmillmask"
+//	"$normalmapalphaenvmapmask" 1
+//	"$phongexponent" "10" //change this number to make the specular highlight bigger or smaller (larger numbers give you a smaller highlight)
+//	"$phongboost" "0.5" //use this to increase/decrease the highlight intensity 
+//	"$phongfresnelranges" "[5 5 25]" //this are the highlight intensities at different incidence angles from the camera (first value is perpendicular to the camera and the 3rd value is away from the camera)
+}
+
+

@@ -1,0 +1,10 @@
+
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "Models/props_wasteland/prison_lamp001a"
+	"$selfillum" 1
+	"$surfaceprop" "metal"
+}
+
+

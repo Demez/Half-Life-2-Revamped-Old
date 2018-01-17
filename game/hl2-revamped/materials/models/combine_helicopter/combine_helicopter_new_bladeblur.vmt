@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTranslucentTexture
+	"$translucent" 1
+	"$nocull" 1
+	"$basetexture" "models/Combine_Helicopter/combine_helicopter_new_bladeblur"
+	"$nodecal" 1
+	"Proxies"
+	{
+		"HeliBlade"
+		{
+		}
+	}
+}

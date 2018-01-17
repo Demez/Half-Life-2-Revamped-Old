@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_combine/breenbust_sheet"
+	"$surfaceprop" "stone"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .4 .4 .4]"
+	"$basealphaenvmapmask" 1
+}

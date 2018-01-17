@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture"  "models/boxrocket_chell_head/face_0.5_C"
+	"$bumpmap"      "models/boxrocket_chell_head/face_0.5_N"
+// 	"$parallaxMap"  "models/boxrocket_chell_head/face_0.5_D"
+}

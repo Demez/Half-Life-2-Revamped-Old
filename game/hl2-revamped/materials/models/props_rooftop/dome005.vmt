@@ -1,0 +1,19 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	"$basetexture" "models\props_rooftop\Dome005"
+	"$surfaceprop" "metal"
+	"$nocull" 1
+	"$bumpmap" "Models/props_rooftop/Dome005_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .25 .25 .25 ]"
+}
+
+
+
+
+
+

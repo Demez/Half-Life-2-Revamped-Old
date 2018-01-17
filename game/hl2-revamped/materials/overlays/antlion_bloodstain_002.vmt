@@ -1,0 +1,15 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "overlays/antlion_bloodstain_002"
+	"$decal" 1
+	"$decalscale" .25
+	"$translucent" 1
+	//"$bumpmap" "metal/metalwall072c_normal"
+
+	//"$selfillum" 1 
+	//"$selfillumtint" 1
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+	
+}
+

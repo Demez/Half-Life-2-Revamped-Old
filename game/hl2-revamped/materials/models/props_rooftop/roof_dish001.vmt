@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models\props_rooftop\roof_dish001"
+	"$surfaceprop" "metal"
+}

@@ -1,0 +1,44 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Metal/metalwall091a"
+	"$surfaceprop" "metal"
+	"%keywords" "combine"
+
+	// NOTE: Even though env_cubemap is here, it will turned off for DX6
+	// because $multipass 1 isn't defined
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .56 .56 .75 ]"
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+
+	"LightmappedGeneric_DX9"
+	{
+		"$bumpmap" "metal/metalwall091a_normal"
+	//	"$parallaxmap" "Metal/metalwall091a_height"
+	//	"$parallaxmapscale" ".0125"
+		"$normalmapalphaenvmapmask" 1
+		"$envmaptint" "[ .03 .03 .03]"
+	}
+
+	"LightmappedGeneric_DX8"
+	{
+		"$bumpmap" "metal/metalwall091a_normal"
+		"$nodiffusebumplighting" 1
+		"$normalmapalphaenvmapmask" 1
+	}
+
+	"LightmappedGeneric_NoBump_DX8"
+	{
+		"$basetexture" "metal/citadel_metalwall091a"
+		"$basealphaenvmapmask" 1
+	}
+	
+	"LightmappedGeneric_hdr_dx9"
+	{
+		// put HDR override stuff here
+		"$envmaptint" "[ .03 .03 .03]"
+		"$bumpmap" "metal/metalwall091a_normal"
+		"$normalmapalphaenvmapmask" 1
+	}
+}

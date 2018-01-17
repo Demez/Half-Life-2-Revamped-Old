@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_canal/generator02_handrails"
+	//"$surfaceprop" "metal"
+ 	//"$envmaptint" "[ .25 .25 .25]"
+	//"$envmap" "env_cubemap"
+	//"$basealphaenvmapmask" 1
+	"$alphatest"				1
+	"$model"				1
+	"$nocull" 1
+}

@@ -1,0 +1,10 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"wood/woodwall_mine001a"
+	"$surfaceprop"	"Wood"
+
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "7.54"
+	"$detailblendfactor" .5
+	"$detailblendmode" 0
+}

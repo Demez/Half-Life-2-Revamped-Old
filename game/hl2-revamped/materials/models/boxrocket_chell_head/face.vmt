@@ -1,0 +1,23 @@
+"VertexLitGeneric"
+{
+	"$basetexture"  "models/boxrocket_chell_head/face_0.5_C"
+	"$basetexture2"  "models/boxrocket_chell_head/face_0.0_C"
+	"$basetexture3"  "models/boxrocket_chell_head/face_1.0_C"
+	"$bumpmap"      "models/boxrocket_chell_head/face_0.5_N"
+	"$bumpmap2"      "models/boxrocket_chell_head/face_0.0_N"
+	"$bumpmap3"      "models/boxrocket_chell_head/face_1.0_N"
+	// "$parallaxMap"  "models/boxrocket_chell_head/face_0.5_N"
+}
+
+// "models/boxrocket_chell_head/face_0.0_C"
+// "models/boxrocket_chell_head/face_0.0_D"
+// "models/boxrocket_chell_head/face_0.0_N"
+// "models/boxrocket_chell_head/face_0.5_C"
+// "models/boxrocket_chell_head/face_0.5_D"
+// "models/boxrocket_chell_head/face_0.5_N"
+// "models/boxrocket_chell_head/face_1.0_C"
+// "models/boxrocket_chell_head/face_1.0_D"
+// "models/boxrocket_chell_head/face_1.0_N"
+// "models/boxrocket_chell_head/teethLo_C"
+// "models/boxrocket_chell_head/teethUp_C"
+// "models/boxrocket_chell_head/tongue_C"

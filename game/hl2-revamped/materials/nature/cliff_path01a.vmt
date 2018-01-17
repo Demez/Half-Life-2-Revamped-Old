@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "nature\Cliff_path01a"
+	"$detail" "detail\rock_detail_01"
+	"$detailscale" "8"
+	"$detailblendfactor" 1
+	"$detailblendmode" 0
+
+}
+
+

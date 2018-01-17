@@ -1,0 +1,13 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Tile/tilefloor009b"
+	"$surfaceprop" "tile"
+	"%keywords" "c17downtown,wasteland"
+	"$bumpmap" "tile/tilefloor009b_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .42 .42 .42 ]"
+}

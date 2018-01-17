@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Storefront_Template/Storefront_Template001g"
+	"$surfaceprop" "concrete"
+
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "8.283"
+	"$detailblendfactor" .4
+	"$detailblendmode" "0"
+}

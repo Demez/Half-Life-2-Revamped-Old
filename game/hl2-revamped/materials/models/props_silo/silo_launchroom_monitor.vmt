@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_silo/silo_launchroom_monitor"
+	"$surfaceprop"	"default"
+	"$model"	1
+}

@@ -1,0 +1,21 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/Items/car_battery01"
+	"$surfaceprop" "plastic"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .01 .01 .01 ]"
+	//"$envmapmask" "Models/Items/Healthkit01_mask"
+	//"$selfillum" 1
+
+	//"$basetexture" "models/props_combine/combine_barricade_tall03b"
+	//"$surfaceprop" "metal"
+	"$bumpmap" "Models/Items/car_battery01_normal"
+	//"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	//"$envmaptint" "[ .56 .67 .75 ]"
+}
+
+

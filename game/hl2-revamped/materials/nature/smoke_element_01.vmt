@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"nature/smoke_element_01"
+	"$surfaceprop"	"no_decal"
+	"$translucent"	1
+	"$alphatest" 1
+	"$nofog" 1
+	$ignorez 1
+}

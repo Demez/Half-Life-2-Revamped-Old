@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$basetexture" 	"Models/props_mining/flatbed_cart01"
+	"$envmap"  "env_cubemap"
+	"$basealphaenvmapmask" 1
+	"$envmaptint" "[.25 .25 .25]"
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "9.792"
+	"$detailblendfactor" .55
+	"$detailblendmode" 0
+	//"$seamless_detail" 1
+	//"$seamless_scale" .001
+}

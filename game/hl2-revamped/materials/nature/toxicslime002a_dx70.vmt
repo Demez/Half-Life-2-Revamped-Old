@@ -1,0 +1,28 @@
+"LightmappedGeneric"
+{
+	"$abovewater" 1
+	"%keywords" "wasteland"
+	"%compileSlime" 1
+	"$surfaceprop" "slime"
+
+	"$basetexture" "Nature/toxicslime002a"
+
+	"$bottommaterial" "nature/toxicslime002a_dx70_beneath"
+	
+	"$fogenable" 1
+	"$fogcolor" "{29 99 39}"
+	"$fogstart" 1.00
+	"$fogend" 100.00
+
+//	"Proxies"
+//	{
+//		"AnimatedTexture"
+//		{
+//			"animatedtexturevar" "$basetexture"
+//			"animatedtextureframenumvar" "$frame"
+//			"animatedtextureframerate" 21.00
+//		}
+//	}
+}
+
+

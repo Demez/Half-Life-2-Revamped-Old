@@ -1,0 +1,7 @@
+LightmappedGeneric
+{
+	"%tooltexture" "shadertest/shadertest_env"
+	"$envmap" "shadertest/shadertest_env"
+	"$envmapmask" "shadertest/LightmappedGeneric_envmask"
+	"$envmapmaskscale" 5
+}

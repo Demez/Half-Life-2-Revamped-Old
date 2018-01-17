@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/combine_turrets/combine_cannon_powergen02"	
+
+	"$selfillum" "1"
+
+}

@@ -1,0 +1,19 @@
+"Water"
+{
+	"$abovewater" 1
+	"%compilewater" 1
+	"$forceexpensive" 1
+	"%tooltexture" "dev/water_normal"
+	"$refracttexture" "_rt_WaterRefraction"
+	"$refractamount" "0"
+
+	"$bumpmap" "dev/water_dudv"
+	"$normalmap" "dev/water_normal"
+
+	"$surfaceprop" "water"
+
+	"$fogenable" 1
+	"$fogcolor" "{0 128 0}"
+	"$fogstart" 100
+	"$fogend" 600
+}

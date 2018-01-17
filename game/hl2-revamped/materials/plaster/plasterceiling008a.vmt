@@ -1,0 +1,12 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Plaster/plasterceiling008a"
+	"$surfaceprop"  "plaster"
+	"$detail" "detail\plaster_detail_01"
+	"$detailscale" "6.783"
+	"$detailblendfactor" .8
+	"$detailblendmode" "0"
+
+	"%keywords" "c17skyscraper"
+	"$bumpmap" "Plaster/plasterceiling008a_normal"
+}

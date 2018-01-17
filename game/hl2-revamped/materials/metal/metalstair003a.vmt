@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Metal/metalstair003a"
+	"$surfaceprop" "metal"
+	"%keywords" "c17downtown"
+	"$bumpmap" "Metal/metalstair003a_normal"
+}

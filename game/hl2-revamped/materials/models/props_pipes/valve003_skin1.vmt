@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_pipes/valve003_skin1"
+	"$surfaceprop" "metal"
+}

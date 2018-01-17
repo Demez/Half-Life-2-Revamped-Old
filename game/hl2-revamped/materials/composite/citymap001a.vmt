@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmapSelfIllum
+	"$basetexture" "Composite/citymap001a"
+	"$selfillum" 1
+	"%keywords" "c17citadel"
+	"$surfaceprop" "concrete"
+}

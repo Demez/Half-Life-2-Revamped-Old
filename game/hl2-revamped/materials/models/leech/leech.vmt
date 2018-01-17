@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/Leech/Leech"
+	"$normalmapalphaenvmapmask" 1
+	"$bumpmap" "Models/Leech/Leech_normal"
+	"$envmap" "env_cubemap"
+	"$envmapcontrast" 1
+}

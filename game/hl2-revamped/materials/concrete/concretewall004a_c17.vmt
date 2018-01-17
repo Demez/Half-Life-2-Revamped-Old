@@ -1,0 +1,16 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Concrete/concretewall004a"
+	"$surfaceprop" "concrete"
+	
+        "$detail" "detail\noise_detail_01"
+	"$detailscale" "7.345"
+	"$detailblendfactor" .6
+	"$detailblendmode" 0
+	"%keywords" "c17sewers"
+	 
+	"LightmappedGeneric_DX9"
+	{
+		"$bumpmap" "concrete/concretewall004a_normal"
+	}
+}

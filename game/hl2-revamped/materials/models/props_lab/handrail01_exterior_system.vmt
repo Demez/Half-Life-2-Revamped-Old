@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$baseTexture" "models/props_lab/handrail01_exterior_system"
+	"$surfaceprop" "metal"
+}
+

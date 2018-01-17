@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "models\props_docks\dock02a"
+	"$surfaceprop" "metal"
+	
+}

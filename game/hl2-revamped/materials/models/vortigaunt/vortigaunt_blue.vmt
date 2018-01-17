@@ -1,0 +1,47 @@
+"VertexLitGeneric"
+{
+	"$surfaceprop" "default"
+	"$basetexture" "Models/vortigaunt/vortigaunt_base"
+	"$bumpmap" "Models/vortigaunt/vortigaunt_normal"
+	"$phong" "1"
+	"$phongboost" "10"
+	"$phongexponenttexture" "Models/vortigaunt/vortigaunt_exponent"
+	"$phongalbedotint" "1"
+	"$phongfresnelranges" "[.18 .4 1]"
+	"$halflambert" "1"
+	"$nodecal" "1"
+
+	// Rim lighting parameters
+	"$rimlight" "1"												// To enable rim lighting (requires phong)
+	"$rimlightexponent" "10"										// Exponent for phong component of rim lighting	
+	"$rimlightboost" "3"										// Boost for ambient cube component of rim lighting
+
+
+	// Blend between color textures
+	"$detail" "Models/Vortigaunt/vortigaunt_blue"
+	"$detailblendmode" "3"
+	"$detailblendfactor" "0.0"
+	"$detailScale" "1.0"
+
+	// Emissive Scroll Pass
+	"$emissiveBlendEnabled"     "1" // Enables effect
+	"$emissiveBlendTexture"     "models/vortigaunt/vortigaunt_illum"
+	"$emissiveBlendBaseTexture" "Models/Vortigaunt/vortigaunt_blue"
+	"$emissiveBlendFlowTexture" "models/vortigaunt/vortigaunt_flow"
+	"$emissiveBlendTint"        "[1 1 1]"
+	"$emissiveBlendScrollVector" "[0.11 0.124]"
+	"$time" "0"
+	"Proxies"
+	{
+		"VortEmissive"
+		{
+		}
+		"MaterialModify"
+		{
+		}
+		"CurrentTime"
+		{
+			"resultVar" "$time"
+		}
+	}
+}

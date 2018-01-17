@@ -1,0 +1,12 @@
+// First sequence
+sequence 0
+frame antlion_gib_1a_128.vmt 1
+frame antlion_gib_1b_128.vmt 1
+
+//
+// Second sequence
+sequence 1
+frame antlion_particle_blood1.vmt 1
+frame antlion_particle_blood2.vmt 1
+frame antlion_particle_blood3.vmt 1
+frame antlion_particle_blood4.vmt 1

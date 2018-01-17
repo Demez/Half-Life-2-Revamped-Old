@@ -1,0 +1,21 @@
+"UnlitGeneric"
+{
+	"$vertexcolor" 1
+	"$basetexture" "shadertest/UnlitAdditiveGeneric"
+	"$envmap" "shadertest/shadertest_env"
+	"$envmapmask" "shadertest/unlitadditivegeneric_envmapmask"
+	"$envmapmaskscale" 10
+	"$multipass" 1
+	"$detail" "shadertest/shadertestdetail"
+	"$detailscale" 5 
+
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" 0.03
+			"texturescrollangle" 60
+		}
+	}
+}

@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "nature/rockwall011g"
+	"$bumpmap" "Nature/cliffface002a_normal"
+	"$model" 1
+//	"$basealphaenvmapmask" 1
+	"$surfaceprop" "boulder"
+
+	"$detail" "detail\rock_detail_01"
+	"$detailscale" "8.0"
+	"$detailblendfactor" .7
+	"$detailblendmode" 0
+}

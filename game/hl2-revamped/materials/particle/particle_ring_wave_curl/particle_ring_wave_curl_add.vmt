@@ -1,0 +1,6 @@
+"SpriteCard"
+{
+	"$basetexture" "particle\particle_Ring_Wave_Curl\particle_Ring_Wave_Curl"
+	$Additive 1
+	$NoCull 1
+}

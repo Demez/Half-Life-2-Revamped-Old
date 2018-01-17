@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$basetexture" "shadertest/UnlitAdditiveAlphaTestedTexture"
+	"$alphatested" 1
+	"$translucent" 1
+	"$detail" "shadertest/shadertestdetail"
+	"$detailscale" 10 
+}

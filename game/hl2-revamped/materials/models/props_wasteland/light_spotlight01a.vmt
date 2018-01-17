@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_wasteland/light_spotlight01a"
+	"$surfaceprop" "glass"
+	"$selfillum" 1
+}
+
+

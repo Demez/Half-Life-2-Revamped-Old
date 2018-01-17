@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/props_lab/teleportgate_fence"
+	"$translucent" "1"
+	"$nodecal" "1"
+}

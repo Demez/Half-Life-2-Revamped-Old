@@ -1,0 +1,20 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "shadertest/LightmappedBaseAlphaMaskedEnvMappedTexture"
+	"$envmap" "shadertest/shadertest_env"
+	"$basealphaenvmapmask" 1
+	"$multipass" 1
+	"$detail" "shadertest/shadertestdetail"
+
+	"Proxies"
+	{
+		// Alpha is sinusoidal
+		"Sine"
+		{
+			"resultVar" "$alpha"
+			"sineperiod" 5.00
+			"sinemin" 1
+			"sinemax" 1
+		}
+	}
+}

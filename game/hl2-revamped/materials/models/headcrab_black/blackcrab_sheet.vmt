@@ -1,0 +1,19 @@
+"vertexlitgeneric"
+{
+	"$model" 1
+	"$baseTexture" "models/Headcrab_black/Blackcrab_sheet"
+//	"$envmap" "env_cubemap"
+//	"$envmapcontrast" 1
+	"$bumpmap" "models/headcrab_black/blackcrab_sheet_normal"
+//	"$normalmapalphaenvmapmask" 1
+	"$phong"	"1"
+ 	"$phongexponent"	"12"
+	"$phongboost"	"2"
+	"$phongfresnelranges"   "[.2 .8 1]"
+
+	//rimlight parameters
+	"$rimlight" "1"
+	"$rimlightexponent" "8"
+	"$rimlightboost" ".5"
+	
+}

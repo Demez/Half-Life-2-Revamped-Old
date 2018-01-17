@@ -1,0 +1,12 @@
+"screenspace_general"
+{
+	"$additive" 0
+	"$ignorez" 1
+	"$disable_color_writes" 1
+	"$writealpha" 1
+	"$PIXSHADER" "clearalpha_ps20"
+	"$C0_X" "0.0"
+	"$C0_Y" "0.0"
+	"$C0_Z" "0.0"
+	"$C0_W" "1.0"
+}

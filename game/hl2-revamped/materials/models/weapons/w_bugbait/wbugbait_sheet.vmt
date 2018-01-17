@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/Weapons/w_bugbait/wbugbait_sheet"
+	"$selfillum" "1"
+}

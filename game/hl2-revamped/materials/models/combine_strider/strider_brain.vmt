@@ -1,0 +1,22 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/Combine_Strider/strider_brain"
+	"$selfillum" 1
+	"$bumpmap" "Models/Combine_Strider/strider_brain_Normal"
+	// -- From here down is new stuff which will only be applied if $phong is set to 1 --
+ 	"$phong"     "1"
+ 	"$phongboost"   "4"
+	"$phongexponent"   "30"
+ 	"$phongfresnelranges"   "[.2 .5 1]"
+
+	"Proxies"
+	{
+		"Sine"
+		{
+			"resultVar"	"$selfillumtint"
+			"sineperiod"	5
+			"sinemin"	0
+			"sinemax"	2
+		}
+	}
+}

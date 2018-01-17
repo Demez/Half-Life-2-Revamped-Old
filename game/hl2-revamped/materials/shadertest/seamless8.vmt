@@ -1,0 +1,21 @@
+"vertexlitgeneric"
+{
+// "$basetexture" "nature/gravelfloor002a"
+// "$basetexture" "nature/rockfloor002a"
+//
+// "$detail" "Concrete/sewer_water001"
+ "$basetexture" "nature/snowfloor003a"
+// "$basetexture" "nature/toxicslime002a_dx70"
+// "$detail" "nature/snowwall003a"
+// "$basetexture" "nature/water_canals_cheap001_dx70"
+
+// "$detail" "Concrete/concreteafloor009a"
+ "%tooltexture" "shadertest/shadertest_env"
+// $detailblendmode 2
+ $seamless_scale .1
+ $seamless_base 1
+ $seamless_detail 0
+// $detailscale 1
+// $detailblendfactor 0.1
+ 
+}

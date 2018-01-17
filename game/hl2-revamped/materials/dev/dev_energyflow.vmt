@@ -1,0 +1,19 @@
+"UnlitTwoTexture"
+{
+	// Original shader: BaseTimesLightmap
+	"$basetexture" "Dev/dev_measuregeneric01b"
+	"$Texture2" "Models/props_combine/combine_fenceglow2"
+	"$surfaceprop" "concrete"
+	"$additive" "1"
+
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" 2
+			"texturescrollangle" 90
+		}
+
+	}
+}

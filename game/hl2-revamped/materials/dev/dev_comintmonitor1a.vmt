@@ -1,0 +1,49 @@
+"UnlitTwoTexture"
+{
+	"$basetexture" "_rt_Camera"
+	"%tooltexture" "dev/dev_monitor"
+	"$surfaceprop" "glass"
+	"$texture2"	"dev/dev_combinescanline"
+//	"$texture2"	"models/props_combine/combinescanline2"
+//	"$texture2scale" 0
+	"$vertexcolor" 1
+
+
+
+
+	"Proxies"
+	{
+
+		"Sine"
+		{
+			"resultVar" "$color[0]"
+			"sineperiod" .2
+			"sinemin" .99
+			"sinemax" 1
+		}
+		"Sine"
+		{
+			"resultVar" "$color[1]"
+			"sineperiod" .1
+			"sinemin" .98
+			"sinemax" 1
+		}
+		"Sine"
+		{
+			"resultVar" "$color[2]"
+			"sineperiod" .1
+			"sinemin" .99
+			"sinemax" 1
+		}
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" 1
+			"texturescrollangle" -90
+		}
+
+
+	}
+
+}

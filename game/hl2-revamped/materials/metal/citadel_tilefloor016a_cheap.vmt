@@ -1,0 +1,14 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Tile/tilefloor016a"
+	"$bumpmap" "tile/tilefloor016a_normal"
+	"$normalmapalphaenvmapmask" 1
+	"$envmap" "env_cubemap"
+	"$surfaceprop" "tile"
+	"$envmaptint" "[ .4 .4 .4 ]"
+	"%keywords" "combine"
+
+	"$reflectivity" "[.23 .31 .31 ]" //this is a artificial radiosity boost
+
+}

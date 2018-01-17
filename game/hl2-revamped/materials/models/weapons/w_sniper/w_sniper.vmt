@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/weapons/w_sniper/w_sniper"
+	"$surfaceprop"	"Metal"
+	"$bumpmap"	"Models/weapons/w_sniper/w_sniper_normal"
+	"$model" "1"
+	"$phong" "1"
+	"$phongboost" "1"
+	"$phongexponenttexture" "Models/weapons/w_sniper/w_sniper_phong"
+	"$phongalbedotint" "1"								
+	"$phongfresnelranges"	"[.5 1 2]"
+}
+

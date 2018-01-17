@@ -1,0 +1,12 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "models/Kleiner/walter_face"
+	"$bumpmap" "models/Kleiner/walter_face_normal"
+	"$phong" "1"
+	"$phongboost" "5"
+	"$halflambert" "1"
+	"$phongexponenttexture" "models/Kleiner/walter_face_phong"
+	//"$phongalbedotint" "1"										
+	"$phongfresnelranges"	"[.2 .6  1]"
+}

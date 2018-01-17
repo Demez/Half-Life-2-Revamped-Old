@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Nature/rockfloor006a"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "Nature/rockfloor006a_normal"
+	"$parallaxmap" "Nature/rockfloor006a_height"
+	"$parallaxmapscale" ".025"
+
+}

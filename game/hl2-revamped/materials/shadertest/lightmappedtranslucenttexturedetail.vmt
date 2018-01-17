@@ -1,0 +1,34 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "shadertest/LightmappedTranslucentTexture"
+	"$translucent" 1
+	"$detail" "shadertest/shadertestdetail"
+
+	// Fallback test
+//	"LightmappedGeneric_DX6"
+//	{
+//		"Proxies"
+//		{
+//			// Alpha is sinusoidal
+//			"Sine"
+//			{
+//				"resultVar" "$color[1]"
+//				"sineperiod" 4.00
+//				"sinemin" 0.5
+//				"sinemax" 1
+//			}
+//		}
+//	}
+
+	"Proxies"
+	{
+		// Alpha is sinusoidal
+		"Sine"
+		{
+			"resultVar" "$alpha"
+			"sineperiod" 4.00
+			"sinemin" 1
+			"sinemax" 1
+		}
+	}
+}

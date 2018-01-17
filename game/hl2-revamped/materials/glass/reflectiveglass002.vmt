@@ -1,0 +1,24 @@
+"lightmappedreflective"
+{
+	"$basetexture" "glass/reflectiveglass002"
+	"$envmapmask" "glass/reflectiveglass002_mask"
+	"$translucent" 1
+	
+	"$refracttexture" "_rt_WaterRefraction"
+	"$refractamount" "-0.2"
+	"$refracttint" "[1 1 1]"
+
+	"$reflecttexture" "_rt_WaterReflection"
+	"$reflectamount" "0.2"
+	"$reflecttint" "[1 1 1]"
+
+	"$fresnelpower" "1"
+	"$minreflectivity" "0.5"
+	"$maxreflectivity" "1.0"
+	
+	"$normalmap" "glass/reflectiveglass002_normal"
+
+	"$surfaceprop" "glass"
+	"$bumpframe" "0"
+}
+

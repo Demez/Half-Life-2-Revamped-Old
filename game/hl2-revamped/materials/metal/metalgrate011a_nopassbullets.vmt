@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmapAlphaBlend
+	"$translucent" 1
+	"$basetexture" "Metal/metalgrate011a"
+	"$surfaceprop" "metal"
+	"$nodecal" 1
+	"%keywords" "c17industrial,kraken"
+}

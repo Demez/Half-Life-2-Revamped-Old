@@ -1,0 +1,16 @@
+"UnLitTwoTexture"
+{
+	"$basetexture" "Props/combine_display01c"
+	"$surfaceprop" "glass"
+	"$texture2"	"dev/dev_scanline"
+	"Proxies"
+	{
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" 3
+			"texturescrollangle" 90
+		}
+}
+}

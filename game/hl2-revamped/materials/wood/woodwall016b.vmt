@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	// Original shader: CubicEnvMapBlendMaskedBaseTimesLightmap
+	"$basealphaenvmapmask" 1
+	"$basetexture" "Wood/woodwall016b"
+	"$envmap" "env_cubemap"
+	"$surfaceprop" "wood"
+	"%keywords" "borealis"
+}

@@ -1,0 +1,8 @@
+"UnLitGeneric"
+{
+ 	"$model" 1
+	"$basetexture" "models/props_c17/frostedglass"
+//	"$translucent" "1"
+	"$additive" "1"
+	"$nocull" 1
+}

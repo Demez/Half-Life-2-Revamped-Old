@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_forest/dog_gate_fence"
+	"$surfaceprop"	"metal"
+	"$translucent"	1
+}

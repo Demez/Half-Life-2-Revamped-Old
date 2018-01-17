@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/props_radiostation/radio_antenna01_alpha"
+//	"$envmap"  "env_cubemap"
+//	"$basealphaenvmapmask" 1
+//	"$envmaptint" "[ .5 .5 .5 ]
+	"$alphatest" 1
+
+}

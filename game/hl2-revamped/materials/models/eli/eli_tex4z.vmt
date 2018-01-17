@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "models/eli/eli_tex4z"
+    "$bumpmap" "models/eli/eli_head_normal"
+	"$halflambert" 1
+	"$nodecal" "1"
+	"$phong" "1"
+	"$phongboost" "4"
+	"$phongexponenttexture" "models/eli/eli_head_phong"
+	//"$phongalbedotint" "1"										
+	"$phongfresnelranges"	"[.2 .6  1]"
+
+}

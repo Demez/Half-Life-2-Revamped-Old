@@ -1,0 +1,6 @@
+"Sprite"
+{
+	"$basetexture" "sprites/yellowflare"
+	"$color" "[ 1.00 1.00 1.00 ]"
+	"$additive" 0
+}

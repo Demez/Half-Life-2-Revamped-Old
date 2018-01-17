@@ -1,0 +1,16 @@
+"UnlitGeneric"
+{
+	"$vertexcolor" 1
+	"%tooltexture" "shadertest/UnlitAdditiveVertexColor"
+
+	"Proxies"
+	{
+		"Sine"
+		{
+			"resultVar" "$Alpha"
+			"sineperiod" 2.00
+			"sinemin" 0
+			"sinemax" 1
+		}
+	}
+}

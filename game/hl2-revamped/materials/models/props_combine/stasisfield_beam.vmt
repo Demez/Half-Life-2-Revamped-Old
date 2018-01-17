@@ -1,0 +1,17 @@
+"UnLitGeneric"
+{
+	// Original shader: BaseTimesLightmap
+	"$basetexture" "models/props_combine/stasisfield_beam"
+	"$additive" "1"
+	"$model" "1"
+
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" .4
+			"texturescrollangle" 45
+		}
+	}
+}

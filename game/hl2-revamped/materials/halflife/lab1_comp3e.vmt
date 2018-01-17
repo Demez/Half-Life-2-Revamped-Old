@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmapSelfIllum
+	"$basetexture" "halflife/lab1_comp3e"
+	"$selfillum" 1
+	"$surfaceprop" "computer"
+}

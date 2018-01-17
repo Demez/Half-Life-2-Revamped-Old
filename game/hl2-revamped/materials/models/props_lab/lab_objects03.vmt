@@ -1,0 +1,7 @@
+
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "Models/props_lab/lab_objects03"
+	"$surfaceprop" "cardboard"
+}

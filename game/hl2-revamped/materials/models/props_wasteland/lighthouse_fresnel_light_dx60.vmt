@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+ 	"$model" 1
+	"$surfaceprop" "glass"
+//	"$color" "{245 232 180}"
+	"$basetexture" "models/Kleiner/glasslens"
+	"$additive" "1"
+}

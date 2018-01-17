@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_building_details/courtyard_template001c_bars_dark"
+	"$surfaceprop" "metal"
+	"$basealphaenvmapmask" 1
+	"$envmap" "env_cubemap"
+}

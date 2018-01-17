@@ -1,0 +1,10 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/rockwall_cave02a_dx8"
+	"$basetexture2" "nature/rockwall_cave03a"
+	"$surfaceprop" "antlionsand"
+	"%keywords" "ep2"	
+	"$seamless_scale" .005
+}
+
+	

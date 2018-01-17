@@ -1,0 +1,6 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"nature/trees_skybox01"
+	"$surfaceprop"	"no_decal"
+	"$translucent"	1
+}

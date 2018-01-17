@@ -1,0 +1,17 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/seesawBridge/bridge_colour"
+//	"$bumpmap" "Models/seesawBridge/bridge_normal" 
+
+//	"$phong" "1" //this turns on the phong effect
+//	"$phongexponent" "100" //change this number to make the specular highlight bigger or smaller (larger numbers give you a smaller highlight)
+//	"$phongboost" "0.15" //use this to increase/decrease the highlight intensity 
+//	"$phongfresnelranges" "[5 5 25]" //this are the highlight intensities at different incidence angles from the camera (first value is perpendicular to the camera and the 3rd value is away from the camera)
+
+	"$alphatest" 			1
+	"$model" 1
+	"$nocull" 1
+
+}
+
+

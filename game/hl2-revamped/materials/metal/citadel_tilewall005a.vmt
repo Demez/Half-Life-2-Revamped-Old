@@ -1,0 +1,33 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Tile/tilewall005a"
+	"$surfaceprop" "tile"
+	"%keywords" "c17downtown"
+
+	// NOTE: Even though env_cubemap is here, it will turned off for DX6
+	// because $multipass 1 isn't defined
+	"$envmap" "env_cubemap"
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	//"$envmaptint" "[ 0.75 0.75 1 ]"
+
+	"LightmappedGeneric_DX9"
+	{
+		"$bumpmap" "Tile/tilewall005a_normal"
+		"$normalmapalphaenvmapmask" 1
+	}
+
+	"LightmappedGeneric_DX8"
+	{
+		"$bumpmap" "Tile/tilewall005a_normal"
+		"$nodiffusebumplighting" 1
+		"$normalmapalphaenvmapmask" 1
+	}
+
+	"LightmappedGeneric_NoBump_DX8"
+	{
+		"$basetexture" "Tile/citadel_tilewall005a"
+		"$basealphaenvmapmask" 1
+	}
+
+}

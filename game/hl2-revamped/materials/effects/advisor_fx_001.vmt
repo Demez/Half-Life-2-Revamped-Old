@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"Effects/advisor_fx_001"
+	"$surfaceprop"	"no_decal"
+	"$translucent"	1
+}

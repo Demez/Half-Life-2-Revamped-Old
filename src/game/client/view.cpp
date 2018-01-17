@@ -51,7 +51,7 @@
 #else
 #error "GAMEUI_EMBEDDED"
 #endif*/
-#include "hl2/gameui/hl2/basemodpanel.h"
+#include "gameui/shared/basemodpanel.h"
 #endif
 #ifdef INFESTED_DLL
 #include "c_asw_marine.h"
@@ -728,7 +728,8 @@ void CViewRender::SetUpView()
 	float flFOVOffset = default_fov.GetFloat() - view.fov;
 
 	//Adjust the viewmodel's FOV to move with any FOV offsets on the viewer's end
-	view.fovViewmodel = GetClientMode()->GetViewModelFOV() - flFOVOffset;
+	//view.fovViewmodel = GetClientMode()->GetViewModelFOV() - flFOVOffset;
+	view.fovViewmodel = abs(GetClientMode()->GetViewModelFOV() - flFOVOffset);
 
 	// Compute the world->main camera transform
 	ComputeCameraVariables( view.origin, view.angles, 

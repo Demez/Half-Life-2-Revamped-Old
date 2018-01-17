@@ -1,0 +1,46 @@
+"UnlitGeneric"
+{
+	"$vertexcolor" 1
+	"$basetexture" "shadertest/UnlitAdditiveGeneric"
+	"$envmap" "shadertest/shadertest_env"
+	"$envmapmask" "shadertest/unlitadditivegeneric_envmapmask"
+	"$envmapmaskscale" "10"
+	"$multipass" 1
+
+	"$temp1" 0
+	"$temp2" 0
+	"$temp2" 0
+
+	"Proxies"
+	{
+		"Sine"
+		{
+			"resultVar" "$temp1"
+			"sineperiod" 1.00
+			"sinemin" 0.5
+			"sinemax" 1.0
+		}
+
+		"Sine"
+		{
+			"resultVar" "$temp2"
+			"sineperiod" 10.00
+			"sinemin" 0.2
+			"sinemax" 1
+		}
+
+		"Multiply"
+		{
+			"srcVar1" "$temp1"
+			"srcVar2" "$temp2"
+			"resultVar" "$alpha"
+		}
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" 0.20
+			"texturescrollangle" 60
+		}
+	}
+}

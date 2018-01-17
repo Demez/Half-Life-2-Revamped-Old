@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "props/sign_novaprospekt"
+	"$surfaceprop" "metal"
+	"%keywords" "c17"
+	"$alphatest" 1
+	"$nomip" 1
+	"%compilepassbullets" 1
+}

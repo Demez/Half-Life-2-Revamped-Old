@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_mining/antlion_detector"
+	"$envmap"  "env_cubemap"
+	"$basealphaenvmapmask" 1
+	"$envmaptint" "[ .5 .5 .5 ]"
+//	"$bumpmap"	      "Models/props_mining/antlion_detector_norm"
+//	"$phong" "1" //this turns on the phong effect
+//	"$phongexponenttexture" 	"Models/props_mining/antlion_detector_exponent"
+//	"$phongexponent"  "20"
+//	"$phongboost" "4" //use this to increase/decrease the highlight intensity 
+//	"$phongfresnelranges" "[.1 .5 1]" //this are the highlight intensities at different incidence angles from the camera (first value is perpendicular to the camera and the 3rd value is away from the camera)
+}

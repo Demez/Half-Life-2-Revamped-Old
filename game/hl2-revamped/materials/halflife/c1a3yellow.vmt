@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	// Original shader: BaseTimesLightmap
+	"$basetexture" "halflife/c1a3yellow"
+	"$additive" 1
+}

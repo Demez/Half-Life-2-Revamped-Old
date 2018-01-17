@@ -1,0 +1,16 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/rockwall_cave01a"
+	"$basetexture2" "nature/dirtfloor004a"
+	"$bumpmap" "Nature/rockwall_cave_02a_height-ssbump"
+	"$ssbump" "1"
+	"%tooltexture" "nature/blendgrassgravel001a_tooltexture"
+	"$bumpmap2" "Nature/dirtfloor012a_normal"
+	"%keywords" "outland"
+	"$surfaceprop" "antlionsand"
+	"$surfaceprop2" "antlionsand"
+//	"$blendmodulatetexture" "nature/rockblendtexture001a"
+
+}
+
+	

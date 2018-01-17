@@ -1,0 +1,17 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	//"$basetexture" "Models/Combine_Dropship/combine_dropship01"
+	//"$envmap" "Environment Maps/envmapcombine"
+	//"$envmapsphere" 1
+	//"$envmaptint" "[ .01 .01 .01 ]"
+	
+	"$basetexture" "Models/Combine_Dropship/combine_dropship01"
+	"$surfaceprop" "metal"
+	"$bumpmap" "models/Combine_Dropship/combine_dropship01_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .56 .67 .75 ]"
+}

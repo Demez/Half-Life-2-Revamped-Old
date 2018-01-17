@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/seesawBridge/bridge_concrete"
+	"$surfaceprop" "concrete"
+//	"$bumpmap" "models/seesawBridge\bridge_concrete_normal"
+
+}

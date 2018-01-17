@@ -1,0 +1,9 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "PerfTest/rockwall002a"
+	"$basetexture2" "nature/dirtfloor004a"
+	"%tooltexture" "PerfTest/rockwall002a"
+	"$surfaceprop" "concrete"
+	"$surfaceprop2" "dirt"
+//	"%keywords" "c17downtown"
+}

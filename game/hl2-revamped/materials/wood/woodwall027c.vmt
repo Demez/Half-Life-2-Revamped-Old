@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Wood/woodwall027c"
+	"$surfaceprop" "wood"
+	"%keywords" "wasteland"
+	"$bumpmap" "Wood/woodwall027c_normal"
+	"$parallaxmap" "Wood/woodwall027c_height"
+	"$parallaxmapscale" ".035"
+}

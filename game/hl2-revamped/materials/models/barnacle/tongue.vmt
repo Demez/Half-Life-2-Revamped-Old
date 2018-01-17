@@ -1,0 +1,15 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/barnacle/tongue"
+	"$bumpmap" "models/barnacle/tongue_normal"
+	"$halflambert" "1"
+	"$phong" "1"
+	"$phongboost" "4"
+	"$phongexponent" "70"
+	//"$phongexponenttexture" "models/barnacle/tongue_phong"
+	//"$phongalbedotint" "1"										
+	"$phongfresnelranges"	"[.3 .6 1]"
+	"$nodecal" "1"
+	"$rimlight" "1"
+	"$rimlightexponent" "75"
+}

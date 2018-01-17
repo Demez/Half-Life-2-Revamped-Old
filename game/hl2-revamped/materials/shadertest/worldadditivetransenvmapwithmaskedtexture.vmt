@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	// Original shader: WorldAdditiveTransEnvMapWithMaskedTexture
+	//"$envmapsphere" 1
+	"$basealphaenvmapmask" 1
+	"$basetexture" "shadertest/WorldAdditiveTransEnvMapWithMaskedTexture"
+	"$envmap" "shadertest/envmap"
+}

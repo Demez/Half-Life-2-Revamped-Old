@@ -1,0 +1,39 @@
+"VertexLitGeneric"
+{
+ "$baseTexture" "Models/props_lab/printout_sheet"
+ "$nocull" 1
+"$nodecal" "1"
+ "$gnoise" 1
+ "$temp" "[0 0]"
+ "$curr" 0.0
+ "Proxies"
+ {
+  "GaussianNoise"
+  {
+   "minVal" -0.002
+   "maxVal" 0.0 
+    "mean" -.0002y	
+   "halfwidth" .002
+   "resultVar" "$gnoise"
+  }
+ 
+  "Add"
+  {
+   "srcVar1" "$gnoise"
+   "srcVar2" "$curr"
+   "resultVar" "$curr"
+  }
+ 
+  "Equals"
+  {
+   "srcVar1" "$curr"
+   "resultVar" "$temp[1]"
+  }
+ 
+  "TextureTransform"
+  {
+   "translateVar" "$temp"
+   "resultVar" "$basetexturetransform"
+  }  
+ }
+}

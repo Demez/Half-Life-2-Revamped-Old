@@ -1,0 +1,11 @@
+"lightmappedGeneric"
+{
+	"$basetexture" "nature/antlion_crust01a"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[.2 .2 .2]"
+	"$translucent" 1
+	"$bumpmap" "nature/antlion_web01a_normal"
+	"$normalmapalphaenvmapmask" 1
+//	"$nocull" 1
+
+}

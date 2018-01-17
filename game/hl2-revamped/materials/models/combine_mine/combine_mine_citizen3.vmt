@@ -1,0 +1,22 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+
+
+	"$baseTexture" "Models/Combine_Mine/combine_mine_citizen3"
+	"$surfaceprop" "metal"
+	"$bumpmap" "models/Combine_Mine/combine_mine03_normal"
+	//"$envmap" "env_cubemap"
+	//"$normalmapalphaenvmapmask" 1
+	//"$envmapcontrast" 1
+	//"$envmapsaturation" 1
+	//"$envmaptint" "[ .56 .67 .75 ]"
+	"$phong" "1"
+	"$phongboost" "5"
+	//"$halflambert" "1"
+	"$phongexponent" "15"
+	"$phongfresnelranges"	"[.1 .5 1.0]"
+
+
+}
+

@@ -1,0 +1,6 @@
+"unlitgeneric"
+{
+	"%tooltexture" "shadertest/cubedemo"
+	"$envmap" "shadertest/cubedemo"
+	"$envmapcameraspace" 1
+}

@@ -1,0 +1,7 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"nature/1west_3"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+	"$decal"	1
+}

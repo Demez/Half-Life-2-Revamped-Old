@@ -1,0 +1,9 @@
+"unlitgeneric"
+{
+	"$basetexture" "particle\aurora_1\aurora_1"
+	$vertexcolor 1
+	$vertexalpha 1
+	$translucent 1
+	$additive 1
+	$nocull 1
+}

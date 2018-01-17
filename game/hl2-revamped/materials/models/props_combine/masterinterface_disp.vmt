@@ -1,0 +1,19 @@
+"Unlittwotexture"
+{
+	"$basetexture" "Models/props_combine/masterinterface_disp"
+	"$texture2" "Models/props_combine/masterinterface_disp2"
+	"$model" 1
+	"Proxies"
+	{
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" 1
+			"texturescrollangle" -90
+		}
+	}
+
+
+}
+

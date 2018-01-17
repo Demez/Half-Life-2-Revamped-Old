@@ -1,0 +1,7 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "particle\antlion_gib1\antlion_gib_1b_128"
+	$vertexcolor 1
+	$vertexalpha 1
+	$translucent 1
+}

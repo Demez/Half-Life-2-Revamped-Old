@@ -1,0 +1,10 @@
+"Modulate"
+{
+	"$basetexture" "effects/red"
+	"$surfaceprop" "glass"
+	"$texture2"	"models/props_combine/combinescanline"
+	"$selfillum" "1"
+	"$mod2x" "1"
+	"$additive" "1"
+
+}

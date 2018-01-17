@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$color"				"[1 1 1]"
+	"$baseTexture"			"models/props_combine/prison01"
+	"$selfIllum"			1
+	//"$translucent"			0
+	"$alpha"				1
+}

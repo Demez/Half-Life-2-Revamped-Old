@@ -1,0 +1,29 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Metal/metalwall001a"
+	"$surfaceprop"  "metal"
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "4.283"
+	"$detailblendfactor" .8
+	"$detailblendmode" "0"
+
+	"%keywords" "c17industrial"
+	"$bumpmap" "Metal/metalwall001a_normal"
+	"$envmaptint" "[ .56 .56 .56 ]"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+
+  "LightmappedGeneric_HDR_dx9"
+  {
+    "$envmaptint" "[.25 .25 .25]"
+    "$normalmapalphaenvmapmask" 1
+  }
+
+ "LightmappedGeneric_DX9"
+  {
+    "$envmaptint" "[.25 .25 .25]"
+  }
+}

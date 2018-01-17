@@ -1,0 +1,18 @@
+"lightmappedGeneric"
+{
+	"$basetexture" "nature/antlion_web01a"
+	"$envmaptint" "[2 2 2]"
+	"$translucent" 1
+	"$bumpmap" "nature/antlion_web01a_normal"
+	"$normalmapalphaenvmapmask" 1
+	"$nocull" 1
+	"$seamless_scale" .007
+	"$envmap" "cubemaps/cubemap_cave01"
+	"$nodecal" 1
+	
+	"lightmappedGeneric_dx8"
+	{
+	"$fallbackmaterial" "nature\antlion_web01a_dx8"
+	}
+	
+}

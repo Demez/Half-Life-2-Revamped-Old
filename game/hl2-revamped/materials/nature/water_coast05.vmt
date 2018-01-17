@@ -1,0 +1,54 @@
+"Water"
+{
+//for coast_10
+
+	"$abovewater" 1
+	"%compilewater" 1
+	"$forcecheap" 1
+	"$reflectentities" 0
+	"$envmap" "env_cubemap"
+	//"$envmaptint"[10 10 10]"
+	"$envmapcontrast" "1"
+	"%tooltexture" "nature/water_frame01_normal"
+	//"$refracttexture" "_rt_WaterRefraction"
+	//"$refractamount" "2"
+
+	//"$reflecttexture" "_rt_WaterReflection"
+	//"$reflectamount" "1.1"
+
+	"$scale" "[1 1]"
+
+	"$bumpmap" "nature/water_coast01_dudv"
+	"$normalmap" "nature/water_coast01_normal"
+
+	"$surfaceprop" "water"
+	"$bottommaterial" "nature/water_coast01_beneath"
+	"$bumpframe" "0"
+
+	"$fogenable" 1
+	"$fogcolor" "{7 16 18}"
+	"srgb?$fogcolor" "{21 48 56}"
+
+//	"$fogcolor" "{15 32 36}"
+//	"$fogcolor" "{22 47 53}"
+	"$fogstart" 1.00
+	"$fogend" 196.00
+
+	"$scroll1" "[.01 .01 .05]"
+	"$scroll2" "[-.025 .025 .075]"
+
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$bumptransform"
+			"texturescrollrate" .02
+			"texturescrollangle" 25.00
+		}
+		"WaterLOD"
+		{
+		}
+			
+	}
+
+}

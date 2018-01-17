@@ -1,0 +1,16 @@
+"UnlitGeneric"
+{
+	"$color" "[ 0.80 0.00 0.30 ]"
+	"%tooltexture" "shadertest/UnlitAdditiveSingleColor"
+
+	"Proxies"
+	{
+		"Sine"
+		{
+			"resultVar" "$ALPHA"
+			"sineperiod" 2.00
+			"sinemin" 0
+			"sinemax" 1
+		}
+	}
+}

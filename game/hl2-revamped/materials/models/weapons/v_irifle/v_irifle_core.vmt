@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/Weapons/V_IRifle/V_IRifle_core"
+	"$surfaceprop" "metal"
+	"$selfillum" 1
+}

@@ -1,0 +1,8 @@
+"DecalModulate"
+{
+	"$decal" 1
+	"$basetexture" "Decals/bloodstain_003b"
+	"$decalscale" 0.25
+}
+
+

@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/Props_hive/nest_lrg_flat_optimized_albedo"
+//	"$surfaceprop"	"cardboard"
+	"$bumpmap"	"Models/Props_hive/nest_lrg_flat_optimized_normal"
+	"$selfillum"	1
+	"$model"	1
+	"$nodecal"	1
+}

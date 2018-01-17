@@ -1,0 +1,12 @@
+
+//Coast bumpmap upgrade. Please excuse the hackiness.
+"LightmappedGeneric"
+{
+ "$basetexture" "Nature/cliffface001a"
+ "$surfaceprop" "dirt"
+ "$bumpmap" "Nature/cliffface001a_normal"
+ "$parallaxmap" "Nature/cliffface001a_height"
+ "$parallaxmapscale" ".025"
+ "$basetexturetransform" "center 0 0 scale 2 2 rotate 0 translate 0 0"
+
+}

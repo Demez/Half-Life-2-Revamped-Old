@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	// Original shader: AddTexture
+	"$basetexture" "effects/c17_07camera"
+}

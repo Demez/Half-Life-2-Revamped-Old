@@ -1,0 +1,12 @@
+"UnlitGeneric"
+{
+	"$baseTexture" "Models/Effects/splodecard2_sheet"
+	"$mod2x" "1"	
+//	"$additive" "1"
+	"$translucent" "1"
+	"$model" "1"
+	
+
+
+}
+

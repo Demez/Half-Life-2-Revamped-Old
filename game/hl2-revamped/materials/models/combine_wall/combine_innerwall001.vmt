@@ -1,0 +1,17 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_combine/Combine_InnerWall001"
+	"$surfaceprop" "metal"
+	//"$nocull" 1
+	//"$envmap" "Environment Maps/envmapcombine"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .25 .25 .25]"
+	"$basealphaenvmapmask" 1
+
+	"360?$color2" "[ 0.4 0.4 0.4 ]"
+
+        "$detail" "detail\metal_detail_01"
+	"$detailscale" "30.345"
+	"$detailblendfactor" .6
+	"$detailblendmode" 0
+}

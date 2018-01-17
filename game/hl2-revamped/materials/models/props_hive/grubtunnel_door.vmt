@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/Props_hive/Grubtunnel_door"
+	"$surfaceprop"	"default"
+	"$bumpmap"	"Models/Props_hive/Grubtunnel_door_normal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[1 1 1]"
+	"$translucent" "1"
+
+	"VertexLitGeneric_dx8"
+	{
+	"$fallbackmaterial" "models\props_hive\GrubTunnel_door_dx8"
+	}
+}

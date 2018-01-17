@@ -1,0 +1,9 @@
+"unlitgeneric"
+{
+	"$basetexture"	"nature/mountainrange_far_01b"
+	"$surfaceprop"	"no_decal"
+	"$translucent"	1
+	"$nofog" 1
+	$ignorez 1
+	"360?$color2" "[ 0.5 0.6 0.8 ]"
+}

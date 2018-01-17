@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+     "$basetexture" "Models\props_buildings\factory_skybox001a"
+     "$surfaceprop" "metal"
+     "$envmap" "env_cubemap"	
+     "$basealphaenvmapmask" 1
+}

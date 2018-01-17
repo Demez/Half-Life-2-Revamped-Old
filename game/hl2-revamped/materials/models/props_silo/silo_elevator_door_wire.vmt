@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_wasteland/fence_alpha"
+	//"$basetexture"	"Models/props_silo/silo_elevator_door_wire"	
+	"$alphatest" "1"
+	"$AlphaTestReference" "0.2"
+	//"$translucent" "1"
+}

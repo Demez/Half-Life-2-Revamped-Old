@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmapAlphaBlend
+	"$alphatest" 1
+	"$basetexture" "Metal/metaltruss026a"
+	"$surfaceprop" "metal"
+	"%compilepassbullets" 1
+	"%keywords" "c17industrial,wasteland"
+}

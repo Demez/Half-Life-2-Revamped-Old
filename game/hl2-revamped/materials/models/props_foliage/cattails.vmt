@@ -1,0 +1,13 @@
+"UnlitGeneric"
+//"VertexlitGeneric"
+{
+
+	"$baseTexture" "models/props_foliage/cattails"
+	"$selfIllum" 0
+	"$alphatest" 1
+	"$alpha" 1
+	"$nocull" 1
+	"$model" 1
+}
+
+

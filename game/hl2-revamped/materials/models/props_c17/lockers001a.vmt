@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_c17/Lockers001a"
+	"$envmap" "env_cubemap"
+	"$basealphaenvmapmask" 1
+
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "4.545"
+	"$detailblendfactor" .6
+	"$detailblendmode" 0
+	
+}
+
+

@@ -1,0 +1,7 @@
+"Teeth"
+{
+	"$basetexture" "models/gman/lower_teeth"
+	"$model" 1
+	"$clientshader" "MouthShader"
+	"$halflambert" 1
+}

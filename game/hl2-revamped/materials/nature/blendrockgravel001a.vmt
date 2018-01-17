@@ -1,0 +1,15 @@
+"WorldVertexTransition"
+{
+	"$basetexture2" "nature/gravelfloor004a"
+	"$basetexture" "nature/rockwall001a"
+	"%tooltexture" "nature/blendrockgravel001a_tooltexture"
+	"%keywords" "wasteland"
+	"$surfaceprop" "concrete"
+	"$bumpmap2" "Nature/gravelfloor004a_normal"
+	"$bumpmap" "nature/rockwall001a_normal"
+
+	"$detail" "detail\rock_detail_01"
+	"$detailscale" "5.0"
+	"$detailblendfactor" .6
+	"$detailblendmode" 0
+}

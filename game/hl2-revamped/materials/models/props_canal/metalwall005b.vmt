@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	// Original shader: BaseTimesLightmap
+	"$basetexture" "Metal/metalwall005b"
+	"$surfaceprop" "metal"
+	"%keywords" "c17industrial"
+}

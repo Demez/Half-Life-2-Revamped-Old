@@ -1,0 +1,7 @@
+"DecalBaseTimesLightmapAlphaBlendSelfIllum"
+{
+	"$basetexture" "Decals/decalmetalvent004a"
+	"$selfillumtexture" "decals/decalmetalventmask004a"
+	"$decalscale" 0.25
+	"%keywords" "airexchange,c17industrial"
+}

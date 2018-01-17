@@ -1,0 +1,24 @@
+"UnlitTwoTexture"
+{
+ 	"$model" 1
+    "$nocull" "1"
+	"$basetexture" "models/props_combine/stasisshield_dx7"
+	"$texture2" "models/props_combine/stasisshield_dx7"
+
+	"$additive" "1"
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" .08
+			"texturescrollangle" 70
+		}
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" -.08
+			"texturescrollangle" 30
+		}
+	}
+}

@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_combine/portalspire_sheet"
+	"$surfaceprop" "metal"
+	"$selfillum" "1"
+}

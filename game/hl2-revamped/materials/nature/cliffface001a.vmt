@@ -1,0 +1,13 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Nature/cliffface001a"
+	"$surfaceprop" "dirt"
+	"$bumpmap" "Nature/cliffface001a_normal"
+	//"$parallaxmap" "Nature/cliffface001a_height"
+	//"$parallaxmapscale" ".025"
+
+	"$detail" "detail\rock_detail_01"
+	"$detailscale" "11"
+	"$detailblendfactor" 1
+	"$detailblendmode" 0
+}

@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmapAlphaBlend
+	"$translucent" 1
+	"$decal" 1
+	"$basetexture" "Wood/woodtrack001a"
+	"$surfaceprop" "wood"
+	"%keywords" "c17industrial,c17trainstation,wasteland"
+}

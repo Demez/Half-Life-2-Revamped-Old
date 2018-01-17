@@ -1,0 +1,19 @@
+//same ad 008c except different macro texture and has detail props
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/sandfloor009a"
+	"$basetexture2" "nature/cliffface002a"
+	"%tooltexture" "nature/blendrocksand008c_tooltexture"
+
+	"$detail" "overlays/macro01a"
+	"$detailscale" .1
+
+
+
+        "$basetexturetransform" "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+        "$basetexturetransform2" "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+        
+//	"%detailtype" "rocks_redgrass"
+	"$surfaceprop" "dirt"
+	"%keywords" "coastline"
+}

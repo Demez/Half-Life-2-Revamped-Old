@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$translucent" 1
+	"$basetexture" "models/props_foliage/grass3"
+	"$model" 1
+	"$nocull" 1
+	"$alpha" 1
+}

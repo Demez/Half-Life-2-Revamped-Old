@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/props_c17/cashregister01a"
+	"$envmapmask" "Models/props_c17/cashregister01a_mask"
+	"$envmap" "env_cubemap"
+
+}
+
+

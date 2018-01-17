@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTranslucentTexture
+	"$translucent" 1
+	"$nocull" 1
+	"$basetexture" "models/Airboat/airboat_blur02"
+}

@@ -1,0 +1,12 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "models/gman/gman_face_map3"
+	"$bumpmap" "models/gman/gman_normal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .04 .04 .04 ]"
+	"$envmapconstrast" "1"
+	"$normalmapalphaenvmapmask" 1
+	"$halflambert" 1
+}

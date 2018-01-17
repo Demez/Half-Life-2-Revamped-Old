@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$baseTexture" "nature/blue_sky01"
+	"$selfillum" 1
+	"$nodecal" "1"
+	"$nofog" 1
+}

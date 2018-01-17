@@ -1,0 +1,23 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "shadertest/LightmappedAlphaTestedTexture"
+	"$alphatest" 1
+	
+	"$temp" "[0 0]"
+		 
+	"Proxies"
+	{
+		// Texture scrolls as we move!!
+		"PlayerPosition"
+		{
+			"resultVar" "$temp"
+			"scale" 0.01
+		}
+
+		"TextureTransform"
+		{
+			"translateVar" "$temp"
+			"resultVar" "$basetexturetransform"
+		}
+	}
+}

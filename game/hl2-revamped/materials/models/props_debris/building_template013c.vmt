@@ -1,0 +1,13 @@
+// envmaptint_fix
+"vertexLitGeneric"
+{
+	"$basetexture" "Building_Template/Building_Template013c"
+	"$surfaceprop" "concrete"
+//	"$bumpmap" "Building_Template/Building_Template013c_normal"
+//	"$envmap" "env_cubemap"
+//	"$normalmapalphaenvmapmask" 1
+//	"$envmapcontrast" 1
+//	"$envmapsaturation" 1
+//	"$envmaptint" "[ .25 .25 .25 ]"
+
+}

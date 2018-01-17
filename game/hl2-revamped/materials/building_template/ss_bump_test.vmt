@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Building_Template/Building_Template004a"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "demo/hl-logo"
+	"$ssbump" "1"
+}

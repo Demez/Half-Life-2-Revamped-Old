@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Nature/dirtfloor005c"
+//	"$detail" "Decals/decalplaster001a"
+//	"$detailscale" 0.20
+	"$surfaceprop" "dirt"
+}

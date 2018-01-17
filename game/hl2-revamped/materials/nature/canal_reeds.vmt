@@ -1,0 +1,18 @@
+"WorldVertexTransition"
+{
+	"%tooltexture" "nature/blendsandweed005a_tooltexture"
+	"%detailtype" "canal_reeds"
+	"%keywords" "canal"
+	"$surfaceprop" "sand"
+
+	"$basetexture" "nature/sandfloor010a"
+	"$basetexture2" "nature/seaweed002a"
+	"$bumpmap" "nature/sandfloor010a_normal"
+
+
+	 "WorldVertexTransition_DX9"
+	{
+		"$bumpmap2" "nature/seaweed002a_normal"
+	}
+}
+

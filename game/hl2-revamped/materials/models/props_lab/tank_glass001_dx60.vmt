@@ -1,0 +1,20 @@
+//"UnlitGeneric"
+"UnlitTwoTexture"
+{
+ 	"$model" 1
+ 	"$surfaceprop" "water"
+	"$basetexture" "dev/water"
+	"$texture2" "models/props_lab/glass_tint001"
+	"$additive" 1
+	"$color" "[1 0 0]"
+
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedtextureframerate" 20.00
+		}
+
+}

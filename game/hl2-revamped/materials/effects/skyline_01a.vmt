@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"Effects/skyline_01a"
+	"$surfaceprop"	"no_decal"
+	"$translucent"	1
+	"$alphatest" 1
+	"$nofog" 1
+	$ignorez 1
+}

@@ -1,0 +1,45 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "shadertest/LightmappedGeneric"
+	"$envmap" "shadertest/shadertest_env"
+	"$envmapmask" "shadertest/LightmappedGeneric_envmask"
+	"$envmapmaskscale" 5
+	"$detail" "shadertest/shadertestdetail"
+
+	"$temp" 0
+	"$one" 1
+
+	"Proxies"
+	{
+		// Color green is sinusoidal
+		"Sine"
+		{
+			"resultVar" "$envmaptint[1]"
+			"sineperiod" 2.00
+			"sinemin" 0
+			"sinemax" 1
+		}
+
+		"Sine"
+		{
+			"resultVar" "$alpha"
+			"sineperiod" 4.00
+			"sinemin" 0
+			"sinemax" 1
+		}
+
+		// Gets more transparent as we move
+//		"PlayerSpeed"
+//		{
+//			"resultVar" "$temp"
+//			"scale" 0.003
+//		}
+  
+	//	"Subtract"
+	//	{
+	//		"srcVar1"	"$one"
+	//		"srcVar2"	"$temp"
+	//		"resultVar"	"$alpha" 
+	//	}
+	}
+}

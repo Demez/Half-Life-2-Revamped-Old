@@ -1,0 +1,12 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmap
+	"$basetexture" "Metal/metalwall029a"
+	"$surfaceprop"  "metal"
+	"$detail" "detail\plaster_detail_01"
+	"$detailscale" "6.283"
+	"$detailblendfactor" 1
+	"$detailblendmode" "0"
+
+	"%keywords" "c17industrial,wasteland"
+}

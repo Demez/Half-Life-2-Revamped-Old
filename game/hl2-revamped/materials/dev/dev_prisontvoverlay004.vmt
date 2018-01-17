@@ -1,0 +1,11 @@
+"UnlitGeneric"
+//"UnlitTwoTexture"
+//"Modulate"
+{
+	"$basetexture" "dev/dev_prisontvoverlay004"
+	"$texture2" "dev/dev_prisontvoverlay004"
+	"%tooltexture" "dev/dev_prisontvoverlay004"
+	"$surfaceprop" "glass"
+	"$additive" "1"
+//	"$mod2x" "1"
+}

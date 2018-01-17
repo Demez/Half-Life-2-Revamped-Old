@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/Props_hive/Grubtunnel_door"
+	"$surfaceprop"	"default"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[1 1 1]"
+	"$translucent" "1"
+
+}

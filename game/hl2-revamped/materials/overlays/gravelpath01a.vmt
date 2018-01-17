@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "overlays/gravelpath01a"
+	"$translucent" 1
+	"$decal" 1
+	"$surfaceprop" "gravel"
+	"%keywords" "coastline wasteland"
+	$vertexalpha 1
+}

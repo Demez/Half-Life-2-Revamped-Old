@@ -1,0 +1,13 @@
+"floatcombine_autoexpose"
+{
+	"$basetexture" "_rt_FullFrameFB"
+	"$bloomtexture" "_rt_SmallHDR0"
+	"$exposure_texture" "_rt_TeenyFB0"
+	"$edge_softness" "0"
+	"$sharpness" "1.0"
+	"$woodcut" "0.00"
+    "$bloomexponent" "3"
+	"$vignette_min_bright" "1"
+	"$ignorez" 1
+	"$nocull" 1
+}

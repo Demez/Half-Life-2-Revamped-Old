@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_junk/glass_objects01"
+	"$envmapmask" "Models/props_junk/glass_objects01_m"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[.9 .8 .7]"
+	"$translucent" 1
+}

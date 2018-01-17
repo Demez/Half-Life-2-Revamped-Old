@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/props_radiostation/radio_antenna01_alpha"
+	"$alphatest" 1
+//	"$nocull" 1	
+//	"$translucent" 1
+	"$model" 1
+}

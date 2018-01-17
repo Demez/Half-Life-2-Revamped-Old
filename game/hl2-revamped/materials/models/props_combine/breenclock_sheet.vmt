@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_combine/breenclock_sheet"
+	"$surfaceprop" "wood"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ 1 1 .6]"
+	"$basealphaenvmapmask" 1
+}

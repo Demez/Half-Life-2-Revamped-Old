@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/props_c17/cashregister01a"
+	"$nocull" 1
+	"$translucent" 1
+
+}

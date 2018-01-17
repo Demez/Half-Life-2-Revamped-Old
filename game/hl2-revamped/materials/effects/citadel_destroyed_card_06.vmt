@@ -1,0 +1,7 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"effects/citadel_destroyed_card_06"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+	"srgb?$alpha" ".9"
+}

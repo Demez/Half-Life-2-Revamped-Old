@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Building_Template/Building_Trainstation_Truss_Template001b"
+	"$surfaceprop" "metal"
+	"$alphatest" 1
+	"%compilepassbullets" 1
+}

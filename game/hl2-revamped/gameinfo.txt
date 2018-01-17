@@ -21,7 +21,7 @@
 			// Default ("./") path for ASW is "/steamapps/common/Alien Swarm", so we can easily go up and mount SFM content
 
 			// TODO: Remove need for SFM
-			"Game"	"D:\SteamLibrary\steamapps\common\SourceFilmmaker/game/hl2"			// This is workaround for hl2 and episodic content mounting
+			//"Game"	"D:\SteamLibrary\steamapps\common\SourceFilmmaker/game/hl2"			// This is workaround for hl2 and episodic content mounting
 
 			//"Game"	"../Half-Life 2/ep2"				// This is workaround for ep2 maps mounting
 			//"Game"	"../Half-Life 2/episodic"			// This is workaround for ep1 maps mounting

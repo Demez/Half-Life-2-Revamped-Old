@@ -1,0 +1,12 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/smallcliff"
+	"$basetexture2" "nature/sandfloor010a"
+	"%tooltexture" "nature/blendcliffsand01a_tooltexture"
+	"%keywords" "wasteland"
+	"$surfaceprop" "dirt"
+	"$surfaceprop2" "dirt"
+//	"$blendmodulatetexture" "nature/rockblendtexture001a"
+	"%detailtype" "swamp_land_001"
+}
+

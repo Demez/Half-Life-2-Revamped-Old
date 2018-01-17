@@ -1,0 +1,13 @@
+"vertexlitgeneric"
+{
+	"$baseTexture" "Models/Weapons/V_smg1/v_smg1_sheet"
+	"$bumpmap" "models/weapons/v_smg1/smg1_normal"
+
+// -- From here down is new stuff which will only be applied if $phong is set to 1 --
+	"$phong" "1"
+	"$phongexponent" "45"
+	"$phongboost"	"2"
+	"$phongfresnelranges"	"[.2 4 1]"
+
+	"360?$color2" "[ 0.4 0.4 0.4 ]"
+}

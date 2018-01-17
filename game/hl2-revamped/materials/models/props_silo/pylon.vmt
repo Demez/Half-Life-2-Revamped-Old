@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\props_silo/pylon"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_silo/pylon_ref"
+}

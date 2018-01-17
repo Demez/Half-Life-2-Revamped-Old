@@ -1,0 +1,41 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "shadertest/LightmappedTexture"
+	"$detail" "shadertest/shadertestdetail"
+	"$detailscale" 10
+	"$halfwidth" 0.1
+	"$mean" 0.6
+	"$one" 1
+
+	"$noisechoice" 0
+
+	"Proxies"
+	{
+		"GaussianNoise"
+		{
+			"resultVar" "$noisechoice"
+			"halfwidthVar" "$halfwidth"
+			"meanVar" "$mean"
+		}
+
+//		"GaussianNoise"
+//		{
+//			"resultVar" "$bignoise"
+//			"halfwidthVar" "$halfwidth"
+//			"meanVar" "$mean"
+//		}
+
+		"GaussianNoise"
+		{
+			"resultVar" "$temp"
+			"halfwidthVar" "$halfwidth"
+			"meanVar" "$mean"
+		}
+
+		"LessOrEqual"
+		{
+			"srcVar1"	"$compare"
+			"srcVar2"	"$one"
+		}
+	}
+}

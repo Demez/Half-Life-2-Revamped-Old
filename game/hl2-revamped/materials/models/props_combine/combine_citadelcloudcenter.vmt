@@ -1,0 +1,23 @@
+"VolumeClouds"
+{
+	// Large shell
+	"$basetexture" "Models/props_combine/combine_citadelcloudcenter_inner"
+	"$basetexture2" "Models/props_combine/combine_citadelcloudcenter_middle"
+	"$basetexture3" "Models/props_combine/combine_citadelcloudcenter_outer"
+
+	"%keywords" "combine"
+	
+	//"$basetexture" "Models/props_combine/cit_cloud001c"
+	"$nofog" "1"
+	"$model" "1"
+	"$translucent" "1"
+
+	"$time" "0.0"
+	"Proxies"
+	{
+		"CurrentTime"
+		{
+			"resultVar" "$time"
+		}
+	}
+}

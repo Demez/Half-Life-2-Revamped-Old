@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_mining/railroad_spike01"
+	"$surfaceprop"	"metal"
+}

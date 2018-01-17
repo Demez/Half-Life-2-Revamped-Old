@@ -1,0 +1,13 @@
+
+"VertexLitGeneric"
+{
+	"$basetexture"	"models\props_trainstation\wrecked_train_divider"
+	"$bumpmap"	      "models\props_trainstation\wrecked_train_divider_normal"
+	"$phong" "1" //this turns on the phong effect
+	"$phongboost" "3" //use this to increase/decrease the highlight intensity 
+	"$phongfresnelranges" "[.3 .5 1]" 
+	"$phongexponent"   "10"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "{ 89 89 89 }"
+	"$normalmapalphaenvmapmask" "1"
+}

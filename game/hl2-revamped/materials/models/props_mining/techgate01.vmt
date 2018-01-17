@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_mining/techgate01"
+	"$bumpmap" "Models/props_mining/techgate01_normal"
+	
+
+	"$surfaceprop"	"metal"
+	"$phong" "1" //this turns on the phong effect 
+	"$phongexponent" "40" //change this number to make the specular highlight bigger or smaller (larger numbers give you a smaller highlight) 
+	"$phongboost" ".5" //use this to increase/decrease the highlight intensity 
+	"$phongfresnelranges" "[2 2 25]" //this are the highlight intensities at different incidence angles from the camera (first value is perpendicular to the camera and the 3rd value is away from the camera) 
+	//"$halflambert" "1"
+
+}

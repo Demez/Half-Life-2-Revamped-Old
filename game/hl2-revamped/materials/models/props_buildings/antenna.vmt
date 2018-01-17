@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$color"				"[1 1 1]"
+	"$baseTexture"			"models/props_buildings/antenna"
+	"$translucent"			1
+	"$alpha"				1
+}

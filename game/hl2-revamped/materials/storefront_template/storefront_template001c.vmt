@@ -1,0 +1,17 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Storefront_Template/Storefront_Template001c"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "Storefront_Template/Storefront_Template001c_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .5 .5 .5 ]"
+
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "7.283"
+	"$detailblendfactor" .65
+	"$detailblendmode" "0"
+}

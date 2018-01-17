@@ -1,0 +1,20 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/Combine_Room/combine_monitor001"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .35 .35 .35]"
+	"$envmapmask" "models/Combine_Camera/combine_camera001_mask"
+	"$selfillum" 1
+
+	//"$baseTexture"	"models/combine_apc/apc01blue"
+	//"$surfaceprop" "metal"
+	//"$bumpmap" "models/Combine_Room/combine_monitor001_normal"
+	//"$envmap" "env_cubemap"
+	//"$normalmapalphaenvmapmask" 1
+	//"$envmapcontrast" 1
+	//"$envmapsaturation" 1
+	//"$envmaptint" "[ .75 .9 1]"
+
+}
+

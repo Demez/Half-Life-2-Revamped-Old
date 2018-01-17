@@ -1,0 +1,12 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "glass/combinepodglass001a"
+	"$envmap" "env_cubemap"
+	"$surfaceprop" "metal"
+	"%keywords" "c17industrial"
+	"$translucent" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .5 .5 .75]"
+	"$nodecal" 1
+}

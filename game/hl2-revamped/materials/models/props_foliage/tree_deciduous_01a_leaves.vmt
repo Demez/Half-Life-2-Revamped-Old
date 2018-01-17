@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	// Original shader: BaseTextureAlphaBlend
+	"$alphatest" 1
+	"$basetexture" "models/props_foliage/tree_deciduous_01a_leaves"
+	"$model" 1
+	"$nocull" 1
+	"$nodecal" 1
+}
+

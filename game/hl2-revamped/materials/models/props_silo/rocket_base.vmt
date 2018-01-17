@@ -1,0 +1,15 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_silo/rocket_base"
+	
+	"$basemapalphaphongmask" "1"
+
+	"$phong" "1" //this turns on the phong effect
+//	"$phongalbedotint" "1"
+	"$phongexponenttexture" "Models/props_silo/rocket_base_exponent"
+//	"$phongexponent" "10" //change this number to make the specular highlight bigger or smaller (larger numbers give you a smaller highlight)
+	"$phongboost" ".4" //use this to increase/decrease the highlight intensity 
+	"$phongfresnelranges" "[1 7 75]" 
+
+}
+

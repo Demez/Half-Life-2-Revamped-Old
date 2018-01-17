@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"effects/citadel_sky_card_01"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+	"$nofog" 1
+	$ignorez 1
+}

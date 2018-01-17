@@ -1,0 +1,14 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Metal/metalcombine001"
+	"$surfaceprop" "metal"
+	"%keywords" "combine"
+	"$bumpmap" "Metal/metalcombine001_normal"
+	"$nodiffusebumplighting" 1
+	"$envmaptint" "[ .56 .67 .75 ]"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+}

@@ -1,0 +1,19 @@
+"Refract"
+{
+	"Refract_DX60"
+	{
+		"$fallbackmaterial" "models/props_wasteland/lighthouse_fresnel_light_dx60"
+	}
+
+ 	"$model" 1
+	"$bluramount" 1
+ 	"$surfaceprop" "glass"
+	"$refractamount" "2"
+	//"$REFRACTTINT" "{230 240 250}"
+	"$REFRACTTINT" "{245 232 180}"
+	"$scale" "[1 1]"
+ 	"$dudvmap" "models/props_wasteland\lighthouse_fresnel_light_dudv"
+	"$normalmap" "models/props_wasteland\lighthouse_fresnel_light_normal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[.3 .4 .4]"
+}

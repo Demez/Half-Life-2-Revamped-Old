@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models\props_trainstation\wrecked_train_seat"
+	"$bumpmap"	   "models\props_trainstation\wrecked_train_seat_normal"
+
+	"$phong" "1" //this turns on the phong effect
+	"$phongexponent"  "8"
+	"$phongboost" "0.2" //use this to increase/decrease the highlight intensity 
+	"$phongfresnelranges" "[.1 .5 1]" //this are the highlight intensities at different incidence angles from the camera (first value is perpendicular to the camera and the 3rd value is away from the camera)	
+
+	// To compensate for srgb 0 in txt file
+	"360?$color2" "[ 0.64 0.64 0.71 ]"
+}

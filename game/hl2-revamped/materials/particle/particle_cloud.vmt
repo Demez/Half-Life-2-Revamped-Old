@@ -1,0 +1,8 @@
+"spritecard"
+{
+
+	"$basetexture" "Models/props_combine/cit_cloud001b"
+	"$nofog" "1"
+	"$translucent" "1"
+	$nocull 1
+}

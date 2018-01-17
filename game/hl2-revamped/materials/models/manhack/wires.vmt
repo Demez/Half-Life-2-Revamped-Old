@@ -1,0 +1,17 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitSelfIlluminatedTexture
+	"$basetexture" "models/manhack/manhack_sheet"
+	"$selfillum" 1
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" 1.3
+			"texturescrollangle" 90
+		}
+	}
+
+
+}

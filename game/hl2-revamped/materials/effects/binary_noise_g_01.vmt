@@ -1,0 +1,51 @@
+"UnlitTwoTexture"
+{
+	"$basetexture" "effects/binary_noise_G_01"
+	"$surfaceprop" "glass"
+	"$translucent" 1
+	"$texture2"	"models/props_combine/combinescanline"
+//	"$selfillum" "1"
+//	"$mod2x" "1"
+	"$additive" "1"
+
+	"Proxies"
+	{
+
+		"Sine"
+		{
+			"resultVar" "$color[0]"
+			"sineperiod" .1
+			"sinemin" .98
+			"sinemax" 1
+		}
+		"Sine"
+		{
+			"resultVar" "$color[1]"
+			"sineperiod" .1
+			"sinemin" .98
+			"sinemax" 1
+		}
+		"Sine"
+		{
+			"resultVar" "$color[2]"
+			"sineperiod" .1
+			"sinemin" .99
+			"sinemax" 1
+		}
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" 1
+			"texturescrollangle" -90
+		}
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" 0.5
+			"texturescrollangle" 90
+		}
+	}
+
+}

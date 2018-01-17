@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Nature/gravelfloor004a"
+	"$surfaceprop" "dirt"
+
+	"LightmappedGeneric_DX9"
+ 	{
+		"$bumpmap" "Nature/gravelfloor004a_normal"
+	}
+}

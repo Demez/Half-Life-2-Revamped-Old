@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_lab/power_cable001"
+	"$surfaceprop"	"flesh"
+}

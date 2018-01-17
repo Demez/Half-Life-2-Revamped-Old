@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"effects/fake_smoke01"
+	"$surfaceprop"	"default"
+	"$translucent"	1
+}

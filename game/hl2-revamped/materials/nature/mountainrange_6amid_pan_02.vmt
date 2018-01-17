@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"nature/mountainrange_6amid_pan_02"
+	"$surfaceprop"	"no_decal"
+	"$translucent"	1
+	"$nofog" 1
+	$ignorez 1
+}

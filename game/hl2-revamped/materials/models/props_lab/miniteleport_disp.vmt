@@ -1,0 +1,15 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_lab/miniteleport_disp"
+	"$selfillum" "1"
+	"$model" 1
+	"Proxies"
+	{
+
+		"MaterialModify"
+		{
+			// fixme!  This has to be here, or material loading barfs.
+			"dummy" 0
+		}
+	}
+}

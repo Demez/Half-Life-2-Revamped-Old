@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"effects/flatgray_01"
+	"$surfaceprop"	"default_silent"
+}

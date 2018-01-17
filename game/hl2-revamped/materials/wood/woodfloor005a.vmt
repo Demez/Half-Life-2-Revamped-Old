@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Wood/woodfloor005a"
+	"$surfaceprop" "wood"
+	"%keywords" "c17skyscraper"
+	"$bumpmap" "Wood/woodfloor005a_normal"
+	"$parallaxmap" "Wood/woodfloor005a_height"
+	"$parallaxmapscale" ".02"
+}

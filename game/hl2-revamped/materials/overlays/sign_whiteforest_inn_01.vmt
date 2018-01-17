@@ -1,0 +1,8 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"overlays/sign_whiteforest_inn_01"
+	"$surfaceprop"	"rock"
+	"$translucent"	1
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+}

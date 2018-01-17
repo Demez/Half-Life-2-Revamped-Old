@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_c17/awning001d"
+	"$surfaceprop" "metal"
+	"$nocull" 1
+}

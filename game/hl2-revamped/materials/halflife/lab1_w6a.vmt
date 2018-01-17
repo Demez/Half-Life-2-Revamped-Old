@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmap
+	"$basetexture" "halflife/lab1_w6a"
+}

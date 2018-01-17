@@ -1,0 +1,13 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "overlays/rationpapers04"
+	"$translucent" 1
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+	"$decal" 1
+	"$decalscale" "0.250"
+	"$surfaceprop" "paper"
+	"%keywords" "dod"
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+}

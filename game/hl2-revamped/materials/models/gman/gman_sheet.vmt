@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/Gman/gman_sheet"
+	"$halflambert" 1
+	"$bumpmap" "models/gman/gman_sheet_normal"
+
+	// Original shader: VertexLitTexture
+	"$phong" "1"
+	"$phongboost" "4"
+	"$phongexponent" "10"
+	"$phongexponenttexture" "models/gman/gman_sheet_phong"
+	"$phongalbedotint" "1"										
+	"$phongfresnelranges"	"[.01 .4 1]"
+}

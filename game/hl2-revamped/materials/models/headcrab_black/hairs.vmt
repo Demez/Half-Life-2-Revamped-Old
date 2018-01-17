@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/Headcrab_black/hairs"
+	"$translucent" 1
+	"$nocull" 1
+	"$nodecal" 1
+	"$clamps" 1
+	"$clampt" 1
+}

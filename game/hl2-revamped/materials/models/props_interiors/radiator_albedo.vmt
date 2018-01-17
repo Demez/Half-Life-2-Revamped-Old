@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_interiors/radiator_albedo"
+	"$surfaceprop"	"Metal"
+	"$bumpmap"	"Models/props_interiors/radiator_normal"
+	"$model" "1"
+	"$phong" "1"
+	"$phongboost" "5"
+	"$phongexponenttexture" "Models/props_interiors/radiator_phong"
+//	"$phongalbedotint" "1"								
+	"$phongfresnelranges"	"[.5 .8 1]"
+}
+

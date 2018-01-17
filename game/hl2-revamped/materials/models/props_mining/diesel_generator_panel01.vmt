@@ -1,0 +1,22 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_mining/diesel_generator_panel"
+
+
+	"$surfaceprop" "metal"
+	"$selfillum" "1"
+
+	"Proxies"
+	{
+
+
+		"MaterialModifyAnimated"
+//		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedtextureframerate" 15
+		}
+
+	}
+}

@@ -1,0 +1,14 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "nature\Cliff01a"
+	//test// "$baseTexture" "dev\reflectivity_50"
+	"$bumpmap" "nature\Cliff01a-ssbump"
+	"$ssbump" "1"
+	"$surfaceprop" "concrete"
+	"$detail" "detail\rock_detail_01"
+	"$detailscale" "8"
+	"$detailblendfactor" 1
+	"$detailblendmode" 0
+}
+
+

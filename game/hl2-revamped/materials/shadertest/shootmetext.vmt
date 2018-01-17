@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "shadertest/shootmetext"
+	"$surfaceprop"  "metal"
+	"$leakamount"  5
+	"$leakcolor"  "[0.5 1.0 0.5]"
+	"$leaknoise"  0;
+	"$leakforce"  10
+}

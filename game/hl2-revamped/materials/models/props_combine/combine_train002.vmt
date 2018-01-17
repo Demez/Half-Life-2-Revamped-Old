@@ -1,0 +1,26 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+
+	//"$basetexture" "Models/props_combine/Combine_Train002"
+	//"$surfaceprop" "metal"
+	//"%keywords" "combine"
+	//"$bumpmap" "Metal/metalwall077a_normal"
+	//"$envmaptint" "[ .56 .56 .56 ]"
+	//"$envmap" "env_cubemap"
+	//"$normalmapalphaenvmapmask" 1
+	//"$envmapcontrast" 1
+	//"$envmapsaturation" 1
+
+	
+	"$basetexture" "Models/props_combine/Combine_Train002"
+	"$surfaceprop" "metal"
+	"$bumpmap" "models/props_combine/Combine_Train002_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .56 .67 .75 ]"
+
+
+}

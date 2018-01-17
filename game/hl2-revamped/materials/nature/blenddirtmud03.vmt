@@ -1,0 +1,9 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/forest_dirt_02"
+	"$basetexture2" "nature/forest_dirt_02"
+	"$surfaceprop" "dirt"
+	"$blendmodulatetexture" "nature/blendtexture01"
+	"%detailtype" "canal_reeds"
+	
+}

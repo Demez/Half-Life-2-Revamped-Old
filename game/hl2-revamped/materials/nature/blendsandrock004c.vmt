@@ -1,0 +1,13 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/sandfloor009a"
+	"$basetexture2" "nature/rockfloor002a"
+	"%tooltexture" "nature/blendsandrock004a_tooltexture"
+	"%keywords" "coastline"
+	"$detail" "overlays/macro01a"
+	"$detailscale" .1
+	"$basetexturetransform" "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+        "$basetexturetransform2" "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+        "%detailtype" "canal_reeds"
+	"$surfaceprop" "sand"
+}

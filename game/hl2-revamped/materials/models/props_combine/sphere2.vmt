@@ -1,0 +1,21 @@
+"UnlitTwoTexture"
+{
+	"$baseTexture" "Models/props_combine/sphere_glow"
+	"$Texture2" "Models/props_combine/sphere_glow2"
+	"$nodecal" "1"
+	"$additive" "1"
+	"$no_fullbright" 1
+	"$model" "1"
+	"$nofog" "1"
+	
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" -1
+			"texturescrollangle" 0
+		}
+
+	}
+}

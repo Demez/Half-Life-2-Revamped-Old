@@ -1,0 +1,23 @@
+"Refract"
+{
+ 	"$model" 1
+ 	"$refractamount" ".065"
+ 	"$bluramount" "1"
+	"$REFRACTTINT" "{214 225 193}"
+	"$scale" "[1 1]"
+	"$dudvmap" "Models/props_c17/frostedglass_01a_normal"
+	"$normalmap" "Models/props_c17/frostedglass_01a_normal"
+	"$nocull" 1
+	"$surfaceprop" "glass"
+	"$envmap" "env_cubemap"
+	"$envmapcontrast" "1"
+	"$envmapsaturation" "[1 1 1]"
+	"$envmaptint" "[.3 .3 .3]"
+
+//	"$refracttinttexture" "Models/props_c17/door02a"
+
+	"Refract_DX60"
+	{
+		"$fallbackmaterial" "models/props_c17/frostedglass_01a_DX60"
+	}
+}

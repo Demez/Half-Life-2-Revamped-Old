@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+     "$basetexture" "models\props_c17\playground_carousel01"
+     "$surfaceprop" "metal"
+     "$envmap" "env_cubemap"	
+     "$basealphaenvmapmask" 1
+     
+}

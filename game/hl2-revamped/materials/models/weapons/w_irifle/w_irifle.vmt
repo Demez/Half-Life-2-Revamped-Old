@@ -1,0 +1,12 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	"$basetexture" "models/Weapons/W_IRifle/W_IRifle"
+	"$surfaceprop" "metal"
+	"$bumpmap" "models/Weapons/W_IRifle/W_IRifle_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .56 .67 .75 ]"
+}

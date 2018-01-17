@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\props_silo/light_wall"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_silo/light_wall_ref"
+	"$selfillum"	1
+}

@@ -1,0 +1,5 @@
+"DebugModifyVertex"
+{
+	"$basetexture" "shadertest/DebugModifyVertex"
+	"$wave" 10.00
+}

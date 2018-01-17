@@ -1,0 +1,22 @@
+"VertexLitGeneric"
+{
+
+	//"$basetexture" "Models/props_combine/Combine_Train002"
+	//"$surfaceprop" "metal"
+	//"%keywords" "combine"
+	//"$bumpmap" "Metal/metalwall077a_normal"
+	//"$envmaptint" "[ 0.75 0.75 .75 ]"
+	//"$envmap" "env_cubemap"
+	//"$normalmapalphaenvmapmask" 1
+	//"$envmapcontrast" 1
+	//"$envmapsaturation" 1
+
+	"$basetexture" "Models/props_combine/CombineThumper001"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .5 .5 .5]"
+	"$envmapmask" "Models/props_combine/CombineThumper001_mask"
+	"$selfillum" 1
+}
+
+

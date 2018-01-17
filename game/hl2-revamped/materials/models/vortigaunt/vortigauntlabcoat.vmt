@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/Kleiner/kleiner_sheet"
+	"$surfaceprop"	"default"
+	"$nocull" "1"
+	"$halflambert" "1"
+	"$model" 1
+}

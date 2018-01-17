@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "models/Gibs/furniture_gibs/FurnitureWoodDrawers001a"
+}

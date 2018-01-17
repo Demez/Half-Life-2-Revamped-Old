@@ -1,0 +1,12 @@
+"LightmappedGeneric"
+{
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+	// Original shader: DecalBaseTimesLightmapAlphaBlend
+// Uncomment this if you add an alpha channel to the base texture
+//	"$translucent" 1
+	"$basetexture" "Decals/decalmetalgrate019a"
+	"$decal" 1
+	"$decalscale" 0.25
+	"%keywords" "c17downtown"
+}

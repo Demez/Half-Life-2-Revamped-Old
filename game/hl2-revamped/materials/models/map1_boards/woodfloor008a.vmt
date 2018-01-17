@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/map1_boards/woodfloor008a"
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "11.740"
+	"$detailblendfactor" .7
+	"$detailblendmode" 0
+	"$color2" "[.75 .75 .75]"
+	
+}

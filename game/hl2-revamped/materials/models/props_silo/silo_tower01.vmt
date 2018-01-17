@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_silo/silo_tower01"
+	"$surfaceprop"	"default"
+	"$model"	1
+}

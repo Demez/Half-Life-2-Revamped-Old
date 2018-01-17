@@ -1,0 +1,12 @@
+"LightmappedGeneric"
+{
+	"$bumpmap" "concrete/concretefloor012a_normal"
+	"$basetexture" "Concrete/concretefloor012a"
+	"$surfaceprop" "concrete"
+	
+        "$detail" "detail\noise_detail_01"
+	"$detailscale" "7.345"
+	"$detailblendfactor" .6
+	"$detailblendmode" 0
+	"%keywords" "skyscraper"
+}

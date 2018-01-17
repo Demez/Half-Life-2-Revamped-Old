@@ -2,16 +2,18 @@ $Project "client"
 {
 	"game\client\client_reactivedrop.vpc"		[$REACTIVEDROP]
 	"game\client\client_swarm.vpc"				[$SWARM]
-	"game\client\client_hl2.vpc"				[$HL2] //[($WIN32||$X360||$POSIX) && $HL2]
-	"game\client\client_episodic.vpc"			[$EPISODIC] //[($WIN32||$X360||$POSIX) && $EPISODIC]
+	"game\client\client_hl2.vpc"				[$HL2]
+	"game\client\client_hl2_deferred.vpc"		[$HL2DEFERRED]
+	"game\client\client_episodic.vpc"			[$EPISODIC]
 }
 
 $Project "server"
 {	
 	"game\server\server_reactivedrop.vpc"		[$REACTIVEDROP]
 	"game\server\server_swarm.vpc"				[$SWARM]
-	"game\server\server_hl2.vpc"				[$HL2] //[($WIN32||$X360||$POSIX) && $HL2]
-	"game\server\server_episodic.vpc"			[$EPISODIC] //[($WIN32||$X360||$POSIX) && $EPISODIC]
+	"game\server\server_hl2.vpc"				[$HL2]
+	"game\server\server_hl2_deferred.vpc"		[$HL2DEFERRED]
+	"game\server\server_episodic.vpc"			[$EPISODIC]
 }
 
 $Project "missionchooser"
@@ -21,12 +23,12 @@ $Project "missionchooser"
 
 $Project "shaderlib"
 {
-	"materialsystem\shaderlib\shaderlib.vpc"
+	//"materialsystem\shaderlib\shaderlib.vpc"
 }
 
 $Project "game_shader_dx9"
 {
 	//"materialsystem\stdshaders\game_shader_dx9_base.vpc"
-	"materialsystem\stdshaders\game_shader_dx9_hl2.vpc" 			[$HL2]
-	//"materialsystem\stdshaders\game_shader_dx9_episodic.vpc"  	[$EPISODIC]
+	"materialsystem\stdshaders\game_shader_dx9_hl2.vpc" 				[$HL2]
+	"materialsystem\deferredshaders\game_shader_generic_deferred.vpc"	[$HL2DEFERRED]
 }

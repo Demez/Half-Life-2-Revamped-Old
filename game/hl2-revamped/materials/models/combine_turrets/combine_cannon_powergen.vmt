@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/combine_turrets/combine_cannon_powergen"	
+
+	"$selfillum" "1"
+
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .35 .35 .35]"
+	"$envmapmask" "Models/combine_turrets/combine_cannon_powergen_mask"
+}

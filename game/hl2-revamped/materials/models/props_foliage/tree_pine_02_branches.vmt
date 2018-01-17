@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$alphatest" 1
+	"$basetexture" "models/props_foliage/tree_pine_02_branches"
+//	"$bumpmap" "models/props_foliage/tree_pine_02_branches_normal"
+	"$model" 1
+	"$nocull" 1
+}
+

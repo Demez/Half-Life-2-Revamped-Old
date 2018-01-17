@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "overlays/puddle001a"
+	"$envmap" "env_cubemap"
+//	"$envmapmask" "overlays/puddle001a_m"	
+	"$translucent" 1
+	"$decal" 1
+	"$surfaceprop" "gravel"
+	"%keywords" "coastline wasteland"
+	$vertexalpha 1
+}

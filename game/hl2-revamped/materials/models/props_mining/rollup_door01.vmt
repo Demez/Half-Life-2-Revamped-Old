@@ -1,0 +1,15 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_mining/rollup_door01"
+	"$envmap"  "env_cubemap"
+	"$basealphaenvmapmask" 1
+	"$envmaptint" "[.25 .25 .25 ]"
+
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "4.283"
+	"$detailblendfactor" .8
+	"$detailblendmode" "0"
+
+}
+
+

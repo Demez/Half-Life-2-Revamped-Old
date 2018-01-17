@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/Magnusson_teleporter/magnusson_teleporter_off"
+	"$bumpmap"	"Models/Magnusson_teleporter/magnusson_teleporter_normal"
+	"$surfaceprop"	"Metal"
+	"$model" "1"
+	"$phong" "1"
+	"$phongboost" "2"
+	"$phongexponenttexture" "Models/Magnusson_teleporter/magnusson_teleporter_phong"
+	"$phongalbedotint" "1"								
+	"$phongfresnelranges"	"[.5 1 2]"
+
+}
+

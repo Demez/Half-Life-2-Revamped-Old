@@ -1,0 +1,13 @@
+"vertexlitgeneric"
+{
+ "$basetexture" "Concrete/concretefloor009a"
+ "$detail" "Concrete/concreteafloor009a"
+ "%tooltexture" "shadertest/shadertest_env"
+ $detailblendmode 2
+ $seamless_scale .5
+ $seamless_base 1
+ $seamless_detail 1
+ $detailscale 1
+ $detailblendfactor 0.1
+ 
+}

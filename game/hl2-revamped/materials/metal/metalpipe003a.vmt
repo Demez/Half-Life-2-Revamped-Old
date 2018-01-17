@@ -1,0 +1,29 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Metal/metalpipe003a"
+	"%keywords" "c17industrial"
+	"$bumpmap" "Metal/metalpipe003a_normal"
+	"$surfaceprop"  "metal"
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "4.283"
+	"$detailblendfactor" .65
+	"$detailblendmode" "0"
+
+	"$envmaptint" "[ .5 .5 .5 ]"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	
+	
+  "LightmappedGeneric_HDR_dx9"
+  {
+    "$envmaptint" "[.1 .1 .1]"
+  }
+
+ "LightmappedGeneric_DX9"
+  {
+    "$envmaptint" "[.1 .1 .1]"
+  }
+}

@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" 	"Dev/dev_measureice01"
+	"$surfaceprop" 	"gravel"
+}

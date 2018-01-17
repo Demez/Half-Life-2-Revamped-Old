@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/props_c17/consolebox05a"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+ 	"$basealphaenvmapmask" 1
+	"$envmaptint" "[ .75 .75 .75]"
+}
+

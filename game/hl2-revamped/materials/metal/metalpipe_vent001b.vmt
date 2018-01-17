@@ -1,0 +1,8 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"metal/metalpipe_vent001b"
+	"$surfaceprop"	"metal"
+	"$envmap"	"env_cubemap"
+	"$basealphaenvmapmask" 1
+	"$envmaptint" "[ 0.05 0.05 0.05 ]"
+}

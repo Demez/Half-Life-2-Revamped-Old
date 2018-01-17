@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_mining/stalactite_rock01"
+	"$surfaceprop"	"rock"
+	"$bumpmap"	"Models/props_mining/stalactite_rock01_normal"
+}

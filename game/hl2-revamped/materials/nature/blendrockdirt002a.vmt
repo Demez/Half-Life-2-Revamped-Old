@@ -1,0 +1,9 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/rockwall011d"
+	"$basetexture2" "nature/dirtfloor004a"
+	"%tooltexture" "nature/blendrockdirt002a_tooltexture"
+	"%keywords" "wasteland"
+	"$surfaceprop" "dirt"
+	"$bumpmap" "Nature/rockwall011d_normal"
+}

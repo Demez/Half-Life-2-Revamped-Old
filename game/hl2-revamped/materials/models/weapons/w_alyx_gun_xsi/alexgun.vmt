@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/Weapons/W_Alyx_Gun_XSI/alexgun"
+	"$envmap" "env_cubemap"
+	"$envmapcontrast" 1
+	"$basealphaenvmapmask" 1
+}

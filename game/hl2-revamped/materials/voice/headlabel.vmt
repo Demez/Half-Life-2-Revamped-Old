@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	// Original shader: BaseTexture
+	"$2basetexture" "voice/speaker4"
+	"$basetexture" "debug/debug_white"
+}

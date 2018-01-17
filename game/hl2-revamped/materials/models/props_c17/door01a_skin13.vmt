@@ -1,0 +1,15 @@
+"vertexlitGeneric"
+{
+	// Original shader: BaseTexture
+	"$basetexture" "models/props_c17/door01a_skin13"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$basealphaenvmapmask" 1
+
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "6.545"
+	"$detailblendfactor" .4
+	"$detailblendmode" 0
+}
+
+

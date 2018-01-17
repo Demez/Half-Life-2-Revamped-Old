@@ -1,0 +1,17 @@
+"cloud"
+{
+	"$basetexture" "shadertest/jet_scroll"
+	"$cloudalphatexture" "shadertest/jet_mask"
+	"$cloudscale" "[ 2.00 2.00 2.00 ]"
+	"$maskscale" "[ 1.00 1.00 1.00 ]"
+	"%tooltexture" "shadertest/jet_scroll"
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$baseTextureTransform"
+			"texturescrollrate" 2
+			"texturescrollangle" 80.00
+		}
+	}
+}

@@ -1,0 +1,12 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "Models/props_wasteland/prisonkitchen02"
+	"$basealphaenvmapmask" 1
+//	"$envmap" "Environment Maps/kitchen"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[.35 .33 .35]"
+//	"$envmapsaturation" ".4"
+	"$envmapcontrast" "1"
+	"$envmapmode" "1"
+}

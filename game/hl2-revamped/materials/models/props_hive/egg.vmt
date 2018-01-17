@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_hive/egg"
+	"$bumpmap" "models/props_hive/egg_normal"
+	"$surfaceprop"	"alienflesh"
+	"$selfillum"	1
+// -- From here down is new stuff which will only be applied if $phong is set to 1 --
+	"$phong" "1"
+//	"$ambientocclusiontexture" "models/alyx/alyx_occlusion"
+	"$phongexponent" 33
+//	"$phongexponenttexture" "models/Alyx/alyx_head_exponent"
+	"$phongboost"	"6"
+	"$phongfresnelranges"	"[0.3 0.5 1]"
+}

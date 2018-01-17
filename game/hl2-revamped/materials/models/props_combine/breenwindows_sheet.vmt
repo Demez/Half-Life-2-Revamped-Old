@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_combine/breenwindows_sheet"
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+//	"$envmaptint" "[ .5 .6 .8]"
+	"$basealphaenvmapmask" 1
+}

@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\props_foliage/hedgesnow_128"
+	"$alphatest" 1
+	"$model" 1
+	"$nocull" 1
+	"$nodecal" 1
+
+}

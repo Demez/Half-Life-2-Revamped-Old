@@ -1,0 +1,33 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Metal/metalwall072a"
+	"$surfaceprop"  "metal"
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "4.283"
+	"$detailblendfactor" .8
+	"$detailblendmode" "0"
+
+	"%keywords" "combine"
+	"$bumpmap" "Metal/metalwall072a_normal"
+	//"$nodiffusebumplighting" 1
+	"$envmaptint" "[ .56 .56 .75 ]"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+//	"$parallaxmap" "Metal/metalwall072a_height"
+//	"$parallaxmapscale" ".05"
+
+	"LightmappedGeneric_HDR_DX9"
+	{
+		"$envmaptint" "[ .09 .1 .12]"	
+	}
+
+	"LightmappedGeneric_DX9"
+	{
+		"$envmaptint" "[ .09 .1 .12]"	
+	}
+}
+
+

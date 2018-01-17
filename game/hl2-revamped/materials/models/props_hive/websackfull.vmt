@@ -1,0 +1,17 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_hive/webSackFull"
+	"$bumpmap"	"Models/props_hive/webSackFull_normal"
+	"$surfaceprop"	"antlion_eggshell"
+	"$translucent"	"1"
+	"$nocull" "1"
+	"$envmap" "cubemaps/cubemap_cave01"
+	"$envmaptint" "[.8 .8 .8]"
+	"$halflambert" 1
+	
+	"VertexLitGeneric_dx8"
+	{
+	"$fallbackmaterial" "models\props_hive\websackFull_dx8"
+	}
+
+}

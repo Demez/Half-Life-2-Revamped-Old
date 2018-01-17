@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$color"				"[1 1 1]"
+	"$baseTexture"			"models/props_buildings/industrial"
+	"$selfIllum"			0
+	//"$translucent"			1
+	"$alphatest"			1
+}

@@ -1,0 +1,38 @@
+"UnlitTwoTexture"
+{
+	"$basetexture" "models/props_lab/cornerunit_cloud"
+//	"$basetexture" "Effects/tp_eyefx/tp2eyefx"
+	"$texture2" "models/props_lab/cornerunit_cloud"
+	"$selfillum" "1"
+	"$model" "1"
+	"$mod2x" "1"
+
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" .2
+			"texturescrollangle" 0
+		}
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" .1
+			"texturescrollangle" 11
+		}
+
+//		"AnimatedTexture"
+//		{
+//			"animatedtexturevar" "$basetexture"
+//			"animatedtextureframenumvar" "$frame"
+//			"animatedtextureframerate" 20
+//		}
+//	}
+
+
+	}
+
+
+}

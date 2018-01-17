@@ -1,0 +1,19 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/rockwall_cave01a"
+	"$basetexture2" "tools/toolsblack"
+	"%tooltexture" "nature/blendgrassgravel001a_tooltexture"
+	"$bumpmap" "Nature/rockwall015a_normal"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .56 .56 .56 ]"
+	"$envmap" "env_cubemap"
+	"$bumpmap2" "Nature/flat_normal"
+	"%keywords" "outland"
+	"$surfaceprop" "rock"
+	"$surfaceprop2" "rock"
+//	"$blendmodulatetexture" "nature/rockblendtexture001a"
+
+}
+

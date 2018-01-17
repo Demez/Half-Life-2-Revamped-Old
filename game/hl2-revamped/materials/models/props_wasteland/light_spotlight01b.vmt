@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_wasteland/light_spotlight01b"
+	"$surfaceprop" "glass"
+}
+
+

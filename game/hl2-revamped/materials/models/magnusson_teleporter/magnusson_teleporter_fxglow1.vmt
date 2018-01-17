@@ -1,0 +1,19 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/Magnusson_teleporter/magnusson_teleporter_fxglow1"
+	"$surfaceprop"	"Metal"
+	"$model" "1"
+	"$selfillum" 1
+	
+	"Proxies"
+	{
+		"Sine"
+		{
+			"resultVar"	"$selfillumtint"
+			"sineperiod"	4
+			"sinemin"	0
+			"sinemax"	1
+		}
+	}
+}
+

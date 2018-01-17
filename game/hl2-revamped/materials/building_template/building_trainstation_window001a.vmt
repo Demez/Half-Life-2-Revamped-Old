@@ -1,0 +1,13 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Building_Template/Building_Trainstation_Window001a"
+	"$surfaceprop" "glass"
+	"$translucent" 1
+	"$envmapmask" "Building_Template/Building_Trainstation_Window001a_mask"
+	"$envmaptint" "[ 0.5 0.5 0.5 ]"
+	"LightmappedGeneric_DX8"
+	{
+		"$envmaptint" "[.15 .15 .15]"
+	} 
+	"$envmap" "env_cubemap"
+}

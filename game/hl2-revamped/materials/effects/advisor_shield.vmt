@@ -1,0 +1,13 @@
+"LightmappedGeneric"
+{
+//	"$basetexture" "Effects/Combineshield/comshieldwall"
+//	"$texture2" "Effects/Combineshield/comshieldwall_close"
+//	"$texture2" "Effects/Combineshield/comshieldwall"
+	"$basetexture"	"Effects/advisor_shield"
+
+	"$translucent" "1"
+	"$surfaceprop" "advisor_shield"
+	"$nodecal" "1"
+	"$additive" "1"
+//	"$mod2x" "1"
+}

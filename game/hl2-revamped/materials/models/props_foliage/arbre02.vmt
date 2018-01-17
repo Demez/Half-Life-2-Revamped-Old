@@ -1,0 +1,12 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\props_foliage\arbre02"
+
+	"$AlphaTest" "1"
+	"$AlphaTestReference" "0.5"
+
+	"$nocull" 1	
+	"$model" 1
+
+	"$FlashlightNoLambert" "1"
+}

@@ -1,0 +1,24 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Plaster/plasterwallpaper001a"
+	"$surfaceprop" "plaster"
+	"%keywords" "c17downtown"
+
+	 "LightmappedGeneric_DX9"
+	{
+		"$bumpmap" "plaster/plasterwallpaper001a_normal"
+		"$envmap" "env_cubemap"
+		"$normalmapalphaenvmapmask" 1
+		"$envmapcontrast" 1
+		"$envmapsaturation" 1
+		"$envmaptint" "[ .12 .12 .12 ]"
+
+	}
+
+	"$detail" "detail\plaster_detail_01"
+	"$detailscale" "6.783"
+	"$detailblendfactor" .8
+	"$detailblendmode" "0"
+
+}

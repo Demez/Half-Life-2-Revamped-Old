@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/Combine_Scanner/scanner_sheet"
+	"$selfillum" "1"
+	"$envmapmask" "models/Combine_Scanner/scanner_mask"
+	"$envmap" "env_cubemap"
+//	"$envmapcontrast" "1"
+	"$envmapsaturation" "[.2 .1 1]"
+}

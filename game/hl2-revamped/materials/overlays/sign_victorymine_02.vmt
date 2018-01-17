@@ -1,0 +1,9 @@
+"LightMappedGeneric"
+{
+	"$basetexture"	"overlays/sign_victorymine_02"
+	"$surfaceprop"	"metal"
+	"$translucent"	1
+	"$decal"	1
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+}

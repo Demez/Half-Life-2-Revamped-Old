@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_lab/crematorcase_jar"
+	"$envmapmask" "models/props_lab/crematorcase_jarmask"
+	"$envmap" "env_cubemap"
+	"$envmapcontrast" "1"
+	"$additive" "1"
+//	"$nocull" "1"
+}

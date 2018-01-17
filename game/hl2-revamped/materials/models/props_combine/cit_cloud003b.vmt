@@ -1,0 +1,14 @@
+"Modulate"
+{
+
+	"$basetexture" "Models/props_combine/cit_cloud003b"
+	"%keywords" "combine"
+	"$mod2x" "1"
+	"$model" "1"
+	"$nofog" "1"
+	"$translucent" "1"
+	"modulate_dx6"
+	{
+		"$fallbackmaterial" "models/props_combine/cit_cloud003_dx7"
+	}
+}

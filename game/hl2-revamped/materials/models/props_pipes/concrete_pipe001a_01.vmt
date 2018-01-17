@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+     "$basetexture" "models\props_pipes\concrete_pipe001a_01"
+     "$surfaceprop" "concrete"
+}

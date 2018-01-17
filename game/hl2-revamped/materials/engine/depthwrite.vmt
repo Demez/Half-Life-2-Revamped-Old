@@ -1,0 +1,14 @@
+"DepthWrite"
+{
+//	"$basetexture" "Decals/simpleshadow"
+	"$no_fullbright" 1
+	"$model" 1
+	"%noToolTexture" 1
+
+	"Proxies"
+	{		
+		"DepthWrite"
+		{
+		}
+	}
+}

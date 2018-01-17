@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/Stalker/stalker_sheet"
+	"$selfillum" 1
+	"VertexLitGeneric_DX9"
+	{
+		"$bumpmap" "models/Stalker/stalker_sheet_normal"
+	}
+}

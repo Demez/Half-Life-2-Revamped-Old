@@ -1,0 +1,6 @@
+"vertexlitGeneric"
+{
+	// Original shader: BaseTexture
+	"$basetexture" "models/ihvtest_tree/treetrunk01a"
+	"$model" 1
+}

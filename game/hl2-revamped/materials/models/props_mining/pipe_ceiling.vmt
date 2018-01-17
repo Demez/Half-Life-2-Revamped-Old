@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_mining/pipe_ceiling"
+	"$surfaceprop"	"metal"
+	"$envmap"  "env_cubemap"
+	"$basealphaenvmapmask" 1
+	"$envmaptint" "[ .5 .5 .5 ]"
+}

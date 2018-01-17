@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_foliage/forestrock_cluster02"
+//	"$bumpmap" "Models/props_foliage/forestrock_cluster02_normal"
+	"$surfaceprop"	"rock"
+	"$detail" "detail/noise_detail_01"
+	"$detailscale" "4"
+	"$detailblendfactor" .7
+	"$detailblendmode" 0
+}

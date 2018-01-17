@@ -1,0 +1,16 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "models/gman/gman_facehirez"
+	"$bumpmap" "models/gman/gmanhirez_normal"
+	"$halflambert" 1
+
+	// Original shader: VertexLitTexture
+	"$phong" "1"
+	"$phongboost" "8"
+	"$phongexponent" "10"
+	"$phongexponenttexture" "models/gman/gmanface_phong"
+	"$phongalbedotint" "1"										
+	"$phongfresnelranges"	"[.01 .4 1]"
+}
+

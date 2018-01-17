@@ -3548,7 +3548,7 @@ void C_BaseAnimating::ProcessMuzzleFlashEvent()
 		//FIXME: We should really use a named attachment for this
 		if ( m_Attachments.Count() > 0 )
 		{
-			Vector vAttachment;
+			/*Vector vAttachment;
 			QAngle dummyAngles;
 			GetAttachment( 1, vAttachment, dummyAngles );
 
@@ -3561,7 +3561,24 @@ void C_BaseAnimating::ProcessMuzzleFlashEvent()
 			el->color.r = 255;
 			el->color.g = 192;
 			el->color.b = 64;
-			el->color.exponent = 5;
+			el->color.exponent = 5;*/
+
+			Vector vAttachment, vAng;
+			QAngle angles;
+
+			GetAttachment(1, vAttachment, angles); // set 1 instead "attachment"
+
+			AngleVectors(angles, &vAng);
+			vAttachment += vAng * 2;
+
+			dlight_t *dl = effects->CL_AllocDlight(index);
+			dl->origin = vAttachment;
+			dl->color.r = 252;
+			dl->color.g = 238;
+			dl->color.b = 128;
+			dl->die = gpGlobals->curtime + 0.05f;
+			dl->radius = random->RandomFloat(245.0f, 256.0f);
+			dl->decay = 512.0f;
 		}
 	}
 }

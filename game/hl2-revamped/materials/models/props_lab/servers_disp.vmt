@@ -1,0 +1,19 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/props_lab/servers_disp"
+	"$selfillum" "1"
+
+	"Proxies"
+	{
+
+
+
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedtextureframerate" 6
+		}
+
+}
+}

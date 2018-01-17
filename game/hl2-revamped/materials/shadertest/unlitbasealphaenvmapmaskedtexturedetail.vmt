@@ -1,0 +1,21 @@
+"UnlitGeneric"
+{
+	"$basetexture" "shadertest/UnlitAdditiveAlphaTestedTexture"
+	"$envmap" "shadertest/shadertest_env"
+	"$basealphaenvmapmask" 1
+	"$multipass" 1
+	"$envmapmode" 1
+	"$detail" "shadertest/shadertestdetail"
+	"$detailscale" 5
+	 
+	"Proxies"
+	{
+		"Sine"
+		{
+			"resultVar" "$COLOR"
+			"sineperiod" 2.00
+			"sinemin" 0
+			"sinemax" 1
+		}
+	}
+}

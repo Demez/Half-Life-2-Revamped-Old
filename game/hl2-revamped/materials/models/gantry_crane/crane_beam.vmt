@@ -1,0 +1,7 @@
+VertexLitGeneric
+{
+	"$basetexture"	"models\gantry_crane\crane_beam"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_trainstation\boxcar_ref"
+
+}

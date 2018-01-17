@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"Models/tools/green_plane/green_plane"
+	"$surfaceprop"	"default"
+}

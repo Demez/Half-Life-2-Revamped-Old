@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\props_silo/Processor"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\props_silo/Processor_REF"
+}

@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_building_details/storefront_template001a_bars"
+	"$surfaceprop" "metal"
+	"$nocull" 1
+	//"$translucent" 1
+	"$alphatest" 1
+}

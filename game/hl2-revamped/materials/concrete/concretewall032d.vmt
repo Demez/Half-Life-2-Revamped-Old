@@ -1,0 +1,14 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Concrete/concretewall032d"
+	"$surfaceprop" "concrete"
+	
+        "$detail" "detail\noise_detail_01"
+	"$detailscale" "7.345"
+	"$detailblendfactor" .6
+	"$detailblendmode" 0
+	"%keywords" "c17sewers,wasteland"
+	"$bumpmap" "Concrete/concretewall032b_normal"
+	"$parallaxmap" "Concrete/concretewall032b_height"
+	"$parallaxmapscale" ".05"
+}

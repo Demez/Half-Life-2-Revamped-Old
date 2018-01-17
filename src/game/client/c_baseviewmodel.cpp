@@ -198,12 +198,13 @@ bool C_BaseViewModel::Interpolate( float currentTime )
 	return bret;
 }
 
+static ConVar cl_flip_viewmodel("cl_flip_viewmodel", "0");
 
 inline bool C_BaseViewModel::ShouldFlipViewModel()
 {
-	return false;
+	//return false;
+	return cl_flip_viewmodel.GetBool();
 }
-
 
 void C_BaseViewModel::ApplyBoneMatrixTransform( matrix3x4_t& transform )
 {

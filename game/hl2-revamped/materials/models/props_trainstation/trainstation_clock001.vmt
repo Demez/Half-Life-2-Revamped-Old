@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_trainstation/trainstation_clock001"
+	"$surfaceprop" "metal"
+	//"$selfillum" 1
+}

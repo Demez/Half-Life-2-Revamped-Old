@@ -1,0 +1,15 @@
+"Modulate"
+{
+	"$translucent" 1
+	"$basetexture" "effects/flicker_256"
+	"$MOD2X" 1
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedtextureframerate" 24
+		}
+	}
+}

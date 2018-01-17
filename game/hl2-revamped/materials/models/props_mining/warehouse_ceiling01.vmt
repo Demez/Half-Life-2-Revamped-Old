@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_mining/warehouse_ceiling01"
+	"$surfaceprop"	"metal"
+}

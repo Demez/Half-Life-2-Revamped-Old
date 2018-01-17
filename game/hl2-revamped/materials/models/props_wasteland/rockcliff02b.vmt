@@ -1,0 +1,15 @@
+"vertexlitGeneric"
+{
+	"$basetexture" "Nature/cliffface002a"
+	"$surfaceprop" "dirt"
+	"$bumpmap" "Nature/cliffface002a_normal"
+//	"$parallaxmap" "Nature/cliffface002a_height"
+//	"$parallaxmapscale" ".025"
+	"$model" 1
+
+	"$detail" "detail\rock_detail_01"
+	"$detailscale" "8.0"
+	"$detailblendfactor" .7
+	"$detailblendmode" 0
+}
+

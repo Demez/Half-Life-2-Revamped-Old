@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$baseTexture" "Models/Effects/splodearc_sheet"
+	"$model" "1"
+	"$additive" "1"
+	"$nocull" "1"
+}
+

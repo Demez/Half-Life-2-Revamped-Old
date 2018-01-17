@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_outland/haybale"
+	"$bumpmap" "Models/props_outland/haybale_normal"
+}

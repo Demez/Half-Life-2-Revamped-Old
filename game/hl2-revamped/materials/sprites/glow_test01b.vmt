@@ -1,0 +1,17 @@
+"Sprite"
+{
+//	"$spriteorientation" "vp_parallel_oriented"
+	"$spriteorigin" "[ 0.50 0.00 ]"
+	"$basetexture" "sprites/glow_test01b"
+	"$translucent" 1
+//	"$ignorevertexcolors" 1
+//	"$vertexcolor" "1"
+	"$tint" "[.53 .45 .29]"
+//	"$tint" "[1 1 1]"
+	"Proxies"
+	{
+		"lampbeam"
+		{
+		}
+	}
+}

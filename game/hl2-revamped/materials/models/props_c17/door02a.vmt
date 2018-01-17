@@ -1,0 +1,19 @@
+"vertexlitGeneric"
+{
+	// Original shader: BaseTexture
+	"$basetexture" "models/props_c17/door02a"
+	"$surfaceprop" "wood"
+	"%keywords" "c17downtown"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models/props_c17/door02a_mask"
+	"$envmapcontrast" 1
+	"$envmapsaturation" .2
+	"$envmaptint" "[ .75 .75 .75]"
+	"$translucent" 1
+
+}
+
+
+
+
+

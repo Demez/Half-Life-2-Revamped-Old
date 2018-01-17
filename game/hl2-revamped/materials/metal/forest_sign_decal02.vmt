@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "metal/forest_sign_decal02"
+	"$decal" 1
+	"$decalscale" 0.25
+	"$translucent" 1
+}

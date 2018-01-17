@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/ichthyosaur/ichthyosaur_sheet"
+	"$model" 1
+	"$alphatest" 1
+}

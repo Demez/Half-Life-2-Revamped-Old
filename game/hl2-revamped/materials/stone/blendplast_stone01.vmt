@@ -1,0 +1,11 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "stone/stonewall_inn01d"
+	"$basetexture2" "stone/stonewall_inn01e"
+	"$surfaceprop" "brick"
+	"$blendmodulatetexture" "stone/stone_blendtexture01"
+
+
+
+}
+

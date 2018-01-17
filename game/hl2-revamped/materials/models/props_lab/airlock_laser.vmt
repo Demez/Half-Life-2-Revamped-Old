@@ -1,0 +1,25 @@
+"UnlitGeneric"
+{
+	"$basetexture" "models/props_lab/airlock_laser"
+//	"$translucent" "1"
+//	"$selfillum" "1"
+	"$additive" "1"
+	"$model" "1"
+	"$nocull" "1"
+
+	"Proxies"
+	{
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" .13
+			"texturescrollangle" 90
+		}
+
+
+
+
+}
+
+}

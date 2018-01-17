@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	"$basetexture"	"overlays/sign_silo_drm_01"
+	"$surfaceprop"	"no_decal"
+	"$decal"	1
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+}

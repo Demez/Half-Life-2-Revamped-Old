@@ -1,0 +1,14 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Brick/brickwall021a"
+	"$surfaceprop" "brick"
+
+	"$detail" "detail\noise_detail_01"
+	"$detailscale" "7.740"
+	"$detailblendfactor" .8
+
+	"$detailblendmode" 0
+	"$bumpmap" "brick/brickwall021a_normal"
+//	"$parallaxmap" "brick/brickwall021a_height"
+//	"$parallaxmapscale" ".0125"
+}

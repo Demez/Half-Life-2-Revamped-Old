@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_lab/radio_sheet"
+	"$selfillum" "1"
+}

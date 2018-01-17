@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_mining/test_model_hdr"
+	"$surfaceprop"	"metal"
+	"$bumpmap"	"Models/props_mining/test_model_hdr_normal"
+}

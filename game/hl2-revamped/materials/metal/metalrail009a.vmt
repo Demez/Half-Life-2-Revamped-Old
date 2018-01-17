@@ -1,0 +1,8 @@
+"LightmappedGeneric"
+{
+	"$translucent" 1
+	"$basetexture" "Metal/metalrail009a"
+	"$surfaceprop" "metal"
+	"%keywords" "c17downtown"
+	"%compilePassBullets" 1
+}

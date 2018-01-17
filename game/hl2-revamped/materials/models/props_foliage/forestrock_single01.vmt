@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"Models/props_foliage/forestrock_single01"
+	"$surfaceprop"	"rock"
+}

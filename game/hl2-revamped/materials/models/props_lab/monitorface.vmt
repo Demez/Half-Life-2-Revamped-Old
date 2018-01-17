@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+//	"$basetexture" "models/props_lab/monitorface"
+	"$envmap" "env_cubemap"
+	"$surfaceprop" "glass"
+	"$additive" 1
+}

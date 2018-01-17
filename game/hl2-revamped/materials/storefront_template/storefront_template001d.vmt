@@ -1,0 +1,14 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Storefront_Template/Storefront_Template001d"
+	"$envmap" "env_cubemap"
+	"$surfaceprop" "glass"
+	"$envmapmask" "Storefront_Template/Storefront_Template001d_mask"
+	"$translucent" 1
+	"$envmaptint" "[ 0.5 0.5 0.5 ]"
+
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "7.283"
+	"$detailblendfactor" .65
+	"$detailblendmode" "0"
+}

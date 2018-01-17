@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"nature/arctic_card_01"
+	"$surfaceprop"	"no_decal"
+	"$translucent"	1
+	"$selfillum"	1
+}

@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$baseTexture"		"models/props_foliage/driftwood_01a"
+	"$bumpmap"		"models/props_foliage/driftwood_01a_normal"
+}

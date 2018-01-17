@@ -1,0 +1,23 @@
+"LightmappedGeneric"
+{
+	"$bumpmap" "shadertest/sphere"
+	"$envmap" "shadertest/cubemap"
+	"$bumpoffset" "[0 0]"
+
+	"Proxies"
+	{
+		// Scroll the bumpmap
+		"Sine"
+		{
+			"resultVar" "$bumpoffset[0]"
+			"sineperiod" 3.00
+			"sinemin" 1
+			"sinemax" -1
+		}
+		"TextureTransform"
+		{
+			"translateVar" "$bumpoffset"
+			"resultVar" "$bumptransform"
+		}
+	}
+}

@@ -1,0 +1,13 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "concrete/forest_road01"
+	"$basetexture2" "concrete/forest_road01a"
+	"$surfaceprop" "dirt"
+	"$blendmodulatetexture" "nature/blendtexture01"
+
+	"$detail" "detail/noise_detail_01"
+	"$detailscale" "10"
+	"$detailblendfactor" 1
+	"$detailblendmode" 0
+}
+

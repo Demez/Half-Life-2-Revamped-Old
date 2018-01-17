@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	// Original shader: SphericalEnvMap
+	"%tooltexture" "shadertest/envmap"
+	"$envmap" "shadertest/envmap"
+	//"$envmapsphere" 1
+}

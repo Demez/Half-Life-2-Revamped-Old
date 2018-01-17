@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/props_combine/combine_intmonitor001_disp_off"
+	"$selfillum" "1"
+}
