@@ -1,0 +1,17 @@
+//-----------------------------------------------------------------------------
+//	CLIENT_HL2.VPC
+//
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$Macro SRCDIR		"..\.."
+$Macro GAMENAME 	"hl2-revamped-deferred" [!$SOURCESDK]
+$Macro GAMENAME 	"hl2-revamped-deferred" [$SOURCESDK]
+
+$Include "$SRCDIR\game\client\client_hl2_base.vpc"
+$Include "$SRCDIR\game\client\client_deferred_base.vpc"
+$Include "$SRCDIR\game\client\client_shadereditor_base.vpc"
+
+$Project "Client (HL2-revamped-deferred)"
+{
+}

@@ -1,0 +1,12 @@
+deferred_brush
+{
+$basetexture "concrete\concretefloor051c"
+$bumpmap "concrete\concretefloor051a_normal"
+$envmap env_cubemap
+$envmapsaturation 1
+$envmapcontrast 1
+$envmaptint "[ 0.4 0.4 0.4 ]"
+
+	$PHONG_SCALE	3.5
+	$PHONG_EXP		0.7
+}

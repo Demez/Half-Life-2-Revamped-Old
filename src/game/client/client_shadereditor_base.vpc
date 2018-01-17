@@ -1,0 +1,36 @@
+//-----------------------------------------------------------------------------
+//	CLIENT_SHADEREDITOR_BASE.VPC
+//
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;.\ShaderEditor"
+		$PreprocessorDefinitions		"$BASE;SHADEREDITOR"
+	}
+}
+
+
+$Project
+{
+	$Folder "Source Files"
+	{
+		$Folder	"ShaderEditor"
+		{
+	
+			$Folder "Client"
+			{
+				$File	"ShaderEditor\ISEdit_ModelRender.h"
+				$File	"ShaderEditor\IVShaderEditor.h"
+				$File	"ShaderEditor\SEdit_ModelRender.h"
+				$File	"ShaderEditor\SEdit_ModelRender.cpp"
+				$File	"ShaderEditor\ISEdit_ModelRender.h"
+				$File	"ShaderEditor\ShaderEditorSystem.h"
+				$File	"ShaderEditor\ShaderEditorSystem.cpp"
+			}
+		}
+	}
+}

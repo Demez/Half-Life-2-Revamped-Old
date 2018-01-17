@@ -1,0 +1,8 @@
+editor_shader
+{
+	$shadername "model_unlitseamless"
+	$basetexture "models/deferred/cm_2"
+
+	$nocull 1
+	$seamless_Scale 0.05
+}

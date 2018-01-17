@@ -1,0 +1,9 @@
+LightmappedGeneric
+{
+$basetexture "swarm\BSP\Swarm_OutsideMetalWall2BSP"
+$bumpmap "swarm\BSP\Swarm_OutsideMetalWall2BSP_normal"
+$surfaceprop metalpanel
+
+	$PHONG_SCALE	1
+	$PHONG_EXP		0.7
+}

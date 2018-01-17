@@ -1,0 +1,11 @@
+DEFERRED_MODEL
+{
+	$model 1
+	$basetexture "models/deferred/materialsphere"
+
+	$HALFLAMBERT	1
+	$LITFACE		0
+
+	$PHONG_SCALE	0
+	$PHONG_EXP		0
+}

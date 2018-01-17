@@ -1,0 +1,12 @@
+DEFERRED_MODEL
+{
+$baseTexture "models\props_foliage\Mall_trees_branches01"
+$AlphaTest 1
+$AlphaTestReference ".3"
+$nocull 1
+$model 1
+$FlashlightNoLambert 1
+$halflambert 1
+$litface 1
+"%keywords" l4d2
+}

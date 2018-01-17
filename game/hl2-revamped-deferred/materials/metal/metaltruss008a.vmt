@@ -1,0 +1,10 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmap
+	"$basetexture" "Metal/metaltruss008a"
+	"$surfaceprop" "metal"
+	"%keywords" "c17industrial,wasteland"
+
+	$PHONG_SCALE	0.8
+	$PHONG_EXP		1
+}

@@ -1,0 +1,27 @@
+"deferred_brush"
+//"multiblend"
+{
+	$multiblend 1
+	
+	$basetexture				"nature/mb_cobble_base"
+	$bumpmap					"nature/mb_cobble_normal"
+	$blendmodulatetexture		"nature/mb_cobble_blend"
+	
+	$basetexture2				"nature/mb_sand_base"
+	$bumpmap2					"nature/mb_sand_normal"
+	$blendmodulatetexture2		"nature/mb_sand_blend"
+	
+	$basetexture3				"nature/mb_grass_base"
+	$bumpmap3					"nature/mb_grass_normal"
+	$blendmodulatetexture3		"nature/mb_grass_blend"
+	
+	$basetexture4				"dev/graygrid"
+	$bumpmap4					"normal"
+	
+	$envmap						env_cubemap
+	$ENVMAPTINT					"[0.3 0.3 0.33]"
+	
+	$BLENDMASKTRANSFORM "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+	$BLENDMASKTRANSFORM2 "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+	$BLENDMASKTRANSFORM3 "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+}

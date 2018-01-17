@@ -1,0 +1,10 @@
+DEFERRED_MODEL
+{
+	$model 1
+	$basetexture "models/deferred/materialsphere"
+
+	$fresnelranges "[0 1 100]"
+	
+	$envmap "env_cubemap"
+	$envmapfresnel	1
+}

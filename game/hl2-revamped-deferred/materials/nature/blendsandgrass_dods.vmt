@@ -1,0 +1,22 @@
+"deferred_brush"
+{
+	$basetexture "dev/graygrid"
+	//"$basetexture" 	"nature/sandfloor007b"
+	"$basetexture2" "nature/cobblegrass001"
+	//"%tooltexture" "nature/blendsandgrass008a_tooltexture"
+	"$bumpmap"	"normal" //"nature/sandfloor007b_normal2"
+	"$bumpmap2"	"nature/mudfloor010a_normal"
+	"$BLENDMODULATETEXTURE" "nature/snowgrassblendtexture"
+	$BLENDMASKTRANSFORM "center .5 .5 scale 1 1 rotate 90 translate 0 0"
+	
+	$PHONG_EXP2 0.2
+	
+	$envmap					env_cubemap
+	$envmapmask				"black"
+	$envmapmask2			"texture_samples/fx_clouds_1"
+	
+	$envmapsaturation		0.5
+	$envmapcontrast			0.9
+	$envmaptint				"[0.5 0.5 0.5]"
+}
+

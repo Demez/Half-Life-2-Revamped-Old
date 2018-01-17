@@ -1,0 +1,7 @@
+DEFERRED_MODEL
+{
+	$model 1
+	$basetexture "models/deferred/materialsphere"
+
+	$rimlight 1
+}

@@ -1,0 +1,22 @@
+
+deferred_model
+{
+$phong 1
+$phongfresnelranges "[.5 2 5]"
+$phongboost 3
+$phongexponent 8
+$selfillum 1
+$baseTexture "models/swarmprops/techdeco/rocketmesh/rocketmesh_new"
+$bumpmap "models/swarmprops/techdeco/rocketmesh/rocketmesh_new_normal"
+$selfillummask "models/swarmprops/techdeco/rocketmesh/rocketmesh_new_selfillum"
+Proxies
+{
+Sine
+{
+sineperiod "3.00"
+sinemin 1
+sinemax 5
+resultVar "$selfillumtint[0]"
+}
+}
+}

@@ -1,0 +1,9 @@
+LightmappedGeneric
+{
+$basetexture "swarm\BSP\MetalFloor3"
+$bumpmap "swarm\BSP\MetalFloor3_normal"
+$surfaceprop metal
+
+	$PHONG_SCALE	1
+	$PHONG_EXP		0.8
+}

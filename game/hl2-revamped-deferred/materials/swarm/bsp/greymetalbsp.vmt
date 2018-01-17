@@ -1,0 +1,11 @@
+LightmappedGeneric
+{
+$basetexture "swarm\models\AS2Metal\GreyMetal"
+$surfaceprop metal
+$envmap env_cubemap
+$basealphaenvmapmask .5
+$envmaptint "[ .03 .03 .03]"
+
+$PHONG_SCALE	1
+$PHONG_EXP		0.9
+}
