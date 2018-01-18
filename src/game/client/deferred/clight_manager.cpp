@@ -183,6 +183,34 @@ bool CLightingManager::IsLightRendered( def_light_t *l )
 	return m_hRenderLights.HasElement( l );
 }
 
+int CLightingManager::CountTempLights() const
+{
+	return m_hDeferredTempLights.Count();
+}
+
+void CLightingManager::AddTempLight(def_light_temp_t *l)
+{
+	m_hDeferredTempLights.AddToTail(l);
+	AddLight(l);
+}
+
+void CLightingManager::UpdateTemplights(float deltaTime)
+{
+	for (int i = m_hDeferredTempLights.Count() - 1; i >= 0; i--)
+	{
+		def_light_temp_t* light = m_hDeferredTempLights[i];
+		if (light->fEndLifeTime < gpGlobals->curtime)
+		{
+			RemoveLight(light);
+			m_hDeferredTempLights.Remove(i);
+		}
+		else
+		{
+			light->flRadius -= deltaTime * light->fDecay;
+		}
+	}
+}
+
 #if DEFCFG_USE_SSE
 void CLightingManager::AllocateSortDataBuffer()
 {

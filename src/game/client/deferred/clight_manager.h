@@ -39,6 +39,10 @@ public:
 	bool RemoveLight( def_light_t *l );
 	bool IsLightRendered( def_light_t *l );
 
+	int CountTempLights() const;
+	void AddTempLight(def_light_temp_t *l);
+	void UpdateTemplights(float deltaTime);
+
 #if DEFCFG_USE_SSE
 	void AllocateSortDataBuffer();
 	void BuildLightSortDataBuffer();
@@ -99,6 +103,7 @@ private:
 #endif
 
 	CUtlVector< def_light_t* > m_hDeferredLights;
+	CUtlVector< def_light_temp_t* > m_hDeferredTempLights;
 
 	CUtlVector< def_light_t* > m_hRenderLights;
 	CUtlVector< def_light_t* > m_hPreSortedLights[ LSORT_COUNT ];

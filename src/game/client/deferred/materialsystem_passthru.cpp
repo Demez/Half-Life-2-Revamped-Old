@@ -117,7 +117,8 @@ static void ShaderReplace( const char *szShadername, IMaterial *pMat )
 		msg->SetInt( "$translucent", 1 );
 	}
 
-	if ( pMat->IsTwoSided() )
+	// Find a better solution to this...
+	if (true) //( pMat->IsTwoSided() )
 	{
 		msg->SetInt( "$nocull", 1 );
 	}

@@ -1210,7 +1210,9 @@ void CBaseModPanel::ApplySchemeSettings(IScheme *pScheme)
 	surface()->GetScreenSize( screenWide, screenTall );
 
 	char filename[MAX_PATH];
-	V_snprintf( filename, sizeof( filename ), "VGUI/swarm/loading/BGFX01" ); // TODO: engine->GetStartupImage( filename, sizeof( filename ), screenWide, screenTall );
+	V_snprintf(filename, sizeof(filename), "console/background01_widescreen"); // make an actual loading screen texture
+	// TODO: engine->GetStartupImage( filename, sizeof( filename ), screenWide, screenTall );
+	// GetStartupImage is undefined
 	m_iBackgroundImageID = surface()->CreateNewTextureID();
 	surface()->DrawSetTextureFile( m_iBackgroundImageID, filename, true, false );
 

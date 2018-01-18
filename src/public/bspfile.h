@@ -394,6 +394,17 @@ struct BSPHeader_t
 	int			mapRevision;				// the map's revision (iteration, version) number (added BSPVERSION 6)
 };
 
+#ifdef DEFERRED_LIGHTGEN
+struct dheader_t
+{
+	DECLARE_BYTESWAP_DATADESC();
+	int			ident;
+	int			version;
+	lump_t		lumps[HEADER_LUMPS];
+	int			mapRevision;				// the map's revision (iteration, version) number (added BSPVERSION 6)
+};
+#endif
+
 // level feature flags
 #define LVLFLAGS_BAKED_STATIC_PROP_LIGHTING_NONHDR 0x00000001	// was processed by vrad with -staticproplighting, no hdr data
 #define LVLFLAGS_BAKED_STATIC_PROP_LIGHTING_HDR    0x00000002   // was processed by vrad with -staticproplighting, in hdr

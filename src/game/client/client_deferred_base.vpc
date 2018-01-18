@@ -9,7 +9,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE;.\deferred;$SRCDIR\game\shared\deferred;"
-		$PreprocessorDefinitions		"$BASE;DEFERRED"
+		$PreprocessorDefinitions		"$BASE;DEFERRED;DEFERRED_LIGHTGEN"
 	}
 }
 

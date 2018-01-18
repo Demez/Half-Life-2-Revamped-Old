@@ -234,7 +234,8 @@ void CFlashlightEffect::UpdateLightTopDown(const Vector &vecPos, const Vector &v
 	state.m_Color[3] = r_flashlightambient.GetFloat();
 	state.m_NearZ = r_flashlightnear.GetFloat() + m_flCurrentPullBackDist;		// Push near plane out so that we don't clip the world when the flashlight pulls back 
 	state.m_FarZ = state.m_FarZAtten = r_flashlightfar.GetFloat();	// Strictly speaking, these are different, but the game can treat them the same
-	state.m_bEnableShadows = state.m_bEnableShadows && r_flashlightdepthtexture.GetBool();
+	//state.m_bEnableShadows = state.m_bEnableShadows && r_flashlightdepthtexture.GetBool();
+	state.m_bEnableShadows = m_bCastsShadows && r_flashlightdepthtexture.GetBool();
 	state.m_flShadowMapResolution = r_flashlightdepthres.GetInt();
 
 	state.m_pSpotlightTexture = m_FlashlightTexture;
@@ -264,10 +265,6 @@ void CFlashlightEffect::UpdateLightTopDown(const Vector &vecPos, const Vector &v
 
 	g_pClientShadowMgr->UpdateProjectedTexture( m_FlashlightHandle, true );
 #endif
-
-	// Kill the old flashlight method if we have one.
-	// FIXME: This doesn't compile
-//	LightOffOld();
 
 #ifndef NO_TOOLFRAMEWORK
 	if ( clienttools->IsInRecordingMode() )
@@ -389,6 +386,7 @@ void CFlashlightEffect::UpdateLight(	int nEntIdx, const Vector &vecPos, const Ve
 #ifdef DEFERRED
 	// @Deferred - Biohazard
 	UpdateLightProjection(state);
+#endif
 
 #ifndef NO_TOOLFRAMEWORK
 	if (clienttools->IsInRecordingMode())
@@ -404,10 +402,11 @@ void CFlashlightEffect::UpdateLight(	int nEntIdx, const Vector &vecPos, const Ve
 #endif
 }
 
+#ifdef DEFERRED
 // @Deferred - Biohazard
 void CFlashlightEffect::UpdateLightProjection(FlashlightState_t &state)
 {
-#endif
+
 	if( m_FlashlightHandle == CLIENTSHADOW_INVALID_HANDLE )
 	{
 		m_FlashlightHandle = g_pClientShadowMgr->CreateFlashlight( state );
@@ -421,6 +420,7 @@ void CFlashlightEffect::UpdateLightProjection(FlashlightState_t &state)
 	}
 
 	g_pClientShadowMgr->UpdateProjectedTexture( m_FlashlightHandle, true );
+#endif
 
 #ifndef DEFERRED
 #ifndef NO_TOOLFRAMEWORK

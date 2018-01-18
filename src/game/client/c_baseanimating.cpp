@@ -59,6 +59,10 @@
 
 #include "clientalphaproperty.h"
 
+#ifdef DEFERRED
+#include "deferred/deferred_shared_common.h"
+#endif
+
 #ifdef DEMOPOLISH_ENABLED
 #include "demo_polish/demo_polish.h"
 #endif
@@ -3548,21 +3552,33 @@ void C_BaseAnimating::ProcessMuzzleFlashEvent()
 		//FIXME: We should really use a named attachment for this
 		if ( m_Attachments.Count() > 0 )
 		{
-			/*Vector vAttachment;
+#ifdef DEFERRED
+			Vector vAttachment;
 			QAngle dummyAngles;
 			GetAttachment( 1, vAttachment, dummyAngles );
 
-			// Make an elight
-			dlight_t *el = effects->CL_AllocElight( LIGHT_INDEX_MUZZLEFLASH + index );
-			el->origin = vAttachment;
-			el->radius = random->RandomInt( 32, 64 ); 
-			el->decay = el->radius / 0.05f;
-			el->die = gpGlobals->curtime + 0.05f;
-			el->color.r = 255;
-			el->color.g = 192;
-			el->color.b = 64;
-			el->color.exponent = 5;*/
-
+			def_light_temp_t *l = new def_light_temp_t(0.1f);
+			
+			l->ang = vec3_angle;
+			l->pos = vAttachment;
+			
+				l->col_diffuse = Vector(0.964705882f, 0.82745098f, 0.403921569f);
+						//l->col_ambient = Vector(20, 20, 20); //GetColor_Ambient();
+				
+				l->flRadius = random->RandomFloat(64, 128);
+			l->flFalloffPower = 1.0f;
+			
+				l->iVisible_Dist = l->flRadius * 2;
+			l->iVisible_Range = l->flRadius * 2;
+			l->iShadow_Dist = l->flRadius;
+			l->iShadow_Range = l->flRadius;
+			
+				l->iFlags >>= DEFLIGHTGLOBAL_FLAGS_MAX_SHARED_BITS;
+			l->iFlags <<= DEFLIGHTGLOBAL_FLAGS_MAX_SHARED_BITS;
+			l->iFlags |= DEFLIGHT_SHADOW_ENABLED;
+			
+				GetLightingManager()->AddTempLight(l);
+#else
 			Vector vAttachment, vAng;
 			QAngle angles;
 
@@ -3579,6 +3595,7 @@ void C_BaseAnimating::ProcessMuzzleFlashEvent()
 			dl->die = gpGlobals->curtime + 0.05f;
 			dl->radius = random->RandomFloat(245.0f, 256.0f);
 			dl->decay = 512.0f;
+#endif
 		}
 	}
 }

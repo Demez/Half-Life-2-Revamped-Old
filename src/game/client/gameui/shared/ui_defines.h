@@ -9,8 +9,8 @@
 
 #define UI_USING_LOGO									// logo
 //#define UI_USING_OLDDIALOGS							// implement?
-#define UI_USING_RANDOMMENUMOVIES						// random menu backgound movies
-#define UI_USING_RANDOMLOADINGBGS						// random game loading backgrounds
+//#define UI_USING_RANDOMMENUMOVIES						// random menu backgound movies
+//#define UI_USING_RANDOMLOADINGBGS						// random game loading backgrounds
 //#define UI_USING_LOADINGSPINNER						// spinning texture in corner when game is loading
 #ifdef DEATHMATCH_CLIENT_DLL
 // We should make use of this. Enable it once we have at least one background image
@@ -50,8 +50,8 @@ static const char *g_ppszRandomMenuMovies[] =
 {
 #ifdef USING_HL2EM
 	"media/background.bik",
-#elif DEATHMATCH_CLIENT_DLL // TODO: Replace these videos
-	"media/bg_01.bik",
+#elif HL2_CLIENT_DLL // TODO: Replace these videos
+	"media/bg_01.bik"
 #else
 	"media/bg_03.bik",
 	"media/bg_02.bik",
@@ -64,12 +64,12 @@ static const char *g_ppszRandomMenuMovies[] =
 static const char g_ppszRandomLoadingBackgrounds[][64] = 
 {
 #ifdef DEATHMATCH_CLIENT_DLL
-	"../console/background01",
+	"../console/background01"
 #elif HL2_CLIENT_DLL
-	"../console/background01",
-	"../console/background02",
-	"../console/background03",
-	"../console/background04"
+	"console/background01",
+	"console/background02",
+	"console/background03",
+	"console/background04"
 #else
 	"swarm/loading/BGFX01",
 #endif
@@ -80,10 +80,10 @@ static const char g_ppszRandomLoadingBackgrounds_widescreen[][64] =
 #ifdef DEATHMATCH_CLIENT_DLL
 	"../console/background01_widescreen",
 #elif HL2_CLIENT_DLL
-	"../console/background01_widescreen",
-	"../console/background02_widescreen",
-	"../console/background03_widescreen",
-	"../console/background04_widescreen"
+	"console/background01_widescreen",
+	"console/background02_widescreen",
+	"console/background03_widescreen",
+	"console/background04_widescreen"
 #else
 	"swarm/loading/BGFX01_wide",
 #endif
@@ -94,8 +94,8 @@ static const char g_ppszRandomLoadingBackgrounds_widescreen[][64] =
 #define UI_DEFAULT_LOADINGBACKGROUND "swarm/loading/BGFX01"
 #define UI_DEFAULT_LOADINGBACKGROUND_WIDE "swarm/loading/BGFX01_wide"
 #else
-#define UI_DEFAULT_LOADINGBACKGROUND "swarm/loading/BGFX01"
-#define UI_DEFAULT_LOADINGBACKGROUND_WIDE "swarm/loading/BGFX01_wide"
+#define UI_DEFAULT_LOADINGBACKGROUND "console/background01"
+#define UI_DEFAULT_LOADINGBACKGROUND_WIDE "console/background01_widescreen"
 #endif
 //=============================================================================
 

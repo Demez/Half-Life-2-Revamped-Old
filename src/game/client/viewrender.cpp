@@ -1000,13 +1000,13 @@ void CSimpleRenderExecutor::AddView( CRendering3dView *pView )
 #ifdef DEFERRED
 // @Deferred - Biohazard
 // this is allocated differently now
-#if 0 //!defined( INFESTED_DLL )
+/*#if !defined( INFESTED_DLL )
 static CViewRender g_ViewRender;
 IViewRender *GetViewRenderInstance()
 {
 	return &g_ViewRender;
 }
-#endif
+#endif*/
 #else
 #if !defined( INFESTED_DLL )
 static CViewRender g_ViewRender;
@@ -1016,7 +1016,6 @@ IViewRender *GetViewRenderInstance()
 }
 #endif
 #endif
-
 
 //-----------------------------------------------------------------------------
 // Constructor
@@ -3703,7 +3702,6 @@ void CRendering3dView::BuildRenderableRenderLists( int viewID )
 #else
 	if ( viewID != VIEW_SHADOW_DEPTH_TEXTURE )
 #endif
-
 	{
 		render->BeginUpdateLightmaps();
 	}
@@ -5206,9 +5204,11 @@ void CShadowDepthView::Draw()
 		render->Push3DView( (*this), VIEW_CLEAR_DEPTH, m_pRenderTarget, GetFrustum() );
 	}
 	
+#ifndef DEFERRED
 	pRenderContext.GetFrom(materials);
 	pRenderContext->PushRenderTargetAndViewport(m_pRenderTarget, m_pDepthTexture, 0, 0, m_pDepthTexture->GetMappingWidth(), m_pDepthTexture->GetMappingWidth());
 	pRenderContext.SafeRelease();
+#endif
 
 	SetupCurrentView( origin, angles, VIEW_SHADOW_DEPTH_TEXTURE );
 
@@ -5260,7 +5260,9 @@ void CShadowDepthView::Draw()
 		pRenderContext->CopyRenderTargetToTextureEx( m_pDepthTexture, -1, NULL, NULL );
 	}
 	
+#ifndef DEFERRED
 	pRenderContext->PopRenderTargetAndViewport();
+#endif
 
 	render->PopView( GetFrustum() );
 

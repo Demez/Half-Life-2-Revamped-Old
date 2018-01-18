@@ -201,7 +201,9 @@ IClientModelRenderable*	C_BaseFlex::GetClientModelRenderable()
 	// Cannot participate if it has a render clip plane
 	if ( !BaseClass::GetClientModelRenderable() )
 		return NULL;
-
+#ifdef DEFERRED
+	MDLCACHE_CRITICAL_SECTION();
+#endif
 	// No flexes allowed for fast path atm
 	CStudioHdr *hdr = GetModelPtr();
 	if ( !hdr || ( hdr->numflexcontrollers() != 0 ) )
