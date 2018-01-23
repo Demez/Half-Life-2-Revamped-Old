@@ -18,8 +18,8 @@
 		{
 			"Game"	"|gameinfo_path|."
 			
-			// change this to own directory
-			"Game"	"D:\sourceengine\projects-community\Half-Life-2-Revamped\game\hl2-revamped"
+			// temp
+			"Game"	"|gameinfo_path|..\hl2-revamped"
 
 			"Game"	"platform"
 		}
