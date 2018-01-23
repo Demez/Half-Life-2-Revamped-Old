@@ -1483,7 +1483,6 @@ void CServerGameDLL::CreateNetworkStringTables( void )
 			g_pStringTableMaterials &&
 			g_pStringTableInfoPanel &&
 			g_pStringTableClientSideChoreoScenes &&
-			g_pStringTableExtraParticleFiles &&
 			g_pStringTableExtraParticleFiles
 #ifdef DEFERRED
 			&& g_pStringTable_LightCookies

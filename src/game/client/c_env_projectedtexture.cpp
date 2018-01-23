@@ -22,7 +22,6 @@
 
 float C_EnvProjectedTexture::m_flVisibleBBoxMinHeight = -FLT_MAX;
 
-static ConVar mat_shadow_filter("mat_shadow_filter", "1", FCVAR_CHEAT);
 
 IMPLEMENT_CLIENTCLASS_DT( C_EnvProjectedTexture, DT_EnvProjectedTexture, CEnvProjectedTexture )
 	RecvPropEHandle( RECVINFO( m_hTargetEntity )	),
@@ -372,8 +371,8 @@ void C_EnvProjectedTexture::UpdateLight( void )
 		state.m_flProjectionSize = m_flProjectionSize;
 		state.m_flProjectionRotation = m_flRotation;
 
-		state.m_bUberlight = true;
-		state.m_bVolumetric = true;
+		//state.m_bUberlight = true;
+		//state.m_bVolumetric = true;
 
 		state.m_nShadowQuality = m_nShadowQuality; // Allow entity to affect shadow quality
 

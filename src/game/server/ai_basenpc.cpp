@@ -91,7 +91,6 @@
 #include "ai_addon.h"
 
 #ifdef HL2_EPISODIC
-// this was commented out
 #include "npc_alyx_episodic.h"
 #endif
 
@@ -6719,7 +6718,6 @@ void CAI_BaseNPC::SetupVPhysicsHull()
 	if ( pPhysObj )
 	{
 		float mass = Studio_GetMass(GetModelPtr());
-		// can crash here
 		if ( mass > 0 )
 		{
 			pPhysObj->SetMass( mass );

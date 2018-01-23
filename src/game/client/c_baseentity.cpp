@@ -45,9 +45,7 @@
 
 #ifdef DEFERRED
 #include "deferred/deferred_shared_common.h"
-#endif
-
-// memdbgon must be the last include file in a .cpp file!!!
+#endif// memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
 

@@ -33,7 +33,7 @@ public:
 	virtual const matrix3x4_t &		RenderableToWorldTransform();
 	virtual bool					ShouldDraw( void ) { return true; }
 	virtual RenderableTranslucencyType_t ComputeTranslucencyType( void ) { return RENDERABLE_IS_TRANSLUCENT; }
-	virtual bool					ShouldReceiveProjectedTextures( int flags ) { return true; }
+	virtual bool					ShouldReceiveProjectedTextures( int flags ) { return false; }
 
 	void	SetTime( float t ) { m_t = t; }
 	void	LimitTime( float tmax ) { m_tMax = tmax; }

@@ -225,6 +225,20 @@ typedef char *  va_list;
 
 int V_vsnprintf( char *pDest, int maxLen, const char *pFormat, va_list params );
 
+
+/*template <size_t maxLenInCharacters> int V_vsprintf_safe( OUT_Z_ARRAY char (&pDest)[maxLenInCharacters], PRINTF_FORMAT_STRING const char *pFormat, va_list params ) { return V_vsnprintf( pDest, maxLenInCharacters, pFormat, params ); }
+
+// gcc insists on only having format annotations on declarations, not definitions, which is why I have both.
+template <size_t maxLenInChars> int V_sprintf_safe( OUT_Z_ARRAY char (&pDest)[maxLenInChars], PRINTF_FORMAT_STRING const char *pFormat, ... ) FMTFUNCTION( 2, 3 );
+template <size_t maxLenInChars> int V_sprintf_safe( OUT_Z_ARRAY char (&pDest)[maxLenInChars], PRINTF_FORMAT_STRING const char *pFormat, ... )
+{
+	va_list params;
+	va_start( params, pFormat );
+	int result = V_vsnprintf( pDest, maxLenInChars, pFormat, params );
+	va_end( params );
+	return result;
+}*/
+
 // Prints out a pretified memory counter string value ( e.g., 7,233.27 Mb, 1,298.003 Kb, 127 bytes )
 char *V_pretifymem( float value, int digitsafterdecimal = 2, bool usebinaryonek = false );
 

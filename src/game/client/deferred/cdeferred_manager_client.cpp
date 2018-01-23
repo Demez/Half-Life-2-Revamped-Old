@@ -66,7 +66,7 @@ void CopyDev()
 			char filepath_src[MAX_PATH];
 			char filepath_dst[MAX_PATH];
 			Q_snprintf( filepath_src, sizeof( filepath_src ), "%s\\shaders\\fxc\\%s.vcs\0", pszGameDir, filename );
-			Q_snprintf( filepath_dst, sizeof( filepath_dst ), "%s\\common\\alien swarm\\platform\\shaders\\fxc\\%s.vcs\0", steamappsPath, filename );
+			Q_snprintf( filepath_dst, sizeof( filepath_dst ), "%s\\..\\platform\\shaders\\fxc\\%s.vcs\0", pszGameDir, filename );
 			Q_FixSlashes( filepath_src );
 			Q_FixSlashes( filepath_dst );
 

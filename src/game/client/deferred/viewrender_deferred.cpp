@@ -55,7 +55,9 @@
 #include "viewpostprocess.h"
 #include "viewdebug.h"
 
+#ifdef SHADEREDITOR
 #include "shadereditor/shadereditorsystem.h"
+#endif
 #include "deferred/deferred_shared_common.h"
 
 
@@ -738,7 +740,9 @@ void CDeferredViewRender::ViewDrawSceneDeferred( const CViewSetup &view, int nCl
 	CPostLightingView::PushDeferredShadingFrameBuffer();
 #endif
 
+#ifdef SHADEREDITOR
 	g_ShaderEditorSystem->UpdateSkymask( bDrew3dSkybox );
+#endif
 
 	GetLightingManager()->RenderVolumetrics( view );
 
@@ -911,7 +915,9 @@ void CDeferredViewRender::DrawSkyboxComposite( const CViewSetup &view, const boo
 	if ( pSkyView->Setup( view, false, &nSkyboxVisible ) )
 	{
 		AddViewToScene( pSkyView );
+#ifdef SHADEREDITOR
 		g_ShaderEditorSystem->UpdateSkymask();
+#endif
 	}
 
 	SafeRelease( pSkyView );
@@ -1765,7 +1771,9 @@ void CDeferredViewRender::RenderView( const CViewSetup &view, const CViewSetup &
 			pRenderContext.SafeRelease();
 		}
 
+#ifdef SHADEREDITOR
 		g_ShaderEditorSystem->CustomPostRender();
+#endif
 
 		// And here are the screen-space effects
 
@@ -1973,7 +1981,9 @@ void CDeferredViewRender::ProcessDeferredGlobals( const CViewSetup &view )
 	matView.SetupMatrixOrgAngles( vec3_origin, view.angles );
 
 	MatrixSourceToDeviceSpace( matView );
+#ifdef SHADEREDITOR
 	g_ShaderEditorSystem->SetMainViewMatrix( matView );
+#endif
 
 	matView = matView.Transpose3x3();
 	Vector viewPosition;

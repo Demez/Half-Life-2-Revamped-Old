@@ -12,7 +12,7 @@
 #include "history_resource.h"
 #include "iinput.h"
 #include "input.h"
-#include "ammodef.h" 
+#include "ammodef.h"
 #include "view.h"
 #include "iviewrender.h"
 #include "iclientmode.h"

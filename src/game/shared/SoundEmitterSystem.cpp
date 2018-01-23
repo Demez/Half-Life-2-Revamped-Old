@@ -47,7 +47,7 @@ const wchar_t *GetStringForIndex( int index );
 #endif
 static bool g_bPermitDirectSoundPrecache = false;
 
-//static ConVar sound_scales_with_time_test("sound_scales_with_time_test", "0", 0, "Changes pitch of sound with host_timescale.");
+// sound scales with time
 template< class T >
 static FORCEINLINE T Clamp( T const &val, T const &minVal, T const &maxVal )
 {

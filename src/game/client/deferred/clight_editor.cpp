@@ -1,8 +1,11 @@
 
 #include "cbase.h"
 #include "deferred/deferred_shared_common.h"
+
+#ifdef SHADEREDITOR
 #include "shadereditor/shadereditorsystem.h"
 #include "shadereditor/ivshadereditor.h"
+#endif
 
 #include "view_shared.h"
 #include "view.h"
@@ -23,7 +26,9 @@ CLightingEditor *GetLightingEditor()
 	return &__g_lightingEditor;
 }
 
+#ifdef SHADEREDITOR
 extern IVShaderEditor *shaderEdit;
+#endif
 
 def_light_editor_t::def_light_editor_t()
 {
@@ -177,6 +182,7 @@ void CLightingEditor::OnRender()
 	if ( !IsEditorActive() )
 		return;
 
+#ifdef SHADEREDITOR
 	const EDITOR_DBG_MODES dbg = GetDebugMode();
 	if ( dbg != EDITOR_DBG_OFF && g_ShaderEditorSystem->IsReady() )
 	{
@@ -192,6 +198,7 @@ void CLightingEditor::OnRender()
 		if ( iDbgIndex != -1 )
 			shaderEdit->DrawPPEOnDemand( iDbgIndex );
 	}
+#endif
 
 	RenderSprites();
 

@@ -4210,11 +4210,6 @@ void C_BaseAnimating::FireEvent( const Vector& origin, const QAngle& angles, int
 
 	// Eject brass
 	case CL_EVENT_EJECTBRASS1:
-		/*if ( m_Attachments.Count() > 0 )
-		{
-			DevWarning( "Unhandled eject brass animevent. FIX THIS LAZY ASS\n" );
-		}
-		break;*/
 		if (m_Attachments.Count() > 0)
 		{
 			if (MainViewOrigin(GET_ACTIVE_SPLITSCREEN_SLOT()).DistToSqr(GetAbsOrigin()) < (256 * 256))

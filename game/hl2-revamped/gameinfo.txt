@@ -16,7 +16,13 @@
 		"SteamAppId"		"630"			// Alien Swarm
 		"SearchPaths"
 		{
-			"Game"	"|gameinfo_path|"
+			"Game"	"|gameinfo_path|."
+			
+			"Game"	"C:\Program Files (x86)\Steam\steamapps\common\Half-Life 2/ep2"			// This is temporary workaround for ep2 maps mounting
+			"Game"	"C:\Program Files (x86)\Steam\steamapps\common\Half-Life 2/episodic"	// This is temporary workaround for ep1 maps mounting
+			
+			//"Game"	"swarm"						// Alien Swarm Folder
+			
 			"Game"	"platform"
 		}
 	}

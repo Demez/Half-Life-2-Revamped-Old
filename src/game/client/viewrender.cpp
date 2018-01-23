@@ -464,7 +464,6 @@ public:
 	void			Draw();
 
 protected:
- 
 
 
 	virtual SkyboxVisibility_t	ComputeSkyboxVisibility();
@@ -3939,7 +3938,7 @@ static void DrawClippedDepthBox( IClientRenderable *pEnt, float *pClipPlane )
 		if( j == 3 ) //not enough lines to even form a triangle
 			continue;
 
-		float *pStartPoint;
+		float *pStartPoint = 0;
 		float *pTriangleFanPoints[4]; //at most, one of our fans will have 5 points total, with the first point being stored separately as pStartPoint
 		int iTriangleFanPointCount = 1; //the switch below creates the first for sure
 		
@@ -5204,11 +5203,11 @@ void CShadowDepthView::Draw()
 		render->Push3DView( (*this), VIEW_CLEAR_DEPTH, m_pRenderTarget, GetFrustum() );
 	}
 	
-#ifndef DEFERRED
+/*#ifndef DEFERRED
 	pRenderContext.GetFrom(materials);
 	pRenderContext->PushRenderTargetAndViewport(m_pRenderTarget, m_pDepthTexture, 0, 0, m_pDepthTexture->GetMappingWidth(), m_pDepthTexture->GetMappingWidth());
 	pRenderContext.SafeRelease();
-#endif
+#endif*/
 
 	SetupCurrentView( origin, angles, VIEW_SHADOW_DEPTH_TEXTURE );
 
@@ -5260,9 +5259,9 @@ void CShadowDepthView::Draw()
 		pRenderContext->CopyRenderTargetToTextureEx( m_pDepthTexture, -1, NULL, NULL );
 	}
 	
-#ifndef DEFERRED
+/*#ifndef DEFERRED
 	pRenderContext->PopRenderTargetAndViewport();
-#endif
+#endif*/
 
 	render->PopView( GetFrustum() );
 

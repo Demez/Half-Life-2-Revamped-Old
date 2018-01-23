@@ -73,6 +73,9 @@ static CTempEnts g_TempEnts;
 // Expose to rest of the client .dll
 ITempEnts *tempents = ( ITempEnts * )&g_TempEnts;
 
+
+
+
 C_LocalTempEntity::C_LocalTempEntity()
 {
 #ifdef _DEBUG

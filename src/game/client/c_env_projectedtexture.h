@@ -89,6 +89,8 @@ private:
 	static float m_flVisibleBBoxMinHeight;
 };
 
+
+
 bool C_EnvProjectedTexture::IsBBoxVisible( void )
 {
 	return IsBBoxVisible( GetAbsOrigin() + m_vecExtentsMin, GetAbsOrigin() + m_vecExtentsMax );

@@ -84,8 +84,8 @@ void CDeferredManagerServer::LevelInitPreEntity()
 	if (!hFile)
 		return;
 
-	dheader_t header;
-	g_pFullFileSystem->Read(&header, sizeof(dheader_t), hFile);
+	BSPHeader_t header;
+	g_pFullFileSystem->Read(&header, sizeof(BSPHeader_t), hFile);
 
 	lump_t &lightLump = header.lumps[LUMP_WORLDLIGHTS];
 

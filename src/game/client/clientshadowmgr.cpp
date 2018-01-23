@@ -55,7 +55,7 @@
 //
 // DEFERRED SHADOW RENDERING
 //
-// When deferred shadow rendering (currently 360 only) is enabled (nope). The
+// When deferred shadow rendering (currently 360 only) is enabled. The
 // ClientShadowMgr bypasses most calls to the engine shadow mgr to avoid the
 // CPU overhead of clipping world geometry against shadow frustums. Instead,
 // We render each shadow frustum and use the depth buffer to back-project each
@@ -1773,6 +1773,7 @@ void CClientShadowMgr::ShutdownRenderToTextureShadows()
 
 			// Switch the material to use blobby shadows
 			ClientShadow_t& shadow = m_Shadows[i];
+
 			shadowmgr->SetShadowMaterial( shadow.m_ShadowHandle, m_SimpleShadow, m_SimpleShadow, (void*)CLIENTSHADOW_INVALID_HANDLE );
 			shadowmgr->SetShadowTexCoord( shadow.m_ShadowHandle, 0, 0, 1, 1 );
 			ClearExtraClipPlanes( i );
@@ -2456,7 +2457,7 @@ ClientShadowHandle_t CClientShadowMgr::CreateShadow( ClientEntityHandle_t entity
 	return shadowHandle;
 }
 
-//comment2
+
 //-----------------------------------------------------------------------------
 // Updates the flashlight direction and re-computes surfaces it should lie on
 //-----------------------------------------------------------------------------
@@ -2508,7 +2509,7 @@ ClientShadowHandle_t CClientShadowMgr::CreateProjection( const FlashlightState_t
 	return shadowHandle;
 }
 
-//comment1
+
 //-----------------------------------------------------------------------------
 // Updates the flashlight direction and re-computes surfaces it should lie on
 //-----------------------------------------------------------------------------
@@ -5442,6 +5443,7 @@ int CClientShadowMgr::BuildActiveShadowDepthList( const CViewSetup &viewSetup, i
 			continue;
 
 		// Calculate an AABB around the shadow frustum
+		// remove this
 		Vector vecAbsMins, vecAbsMaxs;
 		CalculateAABBFromProjectionMatrix( shadow.m_WorldToShadow, &vecAbsMins, &vecAbsMaxs );
 
