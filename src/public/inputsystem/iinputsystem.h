@@ -170,9 +170,6 @@ public:
 	/// Mouse capture
 	virtual void EnableMouseCapture( PlatWindow_t hWnd ) = 0;
 	virtual void DisableMouseCapture() = 0;
-	
-	// read and clear accumulated raw input values
-	//virtual bool GetRawMouseAccumulators( int& accumX, int& accumY ) = 0;
 };
 
 DECLARE_TIER2_INTERFACE( IInputSystem, g_pInputSystem );

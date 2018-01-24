@@ -44,20 +44,6 @@ IMPLEMENT_CLIENTCLASS_DT( C_EnvProjectedTexture, DT_EnvProjectedTexture, CEnvPro
 	RecvPropInt(	 RECVINFO( m_nShadowQuality )	),
 	RecvPropFloat(	 RECVINFO( m_flProjectionSize )	),
 	RecvPropFloat(	 RECVINFO( m_flRotation )	),
-
-	// uberlight
-	/*RecvPropBool( RECVINFO_NAME( m_UberlightState.m_bEnabled, m_bUberlight ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fNearEdge, m_fNearEdge ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fFarEdge, m_fFarEdge ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fCutOn, m_fCutOn ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fCutOff, m_fCutOff ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fShearx, m_fShearx ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fSheary, m_fSheary ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fWidth, m_fWidth ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fWedge, m_fWedge ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fHeight, m_fHeight ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fHedge, m_fHedge ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fRoundness, m_fRoundness ) ),*/
 END_RECV_TABLE()
 
 C_EnvProjectedTexture *C_EnvProjectedTexture::Create( )
@@ -76,7 +62,7 @@ C_EnvProjectedTexture *C_EnvProjectedTexture::Create( )
 	pEnt->m_LightColor.g = 255;
 	pEnt->m_LightColor.b = 255;
 	pEnt->m_LightColor.a = 255;
-	pEnt->m_bEnableShadows = true;
+	pEnt->m_bEnableShadows = false;
 	pEnt->m_flColorTransitionTime = 1.0f;
 	pEnt->m_bCameraSpace = false;
 	pEnt->SetAbsAngles( QAngle( 90, 0, 0 ) );
@@ -158,8 +144,6 @@ void C_EnvProjectedTexture::OnDataChanged( DataUpdateType_t updateType )
 	if ( updateType == DATA_UPDATE_CREATED )
 	{
 		m_SpotlightTexture.Init( m_SpotlightTextureName, TEXTURE_GROUP_OTHER, true );
-		// uberlight
-		//m_SpotlightTexture.Init(m_UberlightState.m_bEnabled ? "white" : m_SpotlightTextureName, TEXTURE_GROUP_OTHER, true);
 	}
 
 	m_bForceUpdate = true;
@@ -371,8 +355,8 @@ void C_EnvProjectedTexture::UpdateLight( void )
 		state.m_flProjectionSize = m_flProjectionSize;
 		state.m_flProjectionRotation = m_flRotation;
 
-		//state.m_bUberlight = true;
-		//state.m_bVolumetric = true;
+		state.m_bUberlight = true;
+		state.m_bVolumetric = true;
 
 		state.m_nShadowQuality = m_nShadowQuality; // Allow entity to affect shadow quality
 
@@ -398,7 +382,6 @@ void C_EnvProjectedTexture::UpdateLight( void )
 			else
 			{
 				m_LightHandle = g_pClientShadowMgr->CreateFlashlight( state );
-				//g_pClientShadowMgr->UpdateUberlightState(m_FlashlightState, m_UberlightState);
 			}
 
 			if ( m_LightHandle != CLIENTSHADOW_INVALID_HANDLE )

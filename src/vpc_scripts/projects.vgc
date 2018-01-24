@@ -1,19 +1,13 @@
 $Project "client"
 {
-	"game\client\client_reactivedrop.vpc"		[$REACTIVEDROP]
-	"game\client\client_swarm.vpc"				[$SWARM]
 	"game\client\client_hl2.vpc"				[$HL2]
 	"game\client\client_hl2_deferred.vpc"		[$HL2DEFERRED]
-	"game\client\client_episodic.vpc"			[$EPISODIC]
 }
 
 $Project "server"
 {	
-	"game\server\server_reactivedrop.vpc"		[$REACTIVEDROP]
-	"game\server\server_swarm.vpc"				[$SWARM]
 	"game\server\server_hl2.vpc"				[$HL2]
 	"game\server\server_hl2_deferred.vpc"		[$HL2DEFERRED]
-	"game\server\server_episodic.vpc"			[$EPISODIC]
 }
 
 $Project "missionchooser"
@@ -23,7 +17,7 @@ $Project "missionchooser"
 
 $Project "shaderlib"
 {
-	//"materialsystem\shaderlib\shaderlib.vpc"
+	"materialsystem\shaderlib\shaderlib.vpc"		[$HL2DEFERRED]
 }
 
 $Project "game_shader_dx9"

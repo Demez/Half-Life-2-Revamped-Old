@@ -301,7 +301,7 @@ void CBaseAnimatingOverlay::StudioFrameAdvance ()
 				{
 					// give it at least one frame advance cycle to propagate 0.0 to client
 					pLayer->m_flWeight -= pLayer->m_flKillRate * flAdvance;
-					pLayer->m_flWeight = clamp( 	pLayer->m_flWeight, 0.0, 1.0 );
+					pLayer->m_flWeight = clamp( 	pLayer->m_flWeight.Get(), 0.0, 1.0 );
 				}
 				else
 				{
@@ -470,7 +470,7 @@ void CBaseAnimatingOverlay::GetSkeleton( CStudioHdr *pStudioHdr, Vector pos[], Q
 	boneSetup.InitPose( pos, q );
 
 	boneSetup.AccumulatePose( pos, q, GetSequence(), GetCycle(), 1.0, gpGlobals->curtime, m_pIk );
-
+	 
 	// sort the layers
 	int layer[MAX_OVERLAYS];
 	int i;

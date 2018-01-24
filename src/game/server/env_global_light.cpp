@@ -1,6 +1,6 @@
 //========= Copyright © 1996-2010, Valve Corporation, All rights reserved. ============//
 //
-// Purpose: World Dynamic Lighting Entity
+// Purpose: global dynamic light.
 //
 // $NoKeywords: $
 //=============================================================================//
@@ -14,8 +14,9 @@
 // FIXME: This really should inherit from something	more lightweight
 //------------------------------------------------------------------------------
 
+
 //------------------------------------------------------------------------------
-// Purpose : World Dynamic Lighting Entity
+// Purpose : Sunlight shadow control entity
 //------------------------------------------------------------------------------
 class CGlobalLight : public CBaseEntity
 {
@@ -52,9 +53,6 @@ private:
 	CNetworkColor32( m_LightColor );
 	CNetworkVar( float, m_flColorTransitionTime );
 	CNetworkVar( float, m_flSunDistance );
-	//global ortho
-	CNetworkVar( float, m_flOrthoSize );
-	//
 	CNetworkVar( float, m_flFOV );
 	CNetworkVar( float, m_flNearZ );
 	CNetworkVar( float, m_flNorthOffset );
@@ -65,24 +63,22 @@ LINK_ENTITY_TO_CLASS(env_global_light, CGlobalLight);
 
 BEGIN_DATADESC( CGlobalLight )
 
-	DEFINE_KEYFIELD( m_bEnabled,				FIELD_BOOLEAN,		"enabled" ),
-	DEFINE_KEYFIELD( m_bStartDisabled,			FIELD_BOOLEAN,		"StartDisabled" ),
-	DEFINE_AUTO_ARRAY_KEYFIELD( m_TextureName,	FIELD_CHARACTER,	"texturename" ),
-	DEFINE_KEYFIELD( m_flSunDistance,			FIELD_FLOAT,		"distance" ),
-	//global ortho
-	DEFINE_KEYFIELD( m_flOrthoSize,				FIELD_FLOAT,		"orthosize" ),
-	DEFINE_KEYFIELD( m_flFOV,					FIELD_FLOAT,		"fov" ),
-	DEFINE_KEYFIELD( m_flNearZ,					FIELD_FLOAT,		"nearz" ),
-	DEFINE_KEYFIELD( m_flNorthOffset,			FIELD_FLOAT,		"northoffset" ),
-	DEFINE_KEYFIELD( m_bEnableShadows,			FIELD_BOOLEAN,		"enableshadows" ),
-	DEFINE_FIELD( m_LightColor,					FIELD_COLOR32 ), 
-	DEFINE_KEYFIELD( m_flColorTransitionTime,	FIELD_FLOAT,		"colortransitiontime" ),
+	DEFINE_KEYFIELD( m_bEnabled,		FIELD_BOOLEAN, "enabled" ),
+	DEFINE_KEYFIELD( m_bStartDisabled,	FIELD_BOOLEAN, "StartDisabled" ),
+	DEFINE_AUTO_ARRAY_KEYFIELD( m_TextureName, FIELD_CHARACTER, "texturename" ),
+	DEFINE_KEYFIELD( m_flSunDistance,	FIELD_FLOAT, "distance" ),
+	DEFINE_KEYFIELD( m_flFOV,	FIELD_FLOAT, "fov" ),
+	DEFINE_KEYFIELD( m_flNearZ,	FIELD_FLOAT, "nearz" ),
+	DEFINE_KEYFIELD( m_flNorthOffset,	FIELD_FLOAT, "northoffset" ),
+	DEFINE_KEYFIELD( m_bEnableShadows, FIELD_BOOLEAN, "enableshadows" ),
+	DEFINE_FIELD( m_LightColor, FIELD_COLOR32 ), 
+	DEFINE_KEYFIELD( m_flColorTransitionTime, FIELD_FLOAT, "colortransitiontime" ),
 
 	// Inputs
-	DEFINE_INPUT( m_flSunDistance,				FIELD_FLOAT, "SetDistance" ),
-	DEFINE_INPUT( m_flFOV,						FIELD_FLOAT, "SetFOV" ),
-	DEFINE_INPUT( m_flNearZ,					FIELD_FLOAT, "SetNearZDistance" ),
-	DEFINE_INPUT( m_flNorthOffset,				FIELD_FLOAT, "SetNorthOffset" ),
+	DEFINE_INPUT( m_flSunDistance,		FIELD_FLOAT, "SetDistance" ),
+	DEFINE_INPUT( m_flFOV,				FIELD_FLOAT, "SetFOV" ),
+	DEFINE_INPUT( m_flNearZ,			FIELD_FLOAT, "SetNearZDistance" ),
+	DEFINE_INPUT( m_flNorthOffset,			FIELD_FLOAT, "SetNorthOffset" ),
 
 	DEFINE_INPUTFUNC( FIELD_COLOR32, "LightColor", InputSetLightColor ),
 	DEFINE_INPUTFUNC( FIELD_STRING, "SetAngles", InputSetAngles ),
@@ -101,8 +97,6 @@ IMPLEMENT_SERVERCLASS_ST_NOBASE(CGlobalLight, DT_GlobalLight)
 	SendPropInt(SENDINFO (m_LightColor ),	32, SPROP_UNSIGNED, SendProxy_Color32ToInt32 ),
 	SendPropFloat( SENDINFO( m_flColorTransitionTime ) ),
 	SendPropFloat(SENDINFO(m_flSunDistance), 0, SPROP_NOSCALE ),
-	//global ortho
-	SendPropFloat(SENDINFO(m_flOrthoSize), 0, SPROP_NOSCALE ),
 	SendPropFloat(SENDINFO(m_flFOV), 0, SPROP_NOSCALE ),
 	SendPropFloat(SENDINFO(m_flNearZ), 0, SPROP_NOSCALE ),
 	SendPropFloat(SENDINFO(m_flNorthOffset), 0, SPROP_NOSCALE ),
@@ -120,8 +114,6 @@ CGlobalLight::CGlobalLight()
 	m_LightColor.Init( 255, 255, 255, 1 );
 	m_flColorTransitionTime = 0.5f;
 	m_flSunDistance = 10000.0f;
-	//global ortho
-	m_flOrthoSize = 1000.0f;
 	m_flFOV = 5.0f;
 	m_bEnableShadows = false;
 }

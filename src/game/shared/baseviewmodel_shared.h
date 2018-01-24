@@ -126,7 +126,7 @@ public:
 	// Should this object receive shadows?
 	virtual bool			ShouldReceiveProjectedTextures( int flags )
 	{
-		return true;
+		return false;
 	}
 
 	virtual void			GetBoneControllers(float controllers[MAXSTUDIOBONECTRLS]);

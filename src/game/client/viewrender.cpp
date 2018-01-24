@@ -49,6 +49,7 @@
 #include "renderparm.h"
 #include "modelrendersystem.h"
 #include "vgui/ISurface.h"
+
 #ifdef DEFERRED
 #include "deferred/cdeferred_manager_client.h"
 #endif
@@ -58,8 +59,6 @@
 #ifdef SHADEREDITOR
 #include "shadereditor/shadereditorsystem.h"
 #endif
-
-
 
 
 #if defined( HL2_CLIENT_DLL ) || defined( INFESTED_DLL )
@@ -100,27 +99,18 @@ extern ConVar r_shadow_deferred;
 //-----------------------------------------------------------------------------
 // Convars related to controlling rendering
 //-----------------------------------------------------------------------------
-static ConVar cl_maxrenderable_dist("cl_maxrenderable_dist", "3000", FCVAR_CHEAT, "Max distance from the camera at which things will be rendered" );
+ConVar cl_maxrenderable_dist("cl_maxrenderable_dist", "3000", FCVAR_CHEAT, "Max distance from the camera at which things will be rendered" );
 
 ConVar r_entityclips( "r_entityclips", "1" ); //FIXME: Nvidia drivers before 81.94 on cards that support user clip planes will have problems with this, require driver update? Detect and disable?
 
 // Matches the version in the engine
-#ifdef DEFERRED
-ConVar r_drawopaqueworld("r_drawopaqueworld", "1", FCVAR_CHEAT);
-ConVar r_drawtranslucentworld("r_drawtranslucentworld", "1", FCVAR_CHEAT);
-ConVar r_3dsky("r_3dsky", "1", 0, "Enable the rendering of 3d sky boxes");
-ConVar r_skybox("r_skybox", "1", FCVAR_CHEAT, "Enable the rendering of sky boxes");
-ConVar r_drawtranslucentrenderables("r_drawtranslucentrenderables", "1", FCVAR_CHEAT);
-ConVar r_drawopaquerenderables("r_drawopaquerenderables", "1", FCVAR_CHEAT);
-#else
-static ConVar r_drawopaqueworld( "r_drawopaqueworld", "1", FCVAR_CHEAT );
-static ConVar r_drawtranslucentworld( "r_drawtranslucentworld", "1", FCVAR_CHEAT );
-static ConVar r_3dsky( "r_3dsky","1", 0, "Enable the rendering of 3d sky boxes" );
-static ConVar r_skybox( "r_skybox","1", FCVAR_CHEAT, "Enable the rendering of sky boxes" );
-static ConVar r_drawtranslucentrenderables( "r_drawtranslucentrenderables", "1", FCVAR_CHEAT );
-static ConVar r_drawopaquerenderables( "r_drawopaquerenderables", "1", FCVAR_CHEAT );
-#endif
-ConVar r_drawviewmodel("r_drawviewmodel", "1", FCVAR_CHEAT);
+ConVar r_drawopaqueworld( "r_drawopaqueworld", "1", FCVAR_CHEAT );
+ConVar r_drawtranslucentworld( "r_drawtranslucentworld", "1", FCVAR_CHEAT );
+ConVar r_3dsky( "r_3dsky","1", 0, "Enable the rendering of 3d sky boxes" );
+ConVar r_skybox( "r_skybox","1", FCVAR_CHEAT, "Enable the rendering of sky boxes" );
+ConVar r_drawviewmodel( "r_drawviewmodel","1", FCVAR_CHEAT );
+ConVar r_drawtranslucentrenderables( "r_drawtranslucentrenderables", "1", FCVAR_CHEAT );
+ConVar r_drawopaquerenderables( "r_drawopaquerenderables", "1", FCVAR_CHEAT );
 
 static ConVar r_flashlightdepth_drawtranslucents( "r_flashlightdepth_drawtranslucents", "0", FCVAR_NONE );
 
@@ -139,11 +129,11 @@ ConVar mat_ambient_light_b_forced( "mat_ambient_light_b_forced", "-1.0" );
 //-----------------------------------------------------------------------------
 // Convars related to fog color
 //-----------------------------------------------------------------------------
-static void GetFogColor( fogparams_t *pFogParams, float *pColor, bool ignoreOverride = false, bool ignoreHDRColorScale = false );
-static float GetFogMaxDensity( fogparams_t *pFogParams, bool ignoreOverride = false );
-static bool GetFogEnable( fogparams_t *pFogParams, bool ignoreOverride = false );
-static float GetFogStart( fogparams_t *pFogParams, bool ignoreOverride = false );
-static float GetFogEnd( fogparams_t *pFogParams, bool ignoreOverride = false );
+void GetFogColor( fogparams_t *pFogParams, float *pColor, bool ignoreOverride = false, bool ignoreHDRColorScale = false );
+float GetFogMaxDensity( fogparams_t *pFogParams, bool ignoreOverride = false );
+bool GetFogEnable( fogparams_t *pFogParams, bool ignoreOverride = false );
+float GetFogStart( fogparams_t *pFogParams, bool ignoreOverride = false );
+float GetFogEnd( fogparams_t *pFogParams, bool ignoreOverride = false );
 float GetSkyboxFogStart( bool ignoreOverride = false );
 float GetSkyboxFogEnd( bool ignoreOverride = false );
 float GetSkyboxFogMaxDensity( bool ignoreOverride = false );
@@ -159,11 +149,7 @@ static ConVar fog_startskybox( "fog_startskybox", "-1", FCVAR_CHEAT );
 static ConVar fog_endskybox( "fog_endskybox", "-1", FCVAR_CHEAT );
 static ConVar fog_maxdensityskybox( "fog_maxdensityskybox", "-1", FCVAR_CHEAT );
 static ConVar fog_colorskybox( "fog_colorskybox", "-1 -1 -1", FCVAR_CHEAT );
-#ifdef DEFERRED
 ConVar fog_enableskybox( "fog_enableskybox", "1", FCVAR_CHEAT );
-#else
-static ConVar fog_enableskybox("fog_enableskybox", "1", FCVAR_CHEAT);
-#endif
 static ConVar fog_maxdensity( "fog_maxdensity", "-1", FCVAR_CHEAT );
 static ConVar fog_hdrcolorscale( "fog_hdrcolorscale", "-1", FCVAR_CHEAT );
 static ConVar fog_hdrcolorscaleskybox( "fog_hdrcolorscaleskybox", "-1", FCVAR_CHEAT );
@@ -206,25 +192,16 @@ static ConVar r_waterforceexpensive( "r_waterforceexpensive", "0" );
 static ConVar r_waterforcereflectentities( "r_waterforcereflectentities", "0" );
 static ConVar r_WaterDrawRefraction( "r_WaterDrawRefraction", "1", 0, "Enable water refraction" );
 static ConVar r_WaterDrawReflection( "r_WaterDrawReflection", "1", 0, "Enable water reflection" );
+ConVar r_ForceWaterLeaf( "r_ForceWaterLeaf", "1", 0, "Enable for optimization to water - considers view in leaf under water for purposes of culling" );
 static ConVar mat_drawwater( "mat_drawwater", "1", FCVAR_CHEAT );
-#ifdef DEFERRED
-ConVar r_ForceWaterLeaf("r_ForceWaterLeaf", "1", 0, "Enable for optimization to water - considers view in leaf under water for purposes of culling");
 ConVar mat_clipz( "mat_clipz", "1" );
-#else
-static ConVar r_ForceWaterLeaf("r_ForceWaterLeaf", "1", 0, "Enable for optimization to water - considers view in leaf under water for purposes of culling");
-static ConVar mat_clipz("mat_clipz", "1");
-#endif
 
 
 //-----------------------------------------------------------------------------
 // Other convars
 //-----------------------------------------------------------------------------
 static ConVar cl_drawmonitors( "cl_drawmonitors", "1" );
-#ifdef DEFERRED
 ConVar r_eyewaterepsilon( "r_eyewaterepsilon", "7.0f", FCVAR_CHEAT );
-#else
-static ConVar r_eyewaterepsilon("r_eyewaterepsilon", "7.0f", FCVAR_CHEAT);
-#endif
 
 extern ConVar cl_leveloverview;
 
@@ -240,11 +217,7 @@ static VMatrix g_matCurrentCamInverse;
 bool s_bCanAccessCurrentView = false;
 IntroData_t *g_pIntroData = NULL;
 static bool	g_bRenderingView = false;			// For debugging...
-#ifdef DEFERRED
 int g_CurrentViewID = VIEW_NONE;
-#else
-static int g_CurrentViewID = VIEW_NONE;
-#endif
 bool g_bRenderingScreenshot = false;
 
 static FrustumCache_t s_FrustumCache;
@@ -446,7 +419,6 @@ void FlushWorldLists()
 }
 #endif
 
-
 //-----------------------------------------------------------------------------
 // Standard 3d skybox view
 //-----------------------------------------------------------------------------
@@ -464,6 +436,7 @@ public:
 	void			Draw();
 
 protected:
+ 
 
 
 	virtual SkyboxVisibility_t	ComputeSkyboxVisibility();
@@ -995,18 +968,9 @@ void CSimpleRenderExecutor::AddView( CRendering3dView *pView )
 	m_pMainView->SetActiveRenderer( pPrevRenderer );
 }
 
-
-#ifdef DEFERRED
 // @Deferred - Biohazard
 // this is allocated differently now
-/*#if !defined( INFESTED_DLL )
-static CViewRender g_ViewRender;
-IViewRender *GetViewRenderInstance()
-{
-	return &g_ViewRender;
-}
-#endif*/
-#else
+#ifndef DEFERRED
 #if !defined( INFESTED_DLL )
 static CViewRender g_ViewRender;
 IViewRender *GetViewRenderInstance()
@@ -1582,7 +1546,7 @@ void CheckAndTransitionColor( float flPercent, float *pColor, float *pLerpToColo
 	}
 }
 
-static void GetFogColorTransition( fogparams_t *pFogParams, float *pColorPrimary, float *pColorSecondary )
+void GetFogColorTransition( fogparams_t *pFogParams, float *pColorPrimary, float *pColorSecondary )
 {
 	if ( !pFogParams )
 		return;
@@ -1602,7 +1566,7 @@ static void GetFogColorTransition( fogparams_t *pFogParams, float *pColorPrimary
 //-----------------------------------------------------------------------------
 // Purpose: Returns the fog color to use in rendering the current frame.
 //-----------------------------------------------------------------------------
-static void GetFogColor( fogparams_t *pFogParams, float *pColor, bool ignoreOverride, bool ignoreHDRColorScale )
+void GetFogColor( fogparams_t *pFogParams, float *pColor, bool ignoreOverride, bool ignoreHDRColorScale )
 {
 	C_BasePlayer *pbp = C_BasePlayer::GetLocalPlayer();
 	if ( !pbp || !pFogParams )
@@ -1670,7 +1634,7 @@ static void GetFogColor( fogparams_t *pFogParams, float *pColor, bool ignoreOver
 }
 
 
-static float GetFogStart( fogparams_t *pFogParams, bool ignoreOverride )
+float GetFogStart( fogparams_t *pFogParams, bool ignoreOverride )
 {
 	if( !pFogParams )
 		return 0.0f;
@@ -1712,7 +1676,7 @@ static float GetFogStart( fogparams_t *pFogParams, bool ignoreOverride )
 	}
 }
 
-static float GetFogEnd( fogparams_t *pFogParams, bool ignoreOverride )
+float GetFogEnd( fogparams_t *pFogParams, bool ignoreOverride )
 {
 	if( !pFogParams )
 		return 0.0f;
@@ -1754,7 +1718,7 @@ static float GetFogEnd( fogparams_t *pFogParams, bool ignoreOverride )
 	}
 }
 
-static bool GetFogEnable( fogparams_t *pFogParams, bool ignoreOverride )
+bool GetFogEnable( fogparams_t *pFogParams, bool ignoreOverride )
 {
 	if ( cl_leveloverview.GetFloat() > 0 )
 		return false;
@@ -1784,7 +1748,7 @@ static bool GetFogEnable( fogparams_t *pFogParams, bool ignoreOverride )
 }
 
 
-static float GetFogMaxDensity( fogparams_t *pFogParams, bool ignoreOverride )
+float GetFogMaxDensity( fogparams_t *pFogParams, bool ignoreOverride )
 {
 	if( !pFogParams )
 		return 1.0f;
@@ -3697,9 +3661,9 @@ void CRendering3dView::BuildRenderableRenderLists( int viewID )
 	const bool bUpdateLightmaps = viewID != VIEW_SHADOW_DEPTH_TEXTURE &&
 		!GetDeferredManager()->IsDeferredRenderingEnabled();
 
-	if (bUpdateLightmaps)
+	if ( bUpdateLightmaps )
 #else
-	if ( viewID != VIEW_SHADOW_DEPTH_TEXTURE )
+	if (viewID != VIEW_SHADOW_DEPTH_TEXTURE)
 #endif
 	{
 		render->BeginUpdateLightmaps();
@@ -3710,7 +3674,7 @@ void CRendering3dView::BuildRenderableRenderLists( int viewID )
 #ifdef DEFERRED
 	if ( bUpdateLightmaps )
 #else
-	if (viewID != VIEW_SHADOW_DEPTH_TEXTURE)
+	if ( viewID != VIEW_SHADOW_DEPTH_TEXTURE )
 #endif
 	{
 		// update lightmap on brush models if necessary
@@ -3938,7 +3902,7 @@ static void DrawClippedDepthBox( IClientRenderable *pEnt, float *pClipPlane )
 		if( j == 3 ) //not enough lines to even form a triangle
 			continue;
 
-		float *pStartPoint = 0;
+		float *pStartPoint;
 		float *pTriangleFanPoints[4]; //at most, one of our fans will have 5 points total, with the first point being stored separately as pStartPoint
 		int iTriangleFanPointCount = 1; //the switch below creates the first for sure
 		
@@ -5202,12 +5166,6 @@ void CShadowDepthView::Draw()
 		//for the 360, the dummy render target has a separate depth buffer which we Resolve() from afterward
 		render->Push3DView( (*this), VIEW_CLEAR_DEPTH, m_pRenderTarget, GetFrustum() );
 	}
-	
-/*#ifndef DEFERRED
-	pRenderContext.GetFrom(materials);
-	pRenderContext->PushRenderTargetAndViewport(m_pRenderTarget, m_pDepthTexture, 0, 0, m_pDepthTexture->GetMappingWidth(), m_pDepthTexture->GetMappingWidth());
-	pRenderContext.SafeRelease();
-#endif*/
 
 	SetupCurrentView( origin, angles, VIEW_SHADOW_DEPTH_TEXTURE );
 
@@ -5258,10 +5216,6 @@ void CShadowDepthView::Draw()
 		//Resolve() the depth texture here. Before the pop so the copy will recognize that the resolutions are the same
 		pRenderContext->CopyRenderTargetToTextureEx( m_pDepthTexture, -1, NULL, NULL );
 	}
-	
-/*#ifndef DEFERRED
-	pRenderContext->PopRenderTargetAndViewport();
-#endif*/
 
 	render->PopView( GetFrustum() );
 

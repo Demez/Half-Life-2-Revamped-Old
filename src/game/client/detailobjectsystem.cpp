@@ -656,7 +656,7 @@ void CDetailModel::GetRenderBoundsWorldspace( Vector& mins, Vector& maxs )
 
 bool CDetailModel::ShouldReceiveProjectedTextures( int flags )
 {
-	return true;
+	return false;
 }
 
 int CDetailModel::GetRenderFlags( void )

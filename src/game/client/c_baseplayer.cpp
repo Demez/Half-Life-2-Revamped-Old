@@ -12,7 +12,7 @@
 #include "history_resource.h"
 #include "iinput.h"
 #include "input.h"
-#include "ammodef.h"
+#include "ammodef.h" 
 #include "view.h"
 #include "iviewrender.h"
 #include "iclientmode.h"
@@ -46,10 +46,6 @@
 #include "cellcoord.h"
 
 #include "debugoverlay_shared.h"
-
-#ifdef DEFERRED
-#include "deferred/flashlighteffect_deferred.h"
-#endif
 
 #ifdef DEMOPOLISH_ENABLED
 #include "demo_polish/demo_polish.h"

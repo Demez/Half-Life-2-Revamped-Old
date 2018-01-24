@@ -198,13 +198,12 @@ bool C_BaseViewModel::Interpolate( float currentTime )
 	return bret;
 }
 
-static ConVar cl_flip_viewmodel("cl_flip_viewmodel", "0");
 
 inline bool C_BaseViewModel::ShouldFlipViewModel()
 {
-	//return false;
-	return cl_flip_viewmodel.GetBool();
+	return false;
 }
+
 
 void C_BaseViewModel::ApplyBoneMatrixTransform( matrix3x4_t& transform )
 {
@@ -262,7 +261,11 @@ bool C_BaseViewModel::ShouldDraw()
 #endif
 	else
 	{
+#ifdef DEFERRED
 		Assert( !IsEffectActive( EF_NODRAW ) );
+#else
+		Assert( !IsEffectActive( EF_NODRAW ) );
+#endif
 		Assert(	GetRenderMode() != kRenderNone );
 
 		if ( vm_draw_always.GetBool() )
