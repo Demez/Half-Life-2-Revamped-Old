@@ -40,10 +40,10 @@ public:
 	CNetworkVar( bool,	m_bDisplayReticle );
 	CNetworkVar( bool,	m_bStickyAutoAim );
 	CNetworkVar( bool,	m_bAutoAimTarget );
-//#ifdef HL2_EPISODIC
+#ifdef HL2_EPISODIC
 	CNetworkVar( float, m_flFlashBattery );
 	CNetworkVar( Vector, m_vecLocatorOrigin );
-//#endif
+#endif
 
 	// Ladder related data
 	CNetworkVar( EHANDLE, m_hLadder );

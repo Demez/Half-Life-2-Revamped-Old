@@ -270,7 +270,7 @@ public:
 	// Should this object be able to have shadows cast onto it?
 	virtual bool	ShouldReceiveProjectedTextures( int flags ) 
 	{
-		return true;
+		return false;
 	}
 
 	// These methods return true if we want a per-renderable shadow cast direction + distance

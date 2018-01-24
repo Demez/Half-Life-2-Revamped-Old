@@ -1135,12 +1135,11 @@ void CNPC_Alyx::DoMobbedCombatAI( void )
 void CNPC_Alyx::DoCustomCombatAI( void )
 {
 	// Only run the following code if we're not in a vehicle
-	// game crash here yay
-	//if ( RunningPassengerBehavior() == false )
-	//{
-	//	// Do our mobbed by enemies logic
-	//	DoMobbedCombatAI();
-	//}
+	if ( RunningPassengerBehavior() == false )
+	{
+		// Do our mobbed by enemies logic
+		DoMobbedCombatAI();
+	}
 
 	CBaseEntity *pEnemy = GetEnemy();
 
@@ -3022,9 +3021,8 @@ bool CNPC_Alyx::IsReadinessCapable( void )
 //-----------------------------------------------------------------------------
 bool CNPC_Alyx::IsAllowedToInteract()
 {
-	// idk why but this breaks
-	//if( RunningPassengerBehavior() )
-	//	return false;
+	if ( RunningPassengerBehavior() )
+		return false;
 
 	if( IsInAScript() )
 		return false;

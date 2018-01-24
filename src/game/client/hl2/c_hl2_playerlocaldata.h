@@ -41,11 +41,10 @@ public:
 	bool	m_bDisplayReticle;
 	bool	m_bStickyAutoAim;
 	bool	m_bAutoAimTarget;
-	// this was moved up
-	Vector	m_vecLocatorOrigin;
-//#ifdef HL2_EPISODIC
+#ifdef HL2_EPISODIC
 	float	m_flFlashBattery;
-//#endif
+	Vector	m_vecLocatorOrigin;
+#endif
 
 	// Ladder related data
 	EHANDLE			m_hLadder;

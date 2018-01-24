@@ -75,9 +75,6 @@ private:
 	int			m_nSpotlightTextureFrame;
 	int			m_nShadowQuality;
 
-	// uberlight
-	//UberlightState_t	m_UberlightState;
-
 	// simple projection
 	IMaterial	*m_pMaterial;
 	float		m_flProjectionSize;

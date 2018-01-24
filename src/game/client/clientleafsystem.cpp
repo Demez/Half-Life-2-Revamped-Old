@@ -701,8 +701,8 @@ void CClientLeafSystem::RecomputeRenderableLeaves()
 			// See note below
 			info.m_Flags &= ~RENDER_FLAGS_HASCHANGED;
 
-			//if ( info.m_Flags & RENDER_FLAGS_RENDER_WITH_VIEWMODELS )
-			//	continue;
+			if ( info.m_Flags & RENDER_FLAGS_RENDER_WITH_VIEWMODELS )
+				continue;
 
 			CalcRenderableWorldSpaceAABB_Bloated( info, absMins, absMaxs );
 			if ( absMins != info.m_vecBloatedAbsMins || absMaxs != info.m_vecBloatedAbsMaxs )

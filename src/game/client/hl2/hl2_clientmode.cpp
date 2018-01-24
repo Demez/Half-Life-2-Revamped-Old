@@ -73,5 +73,6 @@ void CHLModeManager::LevelShutdown( void )
 
 
 static CHLModeManager g_HLModeManager;
+// I know this comes up with a warning as static, but it gives a linker error if its not static, plus game runs fine
 static IVModeManager *modemanager = &g_HLModeManager;
 

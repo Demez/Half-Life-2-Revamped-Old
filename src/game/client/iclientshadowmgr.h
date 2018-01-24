@@ -19,9 +19,6 @@
 #include "IVRenderView.h"
 #include "toolframework/IToolEntity.h"
 
-// uberlight
-//#include "../materialsystem/stdshaders/IShaderExtension.h"
-
 //-----------------------------------------------------------------------------
 // Forward decls
 //-----------------------------------------------------------------------------
@@ -126,9 +123,6 @@ public:
 	virtual void GetFrustumExtents( ClientShadowHandle_t handle, Vector &vecMin, Vector &vecMax ) = 0;
 
 	virtual void ShutdownRenderTargets( void ) =0;
-
-	// uberlight
-	//virtual void UpdateUberlightState(FlashlightState_t& handle, const UberlightState_t& uberlightState) = 0;
 };
 
 

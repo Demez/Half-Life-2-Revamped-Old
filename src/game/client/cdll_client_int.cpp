@@ -2159,16 +2159,16 @@ void CHLClient::InstallStringTableCallback( const char *tableName )
 		networkstringtable->SetAllowClientSideAddString( g_pStringTableExtraParticleFiles, true );
 		// When the particle system list changes, we need to know immediately
 		g_pStringTableExtraParticleFiles->SetStringChangedCallback( NULL, OnPrecacheParticleFile );
-#ifdef DEFERRED
 	}
+#ifdef DEFERRED
 	// @Deferred - Biohazard
 	else if (!Q_strcasecmp(tableName, COOKIE_STRINGTBL_NAME))
 	{
 		g_pStringTable_LightCookies = networkstringtable->FindTable(tableName);
 
 		g_pStringTable_LightCookies->SetStringChangedCallback(NULL, OnCookieTableChanged);
-#endif
 	}
+#endif
 	else
 	{
 		// Pass tablename to gamerules last if all other checks fail

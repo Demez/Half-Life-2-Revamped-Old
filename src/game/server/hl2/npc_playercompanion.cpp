@@ -1458,7 +1458,6 @@ void CNPC_PlayerCompanion::HandleAnimEvent( animevent_t *pEvent )
 		break;
 
 	default:
-		// game crash
 		BaseClass::HandleAnimEvent( pEvent );
 		break;
 	}

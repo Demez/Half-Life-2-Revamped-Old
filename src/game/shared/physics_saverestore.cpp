@@ -306,7 +306,7 @@ public:
 			}
 			else
 				pOwner->CreateVPhysics();
-		}	// can crash here idk why
+		}
 	}
 	
 	

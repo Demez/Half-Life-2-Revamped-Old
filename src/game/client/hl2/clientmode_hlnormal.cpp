@@ -25,8 +25,8 @@
 #include "tier0/memdbgon.h"
 
 extern bool g_bRollingCredits;
-ConVar default_fov( "default_fov", "90", FCVAR_CHEAT );
-ConVar fov_desired( "fov_desired", "90", FCVAR_ARCHIVE | FCVAR_USERINFO, "Sets the base field-of-view.", true, 75.0, true, 90.0 );
+ConVar default_fov( "default_fov", "75", FCVAR_CHEAT );
+ConVar fov_desired( "fov_desired", "75", FCVAR_ARCHIVE | FCVAR_USERINFO, "Sets the base field-of-view.", true, 75.0, true, 90.0 );
 
 vgui::HScheme g_hVGuiCombineScheme = 0;
 

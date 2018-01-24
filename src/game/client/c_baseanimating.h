@@ -499,9 +499,6 @@ public:
 	CRagdoll						*m_pRagdoll;
 	CBaseAnimating					*m_pClientsideRagdoll;
 
-	// Object bodygroup
-	int								m_nBody;
-
 	// Hitbox set to use (default 0)
 	int								m_nHitboxSet;
 
@@ -523,7 +520,7 @@ protected:
 
 // FTYPEDESC_INSENDTABLE STUFF (end)
 	int								m_nSkin;// Texture group to use
-	//int								m_nBody;// Object bodygroup
+	int								m_nBody;// Object bodygroup
 	int								m_nNewSequenceParity;
 	int								m_nResetEventsParity;
 	int								m_nPrevNewSequenceParity;

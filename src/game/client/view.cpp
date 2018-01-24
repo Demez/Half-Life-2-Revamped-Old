@@ -44,15 +44,11 @@
 #ifdef GAMEUI_UISYSTEM2_ENABLED
 #include "gameui.h"
 #endif
-#ifdef GAMEUI_EMBEDDED
 
-/*#if defined( SWARM_DLL )
-#include "swarm/gameui/swarm/basemodpanel.h"
-#else
-#error "GAMEUI_EMBEDDED"
-#endif*/
+#ifdef GAMEUI_EMBEDDED
 #include "gameui/shared/basemodpanel.h"
 #endif
+
 #ifdef INFESTED_DLL
 #include "c_asw_marine.h"
 #endif
@@ -62,6 +58,8 @@
 #endif
 
 
+
+	
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 		  
@@ -729,8 +727,7 @@ void CViewRender::SetUpView()
 	float flFOVOffset = default_fov.GetFloat() - view.fov;
 
 	//Adjust the viewmodel's FOV to move with any FOV offsets on the viewer's end
-	//view.fovViewmodel = GetClientMode()->GetViewModelFOV() - flFOVOffset;
-	view.fovViewmodel = abs(GetClientMode()->GetViewModelFOV() - flFOVOffset);
+	view.fovViewmodel = GetClientMode()->GetViewModelFOV() - flFOVOffset;
 
 	// Compute the world->main camera transform
 	ComputeCameraVariables( view.origin, view.angles, 

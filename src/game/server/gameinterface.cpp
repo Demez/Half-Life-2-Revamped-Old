@@ -1485,6 +1485,7 @@ void CServerGameDLL::CreateNetworkStringTables( void )
 			g_pStringTableClientSideChoreoScenes &&
 			g_pStringTableExtraParticleFiles
 #ifdef DEFERRED
+			// @Deferred - Biohazard
 			&& g_pStringTable_LightCookies
 #endif
 			);

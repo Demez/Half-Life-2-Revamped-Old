@@ -975,9 +975,7 @@ int CBeam::DrawModel( int flags, const RenderableInstance_t &instance )
 		// If the beam is attached
 		for (int i=0;i<MAX_BEAM_ENTS;i++)
 		{
-			// can crash here for some reason
-			//C_BaseViewModel *vm = ToBaseViewModel(m_hAttachEntity[i].Get());
-			C_BaseViewModel *vm = dynamic_cast<C_BaseViewModel *>(m_hAttachEntity[i].Get());
+			C_BaseViewModel *vm = ToBaseViewModel(m_hAttachEntity[i].Get());
 			if ( vm )
 			{
 				return 0;
