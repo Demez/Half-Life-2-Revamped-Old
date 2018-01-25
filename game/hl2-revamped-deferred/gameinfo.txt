@@ -1,6 +1,6 @@
 "GameInfo"
 {
-	"game"		"Half-Life 2: Revamped"			// Game title in Steam
+	"game"		"Half-Life 2: Revamped Deferred"			// Game title in Steam
 	"title"		"Half-Life 2: Revamped"			// Change me!
 	"type"		"singleplayer_only"
 	"icon"		"icon"					// Icon in Steam
