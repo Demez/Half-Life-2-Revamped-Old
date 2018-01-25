@@ -1,16 +1,15 @@
 "vertexlitGeneric"
 {
-	"$basetexture" "Nature/cliffface001a"
+	"$basetexture" "models/props_wasteland/rockcliff02a"
 	"$surfaceprop" "concrete"
-	"$ssbump" "1"
-	"$bumpmap" "Nature/cliffface001a_height-ssbump"
+//	"$bumpmap" "Nature/cliffface001a_normal"
 //	"$parallaxmap" "Nature/cliffface001a_height"
 //	"$parallaxmapscale" ".1"
 	"$model" 1
 
 	"$detail" "detail\rock_detail_01"
-	"$detailscale" "8.0"
-	"$detailblendfactor" .7
+	"$detailscale" "9"
+	"$detailblendfactor" 1
 	"$detailblendmode" 0
 }
 

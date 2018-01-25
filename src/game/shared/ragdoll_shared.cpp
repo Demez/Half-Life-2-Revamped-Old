@@ -758,6 +758,10 @@ bool ShouldRemoveThisRagdoll( CBaseAnimating *pRagdoll )
 		return false;
 	*/
 
+	// Bail if we have a null ragdoll pointer.
+	if (!pRagdoll->m_pRagdoll)
+		return true;
+
 	Vector vMins, vMaxs;
 		
 	Vector origin = pRagdoll->m_pRagdoll->GetRagdollOrigin();

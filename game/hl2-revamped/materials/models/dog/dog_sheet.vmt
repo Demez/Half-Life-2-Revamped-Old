@@ -8,7 +8,7 @@
 	"$halflambert" "1"
 	
 	"$envmap" "env_cubemap"
-	"$envmaptint" "[.05 .05 .05]"
+	"$envmaptint" "[.15 .15 .15]"
 	"$normalmapalphaenvmapmask" "1"
 	"$envmapfresnel" "1"
 	//"$phongexponent" "5"
@@ -22,7 +22,7 @@
 	"$rimlightboost" "1"
 
 	"$detail" "detail\metal_detail_01"
-	"$detailscale" "6.283"
-	"$detailblendfactor" "1.2"
+	"$detailscale" "6.8283"
+	"$detailblendfactor" "2.1"
 	"$detailblendmode" "0"										
 }

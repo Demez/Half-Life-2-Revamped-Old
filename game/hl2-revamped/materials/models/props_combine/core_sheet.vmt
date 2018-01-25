@@ -1,0 +1,53 @@
+"Core"
+{
+	"$normalmap" "Models/props_combine/core_normal"
+	"$dudvmap"  "Models/props_combine/core_dudv"
+
+	"$corecolortexture" "models/props_combine/corewarpcolor"
+	"$flowmap" "models/props_combine/core_flow"
+
+	"$model" 1
+	"$REFRACTAmOUNT" "0.15"
+	"$FLOWMAPSCROLLRATE" "[.0475 .133]"
+//	"$envmap" "CustomCubeMaps/core"
+	"$envmap" "env_cubemap"
+	"$refracttint" "[0.7 0.7 0.6]"
+	"$envmaptint" "[0.8 0.6 0.6]"
+	"$FLOWMAPTEXCOORDOFFSET" "1.0"
+	"$TempMin" 0
+	"$TempMax" 1
+
+	
+	"core_dx70"
+	{
+		"$fallbackmaterial" "models/props_combine/coredx70"
+	}
+
+	"core_dx80"
+	{
+		"$normalmap" "dev/water_normal"
+		"$dudvmap"  "dev/water_dudv"
+		"$bumptransform" "center .5 .5 scale 5 5 rotate 0 translate 0 0"
+		"$envmapcontrast" "1.0"
+	}
+
+	"Proxies"
+	{
+
+		"Sine"
+		{
+			"resultVar" "$FLOWMAPTEXCOORDOFFSET"
+			"sineperiod" 4
+			"sinemin" "$TempMin"
+			"sinemax" "$TempMax"
+		}
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$normalmap" 
+			"animatedtextureframenumvar" "$bumpframe"
+			"animatedtextureframerate" 29.00
+		}
+	}
+}
+
+

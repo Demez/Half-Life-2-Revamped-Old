@@ -1,0 +1,45 @@
+"Unlittwotexture"
+//"VertexlitGeneric"
+{
+	"$model" "1"
+	"$basetexture" "models/props_combine/combine_monitorbay_disp"
+	"$surfaceprop" "glass"
+	"$texture2" "models/props_combine/combinescanline"
+	"$selfillum" "1"
+
+	"Proxies"
+	{
+
+		"Sine"
+		{
+			"resultVar" "$color[0]"
+			"sineperiod" .2
+			"sinemin" .99
+			"sinemax" 1
+		}
+		"Sine"
+		{
+			"resultVar" "$color[1]"
+			"sineperiod" 4.1
+			"sinemin" .78
+			"sinemax" 1
+		}
+		"Sine"
+		{
+			"resultVar" "$color[2]"
+			"sineperiod" 4.1
+			"sinemin" .79
+			"sinemax" 1
+		}
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" 1
+			"texturescrollangle" -90
+		}
+
+
+	}
+
+}

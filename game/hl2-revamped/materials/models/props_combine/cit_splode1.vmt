@@ -1,0 +1,40 @@
+"UnLitTwoTexture"
+{
+
+	"$basetexture" "Models/props_combine/cit_splode1"
+	"$texture2" "Models/props_combine/cit_splode2"
+	"%keywords" "combine"
+	"$nofog" "1"
+	"$model" "1"
+	"$brightness" "1"
+	"$additive" "1"
+
+	"Proxies"
+	{
+
+
+		"Sine"
+		{
+			"sineperiod" ".1"
+			"sinemin" .7
+			"sinemax" 1
+			"resultVar" "$alpha"
+		}
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" 0.2
+			"texturescrollangle" 90
+		}
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" .08
+			"texturescrollangle" 0
+		}
+
+	}
+
+
+}

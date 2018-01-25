@@ -1,0 +1,26 @@
+"UnLitGeneric"
+{
+
+	"$basetexture" "Models/props_combine/cit_corebright"
+	"%keywords" "combine"
+	"$nofog" "1"
+	"$model" "1"
+	"$brightness" "1"
+	"$additive" "1"
+
+	"Proxies"
+	{
+
+
+		"Sine"
+		{
+			"sineperiod" ".09"
+			"sinemin" .9
+			"sinemax" 1
+			"resultVar" "$alpha"
+		}
+
+	}
+
+
+}

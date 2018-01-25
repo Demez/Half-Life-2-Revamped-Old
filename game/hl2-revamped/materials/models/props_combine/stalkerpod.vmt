@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_combine/stalkerPod"
+	"$surfaceprop" "metal"
+
+}

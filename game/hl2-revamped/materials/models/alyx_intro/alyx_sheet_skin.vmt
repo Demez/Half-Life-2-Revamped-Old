@@ -1,0 +1,32 @@
+"vortwarp"
+{
+	"$basetexture" "models/Alyx/alyx_sheet"
+	"$bumpmap" "models/alyx/alyx_sheet_normal"
+	"$halflambert" 1
+	"$nodecal" "1"
+	"$model" "1"
+
+	"$flowmap" "models/vortigaunt/vortigaunt_flow"
+	"$selfillummap" "models/vortigaunt/vortigaunt_illum"
+	"$entityorigin" ""
+	"$warpparam" "1.0"
+	"$selfillumscale" "10"
+	"$selfillumtint" "[0 0 0]"
+	"$tmp" "0"
+	"$one" "1"
+
+	"vortwarp_dx7"
+	{
+		"$basetexture" "models/alyx_intro/intro_alyxsheet"
+	}
+
+	"Proxies"
+	{
+		"EntityOriginAlyx"
+		{
+		}
+		"MaterialModify"
+		{
+		}
+	}
+}

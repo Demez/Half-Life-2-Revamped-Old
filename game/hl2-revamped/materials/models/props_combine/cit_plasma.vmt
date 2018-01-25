@@ -1,0 +1,39 @@
+"UnLitTwoTexture"
+{
+
+	"$basetexture" "Models/props_combine/cit_twirl"
+	"$texture2" "Models/props_combine/cit_plasma2"
+	"%keywords" "combine"
+	"$nofog" "1"
+	"$model" "1"
+	"$brightness" "1"
+	"$additive" "1"
+
+	"Proxies"
+	{
+
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedtextureframerate" 15
+		}
+
+//		"Sine"
+//		{
+//			"sineperiod" ".09"
+//			"sinemin" .8
+//			"sinemax" 1
+//			"resultVar" "$alpha"
+//		}
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$texture2transform"
+			"texturescrollrate" .4
+			"texturescrollangle" 70
+		}
+	}
+
+
+}

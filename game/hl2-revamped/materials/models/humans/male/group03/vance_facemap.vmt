@@ -2,6 +2,6 @@
 {
 	// Original shader: VertexLitTexture
 	"$basetexture" "models/Humans/Male/Group03/vance_facemap"
-	//"$envmapsphere" 1
 	"$halflambert" 1
+	"$nodecal" "1"
 }

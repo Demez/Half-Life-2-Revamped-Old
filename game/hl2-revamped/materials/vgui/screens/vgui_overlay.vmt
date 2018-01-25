@@ -7,7 +7,6 @@
 	"$texoffset"	"[0 0]"
 	"$texscale"	1
 
-	
 //	"Proxies"
 //	{
 //		"LinearRamp"
@@ -29,5 +28,5 @@
 //			"resultVar"	"$basetexturetransform"
 //		}
 //	}
-//	
+
 }

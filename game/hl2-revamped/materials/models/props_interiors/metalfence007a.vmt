@@ -7,5 +7,8 @@
 	"$surfaceprop" "chainlink"
 	"%keywords" "c17downtown,c17industrial"
 	"%compileladder" 1
-	"$alphatest" 1
+
+	"$AlphaTest" "1"
+	"$AlphaTestReference" "0.3"
+	"$AllowAlphaToCoverage" "1"
 }

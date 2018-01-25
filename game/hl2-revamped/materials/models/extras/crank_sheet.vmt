@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/extras/crank_sheet"
+	"$bumpmap" "Models/extras/crank_sheet_normal"
+	"$normalmapalphaenvmapmask" "1"
+//	"$envmap" "CustomCubeMaps/simplespec"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .3 .3 .3 ]"
+}

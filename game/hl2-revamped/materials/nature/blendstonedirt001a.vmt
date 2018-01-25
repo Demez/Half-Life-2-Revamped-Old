@@ -1,0 +1,25 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "Stone/stonefloor006d"
+	"$basetexture2" "nature/dirtfloor004a"
+	"%tooltexture" "nature/blendstonedirt001a_tooltexture"
+	"$surfaceprop" "concrete"
+	"$surfaceprop2" "dirt"
+	"$bumpmap" "stone/stonefloor006a_normal"
+	"$bumpmap2" "Nature/mudfloor001a_normal"
+	"$envmap" "env_cubemap"
+	"$envmapsaturation" 1
+	"$envmapcontrast" 1
+	"$envmaptint" "[ .6 .6 .6 ]"
+	"$normalmapalphaenvmapmask" 1
+
+        //"$basetexturetransform" "center .5 .5 scale 2 2 rotate 0  translate 0 0"
+        //"$basetexturetransform2" "center .5 .5 scale 4 4 rotate 0 translate 0 0"
+	"%keywords" "wasteland"
+	"lightmappedgeneric_HDR_dx9"
+	{
+		"$envmaptint" "[.15 .15 .15]"
+	}
+
+}
+  

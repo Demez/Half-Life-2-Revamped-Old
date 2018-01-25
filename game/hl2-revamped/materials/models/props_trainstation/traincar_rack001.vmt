@@ -2,10 +2,21 @@
 {
      "$basetexture" "models\props_trainstation\Traincar_rack001"
      "$surfaceprop" "metal"
-     "$envmap" "Environment Maps\train_01"
-     "$basealphaenvmapmask" 1
-     "$envmaptint" "[ .75 .75 .75]"
-     "$multipass" 1
+	"$envmap" "Environment Maps\train_01"
+	"$basealphaenvmapmask" 1
+	"$multipass" 1
+
+ 	"vertexlitgeneric_HDR_dx9"
+ 	{
+  		"$envmaptint" "[.25 .25 .25]"
+ 	}
+
+
+	"vertexlitgeneric_DX9"
+ 	{
+  		"$envmaptint" "[.25 .25 .25]"
+ 	}
+
 }
 
 

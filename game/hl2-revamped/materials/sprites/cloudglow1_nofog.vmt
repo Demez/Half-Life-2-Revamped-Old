@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "sprites/muzzleflash3"
+	"$additive" "1"
+	"$translucent" "1"
+	"$nofog" 1
+}

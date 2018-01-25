@@ -1,0 +1,14 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Tile/tilefloor010c"
+	"$surfaceprop" "tile"
+	"%keywords" "c17downtown"
+	"$bumpmap" "tile/tilefloor010c_normal.vtf"
+	//"$bumptransform" "center .5 .5 scale 1.5 1.5 rotate 0 translate 0 0";
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+	"$envmaptint" "[ .56 .56 .56 ]"
+}

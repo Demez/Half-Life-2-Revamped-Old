@@ -1,0 +1,27 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\blueflytrap\crowbar\crowbar_e"
+	"$bumpmap" "models\blueflytrap\crowbar\crowbar_n_alt"
+
+	"$nodiffusebumplighting"	"1"
+
+	"$color2"			"[0 0 0]"
+
+	"$additive"	"1"
+
+	"$phongexponenttexture" "models\blueflytrap\crowbar\crowbar_e"
+
+	"$phong" "1"
+	"$phongboost"	"0.9986979"
+
+	"$phongfresnelranges"	"[0.22 0.856 20]"
+
+	"$envmap" "env_cubemap"
+
+//	"$envmap" "models\cubemaps\fallout4cube_grey"
+//	"$envmap" "models\cubemaps\cube_metal_grey"
+
+	"$normalmapalphaenvmapmask"	"1"
+	"$envmaptint"	"[0.045 0.045 0.045]"
+	"$envmapfresnel"	"1"
+}

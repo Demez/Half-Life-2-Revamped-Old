@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"models/props_combine/combine_citadelwall_destroyed01a"
+	"$envmap" "env_cubemap"
+//	"$translucent" 1
+	"$envmaptint" 0.5 0.5 0.5
+//	"$alphatest" 1
+	"$envmapmask" "models/props_combine/combine_citadelwall_destroyed01a_specular"
+	"$selfillum_envmapmask_alpha" "1"
+}

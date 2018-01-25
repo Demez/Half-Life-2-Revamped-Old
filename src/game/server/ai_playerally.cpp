@@ -1059,7 +1059,9 @@ void CAI_PlayerAlly::StartTask( const Task_t *pTask )
 			TaskComplete();
 		}
 		else
+		{
 			TaskFail( FAIL_NO_SOUND );
+		}
 		break;
 
 	default:

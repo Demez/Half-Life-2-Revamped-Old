@@ -90,7 +90,8 @@ void CDeferredManagerServer::LevelInitPreEntity()
 	lump_t &lightLump = header.lumps[LUMP_WORLDLIGHTS];
 
 	if (lightLump.filelen % sizeof(dworldlight_t))
-		return;
+		//return;
+		return g_pFullFileSystem->Close(hFile);
 
 	g_pFullFileSystem->Seek(hFile, lightLump.fileofs, FILESYSTEM_SEEK_HEAD);
 

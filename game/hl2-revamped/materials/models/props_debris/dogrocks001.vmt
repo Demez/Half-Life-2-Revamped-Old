@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_debris/dogrocks001"
+//	"$bumpmap" "models/props_debris/dogrocks001_normal"
+}

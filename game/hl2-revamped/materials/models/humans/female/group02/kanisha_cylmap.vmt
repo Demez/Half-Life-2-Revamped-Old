@@ -3,4 +3,5 @@
 	// Original shader: VertexLitTexture
 	"$basetexture" "models/Humans/Female/Group02/kanisha_cylmap"
 	"$halflambert" 1
+	"$nodecal" "1"
 }

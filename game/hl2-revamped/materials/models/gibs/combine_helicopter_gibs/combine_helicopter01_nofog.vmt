@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/Combine_Helicopter/combine_helicopter01"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .1 .1 .1]"
+	"$nofog"	"1"
+	"$basealphaenvmapmask" 1
+}

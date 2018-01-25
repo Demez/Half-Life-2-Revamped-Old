@@ -4,5 +4,7 @@
 	"%compilepassbullets" 1
 	"$surfaceprop" "metalgrate"
 	"%keywords" "airexchange,c17industrial,combine,wasteland"
-	"$translucent" 1
+
+	"$AlphaTest" "1"
+	"$AlphaTestReference" "0.35"
 }

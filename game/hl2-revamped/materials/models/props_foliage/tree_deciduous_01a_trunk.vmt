@@ -3,5 +3,4 @@
 	// Original shader: BaseTimesLightmap
 	"$basetexture" "models/props_foliage/tree_deciduous_01a_trunk"
 	"$surfaceprop" "wood"
-	"$nodecal" 1
 }

@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_combine/ballsocket_sheet"
+	"$surfaceprop" "metal"
+	"$selfillum" "1"
+	"%keywords" "combine"
+}

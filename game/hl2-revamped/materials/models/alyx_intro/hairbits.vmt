@@ -1,0 +1,26 @@
+"vortwarp"
+{
+	"$translucent" 1
+//	"$alphatest" 1
+	"$basetexture" "models/Alyx/hairbits"
+	"$halflambert" 1
+	"$nodecal" "1"
+	"$nocull" "1"
+
+	"$model" "1"
+	"$flowmap" "models/vortigaunt/vortigaunt_flow"
+	"$selfillummap" "models/vortigaunt/vortigaunt_illum"
+	"$entityorigin" ""
+	"$warpparam" "1.0"
+	"$selfillumscale" "10"
+	"$selfillumtint" "[0 0 0]"
+	"Proxies"
+	{
+		"EntityOriginAlyx"
+		{
+		}
+		"MaterialModify"
+		{
+		}
+	}
+}

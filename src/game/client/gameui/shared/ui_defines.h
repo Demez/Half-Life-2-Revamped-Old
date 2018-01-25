@@ -20,7 +20,7 @@
 #endif
 #define UI_USING_DEVCOMMENTARIES						// implement!!!
 #define UI_USING_GAMEPLAYCONFIGDIALOG					// "gameplay" menu
-//#define UI_USING_MAINMENUMUSIC						// main menu background music ("Misc.MainUI" by default)
+#define UI_USING_MAINMENUMUSIC							// main menu background music ("Misc.MainUI" by default)
 
 // --- UI colors (random shades of gray for now)
 #define UI_STYLE_ENABLED5			169, 169, 169, 255	// style5
@@ -50,7 +50,7 @@ static const char *g_ppszRandomMenuMovies[] =
 {
 #ifdef USING_HL2EM
 	"media/background.bik",
-#elif HL2_CLIENT_DLL // TODO: Replace these videos
+#elif HL2_CLIENT_DLL // TODO: Replace this video
 	"media/bg_01.bik"
 #else
 	"media/bg_03.bik",
@@ -63,13 +63,11 @@ static const char *g_ppszRandomMenuMovies[] =
 // --- Random Loading Backgrounds (all path are inherited from materials/vgui/)
 static const char g_ppszRandomLoadingBackgrounds[][64] = 
 {
-#ifdef DEATHMATCH_CLIENT_DLL
-	"../console/background01"
-#elif HL2_CLIENT_DLL
-	"console/background01",
-	"console/background02",
-	"console/background03",
-	"console/background04"
+#ifdef HL2_CLIENT_DLL
+	"../console/background01",
+	//"console/background02",
+	//"console/background03",
+	//"console/background04"
 #else
 	"swarm/loading/BGFX01",
 #endif
@@ -77,13 +75,11 @@ static const char g_ppszRandomLoadingBackgrounds[][64] =
 // !!! WIDESCREEN ARRAY SHOULD ALWAYS BE THE SAME SIZE AS REGULAR ONE
 static const char g_ppszRandomLoadingBackgrounds_widescreen[][64] = 
 {
-#ifdef DEATHMATCH_CLIENT_DLL
-	"../console/background01_widescreen",
-#elif HL2_CLIENT_DLL
+#if HL2_CLIENT_DLL
 	"console/background01_widescreen",
-	"console/background02_widescreen",
-	"console/background03_widescreen",
-	"console/background04_widescreen"
+	//"console/background02_widescreen",
+	//"console/background03_widescreen",
+	//"console/background04_widescreen"
 #else
 	"swarm/loading/BGFX01_wide",
 #endif

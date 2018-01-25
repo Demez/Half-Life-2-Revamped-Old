@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "props/Sign_hospital01a"
+	"$surfaceprop" "metal"
+	"%keywords" "c17"
+	"$nomip" 1
+}

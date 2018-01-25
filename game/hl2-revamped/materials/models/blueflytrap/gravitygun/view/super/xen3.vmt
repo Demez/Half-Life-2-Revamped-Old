@@ -1,0 +1,21 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "dev\null"
+	"$bumpmap" "models\blueflytrap\gravitygun\view\texture\xen_n"
+
+	"$additive"	"1"
+
+	"$color2"		"[0 0 0]"
+
+	"$phongexponenttexture" "models\blueflytrap\gravitygun\view\texture\xen_e"
+
+	"$phong" "1"
+	"$phongboost"	"0.9986979"
+
+	"$phongfresnelranges"	"[0.176 0.685 16]"
+
+	"$envmap" "env_cubemap"
+
+	"$envmaptint"	"[0.0262 0.0262 0.0262]"
+	"$envmapfresnel"	"1"
+}

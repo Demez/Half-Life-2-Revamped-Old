@@ -8,7 +8,19 @@
 	"$normalmapalphaenvmapmask" 1
 	"$envmapcontrast" 1
 	"$envmapsaturation" 1
-	"$envmaptint" "[ .8 .8 .8 ]"
+	"$envmaptint" "[ .56 .56 .56 ]"
+
+ 	"vertexlitgeneric_HDR_dx9"
+ 	{
+  		"$envmaptint" "[.25 .25 .25]"
+ 	}
+
+
+	"vertexlitgeneric_DX9"
+ 	{
+  		"$envmaptint" "[.25 .25 .25]"
+ 	}
+
 }
 
 

@@ -1,14 +1,13 @@
 "VertexLitGeneric"
 {
 	"$baseTexture" "Models/props_wasteland/antlionhill_sheet"
-	"$bumpmap" "models/props_wasteland/antlionhill_normal"	
-	//"$envmap" "env_cubemap"
-	//"$normalmapalphaenvmapmask" 1
-	//"$envmaptint" "[1 .9 .8]"
-	//"$envmapcontrast" "1"
+//	"$bumpmap" "models/props_wasteland/antlionhill_normal"	
+//	"$envmap" "env_cubemap"
+//	"$normalmapalphaenvmapmask" 1
+//	"$envmaptint" "[1 .9 .8]"
+//	"$envmapcontrast" "1"
+	"$envmap"  "env_cubemap"
+	"$basealphaenvmapmask" 1
+	"$envmaptint" "[ .5 .5 .5 ]"
 
-	"$detail" "detail\rock_detail_01"
-	"$detailscale" "10.2"
-	"$detailblendfactor" .9
-	"$detailblendmode" 0
 }

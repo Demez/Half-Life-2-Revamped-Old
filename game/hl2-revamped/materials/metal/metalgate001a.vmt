@@ -1,7 +1,8 @@
 "LightmappedGeneric"
 {
-	// Original shader: BaseTimesLightmapAlphaBlend
-	"$translucent" 1
+	"$AlphaTest" "1"
+	"$AlphaTestReference" "0.5"
+
 	"$basetexture" "Metal/metalgate001a"
 	"%compilepassbullets" 1
 	"$surfaceprop" "metal"

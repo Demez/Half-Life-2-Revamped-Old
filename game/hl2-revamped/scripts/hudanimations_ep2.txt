@@ -1,0 +1,70 @@
+// sample animation script
+//
+//
+// commands:
+//	Animate <panel name> <variable> <target value> <interpolator> <start time> <duration>
+//		variables:
+//			FgColor
+//			BgColor
+//			Position
+//			Size
+//			Blur		(hud panels only)
+//			TextColor	(hud panels only)
+//			Ammo2Color	(hud panels only)
+//			Alpha		(hud weapon selection only)
+//			SelectionAlpha  (hud weapon selection only)
+//			TextScan	(hud weapon selection only)
+//
+//		interpolator:
+//			Linear
+//			Accel - starts moving slow, ends fast
+//			Deaccel - starts moving fast, ends slow
+//
+//	RunEvent <event name> <start time>
+//		starts another even running at the specified time
+//
+//	StopEvent <event name> <start time>
+//		stops another event that is current running at the specified time
+//
+//	StopAnimation <panel name> <variable> <start time>
+//		stops all animations refering to the specified variable in the specified panel
+//
+//	StopPanelAnimations <panel name> <start time>
+//		stops all active animations operating on the specified panel
+//
+//
+// Useful game console commands:
+//	cl_Animationinfo <hudelement name> or <panelname> 
+//		displays all the animatable variables for the hud element
+//
+
+
+event KeyHintMessageShow
+{
+	// show the hints
+	Animate HudHintKeyDisplay HintSize	"0"	Linear  0.0	0.1
+	Animate HudHintKeyDisplay HintSize	"1"	Deaccel 0.1	2.0
+	Animate HudHintKeyDisplay Alpha	255 Linear 0.0 0.01
+
+	// Flash background
+	Animate HudHintKeyDisplay	BgColor		"250 220 0 80"	Linear	0.0	0.01
+	Animate HudHintKeyDisplay	BgColor		"BgColor"	Deaccel	0.1	1.0
+	
+	Animate HudHintKeyDisplay	BgColor		"250 220 0 80"	Linear	1.5	0.01
+	Animate HudHintKeyDisplay	BgColor		"BgColor"	Deaccel	1.6	1.0
+	
+	Animate HudHintKeyDisplay	BgColor		"250 220 0 80"	Linear	3.0	0.01
+	Animate HudHintKeyDisplay	BgColor		"BgColor"	Deaccel	3.1	1.0
+
+	Animate HudHintKeyDisplay	FgColor		"BrightFg"	Linear	0.0	0.01
+	Animate HudHintKeyDisplay	FgColor		"FgColor"	Deaccel	0.1	1.0
+
+	Animate HudHintKeyDisplay	FgColor		"BrightFg"	Linear	1.5	0.01
+	Animate HudHintKeyDisplay	FgColor		"FgColor"	Deaccel	1.6	1.0
+
+	Animate HudHintKeyDisplay	FgColor		"BrightFg"	Linear	3.0	0.01
+	Animate HudHintKeyDisplay	FgColor		"FgColor"	Deaccel	3.1	1.0
+
+	// hide the panel after a while	
+	Animate HudHintKeyDisplay Alpha	0 Accel 12.0 2.0
+}

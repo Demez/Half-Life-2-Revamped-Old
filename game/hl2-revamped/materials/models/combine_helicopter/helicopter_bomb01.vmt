@@ -1,13 +1,14 @@
 "VertexLitGeneric"
 {
-
-
 	"$basetexture" "Models/combine_helicopter/helicopter_bomb01"
+	"$bumpmap" "models/combine_helicopter/helicopter_bomb01_normal"
 	"$surfaceprop" "metal"
-	"$envmap" "env_cubemap"
-	"$envmaptint" "[ .5 .5 .5]"
-	"$envmapmask" "Models/combine_helicopter/helicopter_bomb01_mask"
-	"$selfillum" 1
+	"$selfillum" "1"
+	"$phong" "1"
+	"$phongboost" "2"
+	"$halflambert" "1"
+	"$phongexponent" "7"
+	"$phongfresnelranges"	"[.1 .5 1.0]"
 }
 
 

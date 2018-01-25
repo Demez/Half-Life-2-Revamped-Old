@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	
+	"$baseTexture"			"glass/pipes03"
+	"$translucent"			1
+	"$alpha"			1
+	"$envmapmask"			"glass/pipes03_spec"
+	"$envmap" "env_cubemap"
+}

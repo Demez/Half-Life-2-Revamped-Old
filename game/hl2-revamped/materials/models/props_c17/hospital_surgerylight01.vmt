@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"models/props_C17/hospital_surgerylight01"
+	"$surfaceprop" "metal"
+	"$basealphaenvmapmask" 1
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .30 .30 .30 ]"
+}

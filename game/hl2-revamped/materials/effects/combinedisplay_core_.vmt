@@ -1,0 +1,15 @@
+"UnlitGeneric"
+{
+	"$basetexture" "effects/combinedisplay_core_"
+	"Proxies"
+	{
+
+		"MaterialModifyAnimated"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedtextureframerate" 15
+		}
+	}
+	
+}

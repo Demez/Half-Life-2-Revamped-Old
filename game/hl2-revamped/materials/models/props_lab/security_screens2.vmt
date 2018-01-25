@@ -3,6 +3,7 @@
 {
 	"$baseTexture" "Models/props_lab/security_screen"
 	"$texture2" "Models/props_lab/security_noise"
+	"$surfaceprop" "glass"
 	"$model" 1
 	"Proxies"
 	{

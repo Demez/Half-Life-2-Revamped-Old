@@ -3,4 +3,5 @@
 	// Original shader: VertexLitTexture
 	"$basetexture" "models/Humans/Male/Group01/mike_facemap"
 	"$halflambert" 1
+	"$nodecal" "1"
 }

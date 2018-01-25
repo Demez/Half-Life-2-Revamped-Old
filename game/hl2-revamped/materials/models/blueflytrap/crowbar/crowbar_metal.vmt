@@ -1,0 +1,18 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\blueflytrap\crowbar\crowbar"
+	"$bumpmap" "models\blueflytrap\crowbar\crowbar_n"
+
+	"$color2"	"[0 0 0]"
+	"$additive"	"1"
+
+	"$phongexponenttexture" "models\blueflytrap\crowbar\crowbar_e"
+	"$phongalbedotint" 1
+
+	"$phong" "1"
+
+	"$phongboost"	"10.465625"
+	"$phongfresnelranges"	"[0.76 0.821 1.25]"
+
+	$halflambert	"0"
+}

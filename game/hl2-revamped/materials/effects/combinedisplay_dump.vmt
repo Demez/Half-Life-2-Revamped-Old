@@ -1,0 +1,18 @@
+"UnlitGeneric"
+{
+	"$basetexture" "effects/combinedisplay_dump"
+	"Proxies"
+	{
+
+
+
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedtextureframerate" 7 
+		}
+
+	}
+	
+}

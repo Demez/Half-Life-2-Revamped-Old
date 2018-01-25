@@ -1,0 +1,29 @@
+"vortwarp"
+{
+	"$unlit" 1
+	"$basetexture"	"Models/vortigaunt/eyeball_blue"
+	"$surfaceprop"	"default"
+	"$model" "1"
+
+	"$selfillumtint" "[0 0 0]"
+//	"$warpparam" 1
+	"$entityorigin" "[0 0 0]"
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" .30
+			"texturescrollangle" 20
+		}
+
+		"EntityOrigin"
+		{
+		}
+		"MaterialModify"
+		{
+		}
+
+	}
+
+}

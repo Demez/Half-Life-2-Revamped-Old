@@ -1,7 +1,7 @@
 "VertexLitGeneric"
 {
 	"$baseTexture" "Models/Combine_Dropship/dropshipsheet"
-	"$selfillum" 1
+//	"$selfillum" 1
 	"$model" 1
 	"VertexLitGeneric_DX9"
 	{

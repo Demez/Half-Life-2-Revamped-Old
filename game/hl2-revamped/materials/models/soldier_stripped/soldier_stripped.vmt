@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/soldier_stripped/soldier_stripped"
+	"$basealphaenvmapmask" 1
+	"$envmap" "env_cubemap"	
+	"$halflambert" 1
+}

@@ -1,7 +1,7 @@
 "UnlitGeneric"
 {
 	// Original shader: BaseTextureAlphaBlend
-	"$alpha" 1
+	//"$alphatest" 1
 	"$translucent" 1
 	"$basetexture" "models/props_foliage/tree_deciduous_cards_01"
 	"$model" 1

@@ -1,0 +1,13 @@
+"UnLitGeneric"
+{
+
+	"$basetexture" "Models/props_combine/citadelcard"
+	"$surfaceprop" "metal"
+	"%keywords" "combine"
+	"$nofog" "1"
+	"$model" "1"
+	"$translucent" "1"
+	"$alphatest" "1"
+
+        "360?$color2" "[ .7 .7 .7 ]"
+}

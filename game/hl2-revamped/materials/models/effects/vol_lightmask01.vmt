@@ -4,7 +4,7 @@
 	"$texture2" "Models/Effects/dust01" 
 	"$nocull" 1	
 	"$additive" 1
-//	"$translucent" 1
+	"$translucent" 1
 	"$model" 1
 	"$no_fullbright" 1
 

@@ -1482,13 +1482,16 @@ void CServerGameDLL::CreateNetworkStringTables( void )
 			g_pStringTableVguiScreen &&
 			g_pStringTableMaterials &&
 			g_pStringTableInfoPanel &&
-			g_pStringTableClientSideChoreoScenes &&
-			g_pStringTableExtraParticleFiles
-#ifdef DEFERRED
-			// @Deferred - Biohazard
-			&& g_pStringTable_LightCookies
-#endif
-			);
+			g_pStringTableClientSideChoreoScenes
+// doesnt work on debug
+//#ifdef DEFERRED
+//			g_pStringTableExtraParticleFiles && 
+//			 @Deferred - Biohazard
+//			g_pStringTable_LightCookies );
+//#else
+			&& g_pStringTableExtraParticleFiles);
+//#endif
+			
 
 	// Need this so we have the error material always handy
 	PrecacheMaterial( "debug/debugempty" );

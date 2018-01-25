@@ -1,0 +1,20 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_c17/powerbox_bars"
+	"$surfaceprop" "metal"
+	"$selfillum" "1"
+
+	"Proxies"
+	{
+
+
+
+		"MaterialModifyAnimated"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedtextureframerate" 15
+		}
+
+	}
+}

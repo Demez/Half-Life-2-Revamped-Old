@@ -4,7 +4,7 @@ setlocal
 rem Use dynamic shaders to build .inc files only
 rem set dynamic_shaders=1
 rem == Setup path to nmake.exe, from vc 2013 common tools directory ==
-call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"
+call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
 
 set TTEXE=..\..\devtools\bin\timeprecise.exe
 if not exist %TTEXE% goto no_ttexe

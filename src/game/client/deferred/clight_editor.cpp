@@ -1475,9 +1475,6 @@ void CLightingEditor::ApplyKVToGlobalLight( KeyValues *pKVChanges )
 		}
 	}
 
-	//CDeferredViewRender *pDefView = assert_cast< CDeferredViewRender* >( view );
-	//pDefView->ResetCascadeDelay();
-
 	m_EditorGlobalState.bEnabled = ( m_pKVGlobalLight->GetInt( GetLightParamName( LPARAM_SPAWNFLAGS ), 1 ) & DEFLIGHTGLOBAL_ENABLED ) != 0;
 	m_EditorGlobalState.bShadow = ( m_pKVGlobalLight->GetInt( GetLightParamName( LPARAM_SPAWNFLAGS ), 1 ) & DEFLIGHTGLOBAL_SHADOW_ENABLED ) != 0;
 

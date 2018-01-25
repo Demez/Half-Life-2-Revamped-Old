@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"models/props_C17/door01a_powerlock"
+	"$selfillum" 1
+}

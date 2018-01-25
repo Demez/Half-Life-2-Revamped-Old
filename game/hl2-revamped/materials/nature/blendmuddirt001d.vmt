@@ -1,0 +1,22 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/mudfloor001a"	
+	"$basetexture2" "nature/dirtfloor002a"
+	"%tooltexture" "nature/blendmuddirt001a_tooltexture"
+	"$surfaceprop" "mud"
+	"$surfaceprop2" "dirt"
+	"$basetexturetransform" "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+        "$basetexturetransform2" "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+	"%keywords" "coastline"
+
+	"%detailtype" "coastline_redgrass01"
+ "LightmappedGeneric_DX9"
+ {
+	"$bumpmap" "nature/mudfloor001a_normal"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapsaturation" 1
+	"$envmapcontrast" 1
+	"$envmaptint" "[ .65 .65 .65]"
+	"$envmap" "env_cubemap"
+ }
+}

@@ -1,0 +1,24 @@
+"UnLitGeneric"
+{
+
+	"$basetexture" "Models/props_combine/cloudlightning/cit_cloudlight"
+	"%keywords" "combine"
+	"$mod2x" "1"
+	"$nofog" "1"
+	"$model" "1"
+	"$additive" "1"
+
+	"Proxies"
+	{
+
+
+
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedtextureframerate" 20 
+		}
+
+	}
+}

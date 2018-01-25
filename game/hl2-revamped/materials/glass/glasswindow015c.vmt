@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	// Original shader: BaseTimesLightmapAlphaBlend
+	//"$translucent" 1
+	"$selfillum" 1
+	"$basetexture" "Glass/glasswindow015a"
+	"$surfaceprop" "glass"
+	"%keywords" "c17industrial,c17skyscraper,wasteland"
+}

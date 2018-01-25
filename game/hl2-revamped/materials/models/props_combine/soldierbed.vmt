@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/props_combine/soldierbed"
+	"$surfaceprop" "metal"
+	"$selfillum" 1
+}

@@ -499,6 +499,12 @@ public:
 	CRagdoll						*m_pRagdoll;
 	CBaseAnimating					*m_pClientsideRagdoll;
 
+	// Texture group to use
+	int								m_nSkin;
+
+	// Object bodygroup
+	int								m_nBody;
+
 	// Hitbox set to use (default 0)
 	int								m_nHitboxSet;
 
@@ -519,8 +525,8 @@ protected:
 	float							m_flPlaybackRate;// Animation playback framerate
 
 // FTYPEDESC_INSENDTABLE STUFF (end)
-	int								m_nSkin;// Texture group to use
-	int								m_nBody;// Object bodygroup
+	//int								m_nSkin;// Texture group to use
+	//int								m_nBody;// Object bodygroup
 	int								m_nNewSequenceParity;
 	int								m_nResetEventsParity;
 	int								m_nPrevNewSequenceParity;

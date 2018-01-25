@@ -5463,6 +5463,7 @@ int CBaseEntity::PrecacheModel( const char *name )
 		Msg( " !! CBaseEntity::PrecacheModel : (pre) modelinfo->PrecacheModel %s \n", name );
 	}
 	idx = engine->PrecacheModel( name, true ); // Precache is giving model an index.
+
 	if ( sv_modelprecache_debug.GetBool() )
 	{
 		Msg( " !! CBaseEntity::PrecacheModel : (post) modelinfo->PrecacheModel %s, index: %i \n", name, idx );

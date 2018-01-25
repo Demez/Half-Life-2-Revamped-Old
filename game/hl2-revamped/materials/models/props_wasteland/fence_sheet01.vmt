@@ -5,10 +5,4 @@
 	"$envmap" "env_cubemap"
 	"$basealphaenvmapmask" 1
 
-	"$detail" "detail\metal_detail_01"
-	"$detailscale" "12.283"
-	"$detailblendfactor" .8
-	"$detailblendmode" "0"
-
-
 }

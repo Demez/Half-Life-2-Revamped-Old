@@ -1,0 +1,40 @@
+//"UnLitTwoTexture"
+"UnlitGeneric"
+{
+
+	"$basetexture" "Models/props_combine/cit_beacon"
+//	"$texture2" "Models/props_combine/cit_beacon2"
+	"%keywords" "combine"
+	"$nofog" "1"
+	"$model" "1"
+	"$brightness" "1"
+	"$additive" "1"
+
+	"Proxies"
+	{
+
+//		"AnimatedTexture"
+//		{
+//			"animatedtexturevar" "$basetexture"
+//			"animatedtextureframenumvar" "$frame"
+//			"animatedtextureframerate" 15
+//		}
+
+//		"Sine"
+//		{
+//			"sineperiod" ".09"
+//			"sinemin" .8
+//			"sinemax" 1
+//			"resultVar" "$alpha"
+//		}
+
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" 4
+			"texturescrollangle" 120
+		}
+	}
+
+
+}

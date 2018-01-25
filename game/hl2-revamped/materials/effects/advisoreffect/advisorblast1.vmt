@@ -1,0 +1,19 @@
+"UnlitGeneric"
+//"Modulate"
+{
+	"$translucent" "1"
+	"$color" ".2"
+	"$additive" "1"
+//	"$mod2x" "1"
+//	"$znearer" 1
+	"$basetexture" "effects/AdvisorEffect/advisorblast_"
+	"Proxies"
+	{
+		"AnimatedTexture"
+		{
+			"animatedtexturevar" "$basetexture"
+			"animatedtextureframenumvar" "$frame"
+			"animatedtextureframerate" 30
+		}
+	}
+}

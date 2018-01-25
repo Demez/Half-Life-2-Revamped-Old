@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_c17/underelevator_sheet"
+	"$surfaceprop" "metal"
+	"$selfillum" "1"
+}

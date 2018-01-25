@@ -1,0 +1,20 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "concrete\concretefloor033o"
+	"$basetexture2" "nature/dirtfloor004a"
+	"%tooltexture" "nature/blendcondirt001a_tooltexture"
+	"$surfaceprop" "concrete"
+	"$surfaceprop2" "dirt"
+	"$bumpmap" "concrete/concretefloor033o_normal"
+	"$bumpmap2" "Nature/mudfloor001a_normal"
+	"$envmap" "env_cubemap"	
+	"$normalmapalphaenvmapmask" 1
+	"$envmapsaturation" 1
+	"$envmapcontrast" 1
+	"$envmaptint" "[ .56 .56 .56 ]"
+
+        //"$basetexturetransform" "center .5 .5 scale 2 2 rotate 0  translate 0 0"
+        //"$basetexturetransform2" "center .5 .5 scale 4 4 rotate 0 translate 0 0"
+	"%keywords" "wasteland"
+}
+ 

@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/props_trainstation/trainstation_trusspoles_argentan01"
+	"$alphatest" 1
+//	"$translucent" 1
+}

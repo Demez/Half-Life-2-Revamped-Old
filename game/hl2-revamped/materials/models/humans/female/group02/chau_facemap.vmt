@@ -3,4 +3,5 @@
 	// Original shader: VertexLitTexture
 	"$basetexture" "models/Humans/Female/Group02/chau_facemap"
 	"$halflambert" 1
+	"$nodecal" "1"
 }

@@ -1,21 +1,13 @@
 "VertexLitGeneric"
 {
 	"$basetexture" "models/combine_turrets/floor_turret/combine_gun002"
-	//"$surfaceprop" "metal"
-	//"$envmap" "Environment Maps/envmapcombine"
-	//"$envmap" "env_cubemap"
-	//"$nocull" 1
-	//"$envmaptint" "[ .5 .5 .5]"
-	//"$basealphaenvmapmask" 1
-	//"$envmapmask" "models/combine_turrets/floor_turret/Combine_gun002_mask"
-
-	//"$envmap" "env_cubemap"
-	//"$basealphaenvmapmask" 1
-	//"$envmaptint" "[ .125 .125 .125]"
-
 	"$surfaceprop" "metal"
-	"$envmap" "env_cubemap"
-	"$envmaptint" "[ .5 .5 .5]"
-	"$envmapmask" "models/combine_turrets/floor_turret/combine_gun002_mask"
+	"$bumpmap" "models/combine_turrets/floor_turret/combine_gun002_normal"
+	"$phong" 1
+	"$phongexponent" "10"
+	//"$phongexponenttexture" "models/combine_turrets/floor_turret/combine_gun002_phong"
+	"$phongboost" "4"
+	"$phongalbedotint" 1										
+	"$phongfresnelranges"	"[.1 .5  1]"
 	"$selfillum" 1
 }

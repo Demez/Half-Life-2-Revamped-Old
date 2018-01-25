@@ -1,0 +1,12 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"Effects/fake_fog02"
+	"$translucent"	1
+	"$nodecal" 1 
+
+	"UnlitGeneric_hdr_dx9"
+	{
+		// put HDR override stuff here
+		"$basetexture"	"Effects/fake_fog02_hdr"
+	}
+}

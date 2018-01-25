@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/props_lab/projector_sheet"
+	"$surfaceprop" "metal"
+}

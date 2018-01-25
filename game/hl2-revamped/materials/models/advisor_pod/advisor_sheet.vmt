@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"models/Advisor_Pod/advisor_sheet"
+	"$surfaceprop"	"metalpanel"
+	"$selfillum"	1
+}

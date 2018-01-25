@@ -1,0 +1,32 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Metal/citadel_metaldoor_core01"
+	"$surfaceprop" "metal"
+	"%keywords" "combine"
+
+	"$envmap" "env_cubemap"
+	"ldr?$envmaptint" "[ .56 .67 .75 ]"
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+
+	"LightmappedGeneric_DX9"
+	{
+		"$bumpmap" "metal/metalwall077a_normal"
+		"$normalmapalphaenvmapmask" 1
+	}
+
+	"LightmappedGeneric_DX8"
+	{
+		"$bumpmap" "metal/metalwall077a_normal"
+		"$nodiffusebumplighting" 1
+		"$normalmapalphaenvmapmask" 1
+	}
+
+	"LightmappedGeneric_NoBump_DX8"
+	{
+		"$basetexture" "metal/citadel_metaldoor_core01"
+		"$basealphaenvmapmask" 1
+	}
+	
+	"hdr?$envmaptint" "[.09 .1 .12]"
+}

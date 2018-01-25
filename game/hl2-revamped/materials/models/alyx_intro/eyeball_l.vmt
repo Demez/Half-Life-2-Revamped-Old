@@ -1,0 +1,21 @@
+"eyes"
+{
+	"$basetexture" "models/Alyx/eyeball_l"
+	"$iris" "models/alyx/pupil_l"
+	"$halflambert" 1
+	"$nodecal" "1"
+
+	"$intro" 1
+	"$warpparam" 1
+
+	"Proxies"
+	{
+		"EntityOriginAlyx"
+		{
+		}
+		"MaterialModify"
+		{
+		}
+	}
+
+}

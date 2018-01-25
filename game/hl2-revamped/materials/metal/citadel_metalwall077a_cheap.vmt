@@ -1,0 +1,28 @@
+// envmaptint_fix
+"LightmappedGeneric"
+{
+	"$basetexture" "Metal/metalwall077a"
+	"$surfaceprop" "metal"
+	"%keywords" "combine"
+
+	// NOTE: Even though env_cubemap is here, it will turned off for DX6
+	// because $multipass 1 isn't defined
+	"ldr?$envmaptint" "[ .56 .67 .75 ]"
+	"$envmapcontrast" 1
+	"$envmapsaturation" 1
+
+	"LightmappedGeneric_DX9"
+	{
+		"$envmap" "env_cubemap"
+		"$bumpmap" "metal/metalwall077a_normal"
+		"$normalmapalphaenvmapmask" 1
+	}
+
+	"LightmappedGeneric_DX8"
+	{
+		"$basetexture" "metal/citadel_metalwall077a"
+		"$basealphaenvmapmask" 1
+	}
+	
+	"hdr?$envmaptint" "[.09 .1 .12]"
+}

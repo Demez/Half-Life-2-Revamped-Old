@@ -1,0 +1,65 @@
+//============================================================================================================
+// Alyx
+//============================================================================================================
+
+criterion IsAlyx "classname" "npc_alyx" required
+
+// ----------------------------------------------
+// About to collide with something
+// ----------------------------------------------
+
+response AlyxPassengerCollisionWarning
+{
+   	scene "scenes/episode_2/al_passenger_warncollision.vcd"
+}
+
+rule AlyxPassengerCollisionWarning
+{
+	criterion ConceptPassengerCollisionWarning IsAlyx
+	response AlyxPassengerCollisionWarning
+}
+
+// ----------------------------------------------
+// Impacted something heavily
+// ----------------------------------------------
+
+response AlyxPassengerImpact
+{
+   	scene "scenes/episode_2/al_passenger_impact.vcd"
+}
+
+rule AlyxPassengerImpact
+{
+	criterion ConceptPassengerImpact IsAlyx
+	response AlyxPassengerImpact
+}
+
+// ----------------------------------------------
+// Vehicle is overturned
+// ----------------------------------------------
+
+response AlyxPassengerOverturned
+{
+   	scene "scenes/episode_2/al_passenger_overturned.vcd"
+}
+
+rule AlyxPassengerOverturned
+{
+	criterion ConceptPassengerOverturned IsAlyx
+	response AlyxPassengerOverturned
+}
+
+// ----------------------------------------------
+// Ask for being turned upright
+// ----------------------------------------------
+
+response AlyxPassengerRequestUpright
+{
+   	scene "scenes/episode_2/al_passenger_upright.vcd"
+}
+
+rule AlyxPassengerRequestUpright
+{
+	criterion ConceptPassengerRequestUpright IsAlyx
+	response AlyxPassengerRequestUpright
+}

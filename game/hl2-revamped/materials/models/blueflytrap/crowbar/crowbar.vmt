@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\blueflytrap\crowbar\crowbar"
+	"$bumpmap" "models\blueflytrap\crowbar\crowbar_n_alt"
+
+	"$color2"	"[0 0 0]"
+	"$blendTintByBaseAlpha"	"1"
+
+	"$phong" "0"
+}

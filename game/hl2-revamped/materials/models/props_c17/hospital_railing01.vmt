@@ -1,0 +1,11 @@
+"vertexlitGeneric"
+{
+	// Original shader: BaseTexture
+	"$basetexture" "models/props_c17/hospital_railing01"
+	"$basealphaenvmapmask" 1
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" .75 .75 .75
+	"$envmapsaturation" .2 .2 .2 
+//	"$envmapcontrast" 1 1 1
+}

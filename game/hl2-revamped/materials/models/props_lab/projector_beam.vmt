@@ -1,0 +1,10 @@
+"UnlitTwoTexture"
+{
+	"$texture2" "models/props_lab/projector_beam"
+	"$additive" 1
+	"$basetexture" "_rt_Camera"
+	"$surfaceprop" "glass"
+	"$model"  1
+	"$nocull" 1
+
+}

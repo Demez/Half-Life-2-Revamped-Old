@@ -1,0 +1,15 @@
+"vertexlitGeneric"
+{
+	// Original shader: BaseTexture
+	"$basetexture" "models/props_c17/door03a_glass"
+	"$surfaceprop" "glass"
+	"$translucent" 1
+}
+
+
+
+
+
+
+
+

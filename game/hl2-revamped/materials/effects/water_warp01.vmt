@@ -12,8 +12,8 @@
 
 	"$scale" "[1 1]"
 
-	"$bumpmap" "nature/water_coast01_dudv"
-	"$normalmap" "nature/water_coast01_normal"
+	"$bumpmap" "nature/water_frame01_dudv"
+	"$normalmap" "nature/water_frame01_normal"
 	
 	"$bumpframe" "0"
 	"Proxies"

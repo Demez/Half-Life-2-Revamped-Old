@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture"	"Effects/rubble_card01"
+	//"$translucent"	1
+	"$alphatest" 1
+}

@@ -1,10 +1,16 @@
 "LightmappedGeneric"
 {
-	// Original shader: BaseTimesLightmapAlphaBlend
-	"$translucent" 1
-	"$basetexture" "Metal/metalfence004a"
+	"$AlphaTest" "1"
+	"$AlphaTestReference" "0.3"
+	"$AllowAlphaToCoverage" "1"
+
+	"$basetexture" "Models/props_wasteland/fence_alpha"
 	"%compilepassbullets" 1
-	"$surfaceprop" "chainlink"
-	"%keywords" "c17downtown,c17industrial"
-	"%compileladder" 1
+	"$detail" "detail\metal_detail_01"
+	"$detailscale" "4.283"
+	"$detailblendfactor" .8
+	"$detailblendmode" "0"
+	"$surfaceprop" "chainlink" 
+	"$nodecal" 1
+	
 }

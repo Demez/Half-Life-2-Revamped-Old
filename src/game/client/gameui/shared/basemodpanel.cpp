@@ -153,7 +153,8 @@ CBaseModPanel::CBaseModPanel(): BaseClass(0, "CBaseModPanel"),
 	m_iProductImageID = -1;
 
 #ifdef UI_USING_MAINMENUMUSIC
-	m_backgroundMusic = "Misc.MainUI";
+	//m_backgroundMusic = "Misc.MainUI";
+	m_backgroundMusic = "music/menu_music.mp3";
 #endif
 
 	m_nBackgroundMusicGUID = 0;
@@ -1210,7 +1211,7 @@ void CBaseModPanel::ApplySchemeSettings(IScheme *pScheme)
 	surface()->GetScreenSize( screenWide, screenTall );
 
 	char filename[MAX_PATH];
-	V_snprintf(filename, sizeof(filename), "console/background01_widescreen"); // make an actual loading screen texture
+	V_snprintf(filename, sizeof(filename), "../console/background01_widescreen"); // make an actual loading screen texture
 	// TODO: engine->GetStartupImage( filename, sizeof( filename ), screenWide, screenTall );
 	// GetStartupImage is undefined
 	m_iBackgroundImageID = surface()->CreateNewTextureID();

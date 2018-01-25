@@ -1,0 +1,20 @@
+//"Modulate"
+"UnlitTwoTexture"
+{
+	"$basetexture" "models/props_lab/projector_noise"
+	"$texture2" "models/props_lab/projector_noise2"
+	"$mod2x" "1"
+	"$additive" "1"
+	"$surfaceprop" "glass"
+	"$model"  "1"
+
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" 11
+			"texturescrollangle" 80
+		}
+	}
+}

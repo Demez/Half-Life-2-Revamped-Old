@@ -1,0 +1,11 @@
+"vertexlitGeneric"
+{
+	// Original shader: BaseTexture
+	"$basetexture" "models/props_c17/door01a_skin15"
+	"$surfaceprop" "wood"
+	"$basealphaenvmapmask" 1
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .30 .30 .30 ]"
+}
+
+

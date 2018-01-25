@@ -1,0 +1,17 @@
+"WorldVertexTransition"
+{
+	"$basetexture" "nature/dirtfloor004a"
+	"$basetexture2" "Nature/rockwall015a"
+
+	"%tooltexture" "nature/blenddebris002a_tooltexture"
+	"$surfaceprop" "dirt"
+	"$surfaceprop2" "concrete"
+	"$basetexturetransform" "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+        "$basetexturetransform2" "center .5 .5 scale 1 1 rotate 0 translate 0 0"
+
+
+		"$bumpmap" "dev/flat_normal"
+		"$bumpmap2" "Nature/rockwall015a_normal"
+
+
+}

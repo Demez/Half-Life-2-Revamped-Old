@@ -1,0 +1,28 @@
+"teeth"
+{
+	"$basetexture" "models/alyx/fmouth"
+	"$clientshader" "MouthShader"
+	"$model" 1
+	"$halflambert" 1
+	"$nodecal" "1"
+
+// If you specify a bump map, you'll get phong
+	"$bumpmap" "models/alyx/alyx_teeth_normal"
+// This parameter overrides the alpha channel of the normal map (if any) to provide a phong exponent
+	"$phongexponent" "100"
+
+	"$intro" 1
+	"$entityorigin" "[0 0 0]"
+	"$warpparam" 1
+
+	"Proxies"
+	{
+		"EntityOriginAlyx"
+		{
+		}
+		"MaterialModify"
+		{
+		}
+	}
+
+}

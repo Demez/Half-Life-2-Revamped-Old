@@ -1,0 +1,14 @@
+"VertexlitGeneric"
+{
+	"$basetexture"	"models\blueflytrap\gravitygun\view\texture\glass"
+	"$bumpmap" 	"models\blueflytrap\gravitygun\world\texture\flatnormal"
+
+	"$translucent"	"1"
+
+	"$phong" "1"
+	"$phongboost"	"0"
+
+	"$phongfresnelranges"	"[0 0 0]"	// dummy
+
+	"$ambientocclusion"	"0"
+}

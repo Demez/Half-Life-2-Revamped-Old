@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$model" 1
+	"$basetexture" "Models/crashedgunship/crashedgunship"
+	"$surfaceprop" "combinemetal"
+//	"$detail" "detail/detailash001a"
+//	"$detailscale" 1
+}

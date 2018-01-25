@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+	"$basetexture"	"decals\snow01"
+	"$translucent" "1"
+	"$decal" "1"
+	"$decalscale" "0.250"
+	"$surfaceprop" "snow"
+
+}
