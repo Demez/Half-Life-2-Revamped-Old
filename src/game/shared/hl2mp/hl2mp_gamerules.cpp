@@ -765,12 +765,12 @@ void CHL2MPRules::ClientSettingsChanged( CBasePlayer *pPlayer )
 	if ( pHL2Player == NULL )
 		return;
 
-	const char *pCurrentModel = modelinfo->GetModelName( pPlayer->GetModel() );
-	const char *szModelName = engine->GetClientConVarValue( engine->IndexOfEdict( pPlayer->edict() ), "cl_playermodel" );
+	//const char *pCurrentModel = modelinfo->GetModelName( pPlayer->GetModel() );
+	//const char *szModelName = engine->GetClientConVarValue( engine->IndexOfEdict( pPlayer->edict() ), "cl_playermodel" );
 
 	//If we're different.
-	if ( stricmp( szModelName, pCurrentModel ) )
-	{
+	/*if ( stricmp( szModelName, pCurrentModel ) )
+	{*/
 		//Too soon, set the cvar back to what it was.
 		//Note: this will make this function be called again
 		//but since our models will match it'll just skip this whole dealio.
@@ -799,14 +799,14 @@ void CHL2MPRules::ClientSettingsChanged( CBasePlayer *pPlayer )
 		}
 		else
 		{
-			if ( Q_stristr( szModelName, "models/human") )
-			{
+			/*if ( Q_stristr( szModelName, "models/human") )
+			{*/
 				pHL2Player->ChangeTeam( TEAM_REBELS );
-			}
+			/*}
 			else
 			{
 				pHL2Player->ChangeTeam( TEAM_COMBINE );
-			}
+			}*/
 		}
 	}
 	if ( sv_report_client_settings.GetInt() == 1 )
@@ -978,7 +978,7 @@ CAmmoDef *GetAmmoDef()
 
 	bool CHL2MPRules::FShouldSwitchWeapon( CBasePlayer *pPlayer, CBaseCombatWeapon *pWeapon )
 	{		
-		if ( pPlayer->GetActiveWeapon() && pPlayer->IsNetClient() )
+		/*if ( pPlayer->GetActiveWeapon() && pPlayer->IsNetClient() )
 		{
 			// Player has an active item, so let's check cl_autowepswitch.
 			const char *cl_autowepswitch = engine->GetClientConVarValue( engine->IndexOfEdict( pPlayer->edict() ), "cl_autowepswitch" );
@@ -986,7 +986,7 @@ CAmmoDef *GetAmmoDef()
 			{
 				return false;
 			}
-		}
+		}*/
 
 		return BaseClass::FShouldSwitchWeapon( pPlayer, pWeapon );
 	}
@@ -1130,7 +1130,7 @@ void CHL2MPRules::CleanUpMap()
 				CMapEntityRef &ref = g_MapEntityRefs[m_iIterator];
 				m_iIterator = g_MapEntityRefs.Next( m_iIterator );	// Seek to the next entity.
 
-				if ( ref.m_iEdict == -1 || engine->PEntityOfEntIndex( ref.m_iEdict ) )
+				/*if ( ref.m_iEdict == -1 || engine->PEntityOfEntIndex( ref.m_iEdict ) )
 				{
 					// Doh! The entity was delete and its slot was reused.
 					// Just use any old edict slot. This case sucks because we lose the baseline.
@@ -1141,7 +1141,7 @@ void CHL2MPRules::CleanUpMap()
 					// Cool, the slot where this entity was is free again (most likely, the entity was 
 					// freed above). Now create an entity with this specific index.
 					return CreateEntityByName( pClassname, ref.m_iEdict );
-				}
+				}*/
 			}
 		}
 

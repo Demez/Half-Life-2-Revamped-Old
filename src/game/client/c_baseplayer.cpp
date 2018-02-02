@@ -1255,6 +1255,7 @@ void C_BasePlayer::TurnOffFlashlight( void )
 	}
 }
 
+#ifdef HL2MP
 //-----------------------------------------------------------------------------
 // Purpose: Engine is asking whether to add this player to the visible entities list
 //-----------------------------------------------------------------------------
@@ -1287,6 +1288,7 @@ void C_BasePlayer::AddEntity(void)
 	// Add in lighting effects
 	CreateLightEffects();
 }
+#endif
 
 extern float UTIL_WaterLevel( const Vector &position, float minz, float maxz );
 

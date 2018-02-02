@@ -218,7 +218,7 @@ void CHL2MP_Player::GiveDefaultItems( void )
 	GiveNamedItem( "weapon_frag" );
 	GiveNamedItem( "weapon_physcannon" );
 
-	const char *szDefaultWeaponName = engine->GetClientConVarValue( engine->IndexOfEdict( edict() ), "cl_defaultweapon" );
+	//const char *szDefaultWeaponName = engine->GetClientConVarValue( engine->IndexOfEdict( edict() ), "cl_defaultweapon" );
 
 	CBaseCombatWeapon *pDefaultWeapon = Weapon_OwnsThisType( szDefaultWeaponName );
 
@@ -240,16 +240,16 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 		{
 			if ( GetModelPtr() == NULL )
 			{
-				const char *szModelName = NULL;
+				/*const char *szModelName = NULL;
 				szModelName = engine->GetClientConVarValue( engine->IndexOfEdict( edict() ), "cl_playermodel" );
 
 				if ( ValidatePlayerModel( szModelName ) == false )
-				{
+				{*/
 					char szReturnString[512];
 
 					Q_snprintf( szReturnString, sizeof (szReturnString ), "cl_playermodel models/combine_soldier.mdl\n" );
 					engine->ClientCommand ( edict(), szReturnString );
-				}
+				//}
 
 				ChangeTeam( TEAM_UNASSIGNED );
 			}

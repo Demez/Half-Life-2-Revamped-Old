@@ -93,8 +93,9 @@ public:
 
 	virtual void	OnRestore();
 
+#ifdef HL2MP
 	virtual void	AddEntity(void);
-
+#endif
 	virtual void	MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int iTracerType );
 
 	virtual void	GetToolRecordingState( KeyValues *msg );

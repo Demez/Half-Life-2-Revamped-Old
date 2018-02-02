@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg4489"
+   sodipodi:docname="icon.svg"
+   inkscape:version="0.92.1 r15371"
+   inkscape:export-filename="D:\sourceengine\projects-community\Half-Life-2-Revamped\game\hl2-revamped\icon.png"
+   inkscape:export-xdpi="50"
+   inkscape:export-ydpi="50">
+  <metadata
+     id="metadata4495">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4493" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1018"
+     id="namedview4491"
+     showgrid="true"
+     showguides="false"
+     inkscape:zoom="1.1072371"
+     inkscape:cx="283.80897"
+     inkscape:cy="296.55035"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4489"
+     units="px"
+     inkscape:pagecheckerboard="false"
+     showborder="true"
+     inkscape:showpageshadow="true"
+     scale-x="1" />
+  <path
+     d="m 60.749966,262.17291 c 0,90.7985 73.600934,164.39819 164.401294,164.39819 90.80067,0 164.40254,-73.59969 164.40254,-164.39819 0,-90.79479 -73.60187,-164.40377 -164.40254,-164.40377 -90.80036,0 -164.401294,73.60775 -164.401294,164.40377 z M 380.28637,88.444913 h 64.90199 v 92.358537 h -64.90199 z"
+     id="path4485"
+     inkscape:connector-curvature="0"
+     style="fill:#e17b26;stroke-width:0.31020692" />
+  <path
+     d="m 481.4655,130.58064 c 0,4.97946 -0.6266,9.65644 -1.86062,14.07285 -1.23433,4.45955 -2.75091,9.13622 -4.52622,14.11876 l -70.24221,164.95409 c -6.3884,18.83669 -15.52369,36.03053 -27.39158,51.62091 -11.88744,15.63164 -25.63736,29.10144 -41.24977,40.44975 -15.61458,11.34735 -32.82795,20.22269 -51.62029,26.6325 C 265.77627,448.79712 246.26922,452 226.04248,452 199.77819,452 175.02926,447.02274 151.79445,437.10292 128.56244,427.14528 108.3416,413.50179 91.1456,396.09265 73.932207,378.72479 60.269453,358.50177 50.155468,335.45992 40.043966,312.38052 35,287.73768 35,261.49479 35,235.20662 40.044274,210.56347 50.155468,187.52563 60.269453,164.44344 73.931899,144.21859 91.1456,126.85258 108.34191,109.4447 128.56523,95.8027 151.79911,85.885693 175.0333,75.926201 199.78502,70.990501 226.04651,70.990501 h 195.83115 c 8.14575,0 15.873,1.47472 23.14846,4.50111 7.25449,3.033212 13.55417,7.191822 18.88106,12.515282 5.32253,5.329697 9.59346,11.607047 12.77681,18.881057 3.20134,7.27872 4.78151,15.15735 4.78151,23.69269 z M 380.36795,261.49355 c 0,-21.30656 -3.98399,-41.44426 -11.97492,-60.41218 -7.98969,-18.96544 -18.99118,-35.55343 -32.9995,-49.75843 -14.00802,-14.20377 -30.42199,-25.37587 -49.21743,-33.51972 -18.81406,-8.14448 -38.84505,-12.25721 -60.13083,-12.25721 -21.28423,0 -41.42069,4.11304 -60.41062,12.2569 -18.96667,8.14232 -35.55313,19.31472 -49.73672,33.5188 -14.20283,14.20653 -25.37803,30.7936 -33.538955,49.75874 -8.163093,18.96791 -12.233935,39.1084 -12.233935,60.41217 0,21.26221 4.070842,41.31616 12.233935,60.11159 8.161245,18.79327 19.336125,35.20756 33.538955,49.23605 14.1839,14.03562 30.77005,24.98871 49.73796,33.00258 18.99025,7.96614 39.12671,11.95135 60.41094,11.95135 21.28578,0 41.31801,-3.98551 60.13082,-11.95135 18.79544,-8.01387 35.20941,-18.96696 49.21743,-33.00258 14.00832,-14.02849 25.00982,-30.44278 32.9995,-49.23636 7.98969,-18.79575 11.97337,-38.84659 11.97337,-60.11035 z m -58.00621,44.17285 11.17148,32.43555 -64.91701,19.1407 -38.8438,-102.15611 -59.61309,94.713 h -44.17067 l 85.68443,-144.2121 -10.63452,-26.06855 h -27.15458 v -30.83767 h 54.28342 l 64.91732,165.99297 z m 78.48421,-163.65678 c -243.93053,206.96468 -121.96527,103.48231 0,0 z"
+     id="path4487"
+     inkscape:connector-curvature="0"
+     style="fill:#49484a;stroke-width:0.31020692"
+     sodipodi:nodetypes="sccccccscccscccsscccsscccscccscccscccsccccccccccccccc" />
+  <flowRoot
+     xml:space="preserve"
+     id="flowRoot4497"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#e17b26;fill-opacity:1;stroke:none"
+     transform="matrix(0.25277398,0,0,0.25277398,-94.03436,48.857141)"><flowRegion
+       id="flowRegion4499"
+       style="fill:#e17b26;fill-opacity:1"><rect
+         id="rect4501"
+         width="493.11932"
+         height="577.11218"
+         x="1837.9081"
+         y="92.786499"
+         style="fill:#e17b26;fill-opacity:1" /></flowRegion><flowPara
+       id="flowPara4503"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:466.66665649px;font-family:'Trebuchet MS';-inkscape-font-specification:'Trebuchet MS Bold';fill:#e17b26;fill-opacity:1">R</flowPara></flowRoot></svg>
