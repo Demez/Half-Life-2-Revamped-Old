@@ -458,7 +458,7 @@ void CBaseViewModel::CalcViewModelLag( Vector& origin, QAngle& angles, QAngle& o
 		VectorMA( m_vecLastFacing, flSpeed * gpGlobals->frametime, vDifference, m_vecLastFacing );
 		// Make sure it doesn't grow out of control!!!
 		VectorNormalize( m_vecLastFacing );
-		VectorMA( origin, 5.0f, vDifference * -1.0f, origin );
+		VectorMA( origin, 1.0f, vDifference * -1.0f, origin ); // 5.0f, -1.0f
 
 		Assert( m_vecLastFacing.IsValid() );
 	}

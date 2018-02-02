@@ -4236,7 +4236,9 @@ void CFuncTankCombineCannon::FuncTankPostThink()
 			if( flDot >= 0.9f && m_bShouldHarrass )
 			{
 				//Msg("%s Harrassing player\n", GetDebugName() );
-				vecTargetPosition = pPlayer->EyePosition();
+				//vecTargetPosition = pPlayer->EyePosition();
+				if (pPlayer)
+					vecTargetPosition = pPlayer->EyePosition();
 				bHarass = true;
 			}
 			else

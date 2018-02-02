@@ -1,0 +1,31 @@
+"GameInfo"
+{
+	"game"		"Half-Life 2: Revamped Deathmatch"			// Game title in Steam
+	"title"		"Half-Life 2: Revamped Deathmatch"			// Game name
+	"type"		"multiplayer_only"
+	"icon"		"icon"					// Icon in Steam
+
+	"developer"	"Strider[RUS] with help of AndreaZzZ, Aluminum Ken, Levan, Hopeless CatE and many others..."
+	"developer_url"	"https://github.com/stanriders/hl2-asw-port"
+
+	//GameData	"halflife2.fgd"
+	SupportsDX8     0
+	
+	"FileSystem"
+	{
+		"SteamAppId"		"630"			// Alien Swarm
+		"SearchPaths"
+		{
+			"Game"	"|gameinfo_path|."
+			
+			// temp
+			"Game"	"|gameinfo_path|..\hl2-revamped"
+			
+			"Game"	"../Half-Life 2/ep2"				// This is workaround for ep2 maps mounting
+			"Game"	"../Half-Life 2/episodic"			// This is workaround for ep1 maps mounting
+			"Game"	"D:\SteamLibrary\steamapps\common\Half-Life 2 Deathmatch\hl2mp"			// This is workaround for hl2dm maps mounting
+			
+			"Game"	"platform"
+		}
+	}
+}

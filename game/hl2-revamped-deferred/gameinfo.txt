@@ -23,7 +23,7 @@
 			
 			"Game"	"../Half-Life 2/ep2"				// This is workaround for ep2 maps mounting
 			"Game"	"../Half-Life 2/episodic"			// This is workaround for ep1 maps mounting
-
+			
 			"Game"	"platform"
 		}
 	}

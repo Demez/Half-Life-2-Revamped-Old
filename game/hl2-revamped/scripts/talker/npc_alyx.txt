@@ -8,29 +8,42 @@ criterion "IsAlyx" "classname" "npc_alyx" "required"
 //============================================================================================================
 //----------------------------------------------------------------------------
 
+criterion "ConceptTalkFoundPlayer" "Concept" "TLK_FOUNDPLAYER" required
+
+response "AlyxIsBack"
+{
+	// speak "*vo/episode_1/npc/alyx/al_greet_cit15.wav"  // I'm the person who's telling you to get moving.
+}
+
+rule AlyxIsBack
+{
+	criteria IsAlyx IsEpisodic ConceptTalkFoundPlayer
+	response AlyxIsBack
+}
+
+criterion "PlayerNotUsingPhysCannon" "playerweapon"  "!=weapon_physcannon" required
 response "AlyxDanger"
 {
-   scene "scenes/npc/Alyx/getback01.vcd"
-   scene "scenes/npc/Alyx/getback02.vcd" 
-   scene "scenes/npc/Alyx/getdown01.vcd"
-	scene "scenes/npc/Alyx/watchout01.vcd"
-	scene "scenes/npc/Alyx/watchout02.vcd"
+	scene "scenes/npc/Alyx/getback01.vcd"
+	scene "scenes/npc/Alyx/getback02.vcd"  
+//	scene "scenes/npc/Alyx/watchout01.vcd"  WATCH OUT!!! 
+//	scene "scenes/npc/Alyx/watchout02.vcd" WATCH OUT!!! 
 }
 rule AlyxDanger
 {
-	criteria IsAlyx ConceptTalkDanger
+	criteria IsAlyx ConceptTalkDanger PlayerNotUsingPhysCannon 
 	response AlyxDanger
 }
 
 response AlyxShot
 {
-   scene "scenes/npc/Alyx/gasp02.vcd"
-   scene "scenes/npc/Alyx/gasp03.vcd"
-   scene "scenes/npc/Alyx/hurt04.vcd" 
-   scene "scenes/npc/Alyx/hurt05.vcd" 
-   scene "scenes/npc/Alyx/hurt06.vcd"
-   scene "scenes/npc/Alyx/hurt08.vcd"
-   scene "scenes/npc/Alyx/uggh01.vcd" 
+   scene "scenes/npc/Alyx/gasp02.vcd" respeakdelay 30
+   scene "scenes/npc/Alyx/gasp03.vcd" respeakdelay 30
+   scene "scenes/npc/Alyx/hurt04.vcd" respeakdelay 30 
+   scene "scenes/npc/Alyx/hurt05.vcd" respeakdelay 30
+   scene "scenes/npc/Alyx/hurt06.vcd" respeakdelay 30
+   scene "scenes/npc/Alyx/hurt08.vcd" respeakdelay 30
+   scene "scenes/npc/Alyx/uggh01.vcd" respeakdelay 30
 }
 
 rule AlyxShot
@@ -40,22 +53,22 @@ rule AlyxShot
 }
 
 
-response AlyxEnemyDead
-{
-   scene "scenes/npc/Alyx/brutal02.vcd" respeakdelay 300
-}
-
-rule AlyxEnemyDead
-{
-	criteria		IsAlyx ConceptEnemyDead
-	response		AlyxEnemyDead
-}
+// response AlyxEnemyDead
+// {
+// //   scene "scenes/npc/Alyx/brutal02.vcd" respeakdelay 300
+// }
+// 
+// rule AlyxEnemyDead
+// {
+// 	criteria		IsAlyx ConceptEnemyDead
+// 	response		AlyxEnemyDead
+// }
 
 response AlyxHideAndReload
 {
-	scene "scenes/npc/Alyx/coverme01.vcd"
-	scene "scenes/npc/Alyx/coverme02.vcd"
-   scene "scenes/npc/Alyx/coverme03.vcd" 
+//	scene "scenes/npc/Alyx/coverme01.vcd"
+//	scene "scenes/npc/Alyx/coverme02.vcd"
+//   scene "scenes/npc/Alyx/coverme03.vcd" 
 }
 
 rule AlyxHideAndReload
@@ -66,9 +79,9 @@ rule AlyxHideAndReload
 
 response AlyxTalkPlayerPushed
 {
-	scene "scenes/npc/Alyx/excuseme01.vcd"
-	scene "scenes/npc/Alyx/excuseme02.vcd"
-   scene "scenes/npc/Alyx/excuseme03.vcd" 
+//	scene "scenes/npc/Alyx/excuseme01.vcd"
+//	scene "scenes/npc/Alyx/excuseme02.vcd"
+//   scene "scenes/npc/Alyx/excuseme03.vcd" 
 }
 
 rule AlyxTalkPlayerPushed
@@ -77,17 +90,18 @@ rule AlyxTalkPlayerPushed
 	response		AlyxTalkPlayerPushed
 }
 
-response AlyxPlayerReload
-{
-   scene "scenes/npc/Alyx/youreload01.vcd"
-   scene "scenes/npc/Alyx/youreload02.vcd"
-}
-
-rule AlyxPlayerReload
-{
-	criteria		ConceptPlayerReload IsAlyx PlayerNear SeePlayer
-	response		AlyxPlayerReload
-}
+// Removed - if okay, can just be deleted
+//response AlyxPlayerReload
+//{
+//   scene "scenes/npc/Alyx/youreload01.vcd"
+//   scene "scenes/npc/Alyx/youreload02.vcd"
+//}
+//
+//rule AlyxPlayerReload
+//{
+//	criteria		ConceptPlayerReload IsAlyx PlayerNear SeePlayer
+//	response		AlyxPlayerReload
+//}
 
 response AlyxWatchOut
 {

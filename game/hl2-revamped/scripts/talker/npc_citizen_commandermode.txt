@@ -16,6 +16,7 @@ criterion "CommandPointNotNearPlayer"   "commandpoint_dist_to_player"   ">=144" 
 criterion "JoinSquadIndividual"        "numjoining"                     "1"      required
 criterion "JoinSquadMultiple"          "numjoining"                     ">1"     required
 criterion "TrailingReinforcement"      "reinforcement"                  "1"     required
+criterion "IsMapEp1_C17_05"      "map"                  "ep1_C17_05"     required
 
 //============================================================================================================
 // Commander mode selection speech
@@ -464,4 +465,36 @@ rule CitizenUnFollow
 	criteria		IsCitizen ConceptTalkStopFollow
 	response		CitizenUnFollow
 }
+
+
+//------------------------------------------------------------------------------------------------------------
+// For ep1_c17_05
+//------------------------------------------------------------------------------------------------------------
+response "CitizenDenyCommand"
+{
+	scene "scenes/episode_1/npc/$gender01/cit_evac_ok02.vcd"
+	scene "scenes/episode_1/npc/$gender01/cit_lug_allright.vcd"
+}
+
+rule CitizenDenyCommand
+{
+	criteria		IsCitizen ConceptTalkDenyCommand IsMapEp1_C17_05  NotInCombat
+	response		CitizenDenyCommand
+}
+
+response "CitizenDenyCommandCombat"
+{
+	scene "scenes/episode_1/npc/$gender01/cit_getaboard03.vcd"
+	scene "scenes/episode_1/npc/$gender01/cit_buddykilled03.vcd"
+	scene "scenes/episode_1/npc/$gender01/cit_buddykilled06.vcd"
+	scene "scenes/episode_1/npc/$gender01/cit_evac_defendus07.vcd"
+	scene "scenes/episode_1/npc/$gender01/cit_runforit.vcd"
+}
+
+rule CitizenDenyCommandCombat
+{
+	criteria		IsCitizen ConceptTalkDenyCommand IsMapEp1_C17_05  RecentCombat
+	response		CitizenDenyCommandCombat
+}
+
 

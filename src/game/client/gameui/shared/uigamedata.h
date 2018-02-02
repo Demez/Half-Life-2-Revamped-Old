@@ -28,6 +28,8 @@
 
 #include "EngineInterface.h"
 
+#include "matchmaking/mm_helpers.h"
+
 namespace BaseModUI {
 
 class CAsyncCtxUIOnDeviceAttached;
@@ -131,6 +133,8 @@ public:
 
 	bool CanPlayer2Join();
 
+	//void OpenFriendRequestPanel(int index, uint64 playerXuid);
+	void OpenInviteUI(char const *szInviteUiType);
 	void ExecuteOverlayCommand( char const *szCommand );
 
 	// Listening for match events

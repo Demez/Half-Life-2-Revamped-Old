@@ -3290,7 +3290,8 @@ void CNPC_Alyx::InputVehiclePunted( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CNPC_Alyx::InputOutsideTransition( inputdata_t &inputdata )
 {
-	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+	// FIX
+	/*CBasePlayer *pPlayer = AI_GetSinglePlayer();
 	if ( pPlayer && pPlayer->IsInAVehicle() )
 	{
 		if ( ShouldAlwaysTransition() == false )
@@ -3299,7 +3300,7 @@ void CNPC_Alyx::InputOutsideTransition( inputdata_t &inputdata )
 		// Enter immediately
 		EnterVehicle( pPlayer->GetVehicleEntity(), true );
 		return;
-	}
+	}*/
 
 	// If the player is in the vehicle and we're not, then we need to enter the vehicle immediately
 	BaseClass::InputOutsideTransition( inputdata );

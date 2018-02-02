@@ -140,6 +140,6 @@
 		"tooltiptext"				"#L4D_keyboard_tip"
 		"labelText"				"#GameUI_Mouse"
 		"style"					"FlyoutMenuButton"
-		"command"				"Mouse" //"MultiplayerSettings"
+		"command"				"Mouse"
 	}
 }

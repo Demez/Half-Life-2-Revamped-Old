@@ -314,7 +314,11 @@ LINK_ENTITY_TO_CLASS( info_target_vehicle_transition, CInfoTargetVehicleTransiti
 //	CPropJeepEpisodic
 //
 
+#ifdef JALOPY // Use this after you test ep2
+LINK_ENTITY_TO_CLASS( prop_vehicle_jalopy, CPropJeepEpisodic );
+#else
 LINK_ENTITY_TO_CLASS( prop_vehicle_jeep, CPropJeepEpisodic );
+#endif
 
 BEGIN_DATADESC( CPropJeepEpisodic )
 

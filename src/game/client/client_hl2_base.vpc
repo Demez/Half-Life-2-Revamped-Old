@@ -22,7 +22,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE;.\hl2;.\hl2\elements;$SRCDIR\game\shared\hl2;.\hl2\vgui;$SRCDIR\game\client\hl2\gameui;..\statemachine;"
-		$PreprocessorDefinitions		"$BASE;HL2_CLIENT_DLL;GAMEUI_EMBEDDED;GAMEUI_EXPORTS;HL2_EPISODIC"
+		$PreprocessorDefinitions		"$BASE;HL2_CLIENT_DLL;GAMEUI_EMBEDDED;GAMEUI_EXPORTS;HL2_EPISODIC;REVAMPED_CLIENT"
 	}
 }
 
@@ -183,10 +183,8 @@ $Project
 			$File	"hl2\vgui_rootpanel_hl2.cpp"
 		}
 	}
-	//Do i need this? idk
 	$Folder	"Link Libraries"
 	{
-		$Lib "$LIBCOMMON\jpeglib"
 		$Lib "$LIBPUBLIC\vpklib"
 	}
 }

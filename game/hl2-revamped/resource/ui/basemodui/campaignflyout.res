@@ -34,9 +34,9 @@
 		"navUp"					"BtnPlayCoopWithFriends"	[$X360]
 		"navUp"					"BtnPlayOnGroupServer"		[$WIN32]
 		"navDown"				"BtnPlayCoopWithAnyone"
-		"labelText"				"#L4D360UI_FoudGames_CreateNewFlyout"
-		"tooltiptext"			"#L4D360UI_FoudGames_CreateNewFlyout"
-		"disabled_tooltiptext"	"#L4D360UI_FoudGames_CreateNewFlyout"
+		"labelText"				"#REVAMPEDUI_Coop_StartGame"
+		"tooltiptext"			"#REVAMPEDUI_Coop_StartGame"
+		"disabled_tooltiptext"	"#REVAMPEDUI_Coop_StartGame"
 		"style"					"FlyoutMenuButton"
 		"command"				"CreateGame"
 	}

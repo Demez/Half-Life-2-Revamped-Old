@@ -612,6 +612,8 @@ public:
 	// the player is in one.
 	virtual void			PlayerRunCommand(CUserCmd *ucmd, IMoveHelper *moveHelper);
 	void					RunNullCommand();
+	CUserCmd *				GetCurrentCommand(void)	{ return m_pCurrentCommand; }
+	//float					GetTimeSinceLastUserCommand(void) { return (!IsConnected() || IsFakeClient() || IsBot()) ? 0.f : gpGlobals->curtime - m_flLastUserCommandTime; }
 
 	// Team Handling
 	virtual void			ChangeTeam( int iTeamNum ) { ChangeTeam(iTeamNum,false, false); }

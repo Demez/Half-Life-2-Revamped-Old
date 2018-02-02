@@ -342,15 +342,14 @@ void *__cdecl operator new( size_t nSize, int nBlockUse, const char *pFileName, 
 	return MemAlloc_Alloc(nSize, pFileName, nLine );
 }
 
-// this keeps crashing the game and i dont know why
-/*void __cdecl operator delete( void *pMem )
+void __cdecl operator delete( void *pMem )
 {
 #if !defined(USE_LIGHT_MEM_DEBUG) && !defined(USE_MEM_DEBUG)
 	g_pMemAlloc->Free(pMem);
 #else
 	g_pMemAlloc->Free(pMem, g_pszModule, 0 );
 #endif
-}*/
+}
 
 void *__cdecl operator new[] ( size_t nSize )
 {

@@ -69,7 +69,7 @@
 		"zpos"				"3"
 		"wide"				"360"
 		"tall"				"15"
-		"visible"			"0"
+		"visible"			"1"
 		"enabled"			"1"
 		"usetitlesafe"		"0"
 		"tabPosition"		"0"

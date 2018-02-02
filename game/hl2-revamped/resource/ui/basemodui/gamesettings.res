@@ -294,60 +294,6 @@
 		"ResourceFile"			"resource/UI/basemodui/DropDownDifficulty.res"
 	}
 	
-	"DrpOnslaught"
-	{
-		"ControlName"			"DropDownMenu"
-		"fieldName"				"DrpOnslaught"
-		"xpos"					"c-250"	
-		"ypos"					"235"			[$WIN32]
-		"ypos"					"165"			[$X360]
-		"zpos"					"1"
-		"wide"					"280"	
-		"tall"					"15"			[$WIN32]
-		"tall"					"20"			[$X360]
-		"visible"				"1"
-		"enabled"				"1"
-		"navUp"					"BtnSelectMission"
-		"navDown"				"BtnStartGame"
-		
-		// button and label
-		"BtnDropButton"
-		{
-			"ControlName"					"BaseModHybridButton"
-			"fieldName"						"BtnDropButton"
-			"xpos"							"0"
-			"ypos"							"0"
-			"zpos"							"2"
-			"wide"							"280"
-			"wideatopen"					"160"
-			"tall"							"15"			[$WIN32]
-			"tall"							"20"			[$X360]
-			"autoResize"					"1"
-			"pinCorner"						"0"
-			"visible"						"1"
-			"enabled"						"1"
-			"tabPosition"					"0"
-			"labelText"						"#L4D360UI_Onslaught"
-			"tooltiptext"					""
-			"disabled_tooltiptext"			""
-			"style"							"DropDownButton"
-			"command"						"FlmOnslaught"
-			"ActivationType"				"1" [$X360]
-		}
-	}
-		
-	"FlmOnslaught"
-	{
-		"ControlName"			"FlyoutMenu"
-		"fieldName"				"FlmOnslaught"
-		"visible"				"0"
-		"wide"					"0"
-		"tall"					"0"
-		"zpos"					"4"
-		"InitialFocus"			"BtnNormal"
-		"ResourceFile"			"resource/UI/basemodui/DropDownOnslaught.res"
-	}
-	
 	"DrpFriendlyFire"
 	{
 		"ControlName"			"DropDownMenu"

@@ -6535,8 +6535,9 @@
 	[
 		1  : "Enabled"				: 1
 		2  : "Always Update (moving light)"	: 0
-		4  : "Volumetrics Enabled"				: 4
-		8  : "Uberlight Enabled"				: 8
+		//4  : "Uberlight Enabled"				: 4
+		//8  : "Volumetrics Enabled"				: 8
+		
 	]
 
 	target(target_destination)	: "target" : : "target"	
@@ -6574,31 +6575,31 @@
 	input LightColor(color255)		: "Change the light color/brightness"
 	input BrightnessScale(float)	: "Set BrightnessScale"
 	
-	input EnableVolumetrics(void)		: "Enable Volumetrics"
-	input EnableUberLight(void)		: "Enable Uberlight"
-	input DisableUberLight(void)		: "Disable Uberlight"
+	//input EnableVolumetrics(void)		: "Enable Volumetrics"
+	//input EnableUberLight(void)		: "Enable Uberlight"
+	//input DisableUberLight(void)		: "Disable Uberlight"
 	
-	volumetricslod(Choices) : "Volumetrics LOD" : 1 : "Enable LOD for Volumetrics" =
-	[
-		0 : "No"
-		1 : "Yes"
-	]
+	//volumetricslod(Choices) : "Volumetrics LOD" : 1 : "Enable LOD for Volumetrics" =
+	//[
+	//	0 : "No"
+	//	1 : "Yes"
+	//]
 	
-	volumetricsmultiplier(float) : "Volumetrics Multiplier" : 2 : "Multiplier for strength of Volumetrics"
-	volumetricsquality(float) : "Volumetrics Quality" : 20 : "Quality of volumetrics"
-	volumetricsqualitybias(float) : "Volumetrics Quality Bias" : 1 : "Volumetrics Quality Bias"
+	//volumetricsmultiplier(float) : "Volumetrics Multiplier" : 2 : "Multiplier for strength of Volumetrics"
+	//volumetricsquality(float) : "Volumetrics Quality" : 20 : "Quality of volumetrics"
+	//volumetricsqualitybias(float) : "Volumetrics Quality Bias" : 1 : "Volumetrics Quality Bias"
 	
-	uberlight_near(float) : "Uberlight Near Edge" : 2 : ""
-	uberlight_far(float) : "Uberlight Far Edge" : 100 : ""
-	uberlight_cuton(float) : "Uberlight Cut On" : 10 : ""
-	uberlight_cutoff(float) : "Uberlight Cut Off" : 650 : ""
-	uberlight_shearx(float) : "Uberlight Shear X" : 0 : ""
-	uberlight_sheary(float) : "Uberlight Shear Y" : 0 : ""
-	uberlight_width(float) : "Uberlight Width" : "0.3" : ""
-	uberlight_wedge(float) : "Uberlight Wedge" : "0.05" : ""
-	uberlight_height(float) : "Uberlight Height" : "0.3" : ""
-	uberlight_hedge(float) : "Uberlight Hedge" : "0.05" : ""
-	uberlight_roundness(float) : "Uberlight Roundness" : "0.8" : ""
+	//uberlight_near(float) : "Uberlight Near Edge" : 2 : ""
+	//uberlight_far(float) : "Uberlight Far Edge" : 100 : ""
+	//uberlight_cuton(float) : "Uberlight Cut On" : 10 : ""
+	//uberlight_cutoff(float) : "Uberlight Cut Off" : 650 : ""
+	//uberlight_shearx(float) : "Uberlight Shear X" : 0 : ""
+	//uberlight_sheary(float) : "Uberlight Shear Y" : 0 : ""
+	//uberlight_width(float) : "Uberlight Width" : "0.3" : ""
+	//uberlight_wedge(float) : "Uberlight Wedge" : "0.05" : ""
+	//uberlight_height(float) : "Uberlight Height" : "0.3" : ""
+	//uberlight_hedge(float) : "Uberlight Hedge" : "0.05" : ""
+	//uberlight_roundness(float) : "Uberlight Roundness" : "0.8" : ""
 ]
 
 

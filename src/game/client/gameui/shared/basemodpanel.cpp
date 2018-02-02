@@ -34,17 +34,22 @@
 #include "VInGameMainMenu.h"
 #include "VKeyboardMouse.h"
 #include "vkeyboard.h"
+#include "vmouse.h"
 #include "VLoadingProgress.h"
 #include "VMainMenu.h"
-//#include "VMultiplayer.h"
 #include "VOptions.h"
 #include "VFooterPanel.h"
 #include "VVideo.h"
-//---
+// SP
 #include "VSingleplayer.h"
 #include "VGameplaySettings.h"
 #include "VLoadGameDialog.h"
 #include "VSaveGameDialog.h"
+// Online
+#include "VGameLobby.h"
+#include "VGameSettings.h"
+//idk
+//#include "VMultiplayer.h"
 //---
 #include "gameconsole.h"
 #include "vgui/ISystem.h"
@@ -266,6 +271,10 @@ CBaseModFrame* CBaseModPanel::OpenWindow(const WINDOW_TYPE & wt, CBaseModFrame *
 			m_Frames[wt] = new ControllerOptionsButtons(this, "ControllerOptionsButtons");
 			break;
 
+		case WT_GAMELOBBY:
+			m_Frames[wt] = new GameLobby(this, "GameLobby");
+			break;
+
 		case WT_GAMEOPTIONS:
 			m_Frames[wt] = new GameOptions(this, "GameOptions");
 			break;
@@ -312,6 +321,8 @@ CBaseModFrame* CBaseModPanel::OpenWindow(const WINDOW_TYPE & wt, CBaseModFrame *
 			m_Frames[wt] = new Video(this, "Video");
 			break;
 			
+// Solo---------------------------------------------------------------------------------
+
 		case WT_LOADGAME:
 			m_Frames[wt] = new CLoadGameDialog(this, "LoadGame");
 			break;
@@ -330,6 +341,12 @@ CBaseModFrame* CBaseModPanel::OpenWindow(const WINDOW_TYPE & wt, CBaseModFrame *
 
 		case WT_DEVELOPERCOMMENTARIES:
 			m_Frames[wt] = new CNewGameDialog(this, "NewGameDialog", true);
+			break;
+
+// Online--------------------------------------------------------------------------------
+
+		case WT_GAMESETTINGS:
+			m_Frames[wt] = new GameSettings(this, "GameSettings");
 			break;
 
 		default:
@@ -694,7 +711,11 @@ void CBaseModPanel::OnGameUIActivated()
 	COM_TimestampedLog( "CBaseModPanel::OnGameUIActivated()" );
 
 	SetVisible( true );
-	if ( WT_LOADINGPROGRESS == GetActiveWindowType() )
+	if ( WT_GAMELOBBY == GetActiveWindowType() )
+	{
+		return;
+	}
+	else if ( !IsX360() && WT_LOADINGPROGRESS == GetActiveWindowType() )
 	{
 		// Ignore UI activations when loading poster is up
 		return;
@@ -972,6 +993,19 @@ void CBaseModPanel::OnLevelLoadingFinished( KeyValues *kvEvent )
 		// no confirmation up, hide the UI
 		GameUI().HideGameUI();
 	}
+
+	// if we are loading into the lobby, then skip the UIActivation code path
+	// this can happen if we accepted an invite to player who is in the lobby while we were in-game
+	if ( WT_GAMELOBBY != GetActiveWindowType() )
+	{
+		// if we are loading into the front-end, then activate the main menu (or attract screen, depending on state)
+		// or if a message box is pending force open game ui
+		if ( GameUI().IsInBackgroundLevel() || pFrame )
+		{
+			GameUI().OnGameUIActivated();
+		}
+	}
+
 	if ( bError )
 	{
 		GenericConfirmation* pMsg = ( GenericConfirmation* ) OpenWindow( WT_GENERICCONFIRMATION, NULL, false );		
@@ -1159,7 +1193,7 @@ void CBaseModPanel::OpenOptionsDialog( Panel *parent )
 }
 
 //=============================================================================
-/*void CBaseModPanel::OpenOptionsMouseDialog(Panel *parent)
+void CBaseModPanel::OpenOptionsMouseDialog(Panel *parent)
 {
 	if (IsPC())
 	{
@@ -1171,7 +1205,7 @@ void CBaseModPanel::OpenOptionsDialog( Panel *parent )
 
 		m_hOptionsMouseDialog->Activate();
 	}
-}*/
+}
 
 //=============================================================================
 void CBaseModPanel::OpenKeyBindingsDialog( Panel *parent )
@@ -1211,7 +1245,7 @@ void CBaseModPanel::ApplySchemeSettings(IScheme *pScheme)
 	surface()->GetScreenSize( screenWide, screenTall );
 
 	char filename[MAX_PATH];
-	V_snprintf(filename, sizeof(filename), "../console/background01_widescreen"); // make an actual loading screen texture
+	V_snprintf(filename, sizeof(filename), "console/background01_widescreen"); // make an actual loading screen texture
 	// TODO: engine->GetStartupImage( filename, sizeof( filename ), screenWide, screenTall );
 	// GetStartupImage is undefined
 	m_iBackgroundImageID = surface()->CreateNewTextureID();

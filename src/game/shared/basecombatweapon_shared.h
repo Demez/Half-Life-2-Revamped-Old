@@ -435,6 +435,9 @@ public:
 	
 	// Weapon state checking
 	virtual bool			IsCarriedByLocalPlayer( void );
+#ifdef HL2MP
+	//virtual bool			ShouldDrawUsingViewModel(void);
+#endif
 	virtual bool			IsActiveByLocalPlayer( void );
 
 	bool					IsBeingCarried() const;

@@ -344,6 +344,8 @@ enum RenderFx_t
 	kRenderFxPulseFastWider,
 	kRenderFxGlowShell,			// Glowing Shell
 
+	kRenderFxRagdoll,			// HACKHACK: TEST CODE for signalling death of a ragdoll character
+
 	kRenderFxMax
 };
 

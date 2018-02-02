@@ -1,8 +1,8 @@
 versioninfo
 {
 	"editorversion" "400"
-	"editorbuild" "7397"
-	"mapversion" "2265"
+	"editorbuild" "5032"
+	"mapversion" "2270"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -80,7 +80,7 @@ viewsettings
 world
 {
 	"id" "3378483"
-	"mapversion" "2265"
+	"mapversion" "2270"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -12903,83 +12903,6 @@ world
 	}
 	solid
 	{
-		"id" "80721"
-		side
-		{
-			"id" "21559"
-			"plane" "(832 640 1152) (832 704 1152) (896 704 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "8"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "21560"
-			"plane" "(832 704 1152) (832 640 1152) (832 640 1088)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "8"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "21561"
-			"plane" "(896 640 1152) (896 704 1152) (896 704 1088)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "21562"
-			"plane" "(832 704 1088) (832 640 1088) (896 640 1088)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "8"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "21563"
-			"plane" "(896 640 1152) (896 640 1088) (832 640 1088)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "21564"
-			"plane" "(832 704 1152) (832 704 1088) (896 704 1088)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "8"
-			"smoothing_groups" "0"
-		}
-		editor
-		{
-			"color" "0 149 194"
-			"visgroupid" "17"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-		}
-	}
-	solid
-	{
 		"id" "80727"
 		side
 		{
@@ -13050,83 +12973,6 @@ world
 		editor
 		{
 			"color" "0 199 172"
-			"visgroupid" "17"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-		}
-	}
-	solid
-	{
-		"id" "80722"
-		side
-		{
-			"id" "21565"
-			"plane" "(832 640 1088) (832 704 1088) (896 704 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "8"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "21566"
-			"plane" "(832 704 1088) (832 640 1088) (832 640 960)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "8"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "21567"
-			"plane" "(896 640 1088) (896 704 1088) (896 704 960)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "8"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "21568"
-			"plane" "(832 704 960) (832 640 960) (896 640 960)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 -1 0 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "8"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "21569"
-			"plane" "(896 640 1088) (896 640 960) (832 640 960)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "8"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "21570"
-			"plane" "(832 704 1088) (832 704 960) (896 704 960)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "8"
-			"smoothing_groups" "0"
-		}
-		editor
-		{
-			"color" "0 165 250"
 			"visgroupid" "17"
 			"visgroupshown" "1"
 			"visgroupautoshown" "1"
@@ -61399,6 +61245,82 @@ world
 	}
 	solid
 	{
+		"id" "532681"
+		side
+		{
+			"id" "44709"
+			"plane" "(1336 -258 992) (1282 -312 992) (1280 -310 992)"
+			"material" "METAL/METALTRACK001A"
+			"uaxis" "[0 -1 0 -50] 0.25"
+			"vaxis" "[1 0 0 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "32"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "44708"
+			"plane" "(1280 -310 984) (1334 -256 984) (1334 -256 992)"
+			"material" "METAL/METALTRACK001A"
+			"uaxis" "[0 -1 0 -50] 0.25"
+			"vaxis" "[0 0 -1 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "32"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "44707"
+			"plane" "(1336 -258 984) (1282 -312 984) (1282 -312 992)"
+			"material" "METAL/METALTRACK001A"
+			"uaxis" "[0 -1 0 -50] 0.25"
+			"vaxis" "[0 0 -1 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "32"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "44706"
+			"plane" "(1334 -256 984) (1280 -310 984) (1282 -312 984)"
+			"material" "METAL/METALTRACK001A"
+			"uaxis" "[0 -1 0 16.07] 0.25"
+			"vaxis" "[1 0 0 12] 0.25"
+			"rotation" "0"
+			"lightmapscale" "32"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "44705"
+			"plane" "(1280 -310 984) (1280 -310 992) (1282 -312 992)"
+			"material" "METAL/METALTRACK001A"
+			"uaxis" "[-1 0 0 6] 0.25"
+			"vaxis" "[0 0 -1 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "32"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "44704"
+			"plane" "(1336 -258 984) (1336 -258 992) (1334 -256 992)"
+			"material" "METAL/METALTRACK001A"
+			"uaxis" "[1 0 0 -384] 1"
+			"vaxis" "[0 0 -1 0] 1"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		editor
+		{
+			"color" "0 180 205"
+			"visgroupshown" "1"
+			"visgroupautoshown" "1"
+		}
+	}
+	solid
+	{
 		"id" "76712"
 		side
 		{
@@ -84465,158 +84387,6 @@ world
 			"visgroupautoshown" "1"
 		}
 	}
-	solid
-	{
-		"id" "532681"
-		side
-		{
-			"id" "44709"
-			"plane" "(1336 -258 992) (1282 -312 992) (1280 -310 992)"
-			"material" "METAL/METALTRACK001A"
-			"uaxis" "[0 -1 0 -50] 0.25"
-			"vaxis" "[1 0 0 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "32"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "44708"
-			"plane" "(1280 -310 984) (1334 -256 984) (1334 -256 992)"
-			"material" "METAL/METALTRACK001A"
-			"uaxis" "[0 -1 0 -50] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "32"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "44707"
-			"plane" "(1336 -258 984) (1282 -312 984) (1282 -312 992)"
-			"material" "METAL/METALTRACK001A"
-			"uaxis" "[0 -1 0 -50] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "32"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "44706"
-			"plane" "(1334 -256 984) (1280 -310 984) (1282 -312 984)"
-			"material" "METAL/METALTRACK001A"
-			"uaxis" "[0 -1 0 16.07] 0.25"
-			"vaxis" "[1 0 0 12] 0.25"
-			"rotation" "0"
-			"lightmapscale" "32"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "44705"
-			"plane" "(1280 -310 984) (1280 -310 992) (1282 -312 992)"
-			"material" "METAL/METALTRACK001A"
-			"uaxis" "[-1 0 0 6] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "32"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "44704"
-			"plane" "(1336 -258 984) (1336 -258 992) (1334 -256 992)"
-			"material" "METAL/METALTRACK001A"
-			"uaxis" "[1 0 0 -384] 1"
-			"vaxis" "[0 0 -1 0] 1"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		editor
-		{
-			"color" "0 180 0"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-		}
-	}
-	solid
-	{
-		"id" "535038"
-		side
-		{
-			"id" "45850"
-			"plane" "(64 448 957.999) (64 1000 957.999) (192 1000 957.999)"
-			"material" "DEV/DEV_WATER2"
-			"uaxis" "[1 0 0 120] 0.25"
-			"vaxis" "[0 -1 0 36] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45849"
-			"plane" "(64 1000 831.117) (64 448 831.117) (192 448 831.117)"
-			"material" "METAL/METALFLOOR007A"
-			"uaxis" "[-1 0 0 -120] 0.25"
-			"vaxis" "[0 -1 0 36] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45848"
-			"plane" "(64 448 831.117) (64 1000 831.117) (64 1000 958)"
-			"material" "METAL/METALFLOOR007A"
-			"uaxis" "[0 -1 0 36] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45847"
-			"plane" "(192 1000 831.117) (192 448 831.117) (192 448 958)"
-			"material" "METAL/METALFLOOR007A"
-			"uaxis" "[0 1 0 -36] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45846"
-			"plane" "(192 448 831.117) (64 448 831.117) (64 448 958)"
-			"material" "METAL/METALFLOOR007A"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45845"
-			"plane" "(64 1000 831.117) (192 1000 831.117) (192 1000 958)"
-			"material" "METAL/METALFLOOR007A"
-			"uaxis" "[-1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 0] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		editor
-		{
-			"color" "0 192 245"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-		}
-	}
 	group
 	{
 		"id" "73899"
@@ -85506,46 +85276,6 @@ world
 	}
 	group
 	{
-		"id" "532105"
-		editor
-		{
-			"color" "220 220 220"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-		}
-	}
-	group
-	{
-		"id" "532486"
-		editor
-		{
-			"color" "220 220 220"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-		}
-	}
-	group
-	{
-		"id" "532809"
-		editor
-		{
-			"color" "220 220 220"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-		}
-	}
-	group
-	{
-		"id" "532925"
-		editor
-		{
-			"color" "220 220 220"
-			"visgroupshown" "1"
-			"visgroupautoshown" "1"
-		}
-	}
-	group
-	{
 		"id" "534463"
 		editor
 		{
@@ -85563,6 +85293,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight001b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-858.162 1288 1351.05"
@@ -86675,6 +86407,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2926.92 4862.22 1327.85"
@@ -86695,6 +86429,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2679.08 4862.22 1327.85"
@@ -89490,6 +89226,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2345.08 4862.22 1327.85"
@@ -89580,6 +89318,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_light002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "923.307 586.64 1100.25"
 	editor
@@ -89645,6 +89385,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_light002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "182.601 -557.123 1036.25"
 	editor
@@ -89710,6 +89452,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_light002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-249.29 12.6721 1252.25"
 	editor
@@ -89775,6 +89519,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_light002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "49.6908 1155.96 1524.25"
 	editor
@@ -89840,6 +89586,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_light002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "2250.07 3894.36 -39.7468"
 	editor
@@ -89905,6 +89653,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_light002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "1214.6 627.778 1044.25"
 	editor
@@ -89970,6 +89720,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_light002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "958.62 221.124 1044.25"
 	editor
@@ -91979,6 +91731,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_emitter01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-194 903 1042"
 	editor
@@ -93967,6 +93721,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_emitter01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-247 832 1042"
 	editor
@@ -94011,6 +93767,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_light002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-246.17 627.855 1100.25"
 	editor
@@ -97590,6 +97348,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_A_03"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -97624,6 +97383,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_A_05"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -97656,6 +97416,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_A_X"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -97690,6 +97451,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_B_02"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -97724,6 +97486,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_B_04"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -97758,6 +97521,7 @@ entity
 	"spawnflags" "258"
 	"StrikeTime" "1"
 	"targetname" "teleseq_B_06"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -97792,6 +97556,7 @@ entity
 	"spawnflags" "258"
 	"StrikeTime" "1"
 	"targetname" "teleseq_B_07"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -97826,6 +97591,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_C_02"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -97860,6 +97626,7 @@ entity
 	"spawnflags" "258"
 	"StrikeTime" "1"
 	"targetname" "teleseq_C_04"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -97892,6 +97659,7 @@ entity
 	"spawnflags" "130"
 	"StrikeTime" "1"
 	"targetname" "teleseq_D_X"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -97926,6 +97694,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_D_03"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -97960,6 +97729,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_D_01"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -97994,6 +97764,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_E_02"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98028,6 +97799,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_E_03"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98062,6 +97834,7 @@ entity
 	"spawnflags" "258"
 	"StrikeTime" "1"
 	"targetname" "teleseq_E_06"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98095,6 +97868,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_F_X"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98129,6 +97903,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_F_05"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98163,6 +97938,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_F_03"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98197,6 +97973,7 @@ entity
 	"spawnflags" "130"
 	"StrikeTime" "1"
 	"targetname" "teleseq_F_01"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98231,6 +98008,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_F_02"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98265,6 +98043,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_F_04"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98299,6 +98078,7 @@ entity
 	"spawnflags" "258"
 	"StrikeTime" "1"
 	"targetname" "teleseq_F_06"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98332,6 +98112,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_E_X"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98366,6 +98147,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_E_05"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98400,6 +98182,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_E_04"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98434,6 +98217,7 @@ entity
 	"spawnflags" "130"
 	"StrikeTime" "1"
 	"targetname" "teleseq_E_01"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98468,6 +98252,7 @@ entity
 	"spawnflags" "258"
 	"StrikeTime" "1"
 	"targetname" "teleseq_D_02"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98502,6 +98287,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_D_04"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98534,6 +98320,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_C_X"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98568,6 +98355,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_C_03"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98602,6 +98390,7 @@ entity
 	"spawnflags" "130"
 	"StrikeTime" "1"
 	"targetname" "teleseq_C_01"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98634,6 +98423,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_B_X"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98668,6 +98458,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_B_05"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98702,6 +98493,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_B_03"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98736,6 +98528,7 @@ entity
 	"spawnflags" "130"
 	"StrikeTime" "1"
 	"targetname" "teleseq_B_01"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98770,6 +98563,7 @@ entity
 	"spawnflags" "258"
 	"StrikeTime" "1"
 	"targetname" "teleseq_A_06"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98804,6 +98598,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_A_04"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98838,6 +98633,7 @@ entity
 	"spawnflags" "2"
 	"StrikeTime" "1"
 	"targetname" "teleseq_A_02"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -98872,6 +98668,7 @@ entity
 	"spawnflags" "130"
 	"StrikeTime" "1"
 	"targetname" "teleseq_A_01"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -99280,6 +99077,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_light002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-1706.34 1140.16 1152.25"
 	editor
@@ -101808,6 +101607,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-3687.14 3135.18 1203.85"
@@ -102112,6 +101913,96 @@ entity
 }
 entity
 {
+	"id" "534336"
+	"classname" "prop_static"
+	"angles" "0 270 0"
+	"disableselfshadowing" "0"
+	"disableshadows" "0"
+	"disablevertexlighting" "0"
+	"fademaxdist" "0"
+	"fademindist" "-1"
+	"fadescale" "1"
+	"ignorenormals" "0"
+	"maxdxlevel" "0"
+	"mindxlevel" "0"
+	"model" "models/props_c17/handrail04_cap.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
+	"screenspacefade" "0"
+	"skin" "0"
+	"solid" "6"
+	"origin" "54.2243 396.649 1012"
+	editor
+	{
+		"color" "250 235 0"
+		"groupid" "534463"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 9000]"
+	}
+}
+entity
+{
+	"id" "534135"
+	"classname" "prop_static"
+	"angles" "0 315 0"
+	"disableselfshadowing" "0"
+	"disableshadows" "0"
+	"disablevertexlighting" "0"
+	"fademaxdist" "0"
+	"fademindist" "-1"
+	"fadescale" "1"
+	"ignorenormals" "0"
+	"maxdxlevel" "0"
+	"mindxlevel" "0"
+	"model" "models/props_c17/handrail04_medium.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
+	"screenspacefade" "0"
+	"skin" "0"
+	"solid" "6"
+	"origin" "24 374 1012"
+	editor
+	{
+		"color" "250 235 0"
+		"groupid" "534463"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 9000]"
+	}
+}
+entity
+{
+	"id" "534261"
+	"classname" "prop_static"
+	"angles" "0 180 0"
+	"disableselfshadowing" "0"
+	"disableshadows" "0"
+	"disablevertexlighting" "0"
+	"fademaxdist" "0"
+	"fademindist" "-1"
+	"fadescale" "1"
+	"ignorenormals" "0"
+	"maxdxlevel" "0"
+	"mindxlevel" "0"
+	"model" "models/props_c17/handrail04_cap.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
+	"screenspacefade" "0"
+	"skin" "0"
+	"solid" "6"
+	"origin" "1.35106 343.813 1012"
+	editor
+	{
+		"color" "250 235 0"
+		"groupid" "534463"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 9000]"
+	}
+}
+entity
+{
 	"id" "60136"
 	"classname" "env_sprite"
 	"framerate" "10.0"
@@ -102216,6 +102107,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/Effects/vol_light.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "112 0 2167.91"
@@ -102240,6 +102133,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-442 378 928.282"
@@ -102264,6 +102159,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-546 406 928.282"
@@ -102288,6 +102185,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface003.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-364 432 928.282"
@@ -102309,6 +102208,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-328 500 1048"
 	editor
@@ -102685,6 +102586,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_fence01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "1036 736 1000"
@@ -102707,6 +102610,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_fence01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "1036 864 1000"
@@ -102926,6 +102831,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_fence01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "316 -448 1000"
@@ -102948,6 +102855,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_fence01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "316 -319 1000"
@@ -103167,6 +103076,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_fence01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"screenspacefade" "0"
 	"skin" "0"
 	"solid" "6"
@@ -103190,6 +103101,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_fence01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"screenspacefade" "0"
 	"skin" "0"
 	"solid" "6"
@@ -110787,6 +110700,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire002.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-996 1364 1154.25"
 	editor
@@ -110807,6 +110722,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1116 1284 1176.27"
 	editor
@@ -110921,6 +110838,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface003.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1018 1322 1088"
@@ -110945,6 +110864,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface003.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1102 1438 1088"
@@ -110969,6 +110890,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_intmonitor001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1000 1390 1148"
@@ -110991,6 +110914,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_debris/concrete_debris128Pile001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1264 974 1092"
@@ -111013,6 +110938,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_debris/concrete_debris256Pile001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1288 920 1133.53"
@@ -112188,6 +112115,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_DoubleRise.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1051.7 1631 1044.49"
@@ -112492,6 +112421,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight001b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-857.081 1497.78 1351.05"
@@ -113392,6 +113323,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/controlroom_monitor001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1009.05 1327.82 1194.58"
 	editor
@@ -113415,6 +113348,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1018 1394 1088"
@@ -113957,6 +113892,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_archgate002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-864.202 1772.34 1264.46"
 	editor
@@ -114631,6 +114568,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_fence01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-768.532 1768.05 999.883"
 	editor
@@ -114650,6 +114589,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_fence01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-959.532 1767.05 999.883"
 	editor
@@ -114669,6 +114610,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_gate001c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-864.17 1777.15 1022.04"
 	editor
@@ -115233,6 +115176,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1094 816 960.282"
@@ -115257,6 +115202,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-33.672 165.716 992.282"
@@ -115281,6 +115228,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface002.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "292.04 162.996 992.282"
@@ -115310,6 +115259,7 @@ entity
 	"spawnflags" "292"
 	"StrikeTime" "-0.2"
 	"targetname" "teleport_charge_beam_1"
+	"targetpoint" "0 0 0"
 	"texture" "materials/Sprites/XBeam2.vmt"
 	"TextureScroll" "0"
 	"origin" "128 2 1070"
@@ -115372,6 +115322,7 @@ entity
 	"spawnflags" "3"
 	"StrikeTime" "1"
 	"targetname" "beam_wheel_1"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -115406,6 +115357,7 @@ entity
 	"spawnflags" "3"
 	"StrikeTime" "1"
 	"targetname" "beam_wheel_2"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -115440,6 +115392,7 @@ entity
 	"spawnflags" "3"
 	"StrikeTime" "1"
 	"targetname" "beam_wheel_3"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -115474,6 +115427,7 @@ entity
 	"spawnflags" "3"
 	"StrikeTime" "1"
 	"targetname" "beam_wheel_4"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -115508,6 +115462,7 @@ entity
 	"spawnflags" "3"
 	"StrikeTime" "1"
 	"targetname" "beam_wheel_5"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -115542,6 +115497,7 @@ entity
 	"spawnflags" "3"
 	"StrikeTime" "1"
 	"targetname" "beam_wheel_6"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"TouchType" "0"
@@ -115834,6 +115790,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1110 1121.7 960.282"
@@ -115880,6 +115838,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1774 -262 928.282"
@@ -115901,6 +115861,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_monitor001temp.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1804 -268 1036.91"
 	editor
@@ -115924,6 +115886,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1878 -234 928.282"
@@ -115948,6 +115912,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1724 -200 928.282"
@@ -115969,6 +115935,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1768 -208 1048"
 	editor
@@ -115989,6 +115957,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1748 -140 1032"
 	editor
@@ -116087,6 +116057,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1856 -34 928.282"
@@ -116108,6 +116080,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_monitor001temp.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1914 -70 1004.91"
 	editor
@@ -119249,6 +119223,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/cell_array_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "2704 4123 -963.819"
 	editor
@@ -119269,6 +119245,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/cell_array_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "2673 3941 -963.819"
 	editor
@@ -119289,6 +119267,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/cell_array_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "3984 4123 -963.819"
 	editor
@@ -119309,6 +119289,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/cell_array_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "3953 3941 -963.819"
 	editor
@@ -119329,6 +119311,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/cell_array_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "1765 2832 -963.819"
 	editor
@@ -119349,6 +119333,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/cell_array_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "1947 2801 -963.819"
 	editor
@@ -119369,6 +119355,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/cell_array_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "1765 4112 -963.819"
 	editor
@@ -122583,6 +122571,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/cell_array_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "37 1680 540.181"
 	editor
@@ -122603,6 +122593,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/cell_array_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "219 1649 540.181"
 	editor
@@ -122623,6 +122615,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/cell_array_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "37 2960 540.181"
 	editor
@@ -122643,6 +122637,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/cell_array_01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "219 2929 540.181"
 	editor
@@ -123168,6 +123164,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_lock01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-294 505 984.78"
@@ -123192,6 +123190,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_lock01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-372 667 988.78"
@@ -123216,6 +123216,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_lock01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-492 709 984.78"
@@ -123240,6 +123242,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_lock01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-251 627 984.78"
@@ -123854,6 +123858,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-869.202 1065.66 1480.27"
 	editor
@@ -123875,6 +123881,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/depot.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "0"
 	"origin" "-1112 884 1508"
@@ -124173,6 +124181,7 @@ entity
 	"spawnflags" "290"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_A1"
+	"targetpoint" "0 0 0"
 	"texture" "materials/Sprites/XBeam2.vmt"
 	"TextureScroll" "0"
 	"origin" "40 -2 1552"
@@ -124203,6 +124212,7 @@ entity
 	"spawnflags" "290"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_A1"
+	"targetpoint" "0 0 0"
 	"texture" "materials/Sprites/XBeam2.vmt"
 	"TextureScroll" "0"
 	"origin" "24 -2 1552"
@@ -124233,6 +124243,7 @@ entity
 	"spawnflags" "290"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_A1"
+	"targetpoint" "0 0 0"
 	"texture" "materials/Sprites/XBeam2.vmt"
 	"TextureScroll" "0"
 	"origin" "8 -2 1552"
@@ -126250,6 +126261,7 @@ entity
 	"spawnflags" "34"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_big_R_1"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"origin" "8 -2 1576"
@@ -126280,6 +126292,7 @@ entity
 	"spawnflags" "34"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_big_L_1"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"origin" "-8 -2 1576"
@@ -127576,6 +127589,7 @@ entity
 	"spawnflags" "34"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_L_1"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"origin" "24 -2 1608"
@@ -127606,6 +127620,7 @@ entity
 	"spawnflags" "34"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_L_2"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"origin" "8 -2 1608"
@@ -127636,6 +127651,7 @@ entity
 	"spawnflags" "34"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_L_3"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"origin" "-8 -2 1608"
@@ -127666,6 +127682,7 @@ entity
 	"spawnflags" "34"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_L_4"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"origin" "-24 -2 1608"
@@ -127696,6 +127713,7 @@ entity
 	"spawnflags" "34"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_R_4"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"origin" "-24 -2 1640"
@@ -127726,6 +127744,7 @@ entity
 	"spawnflags" "34"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_R_3"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"origin" "-8 -2 1640"
@@ -127756,6 +127775,7 @@ entity
 	"spawnflags" "34"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_R_2"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"origin" "8 -2 1640"
@@ -127786,6 +127806,7 @@ entity
 	"spawnflags" "34"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_R_1"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"origin" "24 -2 1640"
@@ -127816,6 +127837,7 @@ entity
 	"spawnflags" "34"
 	"StrikeTime" "1"
 	"targetname" "teleport_destruct_beam_R_5"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/laserbeam.spr"
 	"TextureScroll" "35"
 	"origin" "-40 -2 1640"
@@ -128120,6 +128142,7 @@ entity
 	"spawnflags" "292"
 	"StrikeTime" "-0.3"
 	"targetname" "teleport_charge_beam_2"
+	"targetpoint" "0 0 0"
 	"texture" "sprites/lgtning.spr"
 	"TextureScroll" "35"
 	"origin" "128 2 1072"
@@ -128596,6 +128619,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-292.02 273.716 960.282"
@@ -128620,6 +128645,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_intmonitor001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-304 272 1010"
@@ -130413,6 +130440,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_sprinkler001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2399.98 4893.57 1346.35"
 	editor
@@ -130431,6 +130460,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_sprinkler001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2911.98 4893.57 1346.35"
 	editor
@@ -130774,6 +130805,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/interior_fence002c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-2671.35 4946.65 1224.14"
 	editor
@@ -130793,6 +130826,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/interior_fence002c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-2543.35 4946.65 1224.14"
 	editor
@@ -131971,6 +132006,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-1232 1328 1213.85"
@@ -132212,6 +132249,8 @@ entity
 	"fadescale" "1"
 	"lightingorigin" "light_wall"
 	"model" "models/props_combine/CombineInnerwall001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1282.53 918.73 1585"
 	editor
@@ -132232,6 +132271,8 @@ entity
 	"fadescale" "1"
 	"lightingorigin" "light_wall"
 	"model" "models/props_combine/CombineInnerwall001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-856 1064 1665"
 	editor
@@ -132375,6 +132416,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-2511.14 5085.18 1267.85"
@@ -132440,6 +132483,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-3018.82 4583.14 1267.85"
@@ -132669,6 +132714,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_cagedlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1216.45 1653.81 1177.17"
 	editor
@@ -141462,6 +141509,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_generator01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-844 620 1056.09"
 	editor
@@ -141480,6 +141529,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_generator01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-820 666 1056.09"
 	editor
@@ -144556,6 +144607,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/railing_512.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-193 -26.4719 1225.24"
 	editor
@@ -144574,6 +144627,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/railing_128.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-193 -250 1225"
 	editor
@@ -144592,6 +144647,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/railing_corner_outside.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-223 289 1225"
 	editor
@@ -144611,6 +144668,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/railing_corner_outside.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-739 734 977.47"
 	editor
@@ -144629,6 +144688,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_generator01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-753 726 1056.09"
 	editor
@@ -144726,6 +144787,8 @@ entity
 	"fademindist" "0"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_generator01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-608 448 1063.03"
 	editor
@@ -144761,6 +144824,8 @@ entity
 	"fademindist" "0"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_generator01.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-320 424 1048"
 	editor
@@ -146546,6 +146611,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/cell_01_supports.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "112 -27 1020"
 	editor
@@ -146698,6 +146765,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-472 320 1048"
 	editor
@@ -146718,6 +146787,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-464 400 1048"
 	editor
@@ -146738,6 +146809,8 @@ entity
 	"fademindist" "64"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-464 327 1072"
 	editor
@@ -146758,6 +146831,8 @@ entity
 	"fademindist" "0"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire002.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-412 364 1000"
 	editor
@@ -146778,6 +146853,8 @@ entity
 	"fademindist" "0"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire002.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-496 364 1004"
 	editor
@@ -146962,6 +147039,8 @@ entity
 	"fademindist" "0"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire002.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-296 400 1008"
 	editor
@@ -146982,6 +147061,8 @@ entity
 	"fademindist" "0"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire001.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-328 468 1016"
 	editor
@@ -147639,6 +147720,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_cagedlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-3458.55 2945.91 1049.17"
 	editor
@@ -147658,6 +147741,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_cagedlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2434.55 2945.91 1049.17"
 	editor
@@ -147704,6 +147789,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_cagedlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-3062.09 2898.55 1049.17"
 	editor
@@ -148715,6 +148802,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_long.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3816.53 3009 1051.81"
@@ -148736,6 +148825,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_SingleRise.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3689.71 3009.01 1011.55"
@@ -149529,6 +149620,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_SingleRise.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3689.71 3071 1011.55"
@@ -149550,6 +149643,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_SingleRise.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3739.47 3073 1089.99"
@@ -149690,6 +149785,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeCluster32d_003a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3811 3058 1080"
@@ -149709,6 +149806,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_pipes002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-3366 2972.33 1079.5"
 	editor
@@ -149727,6 +149826,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_conduit001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-3353.56 3134.75 1047.95"
 	editor
@@ -149745,6 +149846,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/pipecluster001c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-3436 3011.33 1075.5"
 	editor
@@ -150195,6 +150298,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_conduit001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-3062 2667 1060"
 	editor
@@ -150213,6 +150318,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_pipes002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2900.64 2614 1079.5"
 	editor
@@ -150395,6 +150502,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_conduit001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2497.56 3134.75 1055.95"
 	editor
@@ -150413,6 +150522,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/pipecluster001c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2636 3009.33 1075.5"
 	editor
@@ -150431,6 +150542,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_pipes002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2610 2972.33 1079.5"
 	editor
@@ -150451,6 +150564,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_DoubleRise.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1616 1220 1044.49"
@@ -151624,6 +151739,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_c17/Handrail04_DoubleRise.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1616.65 1129 1044.49"
@@ -153669,6 +153786,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_debris/concrete_debris256Pile001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2990 2722 1007.53"
@@ -153690,6 +153809,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeSet08d_512_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3058.64 2669 981.53"
@@ -153711,6 +153832,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeSet08d_256_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3228 3130.33 981.53"
@@ -153733,6 +153856,8 @@ entity
 	"fadescale" "1"
 	"lightingorigin" "lighting_basement1"
 	"model" "models/props_debris/plaster_ceiling001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2976 2688 1087"
@@ -153754,6 +153879,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_debris/concrete_debris128Pile001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-3014 2708 1018"
@@ -153775,6 +153902,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_debris/rebar_cluster002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2974 2704 1034"
@@ -154015,6 +154144,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeSet32d_512_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2043.98 2944.83 1064"
@@ -154036,6 +154167,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeSet08d_512_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2039.98 2944.83 1006"
@@ -154167,6 +154300,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeSet32d_512_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2043.98 2432.83 1064"
@@ -154188,6 +154323,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeSet08d_512_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2039.98 2432.83 1006"
@@ -154240,6 +154377,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/interior_fence002d.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2244 2176 1024.14"
 	editor
@@ -154259,6 +154398,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/interior_fence002c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2310 1858 1024.14"
 	editor
@@ -154278,6 +154419,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/interior_fence002c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2244 1664 1024.14"
 	editor
@@ -154298,6 +154441,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeSet08d_128_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2234 2592 1049.53"
@@ -154318,6 +154463,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/interior_fence002c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2310 1726.08 1024.14"
 	editor
@@ -154337,6 +154484,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/interior_fence002c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2244 1920.08 1024.14"
 	editor
@@ -154369,6 +154518,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1621 1176 1183"
@@ -154434,6 +154585,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_cagedlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-2065.52 2945.45 1049.55"
 	editor
@@ -154506,6 +154659,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_cagedlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2065.52 2728.45 1049.55"
 	editor
@@ -154578,6 +154733,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_cagedlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2238.48 2013.45 1049.55"
 	editor
@@ -156488,6 +156645,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_cagedlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1794 1626 1049.55"
 	editor
@@ -157030,6 +157189,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/interior_fence002c.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2244 1344 1024.14"
 	editor
@@ -157217,6 +157378,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_cagedlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1985.52 1344.45 1049.55"
 	editor
@@ -157311,6 +157474,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_cagedlight001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2238.48 2335.79 1049.55"
 	editor
@@ -157406,6 +157571,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeSet32d_512_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2483.07 2192.28 1064"
@@ -157427,6 +157594,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeSet08d_512_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2487.07 2192.28 1006"
@@ -157448,6 +157617,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeSet32d_512_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2483.07 1568.28 1064"
@@ -157469,6 +157640,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeSet08d_512_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2487.07 1568.28 1006"
@@ -157621,6 +157794,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_sprinkler001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2128 1376 1079"
 	editor
@@ -157639,6 +157814,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_sprinkler001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2128 1888 1079"
 	editor
@@ -157657,6 +157834,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_sprinkler001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2128 2400 1079"
 	editor
@@ -157675,6 +157854,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_sprinkler001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-2128 2912 1079"
 	editor
@@ -158785,6 +158966,8 @@ entity
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
 	"model" "models/props_combine/combine_interface002.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1094 889 960.282"
@@ -158838,6 +159021,8 @@ entity
 	"fademindist" "0"
 	"fadescale" "1"
 	"model" "models/Combine_Room/combine_wire002.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-1120 880 1064"
 	editor
@@ -161631,6 +161816,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_pipes/PipeSet08d_256_001a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-2234 2784 1049.53"
@@ -162509,7 +162696,7 @@ hidden
 				editor
 				{
 					"color" "220 30 220"
-					"visgroupshown" "0"
+					"visgroupshown" "1"
 					"visgroupautoshown" "1"
 				}
 			}
@@ -172387,6 +172574,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_monitorbay.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "6"
 	"origin" "-438.13 378.931 1025"
 	editor
@@ -174354,6 +174543,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_fence01a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "720.891 96.4678 1000"
@@ -174376,6 +174567,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_fence01b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "720.891 -32.5321 1000"
@@ -175628,6 +175821,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "0"
 	"solid" "6"
 	"origin" "-1232 1472 1213.85"
@@ -175729,6 +175924,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_light002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-960.448 1738.44 1178.23"
 	editor
@@ -175791,6 +175988,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_light002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-767.616 1737.17 1178.23"
 	editor
@@ -175876,6 +176075,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_light002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-1088 1116.46 1166.23"
 	editor
@@ -175895,6 +176096,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_combine/combine_light002a.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"solid" "0"
 	"origin" "-815.168 1115.18 1166.23"
 	editor
@@ -176118,6 +176321,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-1131.65 1433.5 1062.14"
@@ -176162,6 +176367,8 @@ entity
 	"fademindist" "-1"
 	"fadescale" "1"
 	"model" "models/props_wasteland/prison_flourescentlight002b.mdl"
+	"renderamt" "255"
+	"rendercolor" "255 255 255"
 	"skin" "1"
 	"solid" "6"
 	"origin" "-1131.86 1290.49 1062.14"
@@ -181210,123 +181417,163 @@ entity
 }
 entity
 {
-	"id" "534336"
-	"classname" "prop_static"
-	"angles" "0 270 0"
-	"disableselfshadowing" "0"
+	"id" "537856"
+	"classname" "func_reflective_glass"
+	"disablereceiveshadows" "0"
 	"disableshadows" "0"
-	"disablevertexlighting" "0"
-	"fademaxdist" "0"
-	"fademindist" "-1"
-	"fadescale" "1"
-	"ignorenormals" "0"
-	"maxdxlevel" "0"
-	"mindxlevel" "0"
-	"model" "models/props_c17/handrail04_cap.mdl"
-	"screenspacefade" "0"
-	"skin" "0"
-	"solid" "6"
-	"origin" "54.2243 396.649 1012"
+	"InputFilter" "0"
+	"invert_exclusion" "0"
+	"origin" "128 724 957"
+	"renderamt" "100"
+	"rendercolor" "255 255 255"
+	"renderfx" "0"
+	"rendermode" "0"
+	"solidbsp" "0"
+	"Solidity" "0"
+	"spawnflags" "2"
+	"StartDisabled" "0"
+	"vrad_brush_cast_shadows" "0"
+	solid
+	{
+		"id" "535038"
+		side
+		{
+			"id" "45856"
+			"plane" "(64 448 958) (64 1000 958) (192 1000 958)"
+			"material" "GLASS/REFLECTIVEGLASS001"
+			"uaxis" "[1 0 0 8] 0.25"
+			"vaxis" "[0 -1 0 4] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45855"
+			"plane" "(64 1000 956) (64 448 956) (192 448 956)"
+			"material" "TOOLS/TOOLSNODRAW"
+			"uaxis" "[1 0 0 8] 0.25"
+			"vaxis" "[0 -1 0 4] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45854"
+			"plane" "(64 448 956) (64 1000 956) (64 1000 958)"
+			"material" "TOOLS/TOOLSNODRAW"
+			"uaxis" "[0 -1 0 36] 0.25"
+			"vaxis" "[0 0 -1 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45853"
+			"plane" "(192 1000 956) (192 448 956) (192 448 958)"
+			"material" "TOOLS/TOOLSNODRAW"
+			"uaxis" "[0 1 0 -36] 0.25"
+			"vaxis" "[0 0 -1 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45852"
+			"plane" "(192 448 956) (64 448 956) (64 448 958)"
+			"material" "TOOLS/TOOLSNODRAW"
+			"uaxis" "[1 0 0 0] 0.25"
+			"vaxis" "[0 0 -1 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45851"
+			"plane" "(64 1000 956) (192 1000 956) (192 1000 958)"
+			"material" "TOOLS/TOOLSNODRAW"
+			"uaxis" "[-1 0 0 0] 0.25"
+			"vaxis" "[0 0 -1 0] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		editor
+		{
+			"color" "220 30 220"
+			"visgroupshown" "1"
+			"visgroupautoshown" "1"
+		}
+	}
 	editor
 	{
-		"color" "250 235 0"
-		"groupid" "534463"
+		"color" "220 30 220"
 		"visgroupshown" "1"
 		"visgroupautoshown" "1"
-		"logicalpos" "[0 9000]"
+		"logicalpos" "[0 0]"
 	}
 }
 entity
 {
-	"id" "534135"
-	"classname" "prop_static"
-	"angles" "0 315 0"
-	"disableselfshadowing" "0"
-	"disableshadows" "0"
-	"disablevertexlighting" "0"
-	"fademaxdist" "0"
-	"fademindist" "-1"
-	"fadescale" "1"
-	"ignorenormals" "0"
-	"maxdxlevel" "0"
-	"mindxlevel" "0"
-	"model" "models/props_c17/handrail04_medium.mdl"
-	"screenspacefade" "0"
-	"skin" "0"
-	"solid" "6"
-	"origin" "24 374 1012"
-	editor
-	{
-		"color" "250 235 0"
-		"groupid" "534463"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 9000]"
-	}
-}
-entity
-{
-	"id" "534261"
-	"classname" "prop_static"
-	"angles" "0 180 0"
-	"disableselfshadowing" "0"
-	"disableshadows" "0"
-	"disablevertexlighting" "0"
-	"fademaxdist" "0"
-	"fademindist" "-1"
-	"fadescale" "1"
-	"ignorenormals" "0"
-	"maxdxlevel" "0"
-	"mindxlevel" "0"
-	"model" "models/props_c17/handrail04_cap.mdl"
-	"screenspacefade" "0"
-	"skin" "0"
-	"solid" "6"
-	"origin" "1.35106 343.813 1012"
-	editor
-	{
-		"color" "250 235 0"
-		"groupid" "534463"
-		"visgroupshown" "1"
-		"visgroupautoshown" "1"
-		"logicalpos" "[0 9000]"
-	}
-}
-entity
-{
-	"id" "534799"
+	"id" "540697"
 	"classname" "func_detail"
 	solid
 	{
-		"id" "534716"
+		"id" "540677"
 		side
 		{
-			"id" "45752"
-			"plane" "(665.75 703.5 960) (659.75 701.5 960) (654.25 698.5 960)"
-			"material" "CONCRETE/CONCRETEWALL010C"
+			"id" "45886"
+			"plane" "(640 640 1152) (640 704 1152) (704 704 1152)"
+			"material" "CONCRETE/CONCRETEWALL010B"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 256] 0.25"
 			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45885"
+			"plane" "(640 640 1088) (640 704 1088) (640 704 1152)"
+			"material" "CONCRETE/CONCRETEWALL010B"
+			"uaxis" "[0 1 0 0] 0.25"
+			"vaxis" "[0 0 -1 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45884"
+			"plane" "(704 704 1088) (704 640 1088) (704 640 1152)"
+			"material" "CONCRETE/CONCRETEWALL010B"
+			"uaxis" "[0 1 0 0] 0.25"
+			"vaxis" "[0 0 -1 256] 0.25"
+			"rotation" "0"
 			"lightmapscale" "16"
 			"smoothing_groups" "0"
 		}
 		side
 		{
-			"id" "45751"
-			"plane" "(672 704 1088) (678.25 703.5 1088) (684.25 701.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
+			"id" "45883"
+			"plane" "(640 704 1088) (640 640 1088) (704 640 1088)"
+			"material" "CONCRETE/CONCRETEWALL010B"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 256] 0.25"
 			"rotation" "0"
-			"lightmapscale" "16"
+			"lightmapscale" "8"
 			"smoothing_groups" "0"
 		}
 		side
 		{
-			"id" "45750"
-			"plane" "(672 704 960) (678.25 703.5 960) (678.25 703.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -37] 0.25"
+			"id" "45882"
+			"plane" "(640 640 1088) (640 640 1152) (704 640 1152)"
+			"material" "CONCRETE/CONCRETEWALL010B"
+			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 256] 0.25"
 			"rotation" "0"
 			"lightmapscale" "16"
@@ -181334,343 +181581,13 @@ entity
 		}
 		side
 		{
-			"id" "45749"
-			"plane" "(678.25 703.5 960) (684.25 701.5 960) (684.25 701.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -37] 0.25"
+			"id" "45881"
+			"plane" "(704 704 1088) (704 704 1152) (640 704 1152)"
+			"material" "CONCRETE/CONCRETEWALL010B"
+			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 256] 0.25"
 			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45748"
-			"plane" "(684.25 701.5 960) (689.75 698.5 960) (689.75 698.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45747"
-			"plane" "(689.75 698.5 960) (694.75 694.75 960) (694.75 694.75 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45746"
-			"plane" "(694.75 694.75 960) (698.5 689.75 960) (698.5 689.75 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45745"
-			"plane" "(698.5 689.75 960) (701.5 684.25 960) (701.5 684.25 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45744"
-			"plane" "(701.5 684.25 960) (703.5 678.25 960) (703.5 678.25 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45743"
-			"plane" "(703.5 678.25 960) (704 672 960) (704 672 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45742"
-			"plane" "(704 672 960) (703.5 665.75 960) (703.5 665.75 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45741"
-			"plane" "(703.5 665.75 960) (701.5 659.75 960) (701.5 659.75 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45740"
-			"plane" "(701.5 659.75 960) (698.5 654.25 960) (698.5 654.25 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45739"
-			"plane" "(698.5 654.25 960) (694.75 649.25 960) (694.75 649.25 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45738"
-			"plane" "(694.75 649.25 960) (689.75 645.5 960) (689.75 645.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45737"
-			"plane" "(689.75 645.5 960) (684.25 642.5 960) (684.25 642.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45736"
-			"plane" "(684.25 642.5 960) (678.25 640.5 960) (678.25 640.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45735"
-			"plane" "(678.25 640.5 960) (672 640 960) (672 640 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45734"
-			"plane" "(672 640 960) (665.75 640.5 960) (665.75 640.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45733"
-			"plane" "(665.75 640.5 960) (659.75 642.5 960) (659.75 642.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45732"
-			"plane" "(659.75 642.5 960) (654.25 645.5 960) (654.25 645.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45731"
-			"plane" "(654.25 645.5 960) (649.25 649.25 960) (649.25 649.25 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45730"
-			"plane" "(649.25 649.25 960) (645.5 654.25 960) (645.5 654.25 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45729"
-			"plane" "(645.5 654.25 960) (642.5 659.75 960) (642.5 659.75 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45728"
-			"plane" "(642.5 659.75 960) (640.5 665.75 960) (640.5 665.75 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45727"
-			"plane" "(640.5 665.75 960) (640 672 960) (640 672 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45726"
-			"plane" "(640 672 960) (640.5 678.25 960) (640.5 678.25 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45725"
-			"plane" "(640.5 678.25 960) (642.5 684.25 960) (642.5 684.25 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45724"
-			"plane" "(642.5 684.25 960) (645.5 689.75 960) (645.5 689.75 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45723"
-			"plane" "(645.5 689.75 960) (649.25 694.75 960) (649.25 694.75 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[0 1 0 -219] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45722"
-			"plane" "(649.25 694.75 960) (654.25 698.5 960) (654.25 698.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45721"
-			"plane" "(654.25 698.5 960) (659.75 701.5 960) (659.75 701.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45720"
-			"plane" "(659.75 701.5 960) (665.75 703.5 960) (665.75 703.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45719"
-			"plane" "(665.75 703.5 960) (672 704 960) (672 704 1088)"
-			"material" "CONCRETE/CONCRETEWALL010C"
-			"uaxis" "[1 0 0 -37] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
+			"lightmapscale" "8"
 			"smoothing_groups" "0"
 		}
 		editor
@@ -181682,379 +181599,71 @@ entity
 	}
 	solid
 	{
-		"id" "534793"
+		"id" "540678"
 		side
 		{
-			"id" "45786"
-			"plane" "(665.75 703.5 1088) (659.75 701.5 1088) (654.25 698.5 1088)"
-			"material" "CONCRETE/CONCRETEWALL010B"
+			"id" "45892"
+			"plane" "(640 640 1088) (640 704 1088) (704 704 1088)"
+			"material" "CONCRETE/CONCRETEWALL010C"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 256] 0.25"
 			"rotation" "0"
-			"lightmapscale" "16"
+			"lightmapscale" "8"
 			"smoothing_groups" "0"
 		}
 		side
 		{
-			"id" "45785"
-			"plane" "(672 704 1152) (678.25 703.5 1152) (684.25 701.5 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
+			"id" "45891"
+			"plane" "(640 640 960) (640 704 960) (640 704 1088)"
+			"material" "CONCRETE/CONCRETEWALL010C"
+			"uaxis" "[0 1 0 0] 0.25"
+			"vaxis" "[0 0 -1 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45890"
+			"plane" "(704 704 960) (704 640 960) (704 640 1088)"
+			"material" "CONCRETE/CONCRETEWALL010C"
+			"uaxis" "[0 1 0 0] 0.25"
+			"vaxis" "[0 0 -1 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45889"
+			"plane" "(640 704 960) (640 640 960) (704 640 960)"
+			"material" "CONCRETE/CONCRETEWALL010C"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 256] 0.25"
 			"rotation" "0"
-			"lightmapscale" "16"
+			"lightmapscale" "8"
 			"smoothing_groups" "0"
 		}
 		side
 		{
-			"id" "45784"
-			"plane" "(672 704 1088) (678.25 703.5 1088) (678.25 703.5 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
+			"id" "45888"
+			"plane" "(640 640 960) (640 640 1088) (704 640 1088)"
+			"material" "CONCRETE/CONCRETEWALL010C"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 256] 0.25"
 			"rotation" "0"
-			"lightmapscale" "16"
+			"lightmapscale" "8"
 			"smoothing_groups" "0"
 		}
 		side
 		{
-			"id" "45783"
-			"plane" "(678.25 703.5 1088) (684.25 701.5 1088) (684.25 701.5 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
+			"id" "45887"
+			"plane" "(704 704 960) (704 704 1088) (640 704 1088)"
+			"material" "CONCRETE/CONCRETEWALL010C"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 256] 0.25"
 			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45782"
-			"plane" "(684.25 701.5 1088) (689.75 698.5 1088) (689.75 698.5 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45781"
-			"plane" "(689.75 698.5 1088) (694.75 694.75 1088) (694.75 694.75 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45780"
-			"plane" "(694.75 694.75 1088) (698.5 689.75 1088) (698.5 689.75 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45779"
-			"plane" "(698.5 689.75 1088) (701.5 684.25 1088) (701.5 684.25 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45778"
-			"plane" "(701.5 684.25 1088) (703.5 678.25 1088) (703.5 678.25 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45777"
-			"plane" "(703.5 678.25 1088) (704 672 1088) (704 672 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45776"
-			"plane" "(704 672 1088) (703.5 665.75 1088) (703.5 665.75 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45775"
-			"plane" "(703.5 665.75 1088) (701.5 659.75 1088) (701.5 659.75 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45774"
-			"plane" "(701.5 659.75 1088) (698.5 654.25 1088) (698.5 654.25 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45773"
-			"plane" "(698.5 654.25 1088) (694.75 649.25 1088) (694.75 649.25 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45772"
-			"plane" "(694.75 649.25 1088) (689.75 645.5 1088) (689.75 645.5 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45771"
-			"plane" "(689.75 645.5 1088) (684.25 642.5 1088) (684.25 642.5 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45770"
-			"plane" "(684.25 642.5 1088) (678.25 640.5 1088) (678.25 640.5 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45769"
-			"plane" "(678.25 640.5 1088) (672 640 1088) (672 640 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45768"
-			"plane" "(672 640 1088) (665.75 640.5 1088) (665.75 640.5 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45767"
-			"plane" "(665.75 640.5 1088) (659.75 642.5 1088) (659.75 642.5 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45766"
-			"plane" "(659.75 642.5 1088) (654.25 645.5 1088) (654.25 645.5 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45765"
-			"plane" "(654.25 645.5 1088) (649.25 649.25 1088) (649.25 649.25 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45764"
-			"plane" "(649.25 649.25 1088) (645.5 654.25 1088) (645.5 654.25 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45763"
-			"plane" "(645.5 654.25 1088) (642.5 659.75 1088) (642.5 659.75 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45762"
-			"plane" "(642.5 659.75 1088) (640.5 665.75 1088) (640.5 665.75 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45761"
-			"plane" "(640.5 665.75 1088) (640 672 1088) (640 672 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45760"
-			"plane" "(640 672 1088) (640.5 678.25 1088) (640.5 678.25 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45759"
-			"plane" "(640.5 678.25 1088) (642.5 684.25 1088) (642.5 684.25 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45758"
-			"plane" "(642.5 684.25 1088) (645.5 689.75 1088) (645.5 689.75 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45757"
-			"plane" "(645.5 689.75 1088) (649.25 694.75 1088) (649.25 694.75 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[0 1 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45756"
-			"plane" "(649.25 694.75 1088) (654.25 698.5 1088) (654.25 698.5 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45755"
-			"plane" "(654.25 698.5 1088) (659.75 701.5 1088) (659.75 701.5 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45754"
-			"plane" "(659.75 701.5 1088) (665.75 703.5 1088) (665.75 703.5 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
-			"smoothing_groups" "0"
-		}
-		side
-		{
-			"id" "45753"
-			"plane" "(665.75 703.5 1088) (672 704 1088) (672 704 1152)"
-			"material" "CONCRETE/CONCRETEWALL010B"
-			"uaxis" "[1 0 0 0] 0.25"
-			"vaxis" "[0 0 -1 256] 0.25"
-			"rotation" "0"
-			"lightmapscale" "16"
+			"lightmapscale" "8"
 			"smoothing_groups" "0"
 		}
 		editor
@@ -182067,9 +181676,175 @@ entity
 	editor
 	{
 		"color" "0 180 0"
+		"visgroupid" "17"
 		"visgroupshown" "1"
 		"visgroupautoshown" "1"
-		"logicalpos" "[0 14500]"
+		"logicalpos" "[0 1000]"
+	}
+}
+entity
+{
+	"id" "540703"
+	"classname" "func_detail"
+	solid
+	{
+		"id" "80721"
+		side
+		{
+			"id" "45898"
+			"plane" "(832 640 1152) (832 704 1152) (896 704 1152)"
+			"material" "CONCRETE/CONCRETEWALL010B"
+			"uaxis" "[1 0 0 0] 0.25"
+			"vaxis" "[0 -1 0 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45897"
+			"plane" "(832 704 1152) (832 640 1152) (832 640 1088)"
+			"material" "CONCRETE/CONCRETEWALL010B"
+			"uaxis" "[0 1 0 0] 0.25"
+			"vaxis" "[0 0 -1 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45896"
+			"plane" "(896 640 1152) (896 704 1152) (896 704 1088)"
+			"material" "CONCRETE/CONCRETEWALL010B"
+			"uaxis" "[0 1 0 0] 0.25"
+			"vaxis" "[0 0 -1 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45895"
+			"plane" "(832 704 1088) (832 640 1088) (896 640 1088)"
+			"material" "CONCRETE/CONCRETEWALL010B"
+			"uaxis" "[1 0 0 0] 0.25"
+			"vaxis" "[0 -1 0 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45894"
+			"plane" "(896 640 1152) (896 640 1088) (832 640 1088)"
+			"material" "CONCRETE/CONCRETEWALL010B"
+			"uaxis" "[1 0 0 0] 0.25"
+			"vaxis" "[0 0 -1 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "16"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45893"
+			"plane" "(832 704 1152) (832 704 1088) (896 704 1088)"
+			"material" "CONCRETE/CONCRETEWALL010B"
+			"uaxis" "[1 0 0 0] 0.25"
+			"vaxis" "[0 0 -1 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		editor
+		{
+			"color" "0 180 0"
+			"visgroupshown" "1"
+			"visgroupautoshown" "1"
+		}
+	}
+	solid
+	{
+		"id" "80722"
+		side
+		{
+			"id" "45904"
+			"plane" "(832 640 1088) (832 704 1088) (896 704 1088)"
+			"material" "CONCRETE/CONCRETEWALL010C"
+			"uaxis" "[1 0 0 0] 0.25"
+			"vaxis" "[0 -1 0 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45903"
+			"plane" "(832 704 1088) (832 640 1088) (832 640 960)"
+			"material" "CONCRETE/CONCRETEWALL010C"
+			"uaxis" "[0 1 0 0] 0.25"
+			"vaxis" "[0 0 -1 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45902"
+			"plane" "(896 640 1088) (896 704 1088) (896 704 960)"
+			"material" "CONCRETE/CONCRETEWALL010C"
+			"uaxis" "[0 1 0 0] 0.25"
+			"vaxis" "[0 0 -1 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45901"
+			"plane" "(832 704 960) (832 640 960) (896 640 960)"
+			"material" "CONCRETE/CONCRETEWALL010C"
+			"uaxis" "[1 0 0 0] 0.25"
+			"vaxis" "[0 -1 0 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45900"
+			"plane" "(896 640 1088) (896 640 960) (832 640 960)"
+			"material" "CONCRETE/CONCRETEWALL010C"
+			"uaxis" "[1 0 0 0] 0.25"
+			"vaxis" "[0 0 -1 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		side
+		{
+			"id" "45899"
+			"plane" "(832 704 1088) (832 704 960) (896 704 960)"
+			"material" "CONCRETE/CONCRETEWALL010C"
+			"uaxis" "[1 0 0 0] 0.25"
+			"vaxis" "[0 0 -1 256] 0.25"
+			"rotation" "0"
+			"lightmapscale" "8"
+			"smoothing_groups" "0"
+		}
+		editor
+		{
+			"color" "0 180 0"
+			"visgroupshown" "1"
+			"visgroupautoshown" "1"
+		}
+	}
+	editor
+	{
+		"color" "0 180 0"
+		"visgroupid" "17"
+		"visgroupshown" "1"
+		"visgroupautoshown" "1"
+		"logicalpos" "[0 1500]"
 	}
 }
 cameras
@@ -182097,8 +181872,8 @@ cameras
 	}
 	camera
 	{
-		"position" "[-33.7088 818.423 1143.06]"
-		"look" "[20.9491 756.859 1127.35]"
+		"position" "[-26.1637 961.612 1039.65]"
+		"look" "[39.9903 915.633 1016.54]"
 	}
 }
 cordons

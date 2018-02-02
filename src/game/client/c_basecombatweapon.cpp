@@ -282,6 +282,17 @@ bool C_BaseCombatWeapon::IsCarriedByLocalPlayer( void )
 	return ( C_BasePlayer::IsLocalPlayer( GetOwner() ) );
 }
 
+#ifdef HL2MP
+//-----------------------------------------------------------------------------
+// Purpose: Returns true if this client is carrying this weapon and is
+//			using the view models
+//-----------------------------------------------------------------------------
+/*bool C_BaseCombatWeapon::ShouldDrawUsingViewModel( void )
+{
+	return IsCarriedByLocalPlayer() && !C_BasePlayer::ShouldDrawLocalPlayer();
+}*/
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: Returns true if this weapon is the local client's currently wielded weapon
 //-----------------------------------------------------------------------------

@@ -229,23 +229,24 @@ void C_EnvProjectedTexture::UpdateLight( void )
 				vForward = m_hTargetEntity->GetAbsOrigin() - GetAbsOrigin();
 				VectorNormalize( vForward );
 
-				// JasonM - unimplemented
 				Assert (0);
-
-				//Quaternion q = DirectionToOrientation( dir );
-
-
-				//
-				// JasonM - set up vRight, vUp
-				//
-
-				//			VectorNormalize( vRight );
-				//			VectorNormalize( vUp );
 			}
 		}
 		else
 		{
-			AngleVectors( GetAbsAngles(), &vForward, &vRight, &vUp );
+			// VXP: Fixing targeting
+			Vector vecToTarget;
+			QAngle vecAngles;
+			if (m_hTargetEntity == NULL)
+			{
+				vecAngles = GetAbsAngles();
+			}
+			else
+			{
+				vecToTarget = m_hTargetEntity->GetAbsOrigin() - GetAbsOrigin();
+				VectorAngles(vecToTarget, vecAngles);
+			}
+			AngleVectors(vecAngles, &vForward, &vRight, &vUp);
 		}
 
 		state.m_fHorizontalFOVDegrees = m_flLightFOV;

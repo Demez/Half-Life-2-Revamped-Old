@@ -13,12 +13,15 @@
 #include "tier1/utllinkedlist.h"
 #include "../OptionsDialog.h"
 #include "../OptionsSubKeyboard.h"
+#include "../OptionsSubMouse.h"
+#include "optionsmousedialog.h"
+
 #include "avi/ibik.h"
 #include "ixboxsystem.h"
 //#include "matchmaking/imatchframework.h"
 
 class COptionsDialog;
-//class COptionsMouseDialog;
+class COptionsMouseDialog;
 
 // must supply some non-trivial time to let the movie startup smoothly
 // the attract screen also uses this so it doesn't pop in either
@@ -38,6 +41,8 @@ namespace BaseModUI
 		WT_CONTROLLER,
 		WT_CONTROLLER_STICKS,
 		WT_CONTROLLER_BUTTONS,
+		WT_DOWNLOADCAMPAIGN,
+		WT_GAMELOBBY,
 		WT_GAMEOPTIONS,
 		WT_GENERICCONFIRMATION,
 		WT_INGAMEMAINMENU,
@@ -49,12 +54,18 @@ namespace BaseModUI
 		WT_GENERICWAITSCREEN,
 		WT_TRANSITIONSCREEN,
 		WT_VIDEO,
-		//---
+//SINGLEPLAYER--------------------
 		WT_NEWGAME,
 		WT_LOADGAME,
 		WT_SAVEGAME,
 		WT_GAMEPLAYSETTINGS,
 		WT_DEVELOPERCOMMENTARIES,
+//COOP----------------------------
+		WT_GAMESETTINGS,
+		//WT_COOPSETTINGS,
+//HL2DM---------------------------
+		//WT_DMSETTINGS,
+//--------------------------------
 		WT_WINDOW_COUNT // WT_WINDOW_COUNT must be last in the list!
 	};
 
@@ -147,7 +158,7 @@ namespace BaseModUI
 		void SetLastActiveUserId( int userId );
 		int GetLastActiveUserId();
 		void OpenOptionsDialog( Panel *parent );
-		//void OpenOptionsMouseDialog(Panel *parent);
+		void OpenOptionsMouseDialog( Panel *parent );
 		void OpenKeyBindingsDialog( Panel *parent );
 
 		MESSAGE_FUNC_CHARPTR( OnNavigateTo, "OnNavigateTo", panelName );
@@ -191,7 +202,7 @@ namespace BaseModUI
 		bool m_LevelLoading;
 		vgui::HScheme m_UIScheme;
 		vgui::DHANDLE<COptionsDialog> m_hOptionsDialog;	// standalone options dialog - PC only
-		//vgui::DHANDLE<COptionsMouseDialog> m_hOptionsMouseDialog;	// standalone options dialog - PC only
+		vgui::DHANDLE<COptionsMouseDialog> m_hOptionsMouseDialog;	// standalone options dialog - PC only
 		int m_lastActiveUserId;
 
 		vgui::HFont m_hDefaultFont;

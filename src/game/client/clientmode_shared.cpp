@@ -53,6 +53,9 @@ static vgui::HContext s_hVGuiContext = DEFAULT_VGUI_CONTEXT;
 ConVar cl_drawhud( "cl_drawhud", "1", FCVAR_CHEAT, "Enable the rendering of the hud" );
 ConVar hud_takesshots( "hud_takesshots", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "Auto-save a scoreboard screenshot at the end of a map." );
 
+ConVar default_fov("default_fov", "90", FCVAR_CHEAT);
+ConVar fov_desired("fov_desired", "90", FCVAR_ARCHIVE | FCVAR_USERINFO, "Sets the base field-of-view.", true, 75.0, true, 90.0);
+
 extern ConVar v_viewmodel_fov;
 
 extern bool IsInCommentaryMode( void );

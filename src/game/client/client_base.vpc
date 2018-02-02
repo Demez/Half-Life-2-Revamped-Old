@@ -234,7 +234,7 @@ $Project
 								"gameui\shared\vgameoptions.h" \
 								"gameui\shared\vkeyboard.h" \
 								"gameui\shared\vkeyboardmouse.h" \
-								//"gameui\shared\vmouse.h" \
+								"gameui\shared\vmouse.h" \
 								"gameui\shared\voptions.h" \
 								"gameui\shared\vvideo.h"
 						}
@@ -248,7 +248,7 @@ $Project
 							"gameui\shared\uiavatarimage.cpp" \
 							"gameui\shared\vkeyboard.cpp" \
 							"gameui\shared\vkeyboardmouse.cpp" \
-							//"gameui\shared\vmouse.cpp" \
+							"gameui\shared\vmouse.cpp" \
 							"gameui\shared\voptions.cpp" \
 							"gameui\shared\vvideo.cpp"
 						{
@@ -286,6 +286,38 @@ $Project
 							}
 					}
 					
+					$Folder "MP"
+					{	
+						$Folder "Headers"
+						{
+							//$File	"gameui\shared\vfoundgames.h"
+									/*"gameui\shared\vfoundgroupgames.h" \
+									"gameui\shared\vfoundpublicgames.h" \*/
+							$File	"gameui\shared\vgamelobby.h" \
+									"gameui\shared\vgamelobbychat.h" \
+									"gameui\shared\vgamesettings.h"
+									/*"gameui\shared\vgetlegacydata.h" \
+									"gameui\shared\vmultiplayer.h"*/
+						}
+						/*$File	"gameui\shared\vfoundgames.cpp" \
+								"gameui\shared\vfoundgroupgames.cpp" \
+								"gameui\shared\vfoundpublicgames.cpp" \*/
+						$File	"gameui\shared\vgamelobby.cpp" \
+								"gameui\shared\vgamelobbychat.cpp" \ 
+								"gameui\shared\vgamesettings.cpp"
+								/*"gameui\shared\vgetlegacydata.cpp" \
+								"gameui\shared\vmultiplayer.cpp"*/
+							{
+								$Configuration
+								{
+									$Compiler
+									{
+										$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+									}
+								}
+							}
+					}
+					
 					$Folder "VGUI"
 					{
 						$File	"vgui/nb_button.cpp"
@@ -293,7 +325,15 @@ $Project
 						$File	"vgui/nb_header_footer.cpp"
 						$File	"vgui/nb_header_footer.h"
 						$File	"vgui/nb_horiz_list.cpp"
-						$File	"vgui/nb_horiz_list.h"			
+						$File	"vgui/nb_horiz_list.h"		
+						$File	"vgui/nb_select_campaign_entry.cpp"
+						$File	"vgui/nb_select_campaign_entry.h"
+						$File	"vgui/nb_select_campaign_panel.cpp"
+						$File	"vgui/nb_select_campaign_panel.h"
+						$File	"vgui/nb_select_mission_entry.cpp"
+						$File	"vgui/nb_select_mission_entry.h"
+						$File	"vgui/nb_select_mission_panel.cpp"
+						$File	"vgui/nb_select_mission_panel.h"
 					}
 					
 					//$Folder "Headers"
@@ -1433,6 +1473,7 @@ $Project
 	
 	$Folder	"Link Libraries"
 	{
+		$Lib 		"$LIBCOMMON\jpeglib"
 		$Lib		bitmap
 		$Lib		bonesetup
 		$Lib		choreoobjects

@@ -1462,8 +1462,13 @@ private:
 public:
 	// Object model index
 	short							m_nModelIndex;
-private:
+#ifdef HL2MP
 	unsigned char					m_nRenderFX;
+#endif
+private:
+#ifndef HL2MP
+	unsigned char					m_nRenderFX;
+#endif
 	unsigned char 					m_nRenderMode;
 	unsigned char					m_MoveType;
 	unsigned char					m_MoveCollide;
@@ -2312,6 +2317,14 @@ inline bool	C_BaseEntity::IsInterpolationEnabled()
 {
 	return s_bInterpolate;
 }
+
+//-----------------------------------------------------------------------------
+// Should we be interpolating during this frame? (was EF_NOINTERP)
+//-----------------------------------------------------------------------------
+/*inline bool C_BaseEntity::IsNoInterpolationFrame()
+{
+	return m_ubOldInterpolationFrame != m_ubInterpolationFrame;
+}*/
 
 //-----------------------------------------------------------------------------
 // Purpose: 

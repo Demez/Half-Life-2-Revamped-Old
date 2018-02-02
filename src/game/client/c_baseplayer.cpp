@@ -1240,7 +1240,6 @@ void C_BasePlayer::Flashlight( void )
 	UpdateFlashlight();
 }
 
-
 //-----------------------------------------------------------------------------
 // Purpose: Turns off flashlight if it's active (TERROR)
 //-----------------------------------------------------------------------------
@@ -1256,6 +1255,38 @@ void C_BasePlayer::TurnOffFlashlight( void )
 	}
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: Engine is asking whether to add this player to the visible entities list
+//-----------------------------------------------------------------------------
+void C_BasePlayer::AddEntity(void)
+{
+	// FIXME/UNDONE:  Should the local player say yes to adding itself now 
+	// and then, when it ges time to render and it shouldn't still do the render with
+	// STUDIO_EVENTS set so that its attachment points will get updated even if not
+	// in third person?
+
+	// Add in water effects
+	if (IsLocalPlayer())
+	{
+		CreateWaterEffects();
+	}
+
+	// If set to invisible, skip. Do this before resetting the entity pointer so it has 
+	// valid data to decide whether it's visible.
+	if (!IsVisible() || !GetClientMode()->ShouldDrawLocalPlayer(this))
+	{
+		return;
+	}
+
+	// Server says don't interpolate this frame, so set previous info to new info.
+	/*if (IsNoInterpolationFrame() || Teleported())
+	{
+		ResetLatched();
+	}*/
+
+	// Add in lighting effects
+	CreateLightEffects();
+}
 
 extern float UTIL_WaterLevel( const Vector &position, float minz, float maxz );
 
@@ -1825,16 +1856,67 @@ void C_BasePlayer::ThirdPersonSwitch( bool bThirdperson )
 {
 	// We've switch from first to third, or vice versa.
 	UpdateVisibility();
+
+#ifdef HL2MP
+	/*// Update the visibility of anything bone attached to us.
+	if (IsLocalPlayer())
+	{
+		bool bShouldDrawLocalPlayer = ShouldDrawLocalPlayer();
+		for (int i = 0; i<GetNumBoneAttachments(); ++i)
+		{
+			C_BaseAnimating* pBoneAttachment = GetBoneAttachment(i);
+			if (pBoneAttachment)
+			{
+				if (bShouldDrawLocalPlayer)
+				{
+					pBoneAttachment->RemoveEffects(EF_NODRAW);
+				}
+				else
+				{
+					pBoneAttachment->AddEffects(EF_NODRAW);
+				}
+			}
+		}
+	}*/
+#endif
 }
+
+#ifdef HL2MP
+//-----------------------------------------------------------------------------
+// Purpose: single place to decide whether the camera is in the first-person position
+//          NOTE - ShouldDrawLocalPlayer() can be true even if the camera is in the first-person position, e.g. in VR.
+//-----------------------------------------------------------------------------
+bool C_BasePlayer::LocalPlayerInFirstPersonView()
+{
+	C_BasePlayer *pLocalPlayer = C_BasePlayer::GetLocalPlayer();
+	if (pLocalPlayer == NULL)
+	{
+		return false;
+	}
+	int ObserverMode = pLocalPlayer->GetObserverMode();
+	if ((ObserverMode == OBS_MODE_NONE) || (ObserverMode == OBS_MODE_IN_EYE))
+	{
+		return !input->CAM_IsThirdPerson() && (!ToolsEnabled() || !ToolFramework_IsThirdPersonCamera());
+	}
+
+	// Not looking at the local player, e.g. in a replay in third person mode or freelook.
+	return false;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: single place to decide whether the local player should draw
 //-----------------------------------------------------------------------------
 bool C_BasePlayer::ShouldDrawLocalPlayer()
 {
+#ifdef HL2MP
+	/*if (!UseVR())
+	{
+		return !LocalPlayerInFirstPersonView() || cl_first_person_uses_world_model.GetBool();
+	}*/
+#endif
+
 	int nSlot = GetSplitScreenPlayerSlot();
-
-
 
 	ACTIVE_SPLITSCREEN_PLAYER_GUARD( nSlot );
 	return input->CAM_IsThirdPerson() || ( ToolsEnabled() && ToolFramework_IsThirdPersonCamera() );

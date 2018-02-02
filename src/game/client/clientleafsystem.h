@@ -44,6 +44,9 @@ enum RenderGroup_t
 	RENDER_GROUP_OPAQUE = 0,
 	RENDER_GROUP_TRANSLUCENT,
 	RENDER_GROUP_TRANSLUCENT_IGNOREZ,
+#ifdef HL2MP
+	RENDER_GROUP_TWOPASS,						// Implied opaque and translucent in two passes
+#endif
 	RENDER_GROUP_COUNT, // Indicates the groups above are real and used for bucketing a scene
 };
 

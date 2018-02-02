@@ -96,6 +96,12 @@ extern ISoundEmitterSystemBase *soundemitterbase;
 class IASW_Mission_Chooser;
 extern IASW_Mission_Chooser *missionchooser;
 #endif
+
+#if defined( REVAMPED_CLIENT ) || defined ( HL2MP )
+class IHL2R_Mission_Chooser;
+extern IHL2R_Mission_Chooser *missionchooser;
+#endif
+
 #if defined( REPLAY_ENABLED )
 extern IReplayHistoryManager *g_pReplayHistoryManager;
 #endif

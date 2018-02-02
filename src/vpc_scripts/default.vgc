@@ -1,7 +1,8 @@
 $Games
 {
 	"HL2DEFERRED"
-	"HL2"
+	"HL2R"
+	"HL2MP"
 }
 
 $Conditional	"SOURCESDK" "1"

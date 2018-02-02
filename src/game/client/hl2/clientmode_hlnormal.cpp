@@ -38,7 +38,7 @@ IClientMode *GetClientMode()
 }
 
 // --------------------------------------------------------------------------------- //
-// CASWModeManager.
+// CHL2RModeManager.
 // --------------------------------------------------------------------------------- //
 
 class CSDKModeManager : public IVModeManager

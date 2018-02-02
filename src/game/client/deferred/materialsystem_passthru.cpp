@@ -118,6 +118,7 @@ static void ShaderReplace( const char *szShadername, IMaterial *pMat )
 	}
 
 	// Find a better solution to this...
+	// only works on displacements
 	if (true) //( pMat->IsTwoSided() )
 	{
 		msg->SetInt( "$nocull", 1 );

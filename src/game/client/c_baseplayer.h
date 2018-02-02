@@ -93,6 +93,8 @@ public:
 
 	virtual void	OnRestore();
 
+	virtual void	AddEntity(void);
+
 	virtual void	MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int iTracerType );
 
 	virtual void	GetToolRecordingState( KeyValues *msg );
@@ -230,6 +232,7 @@ public:
 
 	// Global/static methods
 	virtual void				ThirdPersonSwitch( bool bThirdperson );
+	static bool					LocalPlayerInFirstPersonView();
 	bool						ShouldDrawLocalPlayer();
 	static C_BasePlayer			*GetLocalPlayer( int nSlot = -1 );
 	static void					SetRemoteSplitScreenPlayerViewsAreLocalPlayer( bool bSet ); //if true, calls to GetLocalPlayer() will return a remote splitscreen player when applicable.

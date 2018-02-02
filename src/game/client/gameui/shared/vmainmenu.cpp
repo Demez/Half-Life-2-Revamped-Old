@@ -48,7 +48,7 @@ using namespace BaseModUI;
 
 //=============================================================================
 static ConVar connect_lobby( "connect_lobby", "", FCVAR_HIDDEN, "Sets the lobby ID to connect to on start." );
-static ConVar ui_old_options_menu( "ui_old_options_menu", "0", FCVAR_HIDDEN, "Brings up the old tabbed options dialog from Keyboard/Mouse when set to 1." );
+static ConVar ui_old_options_menu( "ui_old_options_menu", "0", FCVAR_HIDDEN, "Brings up the old tabbed options dialog from Keyboard/Mouse when set to 1." ); //FCVAR_HIDDEN
 static ConVar ui_play_online_browser( "ui_play_online_browser",
 #if defined( _DEMO ) && !defined( _X360 )
 									 "0",
@@ -271,10 +271,10 @@ void MainMenu::OnCommand( const char *command )
 			CBaseModPanel::GetSingleton().OpenWindow(WT_KEYBOARDMOUSE, this, true );
 		}
 	}
-	/*else if (!Q_strcmp(command, "Mouse"))
+	else if (!Q_strcmp(command, "Mouse"))
 	{
 		CBaseModPanel::GetSingleton().OpenOptionsMouseDialog(this);
-	}*/
+	}
 	else if (Q_stricmp("#L4D360UI_Controller_Edit_Keys_Buttons", command) == 0)
 	{
 		FlyoutMenu::CloseActiveMenu();
@@ -393,6 +393,53 @@ void MainMenu::OnCommand( const char *command )
 	{
 		// Pass it straight to the engine as a command
 		engine->ClientCmd( command+1 );
+	}
+	// create COOP game
+	else if (!Q_strcmp(command, "CreateGame"))
+	{
+		KeyValues *pSettings = KeyValues::FromString(
+			"settings",
+			" system { "
+			" network LIVE "
+			" access public "
+			" } "
+			" game { "
+			" mode = "
+			" campaign = "
+			" mission = "
+			" } "
+			" options { "
+			" action create "
+			" } "
+			);
+		KeyValues::AutoDelete autodelete(pSettings);
+
+		char const *szGameMode = "campaign";
+		pSettings->SetString("game/mode", szGameMode);
+		pSettings->SetString("game/campaign", "jacob");
+		pSettings->SetString("game/mission", "asi-jac1-landingbay_01");
+
+		if (!CUIGameData::Get()->SignedInToLive())
+		{
+			pSettings->SetString("system/network", "lan");
+			pSettings->SetString("system/access", "public");
+		}
+
+		if (StringHasPrefix(szGameMode, "team"))
+		{
+			pSettings->SetString("system/netflag", "teamlobby");
+		}
+		// 		else if ( !Q_stricmp( "custommatch", m_pDataSettings->GetString( "options/action", "" ) ) )
+		// 		{
+		// 			pSettings->SetString( "system/access", "public" );
+		// 		}
+
+		// TCR: We need to respect the default difficulty
+		pSettings->SetString("game/difficulty", GameModeGetDefaultDifficulty(szGameMode));
+
+		CBaseModPanel::GetSingleton().PlayUISound(UISOUND_ACCEPT);
+		CBaseModPanel::GetSingleton().CloseAllWindows();
+		CBaseModPanel::GetSingleton().OpenWindow(WT_GAMESETTINGS, NULL, true, pSettings);
 	}
 	else
 	{

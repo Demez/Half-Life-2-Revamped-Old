@@ -248,6 +248,43 @@ bool CUIGameData::CanPlayer2Join()
 	return false;
 }
 
+/*//=============================================================================
+void CUIGameData::OpenFriendRequestPanel(int index, uint64 playerXuid)
+{
+#ifdef _X360 
+	XShowFriendRequestUI(index, playerXuid);
+#endif
+}*/
+
+//=============================================================================
+void CUIGameData::OpenInviteUI(char const *szInviteUiType)
+{
+#ifdef _X360 
+	int iSlot = CBaseModPanel::GetSingleton().GetLastActiveUserId();
+	int iCtrlr = XBX_GetUserIsGuest(iSlot) ? XBX_GetPrimaryUserId() : XBX_GetUserId(iSlot);
+
+	if (!Q_stricmp(szInviteUiType, "friends"))
+		::XShowFriendsUI(iCtrlr);
+	else if (!Q_stricmp(szInviteUiType, "players"))
+		xonline->XShowGameInviteUI(iCtrlr, NULL, 0, 0);
+	else if (!Q_stricmp(szInviteUiType, "party"))
+		xonline->XShowPartyUI(iCtrlr);
+	else if (!Q_stricmp(szInviteUiType, "inviteparty"))
+		xonline->XPartySendGameInvites(iCtrlr, NULL);
+	else if (!Q_stricmp(szInviteUiType, "community"))
+		xonline->XShowCommunitySessionsUI(iCtrlr, XSHOWCOMMUNITYSESSION_SHOWPARTY);
+	else if (!Q_stricmp(szInviteUiType, "voiceui"))
+		::XShowVoiceChannelUI(iCtrlr);
+	else if (!Q_stricmp(szInviteUiType, "gamevoiceui"))
+		::XShowGameVoiceChannelUI();
+	else
+	{
+		DevWarning("OpenInviteUI with wrong parameter `%s`!\n", szInviteUiType);
+		Assert(0);
+	}
+#endif
+}
+
 void CUIGameData::ExecuteOverlayCommand( char const *szCommand )
 {
 #if !defined( _X360 ) && !defined( NO_STEAM )

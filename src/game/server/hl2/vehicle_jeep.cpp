@@ -142,8 +142,7 @@ IMPLEMENT_SERVERCLASS_ST( CPropJeep, DT_PropJeep )
 	SendPropBool( SENDINFO( m_bHeadlightIsOn ) ),
 END_SEND_TABLE();
 
-// This is overriden for the episodic jeep
-#ifndef HL2_EPISODIC
+#ifdef JALOPY
 LINK_ENTITY_TO_CLASS( prop_vehicle_jeep, CPropJeep );
 #endif
 

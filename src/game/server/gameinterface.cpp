@@ -1911,13 +1911,13 @@ void CServerGameDLL::GetMatchmakingTags( char *buf, size_t bufSize )
 	}
 
 	// onslaught
-	if ( CAlienSwarm::IsOnslaught() )
+	/*if ( CAlienSwarm::IsOnslaught() )
 	{
 		Q_strncpy( buf, "Onslaught,", bufSize );
 		len = strlen( buf );
 		buf += len;
 		bufSize -= len;
-	}
+	}*/
 
 	// difficulty level
 	const char *szSkill = "Normal,";
@@ -1925,8 +1925,8 @@ void CServerGameDLL::GetMatchmakingTags( char *buf, size_t bufSize )
 	{
 		case 1: szSkill = "Easy,"; break;
 		case 3: szSkill = "Hard,"; break;
-		case 4: szSkill = "Insane,"; break;
-		case 5: szSkill = "Imba,"; break;
+		//case 4: szSkill = "Insane,"; break;
+		//case 5: szSkill = "Imba,"; break;
 	}
 	Q_strncpy( buf, szSkill, bufSize );
 	len = strlen( buf );

@@ -121,15 +121,14 @@
 #include "c_rumble.h"
 #include "viewpostprocess.h"
 
-
-
 #ifdef INFESTED_PARTICLES
 #include "c_asw_generic_emitter.h"
 #endif
 
-#ifdef INFESTED_DLL
+#if defined( REVAMPED_CLIENT ) || defined ( HL2MP )
+#include "missionchooser/hl2r/ihl2r_mission_chooser.h"
+#elif INFESTED_DLL
 #include "missionchooser/iasw_mission_chooser.h"
-
 #endif
 
 #include "tier1/UtlDict.h"
@@ -180,6 +179,9 @@ IUploadGameStats *gamestatsuploader = NULL;
 IBlackBox *blackboxrecorder = NULL;
 #ifdef INFESTED_DLL
 IASW_Mission_Chooser *missionchooser = NULL;
+#endif
+#if defined( REVAMPED_CLIENT ) || defined ( HL2MP )
+IHL2R_Mission_Chooser *missionchooser = NULL;
 #endif
 #if defined( REPLAY_ENABLED )
 IReplayHistoryManager *g_pReplayHistoryManager = NULL;

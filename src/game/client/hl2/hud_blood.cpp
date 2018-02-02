@@ -31,4 +31,4 @@ void BloodSplatCallback( const CEffectData & data )
 */
 }
 
-DECLARE_CLIENT_EFFECT( "HudBloodSplat", BloodSplatCallback );
+DECLARE_CLIENT_EFFECT( HudBloodSplat, BloodSplatCallback );

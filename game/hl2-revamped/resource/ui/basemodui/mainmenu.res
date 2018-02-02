@@ -77,41 +77,41 @@
 		"mode"
 		{
 			"id"				"BtnSingleplayer"
-			"name"				"#HL2PORTUI_MainMenu_Singleplayer"
+			"name"				"#REVAMPEDUI_MainMenu_Singleplayer"
 			"image"				"vgui/hl2/menu_mode_singleplayer"
 			"command"			"FlmSingleplayerFlyout"
-			"menutitle"			"#HL2PORTUI_MainMenu_Singleplayer"
-			"menuhint"			"#L4D360UI_MainMenu_PlaySolo_Tip"
+			"menutitle"			"#REVAMPEDUI_MainMenu_Singleplayer"
+			"menuhint"			"#REVAMPEDUI_MainMenu_Singleplayer_Tip"
 		}
 		
 		"mode"
 		{
 			"id"				"BtnMultiplayer"
-			"name"				"#HL2PORTUI_MainMenu_Coop"
+			"name"				"#REVAMPEDUI_MainMenu_Coop"
 			"image"				"vgui/hl2/menu_mode_coop"
-			"command"			"FlmCFlyout"
-			"menutitle"			"#HL2PORTUI_MainMenu_Coop"
-			"menuhint"			"#L4D360UI_MainMenu_CoOp_Tip"
+			"command"			"FlmCoopFlyout"
+			"menutitle"			"#REVAMPEDUI_MainMenu_Coop"
+			"menuhint"			"#REVAMPEDUI_MainMenu_Coop_Tip"
 		}
 		
 		"mode"
 		{
 			"id"				"BtnSplitScreen"
-			"name"				"#HL2PORTUI_MainMenu_SplitScreen"
+			"name"				"#REVAMPEDUI_MainMenu_SplitScreen"
 			"image"				"vgui/hl2/menu_mode_splitscreen"
 			"command"			"FlmSplitScreenFlyout"
-			"menutitle"			"#HL2PORTUI_MainMenu_SplitScreen"
-			//"menuhint"			"#L4D360UI_MainMenu_PlaySolo_Tip"
+			"menutitle"			"#REVAMPEDUI_MainMenu_SplitScreen"
+			"menuhint"			"#REVAMPEDUI_MainMenu_Splitscreen_Tip"
 		}
 		
 		"mode"
 		{
 			"id"				"BtnDeathmatch"
-			"name"				"#HL2PORTUI_MainMenu_Deathmatch"
+			"name"				"#REVAMPEDUI_MainMenu_DM"
 			"image"				"vgui/hl2/menu_mode_deathmatch"
 			"command"			"FlmDeathmatchFlyout"
-			"menutitle"			"#HL2PORTUI_MainMenu_Deathmatch"
-			//"menuhint"			"#L4D360UI_MainMenu_PlaySolo_Tip"
+			"menutitle"			"#REVAMPEDUI_MainMenu_DM"
+			"menuhint"			"#REVAMPEDUI_MainMenu_DM_Tip"
 		}
 	}
 	"BtnStatsAndAchievements"
@@ -227,7 +227,7 @@
 		"tall"					"0"
 		"zpos"					"3"
 		"InitialFocus"			"BtnCreateGame"
-		"ResourceFile"			"resource/UI/basemodui/SingleplayerFlyout.res" // change this
+		"ResourceFile"			"resource/UI/basemodui/CampaignFlyout.res" // change this
 	}
 	"FlmCoopFlyout"
 	{

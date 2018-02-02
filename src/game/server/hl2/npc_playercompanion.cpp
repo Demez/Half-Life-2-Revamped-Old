@@ -91,7 +91,7 @@ BEGIN_DATADESC( CNPC_PlayerCompanion )
 	DEFINE_FIELD( m_hFlare, FIELD_EHANDLE ),
 
 	DEFINE_INPUTFUNC( FIELD_STRING,	"EnterVehicle",				InputEnterVehicle ),
-	DEFINE_INPUTFUNC( FIELD_STRING, "EnterVehicleImmediately",	InputEnterVehicleImmediately ),
+//	DEFINE_INPUTFUNC( FIELD_STRING, "EnterVehicleImmediately",	InputEnterVehicleImmediately ),
 	DEFINE_INPUTFUNC( FIELD_VOID,	"ExitVehicle",				InputExitVehicle ),
 	DEFINE_INPUTFUNC( FIELD_VOID,	"CancelEnterVehicle",		InputCancelEnterVehicle ),
 #endif	// HL2_EPISODIC
@@ -3339,11 +3339,11 @@ void CNPC_PlayerCompanion::InputEnterVehicle( inputdata_t &inputdata )
 // Purpose: Get into the requested vehicle immediately (no animation, pop)
 // Input  : &inputdata - contains the entity name of the vehicle to enter
 //-----------------------------------------------------------------------------
-void CNPC_PlayerCompanion::InputEnterVehicleImmediately( inputdata_t &inputdata )
+/*void CNPC_PlayerCompanion::InputEnterVehicleImmediately( inputdata_t &inputdata )
 {
 	CBaseEntity *pEntity = FindNamedEntity( inputdata.value.String() );
 	EnterVehicle( pEntity, true );
-}
+}*/
 
 //-----------------------------------------------------------------------------
 // Purpose: 
