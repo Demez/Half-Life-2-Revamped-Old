@@ -95,3 +95,4 @@ src/game/server/Release_hl2-revamped/*
 *.vcxproj.filters
 *.filters
 *.vpc_crc
+/game/hl2-revamped/save
