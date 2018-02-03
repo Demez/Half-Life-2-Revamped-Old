@@ -220,16 +220,16 @@ void CHL2MP_Player::GiveDefaultItems( void )
 
 	//const char *szDefaultWeaponName = engine->GetClientConVarValue( engine->IndexOfEdict( edict() ), "cl_defaultweapon" );
 
-	CBaseCombatWeapon *pDefaultWeapon = Weapon_OwnsThisType( szDefaultWeaponName );
+	//CBaseCombatWeapon *pDefaultWeapon = Weapon_OwnsThisType( szDefaultWeaponName );
 
-	if ( pDefaultWeapon )
+	/*if ( pDefaultWeapon )
 	{
 		Weapon_Switch( pDefaultWeapon );
 	}
 	else
-	{
+	{*/
 		Weapon_Switch( Weapon_OwnsThisType( "weapon_physcannon" ) );
-	}
+	//}
 }
 
 void CHL2MP_Player::PickDefaultSpawnTeam( void )
@@ -366,10 +366,10 @@ bool CHL2MP_Player::ValidatePlayerModel( const char *pModel )
 
 void CHL2MP_Player::SetPlayerTeamModel( void )
 {
-	const char *szModelName = NULL;
-	szModelName = engine->GetClientConVarValue( engine->IndexOfEdict( edict() ), "cl_playermodel" );
+	/*const char *szModelName = NULL;
+	//szModelName = engine->GetClientConVarValue( engine->IndexOfEdict( edict() ), "cl_playermodel" );
 
-	int modelIndex = modelinfo->GetModelIndex( szModelName );
+	///int modelIndex = modelinfo->GetModelIndex( szModelName );
 
 	if ( modelIndex == -1 || ValidatePlayerModel( szModelName ) == false )
 	{
@@ -410,12 +410,12 @@ void CHL2MP_Player::SetPlayerTeamModel( void )
 	SetModel( szModelName );
 	SetupPlayerSoundsByModel( szModelName );
 
-	m_flNextModelChangeTime = gpGlobals->curtime + MODEL_CHANGE_INTERVAL;
+	m_flNextModelChangeTime = gpGlobals->curtime + MODEL_CHANGE_INTERVAL;*/
 }
 
 void CHL2MP_Player::SetPlayerModel( void )
 {
-	const char *szModelName = NULL;
+	/*const char *szModelName = NULL;
 	const char *pszCurrentModelName = modelinfo->GetModelName( GetModel());
 
 	szModelName = engine->GetClientConVarValue( engine->IndexOfEdict( edict() ), "cl_playermodel" );
@@ -486,7 +486,7 @@ void CHL2MP_Player::SetPlayerModel( void )
 	SetModel( szModelName );
 	SetupPlayerSoundsByModel( szModelName );
 
-	m_flNextModelChangeTime = gpGlobals->curtime + MODEL_CHANGE_INTERVAL;
+	m_flNextModelChangeTime = gpGlobals->curtime + MODEL_CHANGE_INTERVAL;*/
 }
 
 void CHL2MP_Player::SetupPlayerSoundsByModel( const char *pModelName )
@@ -1568,9 +1568,9 @@ void CHL2MP_Player::StopObserverMode()
 void CHL2MP_Player::State_Enter_OBSERVER_MODE()
 {
 	int observerMode = m_iObserverLastMode;
-	if ( IsNetClient() )
+	/*if ( IsNetClient() )
 	{
-		const char *pIdealMode = engine->GetClientConVarValue( engine->IndexOfEdict( edict() ), "cl_spec_mode" );
+		const char *pIdealMode = engine->GetClientConVarValue( engine->IndexOfEdict( edict() ), "cl_spec_mode" );		
 		if ( pIdealMode )
 		{
 			observerMode = atoi( pIdealMode );
@@ -1579,7 +1579,7 @@ void CHL2MP_Player::State_Enter_OBSERVER_MODE()
 				observerMode = m_iObserverLastMode;
 			}
 		}
-	}
+	}*/
 	m_bEnterObserver = true;
 	StartObserverMode( observerMode );
 }

@@ -776,14 +776,14 @@ void CHL2MPRules::ClientSettingsChanged( CBasePlayer *pPlayer )
 		//but since our models will match it'll just skip this whole dealio.
 		if ( pHL2Player->GetNextModelChangeTime() >= gpGlobals->curtime )
 		{
-			char szReturnString[512];
+			/*char szReturnString[512];
 
 			Q_snprintf( szReturnString, sizeof (szReturnString ), "cl_playermodel %s\n", pCurrentModel );
 			engine->ClientCommand ( pHL2Player->edict(), szReturnString );
 
 			Q_snprintf( szReturnString, sizeof( szReturnString ), "Please wait %d more seconds before trying to switch.\n", (int)(pHL2Player->GetNextModelChangeTime() - gpGlobals->curtime) );
 			ClientPrint( pHL2Player, HUD_PRINTTALK, szReturnString );
-			return;
+			return;*/
 		}
 
 		if ( HL2MPRules()->IsTeamplay() == false )
@@ -808,7 +808,7 @@ void CHL2MPRules::ClientSettingsChanged( CBasePlayer *pPlayer )
 				pHL2Player->ChangeTeam( TEAM_COMBINE );
 			}*/
 		}
-	}
+	//}
 	if ( sv_report_client_settings.GetInt() == 1 )
 	{
 		UTIL_LogPrintf( "\"%s\" cl_cmdrate = \"%s\"\n", pHL2Player->GetPlayerName(), engine->GetClientConVarValue( pHL2Player->entindex(), "cl_cmdrate" ));
@@ -822,7 +822,7 @@ void CHL2MPRules::ClientSettingsChanged( CBasePlayer *pPlayer )
 int CHL2MPRules::PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarget )
 {
 #ifndef CLIENT_DLL
-	// half life multiplay has a simple concept of Player Relationships.
+	// half life multiplayer has a simple concept of Player Relationships.
 	// you are either on another player's team, or you are not.
 	if ( !pPlayer || !pTarget || !pTarget->IsPlayer() || IsTeamplay() == false )
 		return GR_NOTTEAMMATE;
@@ -1130,12 +1130,12 @@ void CHL2MPRules::CleanUpMap()
 				CMapEntityRef &ref = g_MapEntityRefs[m_iIterator];
 				m_iIterator = g_MapEntityRefs.Next( m_iIterator );	// Seek to the next entity.
 
-				/*if ( ref.m_iEdict == -1 || engine->PEntityOfEntIndex( ref.m_iEdict ) )
-				{
+				//if ( ref.m_iEdict == -1 || engine->PEntityOfEntIndex( ref.m_iEdict ) )
+				//{
 					// Doh! The entity was delete and its slot was reused.
 					// Just use any old edict slot. This case sucks because we lose the baseline.
 					return CreateEntityByName( pClassname );
-				}
+				/*}
 				else
 				{
 					// Cool, the slot where this entity was is free again (most likely, the entity was 

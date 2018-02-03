@@ -900,7 +900,7 @@ void C_HL2MPRagdoll::CreateHL2MPRagdoll( void )
 	SetModelIndex( m_nModelIndex );
 
 	// Make us a ragdoll..
-	//m_nRenderFX = kRenderFxRagdoll;
+	m_nRenderFX = kRenderFxRagdoll;
 
 	matrix3x4a_t boneDelta0[MAXSTUDIOBONES];
 	matrix3x4a_t boneDelta1[MAXSTUDIOBONES];

@@ -139,8 +139,14 @@ public:
 	// Return the current number of used edict slots
 	virtual int			GetEntityCount( void ) = 0;
 	// Given an edict, returns the entity index
+	// error: bad pointer
+	// i need this in hl2mp though
+#ifdef HL2MP
 	//virtual int			IndexOfEdict(const edict_t *pEdict) = 0;
+#endif
+
 	// Given and entity index, returns the corresponding edict pointer
+	// This causes the game to crash for some reason
 	//virtual edict_t		*PEntityOfEntIndex(int iEntIndex) = 0;
 	
 	// Get stats info interface for a client netchannel
