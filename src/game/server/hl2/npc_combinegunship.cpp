@@ -2385,8 +2385,12 @@ void CNPC_CombineGunship::UpdateRotorSoundPitch( int iPitch )
 	// Apply the pitch to both sounds. 
 	controller.SoundChangePitch( m_pAirExhaustSound, iPitch, 0.1 );
 
-	// FIXME: Doesn't work in multiplayer
-	CBaseEntity *pPlayer = UTIL_PlayerByIndex(1);
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
+	CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
+#endif
+
 	if (pPlayer)
 	{
 		Vector pos;

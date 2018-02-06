@@ -231,6 +231,9 @@ LINK_ENTITY_TO_CLASS( point_commentary_viewpoint, CCommentaryViewPosition );
 //-----------------------------------------------------------------------------
 CBasePlayer *GetCommentaryPlayer( void )
 {
+#ifdef HL2COOP
+	return UTIL_GetLocalPlayer();
+#else
 	CBasePlayer *pPlayer;
 
 	if ( gpGlobals->maxClients <= 1 )
@@ -244,6 +247,7 @@ CBasePlayer *GetCommentaryPlayer( void )
 	}
 
 	return pPlayer;
+#endif
 }
 
 //===========================================================================================================

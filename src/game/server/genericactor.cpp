@@ -447,7 +447,11 @@ void CFlextalkActor::ProcessSceneEvents( void )
 		}
 		else if (flex_talk.GetInt() == -4)
 		{
+#ifdef HL2COOP
+			AddLookTarget( UTIL_GetNearestVisiblePlayer(this), 0.5, flex_looktime.GetFloat()  );
+#else
 			AddLookTarget( UTIL_PlayerByIndex( 1 ), 0.5, flex_looktime.GetFloat()  );
+#endif
 			flex_talk.SetValue( "0" );
 		}
 		else if (flex_talk.GetInt() == -5)

@@ -195,7 +195,11 @@ void CAI_Relationship::ApplyRelationship( CBaseEntity *pActivator, CBaseEntity *
 	
 	// The player spawns slightly after the NPCs, meaning that if we don't wait, the
 	// player will miss any relationships placed on them.
-	if ( AI_IsSinglePlayer() && !UTIL_GetLocalPlayer() )
+	if ( 
+#ifndef HL2COOP
+		AI_IsSinglePlayer() && !
+#endif
+		UTIL_GetLocalPlayer() )
 	{
 		SetThink( &CAI_Relationship::ApplyRelationshipThink );
 		SetNextThink( gpGlobals->curtime );

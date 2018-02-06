@@ -12,6 +12,9 @@
 #include "inetchannelinfo.h"
 #include "utllinkedlist.h"
 #include "BaseAnimatingOverlay.h"
+#ifdef HL2COOP
+#include "ai_basenpc.h"
+#endif
 #include "tier0/vprof.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -108,6 +111,49 @@ static void RestoreEntityTo( CBaseEntity *pEntity, const Vector &vWantedPos )
 		LC_SetAbsOrigin( pEntity, tr.endpos, true );
 	}
 }
+
+#ifdef HL2COOP
+static void RestoreEntityTo( CAI_BaseNPC *pEntity, const Vector &vWantedPos )
+{
+	// Try to move to the wanted position from our current position.
+	trace_t tr;
+	VPROF_BUDGET( "RestoreEntityTo", "CLagCompensationManager" );
+	UTIL_TraceEntity( pEntity, vWantedPos, vWantedPos, MASK_NPCSOLID, pEntity, COLLISION_GROUP_NPC, &tr );
+	if ( tr.startsolid || tr.allsolid )
+	{
+		if ( sv_unlag_debug.GetBool() )
+		{
+			DevMsg( "RestorepEntityTo() could not restore entity position for %s ( %.1f %.1f %.1f )\n",
+					pEntity->GetClassname(), vWantedPos.x, vWantedPos.y, vWantedPos.z );
+		}
+
+		UTIL_TraceEntity( pEntity, pEntity->GetLocalOrigin(), vWantedPos, MASK_NPCSOLID, pEntity, COLLISION_GROUP_NPC, &tr );
+		if ( tr.startsolid || tr.allsolid )
+		{
+			// In this case, the guy got stuck back wherever we lag compensated him to. Nasty.
+
+			if ( sv_unlag_debug.GetBool() )
+				DevMsg( " restore failed entirely\n" );
+		}
+		else
+		{
+			// We can get to a valid place, but not all the way back to where we were.
+			Vector vPos;
+			VectorLerp( pEntity->GetLocalOrigin(), vWantedPos, tr.fraction * g_flFractionScale, vPos );
+			UTIL_SetOrigin( pEntity, vPos, true );
+
+			if ( sv_unlag_debug.GetBool() )
+				DevMsg( " restore got most of the way\n" );
+		}
+	}
+	else
+	{
+		// Cool, the entity can go back to whence he came.
+		UTIL_SetOrigin( pEntity, tr.endpos, true );
+		//LC_SetAbsOrigin( pEntity, tr.endpos, true );
+	}
+}
+#endif
 
 // Mappers can flag certain additional entities to lag compensate, this handles them
 void CLagCompensationManager::AddAdditionalEntity( CBaseEntity *pEntity )

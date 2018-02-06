@@ -643,7 +643,11 @@ CBaseEntity *CGlobalEntityList::FindEntityProcedural( const char *szName, CBaseE
 		//
 		if ( FStrEq( pName, "player" ) )
 		{
+#ifdef HL2COOP
+			return (CBaseEntity *)UTIL_GetLocalPlayer();
+#else
 			return (CBaseEntity *)UTIL_PlayerByIndex( 1 );
+#endif
 		}
 		else if ( FStrEq( pName, "pvsplayer" ) )
 		{
@@ -659,7 +663,11 @@ CBaseEntity *CGlobalEntityList::FindEntityProcedural( const char *szName, CBaseE
 			else
 			{
 				// FIXME: error condition?
+#ifdef HL2COOP
+				return (CBaseEntity *)UTIL_GetLocalPlayer();
+#else
 				return (CBaseEntity *)UTIL_PlayerByIndex( 1 );
+#endif
 			}
 
 		}
@@ -673,7 +681,12 @@ CBaseEntity *CGlobalEntityList::FindEntityProcedural( const char *szName, CBaseE
 		}
 		else if ( FStrEq( pName, "picker" ) )
 		{
+#ifdef HL2COOP
+			//return FindPickerEntity( UTIL_GetLocalPlayer() );
+			return UTIL_GetLocalPlayer() ? UTIL_GetLocalPlayer()->FindPickerEntity() : NULL;
+#else
 			return UTIL_PlayerByIndex(1) ? UTIL_PlayerByIndex(1)->FindPickerEntity() : NULL;
+#endif
 		}
 		else if ( FStrEq( pName, "self" ) )
 		{

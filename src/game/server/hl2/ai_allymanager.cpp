@@ -124,6 +124,7 @@ void CAI_AllyManager::CountAllies( int *pTotal, int *pMedics )
 {
 	(*pTotal) = (*pMedics) = 0;
 
+#ifndef HL2COOP
 	if ( !AI_IsSinglePlayer() )
 	{
 		// @TODO (toml 10-22-04): no MP support right now
@@ -131,6 +132,7 @@ void CAI_AllyManager::CountAllies( int *pTotal, int *pMedics )
 	}
 
 	const Vector &	vPlayerPos = UTIL_GetLocalPlayer()->GetAbsOrigin();
+#endif
 	CAI_BaseNPC **	ppAIs 	= g_AI_Manager.AccessAIs();
 	int 			nAIs 	= g_AI_Manager.NumAIs();
 
@@ -147,14 +149,26 @@ void CAI_AllyManager::CountAllies( int *pTotal, int *pMedics )
 				continue;
 			
 			// They only count if I can use them.
+#ifdef HL2COOP
+			if( ppAIs[i]->IRelationType( UTIL_GetNearestPlayer(ppAIs[i]->GetAbsOrigin()) ) != D_LI )
+#else
 			if( ppAIs[i]->IRelationType( UTIL_GetLocalPlayer() ) != D_LI )
+#endif
 				continue;
 
 			// Skip distant NPCs
+#ifdef HL2COOP
+			Vector vNearestPlayerPos = UTIL_GetNearestPlayer(ppAIs[i]->GetAbsOrigin())->GetAbsOrigin();
+#endif
 			if ( !ppAIs[i]->IsInPlayerSquad() && 
 				!UTIL_FindClientInPVS( ppAIs[i]->edict() ) && 
+#ifdef HL2COOP
+				( ( ppAIs[i]->GetAbsOrigin() - vNearestPlayerPos ).LengthSqr() > 150*12 ||
+				  fabsf( ppAIs[i]->GetAbsOrigin().z - vNearestPlayerPos.z ) > 192 ) )
+#else
 				( ( ppAIs[i]->GetAbsOrigin() - vPlayerPos ).LengthSqr() > 150*12 ||
 				  fabsf( ppAIs[i]->GetAbsOrigin().z - vPlayerPos.z ) > 192 ) )
+#endif
 				continue;
 
 			if( FClassnameIs( ppAIs[i], "npc_citizen" ) ) 

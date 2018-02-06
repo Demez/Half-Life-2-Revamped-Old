@@ -910,7 +910,16 @@ void C_BaseAnimating::RemoveBaseAnimatingInterpolatedVars()
 {
 	RemoveVar( m_flEncodedController, false );
 	RemoveVar( m_flPoseParameter, false );
-	RemoveVar( &m_flCycle, false );
+#ifdef HL2MP
+	// HACK:  Don't want to remove interpolation for predictables in hl2dm, though
+	// The animation state stuff sets the pose parameters -- so they should interp
+	//  but m_flCycle is not touched, so it's only set during prediction (which occurs on tick boundaries)
+	//  and so needs to continue to be interpolated for smooth rendering of the lower body of the local player in third person, etc.
+	if (!GetPredictable())
+#endif
+	{
+		RemoveVar(&m_flCycle, false);
+	}
 }
 
 void C_BaseAnimating::LockStudioHdr()
@@ -4152,6 +4161,7 @@ void C_BaseAnimating::FireEvent( const Vector& origin, const QAngle& angles, int
 
 	case CL_EVENT_FOOTSTEP_LEFT:
 		{
+#ifndef HL2MP
 			char pSoundName[256];
 			if ( !options || !options[0] )
 			{
@@ -4171,11 +4181,13 @@ void C_BaseAnimating::FireEvent( const Vector& origin, const QAngle& angles, int
 				Q_snprintf( pSoundName, 256, "%s.FootstepLeft", options );
 			}
 			EmitSound( pSoundName );
+#endif
 		}
 		break;
 
 	case CL_EVENT_FOOTSTEP_RIGHT:
 		{
+#ifndef HL2MP
 			char pSoundName[256];
 			if ( !options || !options[0] )
 			{
@@ -4194,6 +4206,7 @@ void C_BaseAnimating::FireEvent( const Vector& origin, const QAngle& angles, int
 				Q_snprintf( pSoundName, 256, "%s.FootstepRight", options );
 			}
 			EmitSound( pSoundName );
+#endif
 		}
 		break;
 

@@ -291,10 +291,13 @@ int UTIL_DropToFloor( CBaseEntity *pEntity, unsigned int mask, CBaseEntity *pIgn
 	Assert( pEntity );
 
 	trace_t	trace;
+
+#ifndef HL2MP
 	// HACK: is this really the only sure way to detect crossing a terrain boundry?
 	UTIL_TraceEntity( pEntity, pEntity->GetAbsOrigin(), pEntity->GetAbsOrigin(), mask, pIgnore, pEntity->GetCollisionGroup(), &trace );
 	if (trace.fraction == 0.0)
 		return -1;
+#endif // HL2MP
 
 	UTIL_TraceEntity( pEntity, pEntity->GetAbsOrigin(), pEntity->GetAbsOrigin() - Vector(0,0,256), mask, pIgnore, pEntity->GetCollisionGroup(), &trace );
 
@@ -571,6 +574,52 @@ CBasePlayer *UTIL_GetLocalPlayer( void )
 
 	return UTIL_PlayerByIndex( 1 );
 }
+
+#ifdef HL2COOP
+CBasePlayer *UTIL_GetNearestPlayer(const Vector &origin)
+{
+	float distToNearest = 999999.0f;
+	CBasePlayer *pNearest = NULL;
+
+	for (int i = 1; i <= gpGlobals->maxClients; i++)
+	{
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex(i);
+		if (!pPlayer)
+			continue;
+
+		float flDist = (pPlayer->GetAbsOrigin() - origin).LengthSqr();
+		if (flDist < distToNearest)
+		{
+			pNearest = pPlayer;
+			distToNearest = flDist;
+		}
+	}
+
+	return pNearest;
+}
+
+CBasePlayer *UTIL_GetNearestVisiblePlayer(CBaseEntity *pLooker, int mask)
+{
+	float distToNearest = 999999.0f;
+	CBasePlayer *pNearest = NULL;
+
+	for (int i = 1; i <= gpGlobals->maxClients; i++)
+	{
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex(i);
+		if (!pPlayer)
+			continue;
+
+		float flDist = (pPlayer->GetAbsOrigin() - pLooker->GetAbsOrigin()).LengthSqr();
+		if (flDist < distToNearest && pLooker->FVisible(pPlayer, mask))
+		{
+			pNearest = pPlayer;
+			distToNearest = flDist;
+		}
+	}
+
+	return pNearest;
+}
+#endif
 
 //
 // Get the local player on a listen server - this is for multiplayer use only

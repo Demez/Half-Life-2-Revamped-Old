@@ -38,7 +38,9 @@ PRECACHE( MATERIAL, "effects/muzzleflash4" )
 PRECACHE( MATERIAL, "effects/bluemuzzle" )
 PRECACHE( MATERIAL, "effects/gunshipmuzzle" )
 PRECACHE( MATERIAL, "effects/gunshiptracer" )
-PRECACHE( MATERIAL, "effects/huntertracer" )
+#ifndef HL2MP
+CLIENTEFFECT_MATERIAL("effects/huntertracer")
+#endif
 PRECACHE( MATERIAL, "sprites/physcannon_bluelight2" )
 PRECACHE( MATERIAL, "effects/combinemuzzle1" )
 PRECACHE( MATERIAL, "effects/combinemuzzle2" )

@@ -35,6 +35,9 @@ public:
 		const QAngle &weaponAngles = vec3_angle,
 		float weaponRange = 0.0f ) = 0;
 	virtual void	FinishLagCompensation( CBasePlayer *player ) = 0;
+#ifdef HL2COOP
+	virtual void	RemoveNpcData(int index) = 0;
+#endif
 
 	// Mappers can flag certain additional entities to lag compensate, this handles them
 	virtual void	AddAdditionalEntity( CBaseEntity *pEntity ) = 0;

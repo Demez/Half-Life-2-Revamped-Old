@@ -323,6 +323,7 @@ void CHudHistoryResource::Paint( void )
 			case HISTSLOT_AMMO:
 				{
 					// Get the weapon we belong to
+#ifndef HL2MP
 					const FileWeaponInfo_t *pWpnInfo = gWR.GetWeaponFromAmmo( m_PickupHistory[i].iId );
 					if ( pWpnInfo && ( pWpnInfo->iMaxClip1 >= 0 || pWpnInfo->iMaxClip2 >= 0 ) )
 					{
@@ -331,6 +332,7 @@ void CHudHistoryResource::Paint( void )
 						itemAmmoIcon = gWR.GetAmmoIconFromWeapon( m_PickupHistory[i].iId );
 					}
 					else
+#endif // HL2MP
 					{
 						itemIcon = gWR.GetAmmoIconFromWeapon( m_PickupHistory[i].iId );
 						itemAmmoIcon = NULL;
@@ -394,11 +396,13 @@ void CHudHistoryResource::Paint( void )
 			int ypos = tall - (m_flHistoryGap * (i + 1));
 			int xpos = wide - itemIcon->Width() - m_flIconInset;
 
+#ifndef HL2MP
 			// Adjust for a half-height icon
 			if ( bHalfHeight )
 			{
 				ypos += itemIcon->Height() / 2;
 			}
+#endif // HL2MP
 
 			itemIcon->DrawSelf( xpos, ypos, clr );
 

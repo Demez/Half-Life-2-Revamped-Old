@@ -75,6 +75,12 @@ private:
 	int			m_nSpotlightTextureFrame;
 	int			m_nShadowQuality;
 
+#ifdef UBERLIGHT
+	FlashlightState_t	m_FlashlightState;
+	UberlightState_t	m_UberlightState;
+	//Vector m_vecRenderBoundsMin, m_vecRenderBoundsMax;
+#endif
+
 	// simple projection
 	IMaterial	*m_pMaterial;
 	float		m_flProjectionSize;
@@ -85,8 +91,6 @@ private:
 
 	static float m_flVisibleBBoxMinHeight;
 };
-
-
 
 bool C_EnvProjectedTexture::IsBBoxVisible( void )
 {

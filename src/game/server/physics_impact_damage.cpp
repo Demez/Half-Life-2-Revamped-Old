@@ -336,7 +336,13 @@ float CalculatePhysicsImpactDamage( int index, gamevcollisionevent_t *pEvent, co
 	if ( pEvent->pObjects[otherIndex]->GetGameFlags() & FVPHYSICS_PLAYER_HELD )
 	{
 		// if the player is holding the object, use it's real mass (player holding reduced the mass)
+#ifdef HL2COOP
+		Vector origin;
+		pEvent->pObjects[otherIndex]->GetPosition(&origin,NULL);
+		CBasePlayer *pPlayer = UTIL_GetNearestPlayer(origin);
+#else
 		CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#endif
 		if ( pPlayer )
 		{
 			otherMass = pPlayer->GetHeldObjectMass( pEvent->pObjects[otherIndex] );
@@ -436,7 +442,13 @@ float CalculatePhysicsImpactDamage( int index, gamevcollisionevent_t *pEvent, co
 	else if ( pEvent->pObjects[index]->GetGameFlags() & FVPHYSICS_PLAYER_HELD )
 	{
 		// if the player is holding the object, use it's real mass (player holding reduced the mass)
+#ifdef HL2COOP
+		Vector origin;
+		pEvent->pObjects[otherIndex]->GetPosition(&origin,NULL);
+		CBasePlayer *pPlayer = UTIL_GetNearestPlayer(origin);
+#else
 		CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#endif
 		if ( pPlayer )
 		{
 			float mass = pPlayer->GetHeldObjectMass( pEvent->pObjects[index] );

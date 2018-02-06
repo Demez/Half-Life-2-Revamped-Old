@@ -35,6 +35,23 @@ BEGIN_DATADESC( CEnvProjectedTexture )
 	DEFINE_KEYFIELD( m_flProjectionSize, FIELD_FLOAT, "projection_size" ),
 	DEFINE_KEYFIELD( m_flRotation, FIELD_FLOAT, "projection_rotation" ),
 
+#ifdef UBERLIGHT
+	//DEFINE_FIELD( m_bUberlight, FIELD_BOOLEAN ),
+	DEFINE_KEYFIELD( m_fNearEdge, FIELD_FLOAT, "uberlight_near" ),
+	DEFINE_KEYFIELD( m_fFarEdge, FIELD_FLOAT, "uberlight_far" ),
+	DEFINE_KEYFIELD( m_fCutOn, FIELD_FLOAT, "uberlight_cuton" ),
+	DEFINE_KEYFIELD( m_fCutOff, FIELD_FLOAT, "uberlight_cutoff" ),
+	DEFINE_KEYFIELD( m_fShearx, FIELD_FLOAT, "uberlight_shearx" ),
+	DEFINE_KEYFIELD( m_fSheary, FIELD_FLOAT, "uberlight_sheary" ),
+	DEFINE_KEYFIELD( m_fWidth, FIELD_FLOAT, "uberlight_width" ),
+	DEFINE_KEYFIELD( m_fWedge, FIELD_FLOAT, "uberlight_wedge" ),
+	DEFINE_KEYFIELD( m_fHeight, FIELD_FLOAT, "uberlight_height" ),
+	DEFINE_KEYFIELD( m_fHedge, FIELD_FLOAT, "uberlight_hedge" ),
+	DEFINE_KEYFIELD( m_fRoundness, FIELD_FLOAT, "uberlight_roundness" ),
+#endif
+
+//---
+
 	DEFINE_INPUTFUNC( FIELD_VOID, "TurnOn", InputTurnOn ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "TurnOff", InputTurnOff ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "AlwaysUpdateOn", InputAlwaysUpdateOn ),
@@ -48,6 +65,10 @@ BEGIN_DATADESC( CEnvProjectedTexture )
 	DEFINE_INPUTFUNC( FIELD_COLOR32, "LightColor", InputSetLightColor ),
 	DEFINE_INPUTFUNC( FIELD_FLOAT, "Ambient", InputSetAmbient ),
 	DEFINE_INPUTFUNC( FIELD_STRING, "SpotlightTexture", InputSetSpotlightTexture ),
+/*#ifdef UBERLIGHT
+	DEFINE_INPUTFUNC( FIELD_VOID, "EnableUberLight", InputEnableUberLight ),
+	DEFINE_INPUTFUNC( FIELD_VOID, "DisableUberLight", InputDisableUberLight ),
+#endif*/
 	DEFINE_THINKFUNC( InitialThink ),
 END_DATADESC()
 
@@ -72,6 +93,21 @@ IMPLEMENT_SERVERCLASS_ST( CEnvProjectedTexture, DT_EnvProjectedTexture )
 	SendPropInt( SENDINFO( m_nShadowQuality ), 1, SPROP_UNSIGNED ),  // Just one bit for now
 	SendPropFloat( SENDINFO( m_flProjectionSize ) ),
 	SendPropFloat( SENDINFO( m_flRotation ) ),
+
+#ifdef UBERLIGHT
+	SendPropBool(SENDINFO(m_bUberlight)),
+	SendPropFloat(SENDINFO(m_fNearEdge)),
+	SendPropFloat(SENDINFO(m_fFarEdge)),
+	SendPropFloat(SENDINFO(m_fCutOn)),
+	SendPropFloat(SENDINFO(m_fCutOff)),
+	SendPropFloat(SENDINFO(m_fShearx)),
+	SendPropFloat(SENDINFO(m_fSheary)),
+	SendPropFloat(SENDINFO(m_fWidth)),
+	SendPropFloat(SENDINFO(m_fWedge)),
+	SendPropFloat(SENDINFO(m_fHeight)),
+	SendPropFloat(SENDINFO(m_fHedge)),
+	SendPropFloat(SENDINFO(m_fRoundness)),
+#endif
 END_SEND_TABLE()
 
 //-----------------------------------------------------------------------------
@@ -87,6 +123,20 @@ CEnvProjectedTexture::CEnvProjectedTexture( void )
 	m_bLightOnlyTarget = false;
 	m_bLightWorld = true;
 	m_bCameraSpace = false;
+#ifdef UBERLIGHT
+	m_bUberlight = false;
+	m_fNearEdge = 0.f;
+	m_fFarEdge = 0.f;
+	m_fCutOn = 0.f;
+	m_fCutOff = 0.f;
+	m_fShearx = 0.f;
+	m_fSheary = 0.f;
+	m_fWidth = 0.f;
+	m_fWedge = 0.f;
+	m_fHeight = 0.f;
+	m_fHedge = 0.f;
+	m_fRoundness = 0.f;
+#endif
 
 	Q_strcpy( m_SpotlightTextureName.GetForModify(), "effects/flashlight_border" );
 	Q_strcpy( m_SpotlightTextureName.GetForModify(), "effects/flashlight001" );
@@ -237,6 +287,10 @@ void CEnvProjectedTexture::Activate( void )
 {
 	m_bState = ( ( GetSpawnFlags() & ENV_PROJECTEDTEXTURE_STARTON ) != 0 );
 	m_bAlwaysUpdate = ( ( GetSpawnFlags() & ENV_PROJECTEDTEXTURE_ALWAYSUPDATE ) != 0 );
+#ifdef UBERLIGHT
+	//m_bUberlight = HasSpawnFlags( ENV_PROJECTEDTEXTURE_UBERLIGHT );
+	m_bUberlight = ( ( GetSpawnFlags() & ENV_PROJECTEDTEXTURE_UBERLIGHT ) != 0 );
+#endif
 
 	SetThink( &CEnvProjectedTexture::InitialThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
@@ -264,6 +318,17 @@ int CEnvProjectedTexture::UpdateTransmitState()
 	return SetTransmitState( FL_EDICT_ALWAYS );
 }
 
+/*#ifdef UBERLIGHT
+void CEnvProjectedTexture::InputEnableUberLight(inputdata_t &inputdata)
+{
+	m_bUberlight = true;
+}
+
+void CEnvProjectedTexture::InputDisableUberLight(inputdata_t &inputdata)
+{
+	m_bUberlight = false;
+}
+#endif*/
 
 // Console command for creating env_projectedtexture entities
 void CC_CreateFlashlight( const CCommand &args )

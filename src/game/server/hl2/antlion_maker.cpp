@@ -1172,7 +1172,11 @@ void CAntlionTemplateMaker::FindNodesCloseToPlayer( void )
 {
 	SetContextThink( &CAntlionTemplateMaker::FindNodesCloseToPlayer, gpGlobals->curtime + random->RandomFloat( 0.75, 1.75 ), s_pBlockedEffectsThinkContext );
 
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 
 	if ( pPlayer == NULL )
 		 return;
@@ -1260,11 +1264,14 @@ void CAntlionTemplateMaker::BlockedCheckFunc( void )
 			{
 				Vector vHintPos;
 				//pNode->GetPosition( AI_GetSinglePlayer(), &vHintPos );
-
+#ifdef HL2COOP
+				pNode->GetPosition( UTIL_GetNearestPlayer(GetAbsOrigin()), &vHintPos );
+#else
 				if ( AI_IsSinglePlayer() )
 					pNode->GetPosition(AI_GetSinglePlayer(), &vHintPos);
 				else
 					vHintPos = Vector(0, 0, 0);
+#endif
 
 				CBaseEntity*	pList[20];
 				int count = UTIL_EntitiesInBox( pList, 20, vHintPos + NAI_Hull::Mins( HULL_MEDIUM ), vHintPos + NAI_Hull::Maxs( HULL_MEDIUM ), 0 );

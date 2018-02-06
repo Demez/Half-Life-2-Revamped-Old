@@ -2,12 +2,8 @@
 {
 	// Original shader: VertexLitMaskedEnvMappedTexture
 	"$basetexture" "models/Kleiner/glassesside_walter"
-	//"$envmapmask" "models/Kleiner/glassessidemask_walter"
-	//"$envmap" "env_cubemap"
-	//"$envmapcontrast" "1"
-	"$phong" "1"
-	"$phongboost" "1"
-	"$phongexponent" "50"
+	"$envmapmask" "models/Kleiner/glassessidemask_walter"
+	"$envmap" "env_cubemap"
+	"$envmapcontrast" "1"
 	"$halflambert" 1
-	"$phongfresnelranges"	"[.01 .5  1]"
 }

@@ -6,6 +6,9 @@
 
 #define ENV_PROJECTEDTEXTURE_STARTON			(1<<0)
 #define ENV_PROJECTEDTEXTURE_ALWAYSUPDATE		(1<<1)
+#ifdef UBERLIGHT
+#define ENV_PROJECTEDTEXTURE_UBERLIGHT				( 1 << 2 )
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -38,6 +41,10 @@ public:
 	void InputSetLightColor( inputdata_t &inputdata );
 	void InputSetSpotlightTexture( inputdata_t &inputdata );
 	void InputSetAmbient( inputdata_t &inputdata );
+/*#ifdef UBERLIGHT
+	void InputEnableUberLight(inputdata_t &inputdata);
+	void InputDisableUberLight(inputdata_t &inputdata);
+#endif*/
 
 	void InitialThink( void );
 
@@ -64,6 +71,21 @@ private:
 	CNetworkVar( int, m_nShadowQuality );
 	CNetworkVar( float, m_flProjectionSize );
 	CNetworkVar( float, m_flRotation );
+
+#ifdef UBERLIGHT
+	CNetworkVar( bool, m_bUberlight );
+	CNetworkVar( float, m_fNearEdge );
+	CNetworkVar( float, m_fFarEdge );
+	CNetworkVar( float, m_fCutOn );
+	CNetworkVar( float, m_fCutOff );
+	CNetworkVar( float, m_fShearx );
+	CNetworkVar( float, m_fSheary );
+	CNetworkVar( float, m_fWidth );
+	CNetworkVar( float, m_fWedge );
+	CNetworkVar( float, m_fHeight );
+	CNetworkVar( float, m_fHedge );
+	CNetworkVar( float, m_fRoundness );
+#endif
 };
 
 

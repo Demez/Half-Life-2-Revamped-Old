@@ -352,6 +352,13 @@ void CGameText::Display( CBaseEntity *pActivator )
 	if ( !CanFireForActivator( pActivator ) )
 		return;
 
+#ifdef HL2COOP
+	// also send to all if we haven't got a specific activator player to send to
+	if ( MessageToAll() || !pActivator || !pActivator->IsPlayer() )
+		UTIL_HudMessageAll( m_textParms, MessageGet() );
+	else
+		UTIL_HudMessage( ToBasePlayer( pActivator ), m_textParms, MessageGet() );
+#else
 	if ( MessageToAll() )
 	{
 		UTIL_HudMessageAll( m_textParms, MessageGet() );
@@ -370,6 +377,7 @@ void CGameText::Display( CBaseEntity *pActivator )
 			UTIL_HudMessage( ToBasePlayer( pActivator ), m_textParms, MessageGet() );
 		}
 	}
+#endif
 }
 
 void CGameText::InputSetText( inputdata_t &inputdata )

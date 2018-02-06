@@ -447,6 +447,10 @@ float ChangeDistance( float flInterval, float flGoalDistance, float flGoalVeloci
 //
 //=============================================================================
 
+#ifdef HL2COOP
+#define MAX_AIS	256
+#endif
+
 class CAI_Manager
 {
 public:
@@ -461,10 +465,12 @@ public:
 	bool FindAI( CAI_BaseNPC *pAI )	{ return ( m_AIs.Find( pAI ) != m_AIs.InvalidIndex() ); }
 	
 private:
+#ifndef HL2COOP
 	enum
 	{
 		MAX_AIS = 256
 	};
+#endif
 	
 	typedef CUtlVector<CAI_BaseNPC *> CAIArray;
 	
@@ -2207,6 +2213,15 @@ public:
 	void				GetPlayerAvoidBounds( Vector *pMins, Vector *pMaxs );
 
 	void				StartPingEffect( void ) { m_flTimePingEffect = gpGlobals->curtime + 2.0f; DispatchUpdateTransmitState(); }
+
+#ifdef HL2COOP
+	// used by lag compensation to be able to refer to & track specific NPCs, and detect changes in the AI list
+	void				SetAIIndex(int i) { m_iAIIndex = i; }
+	int					GetAIIndex() { return m_iAIIndex; }
+
+private:
+	int					m_iAIIndex;
+#endif
 
 protected:
 	unsigned int		m_nAITraceMask;

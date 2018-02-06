@@ -162,7 +162,11 @@ void CColorCorrectionVolume::Spawn( void )
 
 bool CColorCorrectionVolume::PassesTriggerFilters( CBaseEntity *pEntity )
 {
+#ifdef HL2COOP
+	if( pEntity->IsPlayer() )
+#else
 	if( pEntity == UTIL_GetLocalPlayer() )
+#endif
 		return true;
 
 	return false;

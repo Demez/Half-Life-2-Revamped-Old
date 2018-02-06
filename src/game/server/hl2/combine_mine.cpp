@@ -873,13 +873,21 @@ float CBounceBomb::FindNearestNPC()
 	}
 
 	// finally, check the player.
-	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#ifdef HL2COOP
+					CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
+					CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+#endif
 
 	if( pPlayer && !(pPlayer->GetFlags() & FL_NOTARGET) )
 	{
 		float flDist = (pPlayer->GetAbsOrigin() - GetAbsOrigin() ).LengthSqr();
 
-		if( flDist < flNearest && FVisible( pPlayer, MASK_SOLID_BRUSHONLY ) )
+		if( flDist < flNearest 
+#ifndef HL2COOP
+			&& FVisible( pPlayer, MASK_SOLID_BRUSHONLY ) 
+#endif
+			)
 		{
 			flNearest = flDist;
 			SetNearestNPC( pPlayer );

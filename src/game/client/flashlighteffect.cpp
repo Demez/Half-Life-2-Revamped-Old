@@ -50,11 +50,13 @@ static ConVar r_flashlightvisualizetrace( "r_flashlightvisualizetrace", "0", FCV
 static ConVar r_flashlightambient( "r_flashlightambient", "0.0", FCVAR_CHEAT );
 static ConVar r_flashlightshadowatten( "r_flashlightshadowatten", "0.35", FCVAR_CHEAT );
 static ConVar r_flashlightladderdist( "r_flashlightladderdist", "40.0", FCVAR_CHEAT );
-static ConVar r_flashlight_topdown( "r_flashlight_topdown", "0" );
+//static ConVar r_flashlight_topdown( "r_flashlight_topdown", "0" );
 
 static ConVar r_flashlightnearoffsetscale( "r_flashlightnearoffsetscale", "1.0", FCVAR_CHEAT );
 static ConVar r_flashlighttracedistcutoff( "r_flashlighttracedistcutoff", "128" );
 static ConVar r_flashlightbacktraceoffset( "r_flashlightbacktraceoffset", "0.4", FCVAR_CHEAT );
+
+static ConVar r_flashlightmuzzleflashenabled("r_flashlightmuzzleflashenabled", "0");
 
 //-----------------------------------------------------------------------------
 CFlashlightEffectManager & FlashlightEffectManager( int32 nSplitscreenPlayerOverride )
@@ -84,7 +86,7 @@ CFlashlightEffect::CFlashlightEffect(int nEntIndex, const char *pszTextureName, 
 
 	m_flCurrentPullBackDist = 1.0f;
 
-	m_bMuzzleFlashEnabled = false;
+	m_bMuzzleFlashEnabled = r_flashlightmuzzleflashenabled.GetBool(); //false
 	m_flMuzzleFlashBrightness = 1.0f;
 
 	m_flFov = flFov;
@@ -293,11 +295,11 @@ void CFlashlightEffect::UpdateLight(	int nEntIdx, const Vector &vecPos, const Ve
 	VPROF_BUDGET( __FUNCTION__, VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
 
 
-	if ( r_flashlight_topdown.GetBool() )
+	/*if ( r_flashlight_topdown.GetBool() )
 	{
 		UpdateLightTopDown( vecPos, vecForward, vecRight, vecUp );
 		return;
-	}
+	}*/
 
 	m_nEntIndex = nEntIdx;
 	m_flFov = flFov;

@@ -177,7 +177,11 @@ ConVar  player_debug_print_damage( "player_debug_print_damage", "0", FCVAR_CHEAT
 
 void CC_GiveCurrentAmmo( void )
 {
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#else
 	CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+#endif
 
 	if( pPlayer )
 	{
@@ -746,24 +750,55 @@ int CBasePlayer::ShouldTransmit( const CCheckTransmitInfo *pInfo )
 	return BaseClass::ShouldTransmit( pInfo );
 }
 
-
+#ifdef HL2COOP
+bool CBasePlayer::WantsLagCompensationOnEntity( const CBaseEntity *pEntity, const CUserCmd *pCmd, const CBitVec<MAX_EDICTS> *pEntityTransmitBits ) const
+#else
 bool CBasePlayer::WantsLagCompensationOnEntity( const CBaseEntity *entity, const CUserCmd *pCmd, const CBitVec<MAX_EDICTS> *pEntityTransmitBits ) const
+#endif
 {
 	// Team members shouldn't be adjusted unless friendly fire is on.
-	if ( !friendlyfire.GetInt() && entity->GetTeamNumber() == GetTeamNumber() )
+	if ( !friendlyfire.GetInt() && 
+#ifdef HL2COOP
+		pEntity
+#else
+		entity
+#endif
+		->GetTeamNumber() == GetTeamNumber() )
 		return false;
 
 	// If this entity hasn't been transmitted to us and acked, then don't bother lag compensating it.
-	if ( pEntityTransmitBits && !pEntityTransmitBits->Get( entity->entindex() ) )
+	if ( pEntityTransmitBits && !pEntityTransmitBits->Get( 
+#ifdef HL2COOP
+		pEntity
+#else
+		entity
+#endif
+		->entindex() ) )
 		return false;
 
 	const Vector &vMyOrigin = GetAbsOrigin();
-	const Vector &vHisOrigin = entity->GetAbsOrigin();
+	const Vector &vHisOrigin = 
+#ifdef HL2COOP
+		pEntity->
+#else
+		entity->
+#endif	
+		GetAbsOrigin();
 
 	// get max distance player could have moved within max lag compensation time, 
 	// multiply by 1.5 to to avoid "dead zones"  (sqrt(2) would be the exact value)
+#ifdef HL2COOP
+	float maxspeed;
+	CBasePlayer *pPlayer = ToBasePlayer((CBaseEntity*)pEntity);
+	if ( pPlayer )
+		maxspeed = pPlayer->MaxSpeed();
+	else
+		maxspeed = 600;
+	float maxDistance = 1.5 * maxspeed * sv_maxunlag.GetFloat();
+#else
 	float entityMaxSpeed = ToBasePlayer(entity) ? ToBasePlayer(entity)->MaxSpeed() : 300.0f;
 	float maxDistance = 1.5 * entityMaxSpeed * sv_maxunlag.GetFloat();
+#endif
 
 	// If the player is within this distance, lag compensate them in case they're running past us.
 	if ( vHisOrigin.DistTo( vMyOrigin ) < maxDistance )
@@ -7668,7 +7703,11 @@ void CStripWeapons::StripWeapons(inputdata_t &data, bool stripSuit)
 	}
 	else if ( !g_pGameRules->IsDeathmatch() )
 	{
-		pPlayer = UTIL_GetLocalPlayer();
+#ifdef HL2COOP
+		CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
+		CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#endif
 	}
 
 	if ( pPlayer )
@@ -7747,10 +7786,18 @@ void CRevertSaved::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE 
 	SetNextThink( gpGlobals->curtime + LoadTime() );
 	SetThink( &CRevertSaved::LoadThink );
 
+#ifdef HL2COOP
+	for (int i = 1; i <= gpGlobals->maxClients; i++ )
+  	{
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex( i );
+		if ( !pPlayer )
+			continue;
+#else
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
 
 	if ( pPlayer )
 	{
+#endif
 		//Adrian: Setting this flag so we can't move or save a game.
 		pPlayer->pl.deadflag = true;
 		pPlayer->AddFlag( (FL_NOTARGET|FL_FROZEN) );
@@ -7768,10 +7815,18 @@ void CRevertSaved::InputReload( inputdata_t &inputdata )
 	SetNextThink( gpGlobals->curtime + LoadTime() );
 	SetThink( &CRevertSaved::LoadThink );
 
+#ifdef HL2COOP
+	for (int i = 1; i <= gpGlobals->maxClients; i++ )
+  	{
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex( i );
+		if ( !pPlayer )
+			continue;
+#else
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
 
 	if ( pPlayer )
 	{
+#endif
 		//Adrian: Setting this flag so we can't move or save a game.
 		pPlayer->pl.deadflag = true;
 		pPlayer->AddFlag( (FL_NOTARGET|FL_FROZEN) );
@@ -7862,9 +7917,16 @@ void CMovementSpeedMod::InputSpeedMod(inputdata_t &data)
 	{
 		pPlayer = (CBasePlayer *)data.pActivator;
 	}
-	else if ( !g_pGameRules->IsDeathmatch() )
+	else
+#ifndef HL2COOP
+		if ( !g_pGameRules->IsDeathmatch() )
+#endif
 	{
+#ifdef HL2COOP
+		pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		pPlayer = UTIL_GetLocalPlayer();
+#endif
 	}
 
 	if ( pPlayer )

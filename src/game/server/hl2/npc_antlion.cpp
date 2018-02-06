@@ -4026,12 +4026,22 @@ bool CNPC_Antlion::CorpseGib( const CTakeDamageInfo &info )
 void CNPC_Antlion::Touch( CBaseEntity *pOther )
 {
 	//See if the touching entity is a vehicle
+#ifdef HL2COOP
+	for (int i = 1; i <= gpGlobals->maxClients; i++ )
+#else
 	CBasePlayer *pPlayer = ToBasePlayer( AI_GetSinglePlayer() );
 	
 	// FIXME: Technically we'll want to check to see if a vehicle has touched us with the player OR NPC driver
 
 	if ( pPlayer && pPlayer->IsInAVehicle() )
+#endif
 	{
+#ifdef HL2COOP
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex( i );
+		if ( !pPlayer || !pPlayer->IsInAVehicle() )
+			continue;
+#endif
+
 		IServerVehicle	*pVehicle = pPlayer->GetVehicle();
 		CBaseEntity *pVehicleEnt = pVehicle->GetVehicleEnt();
 
@@ -4081,6 +4091,10 @@ void CNPC_Antlion::Touch( CBaseEntity *pOther )
 					}
 				}
 			}
+
+#ifdef HL2COOP
+			break; // safe to assume will only be touched by 1 vehicle per frame
+#endif
 		}
 	}
 

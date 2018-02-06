@@ -6527,7 +6527,6 @@
 	]
 ]
 
-// lightprop("models/editor/spot.mdl") <---- use this once the orientation is unfucked
 @PointClass base(Targetname, Parentname, Angles) studio("models/editor/cone_helper.mdl") frustum(lightfov,nearz,farz,lightcolor,-1) = env_projectedtexture : 
 	"Projected texture entity."
 [
@@ -6535,7 +6534,7 @@
 	[
 		1  : "Enabled"				: 1
 		2  : "Always Update (moving light)"	: 0
-		//4  : "Uberlight Enabled"				: 4
+		4  : "Uberlight Enabled"				: 4
 		//8  : "Volumetrics Enabled"				: 8
 		
 	]
@@ -6589,17 +6588,17 @@
 	//volumetricsquality(float) : "Volumetrics Quality" : 20 : "Quality of volumetrics"
 	//volumetricsqualitybias(float) : "Volumetrics Quality Bias" : 1 : "Volumetrics Quality Bias"
 	
-	//uberlight_near(float) : "Uberlight Near Edge" : 2 : ""
-	//uberlight_far(float) : "Uberlight Far Edge" : 100 : ""
-	//uberlight_cuton(float) : "Uberlight Cut On" : 10 : ""
-	//uberlight_cutoff(float) : "Uberlight Cut Off" : 650 : ""
-	//uberlight_shearx(float) : "Uberlight Shear X" : 0 : ""
-	//uberlight_sheary(float) : "Uberlight Shear Y" : 0 : ""
-	//uberlight_width(float) : "Uberlight Width" : "0.3" : ""
-	//uberlight_wedge(float) : "Uberlight Wedge" : "0.05" : ""
-	//uberlight_height(float) : "Uberlight Height" : "0.3" : ""
-	//uberlight_hedge(float) : "Uberlight Hedge" : "0.05" : ""
-	//uberlight_roundness(float) : "Uberlight Roundness" : "0.8" : ""
+	uberlight_near(float) : "Uberlight Near Edge" : 2 : ""
+	uberlight_far(float) : "Uberlight Far Edge" : 100 : ""
+	uberlight_cuton(float) : "Uberlight Cut On" : 10 : ""
+	uberlight_cutoff(float) : "Uberlight Cut Off" : 650 : ""
+	uberlight_shearx(float) : "Uberlight Shear X" : 0 : ""
+	uberlight_sheary(float) : "Uberlight Shear Y" : 0 : ""
+	uberlight_width(float) : "Uberlight Width" : "0.3" : ""
+	uberlight_wedge(float) : "Uberlight Wedge" : "0.05" : ""
+	uberlight_height(float) : "Uberlight Height" : "0.3" : ""
+	uberlight_hedge(float) : "Uberlight Hedge" : "0.05" : ""
+	uberlight_roundness(float) : "Uberlight Roundness" : "0.8" : ""
 ]
 
 

@@ -1545,7 +1545,11 @@ void CFuncTank::Think( void )
 		}
 
 #ifdef FUNCTANK_AUTOUSE
-		CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+#ifdef HL2COOP
+					CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
+					CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+#endif
 		bool bThinkFast = false;
 
 		if( pPlayer )
@@ -2240,7 +2244,11 @@ void CFuncTank::Fire( int bulletCount, const Vector &barrelEnd, const Vector &fo
 	{
 		if ( IsX360() )
 		{
+#ifdef HL2COOP
+			UTIL_GetNearestPlayer(GetAbsOrigin())->RumbleEffect( RUMBLE_AR2, 0, RUMBLE_FLAG_RESTART | RUMBLE_FLAG_RANDOM_AMPLITUDE );
+#else
 			UTIL_PlayerByIndex(1)->RumbleEffect( RUMBLE_AR2, 0, RUMBLE_FLAG_RESTART | RUMBLE_FLAG_RANDOM_AMPLITUDE );
+#endif
 		}
 		else
 		{
@@ -3493,7 +3501,11 @@ enum
 
 void UTIL_VisualizeCurve( int type, int steps, float bias )
 {
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 	CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
+#endif
 	Vector vForward, vRight, vUp;
 	
 	pPlayer->EyeVectors( &vForward, &vRight, &vUp );
@@ -4226,7 +4238,11 @@ void CFuncTankCombineCannon::FuncTankPostThink()
 			AddSpawnFlags( SF_TANK_AIM_AT_POS );
 
 			Vector vecTargetPosition = GetTargetPosition();
+#ifdef HL2COOP
+			CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 			CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 			Vector vecToPlayer = pPlayer->WorldSpaceCenter() - GetAbsOrigin();
 			vecToPlayer.NormalizeInPlace();
 
@@ -4375,9 +4391,15 @@ void CFuncTankCombineCannon::Fire( int bulletCount, const Vector &barrelEnd, con
 void CFuncTankCombineCannon::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int iTracerType )
 {
 	// If the shot passed near the player, shake the screen.
+#ifndef HL2COOP
 	if( AI_IsSinglePlayer() )
+#endif
 	{
+#ifdef HL2COOP
+		Vector vecPlayer = UTIL_GetNearestVisiblePlayer(this)->EyePosition();
+#else
 		Vector vecPlayer = AI_GetSinglePlayer()->EyePosition();
+#endif
 
 		Vector vecNearestPoint = PointOnLineNearestPoint( vecTracerSrc, tr.endpos, vecPlayer );
 

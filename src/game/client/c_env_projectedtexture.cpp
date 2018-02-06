@@ -16,9 +16,16 @@
 #include "texture_group_names.h"
 #include "tier0/icommandline.h"
 
+//#include "view_scene.h"
+//#include "viewrender.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
+
+#ifdef VOLUMETRICS
+static ConVar volumetrics_fade_range("volumetrics_fade_range", "128.0", FCVAR_CHEAT);
+ConVar volumetrics_enabled( "volumetrics_enabled", "1", FCVAR_ARCHIVE );able
+#endif
 
 float C_EnvProjectedTexture::m_flVisibleBBoxMinHeight = -FLT_MAX;
 
@@ -44,6 +51,22 @@ IMPLEMENT_CLIENTCLASS_DT( C_EnvProjectedTexture, DT_EnvProjectedTexture, CEnvPro
 	RecvPropInt(	 RECVINFO( m_nShadowQuality )	),
 	RecvPropFloat(	 RECVINFO( m_flProjectionSize )	),
 	RecvPropFloat(	 RECVINFO( m_flRotation )	),
+
+#ifdef UBERLIGHT
+	//RecvPropBool( RECVINFO_NAME( m_UberlightState.m_bEnabled, m_bUberlight ) ),
+	RecvPropBool( RECVINFO_NAME( m_FlashlightState.m_bUberlight, m_bUberlight ) ),
+	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fNearEdge, m_fNearEdge ) ), 
+	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fFarEdge, m_fFarEdge ) ),
+	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fCutOn, m_fCutOn ) ),
+	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fCutOff, m_fCutOff ) ),
+	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fShearx, m_fShearx ) ),
+	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fSheary, m_fSheary ) ),
+	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fWidth, m_fWidth ) ),
+	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fWedge, m_fWedge ) ),
+	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fHeight, m_fHeight ) ),
+	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fHedge, m_fHedge ) ),
+	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fRoundness, m_fRoundness ) ),
+#endif
 END_RECV_TABLE()
 
 C_EnvProjectedTexture *C_EnvProjectedTexture::Create( )
@@ -70,7 +93,6 @@ C_EnvProjectedTexture *C_EnvProjectedTexture::Create( )
 	pEnt->m_bState = true;
 	pEnt->m_flProjectionSize = 500.0f;
 	pEnt->m_flRotation = 0.0f;
-
 	return pEnt;
 }
 
@@ -143,7 +165,11 @@ void C_EnvProjectedTexture::OnDataChanged( DataUpdateType_t updateType )
 {
 	if ( updateType == DATA_UPDATE_CREATED )
 	{
+#ifdef UBERLIGHT
+		m_SpotlightTexture.Init( m_FlashlightState.m_bUberlight ? "white" : m_SpotlightTextureName, TEXTURE_GROUP_OTHER, true );
+#else
 		m_SpotlightTexture.Init( m_SpotlightTextureName, TEXTURE_GROUP_OTHER, true );
+#endif
 	}
 
 	m_bForceUpdate = true;
@@ -356,7 +382,10 @@ void C_EnvProjectedTexture::UpdateLight( void )
 		state.m_flProjectionSize = m_flProjectionSize;
 		state.m_flProjectionRotation = m_flRotation;
 
-		state.m_bUberlight = true;
+		// Make it able to use this somehow
+		// Right now it just breaks
+		//state.m_bUberlight = m_bUberlight;
+		state.m_bUberlight = false;
 		state.m_bVolumetric = true;
 
 		state.m_nShadowQuality = m_nShadowQuality; // Allow entity to affect shadow quality

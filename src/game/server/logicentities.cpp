@@ -2442,7 +2442,11 @@ void CLogicAutosave::InputSave( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CLogicAutosave::InputSaveDangerous( inputdata_t &inputdata )
 {
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#else
 	CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
+#endif
 
 	if ( g_ServerGameDLL.m_fAutoSaveDangerousTime != 0.0f && g_ServerGameDLL.m_fAutoSaveDangerousTime >= gpGlobals->curtime )
 	{
@@ -2492,7 +2496,11 @@ class CLogicActiveAutosave : public CLogicAutosave
 	void SaveThink()
 	{
 		CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-		if ( pPlayer )
+		if ( pPlayer 
+#ifdef HL2COOP
+			&& gpGlobals->maxClients == 1 
+#endif
+			)
 		{
 			if ( m_flStartTime < 0 )
 			{

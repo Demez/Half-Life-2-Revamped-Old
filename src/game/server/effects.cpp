@@ -1143,7 +1143,11 @@ Vector CBlood::BloodPosition( CBaseEntity *pActivator )
 		}
 		else
 		{
+#ifdef HL2COOP
+			player = UTIL_GetNearestVisiblePlayer(this);
+#else
 			player = UTIL_GetLocalPlayer();
+#endif
 		}
 
 		if ( player )

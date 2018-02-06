@@ -312,8 +312,9 @@ void CHudHintDisplay::LocalizeAndDisplay( const char *pszHudTxtMsg, const char *
 		C_BasePlayer *pLocalPlayer = C_BasePlayer::GetLocalPlayer();
 		if ( pLocalPlayer )
 		{
+#ifndef HL2MP
 			pLocalPlayer->EmitSound( "Hud.Hint" );
-
+#endif // HL2MP
 			if ( pLocalPlayer->Hints() )
 			{
 				pLocalPlayer->Hints()->PlayedAHint();

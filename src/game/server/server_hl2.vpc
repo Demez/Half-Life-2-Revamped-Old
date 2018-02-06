@@ -16,7 +16,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE;$SRCDIR\game\shared\hl2;.\hl2"
-		$PreprocessorDefinitions		"$BASE;HL2_DLL;USES_SAVERESTORE;HL2_EPISODIC"
+		$PreprocessorDefinitions		"$BASE;HL2_DLL;USES_SAVERESTORE;HL2_EPISODIC;REVAMPED_SERVER;UBERLIGHT;HL2COOP"
 	}
 }
 

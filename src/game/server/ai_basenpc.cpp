@@ -90,8 +90,12 @@
 #include "vstdlib/jobthread.h"
 #include "ai_addon.h"
 
+#ifdef HL2COOP
+#include "ilagcompensationmanager.h"
+#endif
+
 #ifdef HL2_EPISODIC
-//#include "npc_alyx_episodic.h"
+#include "npc_alyx_episodic.h" //uncomment
 #endif
 
 #include "env_debughistory.h"
@@ -247,10 +251,16 @@ int CAI_Manager::NumAIs()
 }
 
 //-------------------------------------
-
+#ifdef HL2COOP
+int CAI_Manager::AddAI( CAI_BaseNPC *pAI )
+#else
 void CAI_Manager::AddAI( CAI_BaseNPC *pAI )
+#endif
 {
 	m_AIs.AddToTail( pAI );
+#ifdef HL2COOP
+	return NumAIs() - 1; // return the index it was added to
+#endif
 }
 
 //-------------------------------------
@@ -739,8 +749,8 @@ void CAI_BaseNPC::Ignite( float flFlameLifetime, bool bNPCOnly, float flSize, bo
 {
 	BaseClass::Ignite( flFlameLifetime, bNPCOnly, flSize, bCalledByLevelDesigner );
 
-#ifdef HL2_EPISODIC
-/*	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+/*#ifdef HL2_EPISODIC
+	CBasePlayer *pPlayer = AI_GetSinglePlayer();
 	if ( pPlayer && pPlayer->IRelationType( this ) != D_LI )
 	{
 		CNPC_Alyx *alyx = CNPC_Alyx::GetAlyx();
@@ -749,8 +759,8 @@ void CAI_BaseNPC::Ignite( float flFlameLifetime, bool bNPCOnly, float flSize, bo
 		{
 			alyx->EnemyIgnited( this );
 		}
-	}*/
-#endif
+	}
+#endif*/
 }
 
 //-----------------------------------------------------------------------------
@@ -876,9 +886,13 @@ int CAI_BaseNPC::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 		{
 			// See if the person that injured me is an NPC.
 			CAI_BaseNPC *pAttacker = dynamic_cast<CAI_BaseNPC *>( info.GetAttacker() );
+#ifdef HL2COOP
+			if( pAttacker && pAttacker->IsAlive() && UTIL_GetNearestPlayer(GetAbsOrigin()) )
+#else
 			CBasePlayer *pPlayer = AI_GetSinglePlayer();
 
 			if( pAttacker && pAttacker->IsAlive() && pPlayer )
+#endif
 			{
 				if( pAttacker->GetSquad() != NULL && pAttacker->IsInPlayerSquad() )
 				{
@@ -3226,7 +3240,11 @@ void CAI_BaseNPC::UpdateEfficiency( bool bInPVS )
 
 	//---------------------------------
 
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer(); 
+#endif
 	static Vector vPlayerEyePosition;
 	static Vector vPlayerForward;
 	static int iPrevFrame = -1;
@@ -3470,7 +3488,11 @@ void CAI_BaseNPC::UpdateSleepState( bool bInPVS )
 {
 	if ( GetSleepState() > AISS_AWAKE )
 	{
+#ifdef HL2COOP
+		CBasePlayer *pLocalPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
+#endif
 		if ( !pLocalPlayer )
 		{
 			if ( gpGlobals->maxClients > 1 )
@@ -3670,7 +3692,11 @@ void CAI_BaseNPC::RebalanceThinks()
 
 		int i;
 
+#ifdef HL2COOP
+		CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 		Vector vPlayerForward;
 		Vector vPlayerEyePosition;
 
@@ -3946,8 +3972,11 @@ void CAI_BaseNPC::SetPlayerAvoidState( void )
 		Vector vMins, vMaxs;
 
 		GetPlayerAvoidBounds( &vMins, &vMaxs );
-
+#ifdef HL2COOP
+		CBasePlayer *pLocalPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
+#endif
 
 		if ( pLocalPlayer )
 		{
@@ -4932,14 +4961,22 @@ void CAI_BaseNPC::RunAI( void )
 		}
 	}
 
-	if( ai_debug_loners.GetBool() && !IsInSquad() && AI_IsSinglePlayer() )
+	if( ai_debug_loners.GetBool() && !IsInSquad() 
+#ifndef HL2COOP
+		&& AI_IsSinglePlayer()
+#endif
+		)
 	{
 		Vector right;
 		Vector vecPoint;
 
 		vecPoint = EyePosition() + Vector( 0, 0, 12 );
 
+#ifdef HL2COOP
+		UTIL_GetNearestPlayer(GetAbsOrigin())->GetVectors(NULL, &right, NULL);
+#else
 		UTIL_GetLocalPlayer()->GetVectors( NULL, &right, NULL );
+#endif
 
 		NDebugOverlay::Line( vecPoint, vecPoint + Vector( 0, 0, 64 ), 255, 0, 0, false , 0.1 );
 		NDebugOverlay::Line( vecPoint, vecPoint + Vector( 0, 0, 32 ) + right * 32, 255, 0, 0, false , 0.1 );
@@ -8827,7 +8864,13 @@ void CAI_BaseNPC::DrawDebugGeometryOverlays(void)
 
 		info.SetDamage( m_iHealth );
 		info.SetAttacker( this );
+
+
+#ifdef HL2COOP
+		info.SetInflictor( (CBaseEntity *)this );
+#else
 		info.SetInflictor( ( AI_IsSinglePlayer() ) ? (CBaseEntity *)AI_GetSinglePlayer() : (CBaseEntity *)this );
+#endif
 		info.SetDamageType( DMG_GENERIC );
 
 		m_debugOverlays &= ~OVERLAY_NPC_KILL_BIT;
@@ -10041,7 +10084,11 @@ CBaseEntity *CAI_BaseNPC::FindNamedEntity( const char *name, IEntityFindFilter *
 {
 	if ( !stricmp( name, "!player" ))
 	{
+#ifdef HL2COOP
+		return UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		return ( CBaseEntity * )AI_GetSinglePlayer();
+#endif
 	}
 	else if ( !stricmp( name, "!enemy" ) )
 	{
@@ -10056,7 +10103,11 @@ CBaseEntity *CAI_BaseNPC::FindNamedEntity( const char *name, IEntityFindFilter *
 	{
 		// FIXME: look at CBaseEntity *CNPCSimpleTalker::FindNearestFriend(bool fPlayer)
 		// punt for now
+#ifdef HL2COOP
+		return UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		return ( CBaseEntity * )AI_GetSinglePlayer();
+#endif
 	}
 	else if (!stricmp( name, "self" ))
 	{
@@ -10076,7 +10127,11 @@ CBaseEntity *CAI_BaseNPC::FindNamedEntity( const char *name, IEntityFindFilter *
 		{
 			DevMsg( "ERROR: \"player\" is no longer used, use \"!player\" in vcd instead!\n" );
 		}
+#ifdef HL2COOP
+		return UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		return ( CBaseEntity * )AI_GetSinglePlayer();
+#endif
 	}
 	else
 	{
@@ -11552,7 +11607,12 @@ CAI_BaseNPC::CAI_BaseNPC(void)
 	m_interuptSchedule			= NULL;
 	m_nDebugPauseIndex			= 0;
 
+#ifdef HL2COOP
+	SetAIIndex( g_AI_Manager.AddAI( this ) );
+	lagcompensation->RemoveNpcData( GetAIIndex() ); // make sure we're not inheriting anyone else's data
+#else
 	g_AI_Manager.AddAI( this );
+#endif
 	
 	if ( g_AI_Manager.NumAIs() == 1 )
 	{
@@ -11578,6 +11638,11 @@ CAI_BaseNPC::CAI_BaseNPC(void)
 CAI_BaseNPC::~CAI_BaseNPC(void)
 {
 	g_AI_Manager.RemoveAI( this );
+
+#ifdef HL2COOP
+	// this should stop a crash occuring when our death immediately creates a new NPC(eg headcrab from zombie)
+	lagcompensation->RemoveNpcData(GetAIIndex());
+#endif
 
 	delete m_pLockedBestSound;
 
@@ -12121,7 +12186,11 @@ bool CAI_BaseNPC::CineCleanup()
 			{
 				SetLocalOrigin( origin );
 
+#ifdef HL2COOP
+				int drop = UTIL_DropToFloor( this, MASK_NPCSOLID, UTIL_GetNearestVisiblePlayer(this) );
+#else
 				int drop = UTIL_DropToFloor( this, GetAITraceMask(), UTIL_GetLocalPlayer() );
+#endif
 
 				// Origin in solid?  Set to org at the end of the sequence
 				if ( ( drop < 0 ) || sv_test_scripted_sequences.GetBool() )
@@ -12200,7 +12269,11 @@ void CAI_BaseNPC::Teleport( const Vector *newPosition, const QAngle *newAngles, 
 
 bool CAI_BaseNPC::FindSpotForNPCInRadius( Vector *pResult, const Vector &vStartPos, CAI_BaseNPC *pNPC, float radius, bool bOutOfPlayerViewcone )
 {
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(pNPC->GetAbsOrigin());
+#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 	QAngle fan;
 
 	fan.x = 0;
@@ -12729,11 +12802,17 @@ bool CAI_BaseNPC::IsPlayerAlly( CBasePlayer *pPlayer )
 	{
 		// in multiplayer mode we need a valid pPlayer 
 		// or override this virtual function
+#ifndef HL2COOP
 		if ( !AI_IsSinglePlayer() )
 			return false;
+#endif
 
 		// NULL means single player mode
+#ifdef HL2COOP
+		pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		pPlayer = UTIL_GetLocalPlayer();
+#endif
 	}
 
 	return ( !pPlayer || IRelationType( pPlayer ) == D_LI ); 
@@ -13027,7 +13106,11 @@ bool CAI_BaseNPC::FindNearestValidGoalPos( const Vector &vTestPoint, Vector *pRe
 
 	if ( vCandidate != vec3_invalid )
 	{
+#ifdef HL2COOP
+		AI_Waypoint_t *pPathToPoint = GetPathfinder()->BuildRoute(GetAbsOrigin(), vCandidate, UTIL_GetNearestPlayer(GetAbsOrigin()), 5 * 12, NAV_NONE, true);
+#else
 		AI_Waypoint_t *pPathToPoint = GetPathfinder()->BuildRoute( GetAbsOrigin(), vCandidate, AI_GetSinglePlayer(), 5*12, NAV_NONE, bits_BUILD_GET_CLOSE );
+#endif
 		if ( pPathToPoint )
 		{
 			GetPathfinder()->UnlockRouteNodes( pPathToPoint );

@@ -1604,8 +1604,12 @@ public:
 //-----------------------------------------------------------------------------
 void CNPC_AntlionGuard::Footstep( bool bHeavy )
 {
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
 	Assert( pPlayer != NULL );
+#endif
 	if ( pPlayer == NULL )
 		return;
 

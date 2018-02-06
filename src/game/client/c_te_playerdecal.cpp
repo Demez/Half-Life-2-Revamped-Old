@@ -27,7 +27,7 @@ static ConVar cl_playerspraydisable( "cl_playerspraydisable", "0", FCVAR_CLIENTD
 #ifndef _XBOX
 PRECACHE_REGISTER_BEGIN( GLOBAL, PrecachePlayerDecal )
 PRECACHE( MATERIAL, "decals/playerlogo01" )
-#if !defined(HL2_DLL)
+#if !defined(HL2_DLL) || defined(HL2MP)
 PRECACHE( MATERIAL, "decals/playerlogo02" )
 PRECACHE( MATERIAL, "decals/playerlogo03" )
 PRECACHE( MATERIAL, "decals/playerlogo04" )

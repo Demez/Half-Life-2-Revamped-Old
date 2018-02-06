@@ -134,7 +134,11 @@ void CPropVehicleViewController::ExitVehicle( int nRole )
 //-----------------------------------------------------------------------------
 void CPropVehicleViewController::InputForcePlayerIn( inputdata_t &inputdata )
 {
-	CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
+	CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
+#endif
 	if ( !pPlayer )
 		return;
 

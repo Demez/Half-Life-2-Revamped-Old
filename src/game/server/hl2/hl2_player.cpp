@@ -3789,7 +3789,11 @@ void CLogicPlayerProxy::Activate( void )
 
 	if ( m_hPlayer == NULL )
 	{
+#ifdef HL2COOP
+		m_hPlayer = UTIL_GetLocalPlayer();
+#else
 		m_hPlayer = AI_GetSinglePlayer();
+#endif
 	}
 }
 

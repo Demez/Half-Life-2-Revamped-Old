@@ -338,7 +338,12 @@ void ScreenToWorld( int mousex, int mousey, float fov,
 	dy = c_y - (float)mousey;
 
 	// Convert view plane distance
+#ifdef HL2COOP
+	float dist_denom = tan( M_PI * scaled_fov / 360.0f );
+	dist = c_x / dist_denom;
+#else
 	dist = c_x / tan( M_PI * scaled_fov / 360.0 );
+#endif
 
 	// Decompose view angles
 	AngleVectors( vecRenderAngles, &vpn, &vright, &vup );

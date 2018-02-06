@@ -2130,11 +2130,24 @@ void CAI_FollowGoal::EnableGoal( CAI_BaseNPC *pAI )
 		return;
 	
 	CBaseEntity *pGoalEntity = GetGoalEntity();
-	if ( !pGoalEntity && AI_IsSinglePlayer() )
+	if ( !pGoalEntity 
+#ifndef HL2COOP
+		&& AI_IsSinglePlayer()
+#endif
+		)
 	{
+#ifdef HL2COOP
+		CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+		if ( pAI->IRelationType(pPlayer) == D_LI )
+#else
 		if ( pAI->IRelationType(UTIL_GetLocalPlayer()) == D_LI )
+#endif
 		{
+#ifdef HL2COOP
+			pGoalEntity = pPlayer;
+#else
 			pGoalEntity = UTIL_GetLocalPlayer();
+#endif
 			SetGoalEntity( pGoalEntity );
 		}
 	}

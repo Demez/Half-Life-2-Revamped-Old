@@ -709,6 +709,42 @@ void CPropCombineBall::WhizSoundThink()
 	pPhysicsObject->GetVelocity( &vecVelocity, NULL );
 	
 	// Multiplayer equivelent, loops through players and decides if it should go or not, like SP.
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+	if ( pPlayer )
+	{
+		Vector vecDelta;
+		VectorSubtract( pPlayer->GetAbsOrigin(), vecPosition, vecDelta );
+		VectorNormalize( vecDelta );
+		if ( DotProduct( vecDelta, vecVelocity ) > 0.5f )
+		{
+			Vector vecEndPoint;
+			VectorMA( vecPosition, 2.0f * TICK_INTERVAL, vecVelocity, vecEndPoint );
+			float flDist = CalcDistanceToLineSegment( pPlayer->GetAbsOrigin(), vecPosition, vecEndPoint );
+			if ( flDist < 200.0f )
+			{
+			CPASAttenuationFilter filter( vecPosition, ATTN_NORM );
+
+			EmitSound_t ep;
+			ep.m_nChannel = CHAN_STATIC;
+			if ( hl2_episodic.GetBool() )
+			{
+				ep.m_pSoundName = "NPC_CombineBall_Episodic.WhizFlyby";
+			}
+			else
+			{
+				ep.m_pSoundName = "NPC_CombineBall.WhizFlyby";
+			}
+			ep.m_flVolume = 1.0f;
+			ep.m_SoundLevel = SNDLVL_NORM;
+
+			EmitSound( filter, entindex(), ep );
+
+			SetContextThink( &CPropCombineBall::WhizSoundThink, gpGlobals->curtime + 0.5f, s_pWhizThinkContext );
+			return;			
+		}		
+	}
+#else
 	if ( gpGlobals->maxClients > 1 )
 	{
 		CBasePlayer *pPlayer = NULL;
@@ -801,7 +837,7 @@ void CPropCombineBall::WhizSoundThink()
 		}
 
 	}
-
+#endif
 	SetContextThink( &CPropCombineBall::WhizSoundThink, gpGlobals->curtime + 2.0f * TICK_INTERVAL, s_pWhizThinkContext );
 }
 

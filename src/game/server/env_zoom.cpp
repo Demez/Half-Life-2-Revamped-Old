@@ -74,7 +74,16 @@ float GetZoomOwnerDesiredFOV( CBaseEntity *pZoomOwner )
 //-----------------------------------------------------------------------------
 void CEnvZoom::InputZoom( inputdata_t &inputdata )
 {
+#ifdef HL2COOP
+	CBasePlayer *pPlayer;
+
+	if ( inputdata.pActivator && inputdata.pActivator->IsPlayer() )
+		pPlayer = ToBasePlayer( inputdata.pActivator );
+	else
+		pPlayer= UTIL_GetNearestPlayer(GetAbsOrigin());	
+#else
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#endif
 
 	if ( pPlayer )
 	{
@@ -105,7 +114,16 @@ void CEnvZoom::InputZoom( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CEnvZoom::InputUnZoom( inputdata_t &inputdata )
 {
+#ifdef HL2COOP
+	CBasePlayer *pPlayer;
+
+	if ( inputdata.pActivator && inputdata.pActivator->IsPlayer() )
+		pPlayer = ToBasePlayer( inputdata.pActivator );
+	else
+		pPlayer= UTIL_GetNearestPlayer(GetAbsOrigin());	
+#else
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#endif
 
 	if ( pPlayer )
 	{

@@ -423,7 +423,11 @@ void PlayImpactSound( CBaseEntity *pEntity, trace_t &tr, Vector &vecServerOrigin
 		else
 		{
 			CLocalPlayerFilter filter;
+#ifdef HL2COOP
+			C_BaseEntity::EmitSound( filter, NULL, pbulletImpactSoundName, /*pdata->soundhandles.bulletImpact,*/ &vecOrigin );
+#else
 			C_BaseEntity::EmitSound( filter, NULL, pbulletImpactSoundName, pdata->soundhandles.bulletImpact, &vecOrigin );
+#endif
 		}
 
 		return;

@@ -497,7 +497,11 @@ void CNPC_MetroPolice::PrescheduleThink( void )
 	m_bPlayerIsNear = false;
 	if ( PlayerIsCriminal() == false )
 	{
+#ifdef HL2COOP
+		CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
+#endif
 		
 		if ( pPlayer && ( pPlayer->WorldSpaceCenter() - WorldSpaceCenter() ).LengthSqr() < (128*128) )
 		{
@@ -3899,7 +3903,11 @@ void CNPC_MetroPolice::AnnounceHarrassment( void )
 //-----------------------------------------------------------------------------
 void CNPC_MetroPolice::IncrementPlayerCriminalStatus( void )
 {
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 	CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
+#endif
 
 	if ( pPlayer )
 	{
@@ -3951,8 +3959,10 @@ float CNPC_MetroPolice::GetIdealAccel( void ) const
 //-----------------------------------------------------------------------------
 void CNPC_MetroPolice::AdministerJustice( void )
 {
+#ifndef HL2COOP
 	if ( !AI_IsSinglePlayer() )
 		return;
+#endif
 
 	// If we're allowed to chase the player, do so. Otherwise, just threaten.
 	if ( !IsInAScript() && (m_NPCState != NPC_STATE_SCRIPT) && HasSpawnFlags( SF_METROPOLICE_ALLOWED_TO_RESPOND ) )
@@ -3965,7 +3975,13 @@ void CNPC_MetroPolice::AdministerJustice( void )
 		m_flChasePlayerTime = gpGlobals->curtime + RandomFloat( 3, 7 );
 
 		// Attack the target
+#ifdef HL2COOP
+		CBasePlayer *pPlayer = UTIL_GetNearestVisiblePlayer(this);
+		if ( !pPlayer )
+			pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+#endif
 		SetEnemy( pPlayer );
 		SetState( NPC_STATE_COMBAT );
 		UpdateEnemyMemory( pPlayer, pPlayer->GetAbsOrigin() );
@@ -3989,7 +4005,12 @@ void CNPC_MetroPolice::AdministerJustice( void )
 				if ( pNPC->HasSpawnFlags( SF_METROPOLICE_ALLOWED_TO_RESPOND ) )
 				{
 					// Is he within site & range?
+#ifdef HL2COOP
+					CBasePlayer *pPlayer = UTIL_GetNearestVisiblePlayer(this);
+					if ( pPlayer && FVisible(pNPC) && pNPC->FVisible( pPlayer ) && 
+#else
 					if ( FVisible(pNPC) && pNPC->FVisible( UTIL_PlayerByIndex(1) ) && 
+#endif
 						UTIL_DistApprox( WorldSpaceCenter(), pNPC->WorldSpaceCenter() ) < 512 )
 					{
 						pNPC->AdministerJustice();
@@ -4006,7 +4027,12 @@ void CNPC_MetroPolice::AdministerJustice( void )
 //-----------------------------------------------------------------------------
 int CNPC_MetroPolice::SelectSchedule( void )
 {
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+	if ( !GetEnemy() && HasCondition( COND_IN_PVS ) && pPlayer && !pPlayer->IsAlive() )
+#else
 	if ( !GetEnemy() && HasCondition( COND_IN_PVS ) && AI_GetSinglePlayer() && !AI_GetSinglePlayer()->IsAlive() )
+#endif
 	{
 		return SCHED_PATROL_WALK;
 	}
@@ -4978,7 +5004,11 @@ void CNPC_MetroPolice::GatherConditions( void )
 		ClearCondition( COND_METROPOLICE_PLAYER_TOO_CLOSE );
 	}
 
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 	CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
+#endif
 	
 	// FIXME: Player can be NULL here during level transitions.
 	if ( !pPlayer )
@@ -5111,7 +5141,11 @@ void CNPC_MetroPolice::VPhysicsCollision( int index, gamevcollisionevent_t *pEve
 
 	if ( pEvent->pObjects[otherIndex]->GetGameFlags() & FVPHYSICS_PLAYER_HELD )
 	{
+#ifdef HL2COOP
+		CHL2_Player *pPlayer = dynamic_cast<CHL2_Player *>(UTIL_GetNearestPlayer(pHitEntity->GetAbsOrigin()));
+#else
 		CHL2_Player *pPlayer = dynamic_cast<CHL2_Player *>(UTIL_PlayerByIndex( 1 ));
+#endif
 
 		// See if it's being held by the player
 		if ( pPlayer != NULL && pPlayer->IsHoldingEntity( pHitEntity ) )

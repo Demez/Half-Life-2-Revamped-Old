@@ -239,9 +239,15 @@ void CGameWeaponManager::Think()
 		pCandidate = candidates[i];
 		Assert( !pCandidate->IsEffectActive( EF_NODRAW ) );
 
+#ifndef HL2COOP
 		if ( gpGlobals->maxClients == 1 )
+#endif
 		{
+#ifdef HL2COOP
+			CBasePlayer *pPlayer = UTIL_GetNearestVisiblePlayer(pCandidate);
+#else
 			CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#endif
 			// Nodraw serves as a flag that this weapon is already being removed since
 			// all we're really doing inside this loop is marking them for removal by
 			// the entity system. We don't want to count the same weapon as removed
@@ -259,10 +265,12 @@ void CGameWeaponManager::Think()
 				fRemovedOne = true;
 			}
 		}
+#ifndef HL2COOP
 		else
 		{
 			fRemovedOne = true;
 		}
+#endif
 
 		if( fRemovedOne )
 		{

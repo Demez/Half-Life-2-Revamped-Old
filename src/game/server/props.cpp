@@ -864,6 +864,12 @@ void CBreakableProp::Spawn()
 	m_flDmgModClub = 1.0;
 	m_flDmgModExplosive = 1.0;
 	m_flDmgModFire = 1.0f;
+
+	//jmd: I am guessing that the call to Spawn will set any flags that should be set anyway; this
+	//clears flags we don't want (specifically the FL_ONFIRE for explosive barrels in HL2MP)]
+#ifdef HL2MP
+	ClearFlags();
+#endif 
 	
 	BaseClass::Spawn();
 	
@@ -1878,7 +1884,9 @@ void CBreakableProp::Break( CBaseEntity *pBreaker, const CTakeDamageInfo &info )
 		}
 	}
 
-	UTIL_Remove( this );
+#ifndef HL2MP
+	UTIL_Remove(this);
+#endif
 }
 
 

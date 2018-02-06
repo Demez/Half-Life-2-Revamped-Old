@@ -1304,6 +1304,13 @@ bool CBaseCombatCharacter::BecomeRagdoll( const CTakeDamageInfo &info, const Vec
 #endif
 
 #if defined( HL2_DLL )
+
+	// This wasnt here before so idk if I need this
+	bool bMegaPhyscannonActive = false;
+#if !defined( HL2MP )
+	bMegaPhyscannonActive = HL2GameRules()->MegaPhyscannonActive();
+#endif // !HL2MP
+
 	// Mega physgun requires everything to be a server-side ragdoll
 	if ( m_bForceServerRagdoll == true || ( HL2GameRules()->MegaPhyscannonActive() == true ) && !IsPlayer() && Classify() != CLASS_PLAYER_ALLY_VITAL && Classify() != CLASS_PLAYER_ALLY )
 	{
@@ -1659,7 +1666,11 @@ void CBaseCombatCharacter::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector
 				{
 					// Drop enough ammo to kill 2 of me.
 					// Figure out how much damage one piece of this type of ammo does to this type of enemy.
+#ifdef HL2COOP
+					float flAmmoDamage = g_pGameRules->GetAmmoDamage( UTIL_GetNearestPlayer(GetAbsOrigin()), this, pWeapon->GetPrimaryAmmoType() );
+#else
 					float flAmmoDamage = g_pGameRules->GetAmmoDamage( UTIL_PlayerByIndex(1), this, pWeapon->GetPrimaryAmmoType() );
+#endif
 					pWeapon->m_iClip1 = (GetMaxHealth() / flAmmoDamage) * 2;
 				}
 				else
@@ -2999,12 +3010,12 @@ void CBaseCombatCharacter::VPhysicsShadowCollision( int index, gamevcollisioneve
 	// which can occur owing to ordering issues it appears.
 	float flOtherAttackerTime = 0.0f;
 
-#if defined( HL2_DLL )
-	if ( HL2GameRules()->MegaPhyscannonActive() == true )
+#if defined( HL2_DLL ) && !defined( HL2MP )
+	if (HL2GameRules()->MegaPhyscannonActive() == true)
 	{
 		flOtherAttackerTime = 1.0f;
 	}
-#endif
+#endif // HL2_DLL && !HL2MP
 
 	if ( this == pOther->HasPhysicsAttacker( flOtherAttackerTime ) )
 		return;
@@ -3144,7 +3155,11 @@ CBaseEntity *CBaseCombatCharacter::FindMissTarget( void )
 	CBaseEntity *pMissCandidates[ MAX_MISS_CANDIDATES ];
 	int numMissCandidates = 0;
 
+#ifdef HL2COOP
+	CBasePlayer *pPlayer = UTIL_GetNearestVisiblePlayer(this);
+#else
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#endif
 	CBaseEntity *pEnts[256];
 	Vector		radius( 100, 100, 100);
 	Vector		vecSource = GetAbsOrigin();

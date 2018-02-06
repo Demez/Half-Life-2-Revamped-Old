@@ -389,12 +389,25 @@ void CAI_PlayerAlly::DisplayDeathMessage( void )
 	if ( npc_ally_deathmessage.GetBool() == 0 )
 		return;
 
+#ifdef HL2COOP
+	for (int i = 1; i <= gpGlobals->maxClients; i++ )
+#else
 	CBaseEntity *pPlayer = AI_GetSinglePlayer();
 
 	if ( pPlayer )	
+#endif
 	{
+#ifdef HL2COOP
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex( i );
+		if ( !pPlayer )
+			continue;
+	
+		UTIL_ShowMessage( GetDeathMessageText(), pPlayer );
+		pPlayer->NotifySinglePlayerGameEnding();
+#else
 		UTIL_ShowMessage( GetDeathMessageText(), ToBasePlayer( pPlayer ) );
 		ToBasePlayer(pPlayer)->NotifySinglePlayerGameEnding();
+#endif
 	}
 
 	CBaseEntity *pReload = CreatePlayerLoadSave( GetAbsOrigin(), 1.5f, 8.0f, 4.5f );
@@ -430,6 +443,11 @@ void CAI_PlayerAlly::GatherConditions( void )
 		SetCondition( COND_TALKER_CLIENTUNSEEN );
 	}
 
+#ifdef HL2COOP
+	CBasePlayer *pLocalPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+
+	if ( pLocalPlayer && !pLocalPlayer->IsAlive() )
+#else
 	CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
 
 	if ( !pLocalPlayer )
@@ -440,6 +458,7 @@ void CAI_PlayerAlly::GatherConditions( void )
 	}
 
 	if ( !pLocalPlayer->IsAlive() )
+#endif
 	{
 		SetCondition( COND_TALKER_PLAYER_DEAD );
 	}
@@ -448,7 +467,11 @@ void CAI_PlayerAlly::GatherConditions( void )
 	{
 				
 		bool bPlayerIsLooking = false;
+#ifdef HL2COOP
+		if ( pLocalPlayer && ( pLocalPlayer->GetAbsOrigin() - GetAbsOrigin() ).Length2DSqr() < Square(TALKER_STARE_DIST) )
+#else
 		if ( ( pLocalPlayer->GetAbsOrigin() - GetAbsOrigin() ).Length2DSqr() < Square(TALKER_STARE_DIST) )
+#endif
 		{
 			if ( pLocalPlayer->FInViewCone( EyePosition() ) )
 			{
@@ -483,7 +506,11 @@ void CAI_PlayerAlly::GatherEnemyConditions( CBaseEntity *pEnemy )
 		{
 			if( Classify() == CLASS_PLAYER_ALLY_VITAL && hl2_episodic.GetBool() )
 			{
+#ifdef HL2COOP
+				CBasePlayer *pPlayer = UTIL_GetNearestVisiblePlayer(this);
+#else
 				CBasePlayer *pPlayer = AI_GetSinglePlayer();
+#endif
 
 				if( pPlayer )
 				{
@@ -1036,10 +1063,18 @@ void CAI_PlayerAlly::StartTask( const Task_t *pTask )
 	{
 	case TASK_MOVE_AWAY_PATH:
 		{
-			if ( HasCondition( COND_PLAYER_PUSHING ) && AI_IsSinglePlayer() )
+			if ( HasCondition( COND_PLAYER_PUSHING ) 
+#ifndef HL2COOP
+				&& AI_IsSinglePlayer() 
+#endif
+				)
 			{
 				// @TODO (toml 10-22-04): cope with multiplayer push
+#ifdef HL2COOP
+				GetMotor()->SetIdealYawToTarget( UTIL_GetNearestVisiblePlayer(this)->WorldSpaceCenter() );
+#else
 				GetMotor()->SetIdealYawToTarget( UTIL_GetLocalPlayer()->WorldSpaceCenter() );
+#endif
 			}
 			BaseClass::StartTask( pTask );
 			break;
@@ -1207,11 +1242,24 @@ void CAI_PlayerAlly::Event_Killed( const CTakeDamageInfo &info )
 	// notify the player
 	if ( IsInPlayerSquad() )
 	{
+#ifdef HL2COOP
+		for (int i = 1; i <= gpGlobals->maxClients; i++ )
+#else
 		CBasePlayer *player = AI_GetSinglePlayer();
 		if ( player )
+#endif
 		{
+#ifdef HL2COOP
+			CBasePlayer *pPlayer = UTIL_PlayerByIndex( i );
+			if ( !pPlayer )
+				continue;
+#endif
 			variant_t emptyVariant;
+#ifdef HL2COOP
+			pPlayer->AcceptInput( "OnSquadMemberKilled", this, this, emptyVariant, 0 );
+#else
 			player->AcceptInput( "OnSquadMemberKilled", this, this, emptyVariant, 0 );
+#endif
 		}
 	}
 
@@ -1494,7 +1542,11 @@ bool CAI_PlayerAlly::IsOkToSpeak( ConceptCategory_t category, bool fRespondingTo
 		}
 
 		// Don't talk if we're too far from the player
+#ifdef HL2COOP
+		CBaseEntity *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		CBaseEntity *pPlayer = AI_GetSinglePlayer();
+#endif
 		if ( pPlayer )
 		{
 			float flDist = sv_npc_talker_maxdist.GetFloat();
