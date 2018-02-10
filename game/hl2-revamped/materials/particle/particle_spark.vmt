@@ -1,7 +1,0 @@
-"SpriteCard"
-{
-	// Original shader: AddTexture
-	"$basetexture" "effects/spark"
-	"$additive" 1
-	$splinetype 2
-}

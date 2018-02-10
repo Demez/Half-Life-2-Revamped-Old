@@ -1,8 +1,0 @@
-"VertexLitGeneric"
-{
-	"$basetexture" "Models/props_c17/FurnitureToletSink001a"
-	"$envmap" "env_cubemap"
-	"$basealphaenvmapmask" 1
-	
-}
-

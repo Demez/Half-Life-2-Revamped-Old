@@ -3502,7 +3502,7 @@ enum
 void UTIL_VisualizeCurve( int type, int steps, float bias )
 {
 #ifdef HL2COOP
-	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
 #else
 	CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
 #endif

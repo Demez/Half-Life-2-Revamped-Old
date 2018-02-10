@@ -70,6 +70,7 @@ static void RestoreEntityTo( CBaseEntity *pEntity, const Vector &vWantedPos )
 	// Try to move to the wanted position from our current position.
 	trace_t tr;
 	VPROF_BUDGET( "RestoreEntityTo", "CLagCompensationManager" );
+#ifndef HL2COOP
 	if( sv_lagcompensationforcerestore.GetBool() )
 	{
 		// We don't have to test for validity.  Just put them back where you found them.
@@ -77,7 +78,11 @@ static void RestoreEntityTo( CBaseEntity *pEntity, const Vector &vWantedPos )
 	}
 
 	unsigned int mask = MASK_PLAYERSOLID; 
+
 	UTIL_TraceEntity( pEntity, vWantedPos, vWantedPos, mask, pEntity, COLLISION_GROUP_PLAYER_MOVEMENT, &tr );
+#else
+	UTIL_TraceEntity( pEntity, vWantedPos, vWantedPos, MASK_NPCSOLID, pEntity, COLLISION_GROUP_NPC, &tr );
+#endif
 	if ( tr.startsolid || tr.allsolid )
 	{
 		if ( sv_unlag_debug.GetBool() )
@@ -86,7 +91,13 @@ static void RestoreEntityTo( CBaseEntity *pEntity, const Vector &vWantedPos )
 					pEntity->entindex(), vWantedPos.x, vWantedPos.y, vWantedPos.z );
 		}
 
-		UTIL_TraceEntity( pEntity, pEntity->GetAbsOrigin(), vWantedPos, mask, pEntity, COLLISION_GROUP_PLAYER_MOVEMENT, &tr );
+		UTIL_TraceEntity( pEntity, pEntity->GetAbsOrigin(), vWantedPos,
+#ifdef HL2COOP
+			MASK_NPCSOLID, pEntity, COLLISION_GROUP_NPC,
+#else
+			mask, pEntity, COLLISION_GROUP_PLAYER_MOVEMENT,
+#endif
+			&tr );
 		if ( tr.startsolid || tr.allsolid )
 		{
 			// In this case, the guy got stuck back wherever we lag compensated him to. Nasty.
@@ -98,7 +109,13 @@ static void RestoreEntityTo( CBaseEntity *pEntity, const Vector &vWantedPos )
 		{
 			// We can get to a valid place, but not all the way back to where we were.
 			Vector vPos;
-			VectorLerp( pEntity->GetAbsOrigin(), vWantedPos, tr.fraction * g_flFractionScale, vPos );
+			VectorLerp( pEntity->
+#ifdef HL2COOP
+				GetLocalOrigin(),
+#else
+				GetAbsOrigin(),
+#endif
+				vWantedPos, tr.fraction * g_flFractionScale, vPos );
 			LC_SetAbsOrigin( pEntity, vPos, true );
 
 			if ( sv_unlag_debug.GetBool() )
@@ -111,49 +128,6 @@ static void RestoreEntityTo( CBaseEntity *pEntity, const Vector &vWantedPos )
 		LC_SetAbsOrigin( pEntity, tr.endpos, true );
 	}
 }
-
-#ifdef HL2COOP
-static void RestoreEntityTo( CAI_BaseNPC *pEntity, const Vector &vWantedPos )
-{
-	// Try to move to the wanted position from our current position.
-	trace_t tr;
-	VPROF_BUDGET( "RestoreEntityTo", "CLagCompensationManager" );
-	UTIL_TraceEntity( pEntity, vWantedPos, vWantedPos, MASK_NPCSOLID, pEntity, COLLISION_GROUP_NPC, &tr );
-	if ( tr.startsolid || tr.allsolid )
-	{
-		if ( sv_unlag_debug.GetBool() )
-		{
-			DevMsg( "RestorepEntityTo() could not restore entity position for %s ( %.1f %.1f %.1f )\n",
-					pEntity->GetClassname(), vWantedPos.x, vWantedPos.y, vWantedPos.z );
-		}
-
-		UTIL_TraceEntity( pEntity, pEntity->GetLocalOrigin(), vWantedPos, MASK_NPCSOLID, pEntity, COLLISION_GROUP_NPC, &tr );
-		if ( tr.startsolid || tr.allsolid )
-		{
-			// In this case, the guy got stuck back wherever we lag compensated him to. Nasty.
-
-			if ( sv_unlag_debug.GetBool() )
-				DevMsg( " restore failed entirely\n" );
-		}
-		else
-		{
-			// We can get to a valid place, but not all the way back to where we were.
-			Vector vPos;
-			VectorLerp( pEntity->GetLocalOrigin(), vWantedPos, tr.fraction * g_flFractionScale, vPos );
-			UTIL_SetOrigin( pEntity, vPos, true );
-
-			if ( sv_unlag_debug.GetBool() )
-				DevMsg( " restore got most of the way\n" );
-		}
-	}
-	else
-	{
-		// Cool, the entity can go back to whence he came.
-		UTIL_SetOrigin( pEntity, tr.endpos, true );
-		//LC_SetAbsOrigin( pEntity, tr.endpos, true );
-	}
-}
-#endif
 
 // Mappers can flag certain additional entities to lag compensate, this handles them
 void CLagCompensationManager::AddAdditionalEntity( CBaseEntity *pEntity )
@@ -178,6 +152,12 @@ void CLagCompensationManager::RemoveAdditionalEntity( CBaseEntity *pEntity )
 //-----------------------------------------------------------------------------
 void CLagCompensationManager::FrameUpdatePostEntityThink()
 {
+/*#ifdef HL2COOP
+	if ( m_bNeedsAIUpdate )
+		UpdateAIIndexes(); // only bother if we haven't had one yet
+	else // setting this true here ensures that the update happens at the start of the next frame
+		m_bNeedsAIUpdate = true;
+#endif*/
 	if ( (gpGlobals->maxClients <= 1) || !sv_unlag.GetBool() )
 	{
 		ClearHistory();
@@ -236,6 +216,48 @@ void CLagCompensationManager::FrameUpdatePostEntityThink()
 		RecordDataIntoTrack( pEntity, &ld->m_LagRecords, true );
 	}
 }
+
+/*#ifdef HL2COOP
+void CLagCompensationManager::UpdateAIIndexes()
+{
+	CAI_BaseNPC **ppAIs = g_AI_Manager.AccessAIs();
+	int nAIs = g_AI_Manager.NumAIs();
+
+	for ( int i = 0; i < nAIs; i++ )
+	{
+		CAI_BaseNPC *pNPC = ppAIs[i];
+		if ( pNPC && pNPC->GetAIIndex() != i ) // index of NPC has changed
+		{// move their data to their new index, probably wanting to delete the old track record
+			int oldIndex = pNPC->GetAIIndex();
+			int newIndex = i;
+
+			//Msg("Lag compensation record adjusting, moving from index %i to %i\n",oldIndex,newIndex);
+
+			CUtlFixedLinkedList< LagRecord > *track = &m_EntityTrack[ oldIndex ];
+			CUtlFixedLinkedList< LagRecord > *oldTrack = &m_EntityTrack[ newIndex ];
+
+			m_EntityTrack[oldIndex] = *oldTrack;
+			m_EntityTrack[newIndex] = *track;
+			if ( oldTrack->Count() > 0 ) // there's data in the auld yin, probably from someone newly dead,
+			{// but if not we'll swap them round so that the old one can then fix their AI index
+				//Msg("Index %i already contains data!\n",newIndex);
+				for ( int j=0; j<nAIs; j++ )
+				{
+					CAI_BaseNPC *pConflictingNPC = ppAIs[j];
+					if ( pConflictingNPC && pConflictingNPC->GetAIIndex() == newIndex )
+					{// found the conflicting NPC, swap them into the old index
+						pConflictingNPC->SetAIIndex(oldIndex); // presumably they'll fix themselves further down the loop
+						Warning("Lag compensation adjusting entity index, swapping with an existing entity! (%i & %i)\n",oldIndex,newIndex);
+						break;
+					}
+				}
+			}
+
+			pNPC->SetAIIndex(newIndex);
+		}
+	}
+}
+#endif*/
 
 //-----------------------------------------------------------------------------
 // Purpose: Called during gamemovment weapon firing to set up/restore after lag compensation around the bullet traces
@@ -826,6 +848,7 @@ void CLagCompensationManager::RecordDataIntoTrack( CBaseEntity *entity, LagRecor
 		record.m_masterCycle = pAnimating->GetCycle();
 	}
 }
+
 void CLagCompensationManager::RestoreEntityFromRecords( CBaseEntity *entity, LagRecord *restore, LagRecord *change, bool wantsAnims )
 {
 	bool restoreSimulationTime = false;

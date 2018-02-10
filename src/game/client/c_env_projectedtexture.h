@@ -78,6 +78,19 @@ private:
 #ifdef UBERLIGHT
 	FlashlightState_t	m_FlashlightState;
 	UberlightState_t	m_UberlightState;
+
+	//bool m_bUberlightEnabled;
+	float m_fNearEdge;
+	float m_fFarEdge;
+	float m_fCutOn;
+	float m_fCutOff;
+	float m_fShearx;
+	float m_fSheary;
+	float m_fWidth;
+	float m_fWedge;
+	float m_fHeight;
+	float m_fHedge;
+	float m_fRoundness;
 	//Vector m_vecRenderBoundsMin, m_vecRenderBoundsMax;
 #endif
 

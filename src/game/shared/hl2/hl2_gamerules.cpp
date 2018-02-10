@@ -1430,11 +1430,20 @@ CHalfLife2::~CHalfLife2()
 		if( pVictim->MyNPCPointer()->IsPlayerAlly() )
 		{
 			// A physics object has struck a player ally. Don't allow damage if it
+#ifdef HL2COOP
+			// came from any player's physcannon. 
+			for (int i = 1; i <= gpGlobals->maxClients; i++ )
+  			{
+				CBasePlayer *pPlayer = UTIL_PlayerByIndex( i );
+				if ( !pPlayer )
+					continue;
+#else
 			// came from the player's physcannon. 
 			CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
 
 			if( pPlayer )
 			{
+#endif
 				CBaseEntity *pWeapon = pPlayer->HasNamedPlayerItem("weapon_physcannon");
 
 				if( pWeapon )

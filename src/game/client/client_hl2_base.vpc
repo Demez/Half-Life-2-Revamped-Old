@@ -23,7 +23,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE;.\hl2;.\hl2\elements;$SRCDIR\game\shared\hl2;.\hl2\vgui;$SRCDIR\game\client\hl2\gameui;..\statemachine;"
-		$PreprocessorDefinitions		"$BASE;HL2_CLIENT_DLL;GAMEUI_EMBEDDED;GAMEUI_EXPORTS;HL2_EPISODIC;REVAMPED_CLIENT;UBERLIGHT;HL2COOP"
+		$PreprocessorDefinitions		"$BASE;HL2_CLIENT_DLL;GAMEUI_EMBEDDED;GAMEUI_EXPORTS;HL2_EPISODIC;REVAMPED_CLIENT;UBERLIGHT"
 	}
 }
 

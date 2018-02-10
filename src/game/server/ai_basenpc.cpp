@@ -251,16 +251,16 @@ int CAI_Manager::NumAIs()
 }
 
 //-------------------------------------
-#ifdef HL2COOP
+/*#ifdef HL2COOP
 int CAI_Manager::AddAI( CAI_BaseNPC *pAI )
-#else
+#else*/
 void CAI_Manager::AddAI( CAI_BaseNPC *pAI )
-#endif
+//#endif
 {
 	m_AIs.AddToTail( pAI );
-#ifdef HL2COOP
+/*#ifdef HL2COOP
 	return NumAIs() - 1; // return the index it was added to
-#endif
+#endif*/
 }
 
 //-------------------------------------
@@ -11607,12 +11607,12 @@ CAI_BaseNPC::CAI_BaseNPC(void)
 	m_interuptSchedule			= NULL;
 	m_nDebugPauseIndex			= 0;
 
-#ifdef HL2COOP
+/*#ifdef HL2COOP
 	SetAIIndex( g_AI_Manager.AddAI( this ) );
 	lagcompensation->RemoveNpcData( GetAIIndex() ); // make sure we're not inheriting anyone else's data
-#else
+#else*/
 	g_AI_Manager.AddAI( this );
-#endif
+//#endif
 	
 	if ( g_AI_Manager.NumAIs() == 1 )
 	{
@@ -11639,10 +11639,10 @@ CAI_BaseNPC::~CAI_BaseNPC(void)
 {
 	g_AI_Manager.RemoveAI( this );
 
-#ifdef HL2COOP
+/*#ifdef HL2COOP
 	// this should stop a crash occuring when our death immediately creates a new NPC(eg headcrab from zombie)
 	lagcompensation->RemoveNpcData(GetAIIndex());
-#endif
+#endif*/
 
 	delete m_pLockedBestSound;
 

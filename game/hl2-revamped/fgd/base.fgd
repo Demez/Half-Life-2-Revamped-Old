@@ -6575,8 +6575,8 @@
 	input BrightnessScale(float)	: "Set BrightnessScale"
 	
 	//input EnableVolumetrics(void)		: "Enable Volumetrics"
-	//input EnableUberLight(void)		: "Enable Uberlight"
-	//input DisableUberLight(void)		: "Disable Uberlight"
+	input EnableUberLight(void)		: "Enable Uberlight"
+	input DisableUberLight(void)		: "Disable Uberlight"
 	
 	//volumetricslod(Choices) : "Volumetrics LOD" : 1 : "Enable LOD for Volumetrics" =
 	//[

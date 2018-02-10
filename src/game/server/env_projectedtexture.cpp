@@ -36,7 +36,7 @@ BEGIN_DATADESC( CEnvProjectedTexture )
 	DEFINE_KEYFIELD( m_flRotation, FIELD_FLOAT, "projection_rotation" ),
 
 #ifdef UBERLIGHT
-	//DEFINE_FIELD( m_bUberlight, FIELD_BOOLEAN ),
+	DEFINE_FIELD( m_bUberlight, FIELD_BOOLEAN ),
 	DEFINE_KEYFIELD( m_fNearEdge, FIELD_FLOAT, "uberlight_near" ),
 	DEFINE_KEYFIELD( m_fFarEdge, FIELD_FLOAT, "uberlight_far" ),
 	DEFINE_KEYFIELD( m_fCutOn, FIELD_FLOAT, "uberlight_cuton" ),
@@ -318,7 +318,7 @@ int CEnvProjectedTexture::UpdateTransmitState()
 	return SetTransmitState( FL_EDICT_ALWAYS );
 }
 
-/*#ifdef UBERLIGHT
+#ifdef UBERLIGHT
 void CEnvProjectedTexture::InputEnableUberLight(inputdata_t &inputdata)
 {
 	m_bUberlight = true;
@@ -328,7 +328,7 @@ void CEnvProjectedTexture::InputDisableUberLight(inputdata_t &inputdata)
 {
 	m_bUberlight = false;
 }
-#endif*/
+#endif
 
 // Console command for creating env_projectedtexture entities
 void CC_CreateFlashlight( const CCommand &args )

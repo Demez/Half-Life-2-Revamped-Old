@@ -41,10 +41,10 @@ public:
 	void InputSetLightColor( inputdata_t &inputdata );
 	void InputSetSpotlightTexture( inputdata_t &inputdata );
 	void InputSetAmbient( inputdata_t &inputdata );
-/*#ifdef UBERLIGHT
+#ifdef UBERLIGHT
 	void InputEnableUberLight(inputdata_t &inputdata);
 	void InputDisableUberLight(inputdata_t &inputdata);
-#endif*/
+#endif
 
 	void InitialThink( void );
 

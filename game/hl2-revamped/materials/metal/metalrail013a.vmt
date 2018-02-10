@@ -1,9 +1,0 @@
-"LightmappedGeneric"
-{
-	"$basetexture" "Metal/metalrail013a"
-	"%compilepassbullets" 1
-	"$surfaceprop" "metalgrate"
-	"%keywords" "c17industrial"
-	"$alphatest" 1
-}
-

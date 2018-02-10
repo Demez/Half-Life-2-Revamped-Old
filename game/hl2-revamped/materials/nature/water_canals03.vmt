@@ -1,17 +1,5 @@
 "Water"
 {
-	"Water_DX60"
-	{
-		"$fallbackmaterial" "nature/water_canals03_dx70"
-	}
-	"Water_DX80"
-	{
-		"$refractamount" ".13"
-	}
-	"Water_DX81"
-	{
-		"$refractamount" ".13"
-	}
 	"$abovewater" 1
 	"%compilewater" 1
 	"$forceexpensive" 1

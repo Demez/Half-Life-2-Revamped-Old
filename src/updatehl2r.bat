@@ -1,2 +1,2 @@
-devtools\bin\vpc.exe /hl2r +game +shaders /2013
+devtools\bin\vpc.exe /hl2r +game /2013
 pause

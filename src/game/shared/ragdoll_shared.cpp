@@ -789,7 +789,9 @@ bool ShouldRemoveThisRagdoll( CBaseAnimating *pRagdoll )
 	}
 
 #else
+#ifndef HL2COOP
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+#endif
 
 	if( !UTIL_FindClientInPVS( pRagdoll->edict() ) )
 	{
@@ -798,6 +800,7 @@ bool ShouldRemoveThisRagdoll( CBaseAnimating *pRagdoll )
 
 		return true;
 	}
+#ifndef HL2COOP
 	else if( !pPlayer->FInViewCone( pRagdoll ) )
 	{
 		if ( g_debug_ragdoll_removal.GetBool() )
@@ -805,6 +808,7 @@ bool ShouldRemoveThisRagdoll( CBaseAnimating *pRagdoll )
 		
 		return true;
 	}
+#endif
 
 #endif
 
@@ -818,6 +822,9 @@ bool ShouldRemoveThisRagdoll( CBaseAnimating *pRagdoll )
 // Cull stale ragdolls. There is an ifdef here: one version for episodic, 
 // one for everything else.
 //-----------------------------------------------------------------------------
+
+//Demez: oh jesus chirst
+#ifndef HL2COOP
 #if HL2_EPISODIC
 
 void CRagdollLRURetirement::Update( float frametime ) // EPISODIC VERSION
@@ -1066,8 +1073,116 @@ void CRagdollLRURetirement::Update( float frametime ) // Non-episodic version
 		m_LRU.Remove(i);
 	}
 }
-
 #endif // HL2_EPISODIC
+#else
+void CRagdollLRURetirement::Update( float frametime ) // Non-episodic version
+{
+	VPROF( "CRagdollLRURetirement::Update" );
+	// Compress out dead items
+	int i, next;
+
+	int iMaxRagdollCount = m_iMaxRagdolls;
+
+	if ( iMaxRagdollCount == -1 )
+	{
+		iMaxRagdollCount = g_ragdoll_maxcount.GetInt();
+	}
+
+	// fade them all for the low violence version
+	if ( g_RagdollLVManager.IsLowViolence() )
+	{
+		iMaxRagdollCount = 0;
+	}
+	m_iRagdollCount = 0;
+	m_iSimulatedRagdollCount = 0;
+
+	// remove ragdolls with a forced retire time
+	for ( i = m_LRU.Head(); i < m_LRU.InvalidIndex(); i = next )
+	{
+		next = m_LRU.Next(i);
+
+		CBaseAnimating *pRagdoll = m_LRU[i].Get();
+
+		//Just ignore it until we're done burning/dissolving.
+		if ( pRagdoll && pRagdoll->GetEffectEntity() )
+			continue;
+
+		// ignore if it's not time to force retire this ragdoll
+		if ( m_LRU[i].GetForcedRetireTime() == 0.0f || gpGlobals->curtime < m_LRU[i].GetForcedRetireTime() )
+			continue;
+
+		//Msg(" Removing ragdoll %s due to forced retire time of %f (now = %f)\n", pRagdoll->GetModelName(), m_LRU[i].GetForcedRetireTime(), gpGlobals->curtime );
+
+#ifdef CLIENT_DLL
+		pRagdoll->SUB_Remove();
+#else
+		pRagdoll->SUB_StartFadeOut( 0 );
+#endif
+		m_LRU.Remove(i);
+	}
+
+	for ( i = m_LRU.Head(); i < m_LRU.InvalidIndex(); i = next )
+	{
+		next = m_LRU.Next(i);
+		CBaseAnimating *pRagdoll = m_LRU[i].Get();
+		if ( pRagdoll )
+		{
+			m_iRagdollCount++;
+			IPhysicsObject *pObject = pRagdoll->VPhysicsGetObject();
+			if (pObject && !pObject->IsAsleep())
+			{
+				m_iSimulatedRagdollCount++;
+			}
+			if ( m_LRU.Count() > iMaxRagdollCount )
+			{
+				//Found one, we're done.
+				if ( ShouldRemoveThisRagdoll( pRagdoll ) == true )
+				{
+#ifdef CLIENT_DLL
+					pRagdoll->SUB_Remove();
+#else
+					pRagdoll->SUB_StartFadeOut( 0 );
+#endif
+
+					m_LRU.Remove(i);
+					return;
+				}
+			}
+		}
+		else 
+		{
+			m_LRU.Remove(i);
+		}
+	}
+
+
+	//////////////////////////////
+	///   ORIGINAL ALGORITHM   ///
+	//////////////////////////////
+	// not episodic -- this is the original mechanism
+
+	for ( i = m_LRU.Head(); i < m_LRU.InvalidIndex(); i = next )
+	{
+		if ( m_LRU.Count() <=  iMaxRagdollCount )
+			break;
+
+		next = m_LRU.Next(i);
+
+		CBaseAnimating *pRagdoll = m_LRU[i].Get();
+
+		//Just ignore it until we're done burning/dissolving.
+		if ( pRagdoll && pRagdoll->GetEffectEntity() )
+			continue;
+
+#ifdef CLIENT_DLL
+		pRagdoll->SUB_Remove();
+#else
+		pRagdoll->SUB_StartFadeOut( 0 );
+#endif
+		m_LRU.Remove(i);
+	}
+}
+#endif
 
 //This is pretty hacky, it's only called on the server so it just calls the update method.
 void CRagdollLRURetirement::FrameUpdatePostEntityThink( void )

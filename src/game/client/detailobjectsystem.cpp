@@ -49,7 +49,7 @@ ConVar cl_detail_avoid_force( "cl_detail_avoid_force", "0", FCVAR_ARCHIVE, "forc
 ConVar cl_detail_avoid_recover_speed( "cl_detail_avoid_recover_speed", "0", FCVAR_ARCHIVE, "how fast to recover position after avoiding players" );
 #endif
 
-ConVar r_FlashlightDetailProps( "r_FlashlightDetailProps", "1", 0, "Enable a flashlight drawing pass on detail props. 0 = off, 1 = single pass, 2 = multipass (multipass is PC ONLY)" );
+ConVar r_FlashlightDetailProps( "r_FlashlightDetailProps", "2", 0, "Enable a flashlight drawing pass on detail props. 0 = off, 1 = single pass, 2 = multipass (multipass is PC ONLY)" );
 ConVar r_ThreadedDetailProps( "r_threadeddetailprops", "1", 0, "enable threading of detail prop drawing" );
 
 enum DetailPropFlashlightMode_t
@@ -656,7 +656,7 @@ void CDetailModel::GetRenderBoundsWorldspace( Vector& mins, Vector& maxs )
 
 bool CDetailModel::ShouldReceiveProjectedTextures( int flags )
 {
-	return false;
+	return true;
 }
 
 int CDetailModel::GetRenderFlags( void )

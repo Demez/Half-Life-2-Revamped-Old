@@ -571,8 +571,23 @@ CBasePlayer *UTIL_GetLocalPlayer( void )
 
 		return NULL;
 	}*/
+#ifdef HL2COOP
+	// first try getting the host, failing that, get *ANY* player
+	CBasePlayer *pHost = UTIL_GetListenServerHost();
+	if ( pHost )
+		return pHost;
 
+	for (int i = 1; i <= gpGlobals->maxClients; i++ )
+	{
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex( i );
+		if ( pPlayer )
+			return pPlayer;
+	}
+
+	return NULL;
+#else
 	return UTIL_PlayerByIndex( 1 );
+#endif
 }
 
 #ifdef HL2COOP
@@ -629,8 +644,10 @@ CBasePlayer *UTIL_GetListenServerHost( void )
 	// no "local player" if this is a dedicated server or a single player game
 	if (engine->IsDedicatedServer())
 	{
+#ifndef HL2COOP
 		Assert( !"UTIL_GetListenServerHost" );
 		Warning( "UTIL_GetListenServerHost() called from a dedicated server or single-player game.\n" );
+#endif
 		return NULL;
 	}
 

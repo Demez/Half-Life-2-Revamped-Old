@@ -964,7 +964,12 @@ void CBaseCombatWeapon::SetActivity( Activity act, float duration )
 { 
 	//Adrian: Oh man...
 #if !defined( CLIENT_DLL ) && (defined( HL2MP ) || defined( PORTAL ) || defined( SDK_DLL ) )
+#ifdef HL2COOP
+	if ( GetOwner()->IsPlayer() )
+		SetModel( GetWorldModel() );
+#else
 	SetModel( GetWorldModel() );
+#endif
 #endif
 	
 	int sequence = SelectWeightedSequence( act ); 
@@ -975,7 +980,12 @@ void CBaseCombatWeapon::SetActivity( Activity act, float duration )
 
 	//Adrian: Oh man again...
 #if !defined( CLIENT_DLL ) && (defined( HL2MP ) || defined( PORTAL ) || defined( SDK_DLL ) )
+#ifdef HL2COOP
+	if ( GetOwner()->IsPlayer() )
+		SetModel( GetViewModel() );
+#else
 	SetModel( GetViewModel() );
+#endif
 #endif
 
 	if ( sequence != ACTIVITY_NOT_AVAILABLE )

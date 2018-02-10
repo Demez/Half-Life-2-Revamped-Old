@@ -1613,7 +1613,12 @@ void CChangeLevel::ChangeLevelNow( CBaseEntity *pActivator )
 
 	m_bTouched = true;
 
-	CBaseEntity *pPlayer = (pActivator && pActivator->IsPlayer()) ? pActivator : UTIL_GetLocalPlayer();
+	CBaseEntity *pPlayer = (pActivator && pActivator->IsPlayer()) ? pActivator :
+#ifdef HL2COOP
+		UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
+		UTIL_GetLocalPlayer();
+#endif
 
 	int transitionState = InTransitionVolume(pPlayer, m_szLandmarkName);
 	if ( transitionState == TRANSITION_VOLUME_SCREENED_OUT )
@@ -2656,7 +2661,11 @@ void CTriggerSave::Touch( CBaseEntity *pOther )
 		if ( g_ServerGameDLL.m_fAutoSaveDangerousTime != 0.0f && g_ServerGameDLL.m_fAutoSaveDangerousTime >= gpGlobals->curtime )
 		{
 			// A previous dangerous auto save was waiting to become safe
+#ifdef HL2COOP
+			CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 			CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
+#endif
 
 			if ( pPlayer->GetDeathTime() == 0.0f || pPlayer->GetDeathTime() > gpGlobals->curtime )
 			{
@@ -2676,7 +2685,11 @@ void CTriggerSave::Touch( CBaseEntity *pOther )
 	if ( m_fDangerousTimer != 0.0f )
 	{
 		// There's a dangerous timer. Save if we have enough hitpoints.
+#ifdef HL2COOP
+		CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
+#endif
 
 		if (pPlayer && pPlayer->GetHealth() >= m_minHitPoints)
 		{
@@ -3031,7 +3044,11 @@ void CTriggerCamera::Enable( void )
 
 	if ( !m_hPlayer || !m_hPlayer->IsPlayer() )
 	{
+#ifdef HL2COOP
+		m_hPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		m_hPlayer = UTIL_GetLocalPlayer();
+#endif
 	}
 
 	if ( !m_hPlayer )
@@ -3574,8 +3591,10 @@ static void PlayCDTrack( int iTrack )
 	// manually find the single player. 
 	pClient = INDEXENT( 1 );
 
+#ifndef HL2COOP
 	Assert(gpGlobals->maxClients == 1);
-	
+#endif
+
 	// Can't play if the client is not connected!
 	if ( !pClient )
 		return;

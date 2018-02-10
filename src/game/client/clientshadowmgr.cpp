@@ -291,6 +291,9 @@ private:
 	unsigned int m_CurrentFrame;
 };
 
+/*#ifdef UBERLIGHT
+IShaderExtension* g_pShaderExtension;
+#endif*/
 //-----------------------------------------------------------------------------
 // Allocate/deallocate the texture page
 //-----------------------------------------------------------------------------
@@ -829,6 +832,9 @@ public:
 	// Create flashlight (projected texture light source)
 	virtual ClientShadowHandle_t CreateFlashlight( const FlashlightState_t &lightState );
 	virtual void UpdateFlashlightState( ClientShadowHandle_t shadowHandle, const FlashlightState_t &lightState );
+/*#ifdef UBERLIGHT
+	virtual void UpdateUberlightState( FlashlightState_t& flashlightState, const UberlightState_t& uberlightState );
+#endif*/
 	virtual void DestroyFlashlight( ClientShadowHandle_t shadowHandle );
 
 	// Create simple projected texture.  it is not a light or a shadow, but this system does most of the work already for it
@@ -2488,6 +2494,15 @@ void CClientShadowMgr::UpdateFlashlightState( ClientShadowHandle_t shadowHandle,
 	shadowmgr->UpdateFlashlightState( m_Shadows[shadowHandle].m_ShadowHandle, flashlightState );
 }
 
+/*void CClientShadowMgr::UpdateUberlightState( FlashlightState_t& flashlightState, const UberlightState_t& uberlightState )
+{
+	VPROF_BUDGET( "CClientShadowMgr::UpdateUberlightState", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
+
+	if ( !g_pShaderExtension )
+		return;
+
+	g_pShaderExtension->SetUberlightParamsForFlashlightState( flashlightState, uberlightState );
+}*/
 
 void CClientShadowMgr::DestroyFlashlight( ClientShadowHandle_t shadowHandle )
 {

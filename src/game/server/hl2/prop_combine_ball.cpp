@@ -723,7 +723,8 @@ void CPropCombineBall::WhizSoundThink()
 			float flDist = CalcDistanceToLineSegment( pPlayer->GetAbsOrigin(), vecPosition, vecEndPoint );
 			if ( flDist < 200.0f )
 			{
-			CPASAttenuationFilter filter( vecPosition, ATTN_NORM );
+				CPASAttenuationFilter filter(vecPosition, ATTN_NORM);
+			//} //idk
 
 			EmitSound_t ep;
 			ep.m_nChannel = CHAN_STATIC;
@@ -741,7 +742,8 @@ void CPropCombineBall::WhizSoundThink()
 			EmitSound( filter, entindex(), ep );
 
 			SetContextThink( &CPropCombineBall::WhizSoundThink, gpGlobals->curtime + 0.5f, s_pWhizThinkContext );
-			return;			
+			return;	
+			} 
 		}		
 	}
 #else
@@ -840,7 +842,6 @@ void CPropCombineBall::WhizSoundThink()
 #endif
 	SetContextThink( &CPropCombineBall::WhizSoundThink, gpGlobals->curtime + 2.0f * TICK_INTERVAL, s_pWhizThinkContext );
 }
-
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------

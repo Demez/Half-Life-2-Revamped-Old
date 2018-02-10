@@ -119,6 +119,9 @@ public:
 		m_bNeedToRestore = false;
 		m_weaponRange = 0.0f;
 		m_isCurrentlyDoingCompensation = false;
+/*#ifdef HL2COOP
+		m_bNeedsAIUpdate = true;
+#endif*/
 	}
 
 	// IServerSystem stuff
@@ -141,6 +144,14 @@ public:
 	void			StartLagCompensation( CBasePlayer *player, LagCompensationType lagCompensationType, const Vector& weaponPos = vec3_origin, const QAngle &weaponAngles = vec3_angle, float weaponRange = 0.0f );
 	void			FinishLagCompensation( CBasePlayer *player );
 
+/*#ifdef HL2COOP
+	void RemoveNpcData(int index) // clear specific NPC's history
+	{
+	LagRecordList *track = &m_EntityTrack; // uh why is this not working
+ 		track->Purge();
+	}
+#endif*/
+
 	// Mappers can flag certain additional entities to lag compensate, this handles them
 	virtual void	AddAdditionalEntity( CBaseEntity *pEntity );
 	virtual void	RemoveAdditionalEntity( CBaseEntity *pEntity );
@@ -150,6 +161,7 @@ public:
 	void RestoreEntityFromRecords( CBaseEntity *entity, LagRecord *restore, LagRecord *change, bool wantsAnims );
 private:
 
+	//void			BacktrackEntity( CAI_BaseNPC *entity, float flTargetTime ); // in source2013 ai fixes
 
 	void ClearHistory()
 	{
@@ -159,6 +171,10 @@ private:
 		}
 		m_CompensatedEntities.Purge();
 	}
+
+/*#ifdef HL2COOP
+	void UpdateAIIndexes();
+#endif*/
 
 	struct EntityLagData
 	{
@@ -170,11 +186,19 @@ private:
 		bool			m_bRestoreEntity;			   
 		// keep a list of lag records for each player
 		LagRecordList	m_LagRecords;				   
+#ifdef HL2COOP
+		LagRecordList	m_EntityTrack;
+#endif
 
 		// Entity data before we moved him back
 		LagRecord		m_RestoreData;
 		// Entity data where we moved him back
 		LagRecord		m_ChangeData;
+
+/*#ifdef HL2COOP
+		LagRecord				m_EntityRestoreData[ MAX_AIS ];
+		LagRecord				m_EntityChangeData[ MAX_AIS ];
+#endif*/
 	};
 
 	CUtlMap< EHANDLE, EntityLagData * > m_CompensatedEntities;
@@ -182,6 +206,10 @@ private:
 	// True if at least one entity was changed
 	bool					m_bNeedToRestore;
 	CBasePlayer				*m_pCurrentPlayer;	// The player we are doing lag compensation for
+
+/*#ifdef HL2COOP
+	bool					m_bNeedsAIUpdate;
+#endif*/
 
 	LagCompensationType		m_lagCompensationType;
 	Vector					m_weaponPos;

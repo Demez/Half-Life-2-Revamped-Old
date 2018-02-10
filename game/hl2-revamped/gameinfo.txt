@@ -21,6 +21,10 @@
 			"Game"	"C:\Program Files (x86)\Steam\steamapps\common\Half-Life 2/ep2"			// This is temporary workaround for ep2 maps mounting
 			"Game"	"C:\Program Files (x86)\Steam\steamapps\common\Half-Life 2/episodic"	// This is temporary workaround for ep1 maps mounting
 			
+			// if i use reactive drop for the few engine fixes
+			"Game"	"reactivedrop"						// Reactive Drop Folder
+			
+			// or if i use regular swarm
 			"Game"	"swarm"						// Alien Swarm Folder
 			"Game"	"swarm_base"						// Alien Swarm Folder
 			

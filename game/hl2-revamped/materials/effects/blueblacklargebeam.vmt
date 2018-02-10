@@ -1,8 +1,0 @@
-"Sprite"
-{
-	"$basetexture" "effects/blueblacklargebeam"
-	"$spriteorientation" "parallel_upright"
-	"$spriteorigin" "[ 0.50 0.50 ]"
-	"$spriterendermode" 5
-}
-

@@ -48,7 +48,7 @@ using namespace BaseModUI;
 
 //=============================================================================
 static ConVar connect_lobby( "connect_lobby", "", FCVAR_HIDDEN, "Sets the lobby ID to connect to on start." );
-static ConVar ui_old_options_menu( "ui_old_options_menu", "0", FCVAR_CHEAT, "Brings up the old tabbed options dialog from Keyboard/Mouse when set to 1." ); //FCVAR_HIDDEN
+static ConVar ui_old_options_menu( "ui_old_options_menu", "0", 0, "Brings up the old tabbed options dialog from Keyboard/Mouse when set to 1." ); //FCVAR_HIDDEN
 static ConVar ui_play_online_browser( "ui_play_online_browser",
 #if defined( _DEMO ) && !defined( _X360 )
 									 "0",

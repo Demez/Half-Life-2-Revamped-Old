@@ -31,8 +31,9 @@
 	"$fogstart" 100.00
 	"$fogend" 500.00
 
-	"$scroll1" "[.01 .01 .05]"
-	"$scroll2" "[-.025 .025 .075]"
+	// replace with flowmaps since flashlight doesnt like this
+	//"$scroll1" "[.01 .01 .05]"
+	//"$scroll2" "[-.025 .025 .075]"
 
 	"Proxies"
 	{

@@ -821,7 +821,11 @@ float CGameRules::GetAmmoDamage( CBaseEntity *pAttacker, CBaseEntity *pVictim, i
 	float flDamage = 0;
 	CAmmoDef *pAmmoDef = GetAmmoDef();
 
-	if ( pAttacker->IsPlayer() )
+	if ( pAttacker
+#ifdef HL2COOP
+		 && pAttacker
+#endif
+		->IsPlayer() )
 	{
 		flDamage = pAmmoDef->PlrDamage( nAmmoType );
 	}

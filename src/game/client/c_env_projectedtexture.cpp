@@ -22,6 +22,10 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+#ifdef UBERLIGHT
+static ConVar r_flashlight_uberlight_enable("r_flashlight_uberlight_enable", "0");
+#endif
+
 #ifdef VOLUMETRICS
 static ConVar volumetrics_fade_range("volumetrics_fade_range", "128.0", FCVAR_CHEAT);
 ConVar volumetrics_enabled( "volumetrics_enabled", "1", FCVAR_ARCHIVE );able
@@ -165,11 +169,13 @@ void C_EnvProjectedTexture::OnDataChanged( DataUpdateType_t updateType )
 {
 	if ( updateType == DATA_UPDATE_CREATED )
 	{
-#ifdef UBERLIGHT
-		m_SpotlightTexture.Init( m_FlashlightState.m_bUberlight ? "white" : m_SpotlightTextureName, TEXTURE_GROUP_OTHER, true );
-#else
-		m_SpotlightTexture.Init( m_SpotlightTextureName, TEXTURE_GROUP_OTHER, true );
-#endif
+		// TODO: allow this to work as a normal projected texture or an uberlight
+		m_SpotlightTexture.Init( 
+/*#ifdef UBERLIGHT
+		m_FlashlightState.m_bUberlight ? "white",	
+#endif*/
+		m_SpotlightTextureName, TEXTURE_GROUP_OTHER, true );
+
 	}
 
 	m_bForceUpdate = true;
@@ -177,7 +183,7 @@ void C_EnvProjectedTexture::OnDataChanged( DataUpdateType_t updateType )
 	BaseClass::OnDataChanged( updateType );
 }
 
-static ConVar asw_perf_wtf("asw_perf_wtf", "0", FCVAR_DEVELOPMENTONLY, "Disable updating of projected shadow textures from UpdateLight" );
+static ConVar asw_perf_wtf("asw_perf_wtf", "0", 0, "Disable updating of projected shadow textures from UpdateLight" ); //FCVAR_DEVELOPMENTONLY
 void C_EnvProjectedTexture::UpdateLight( void )
 {
 	VPROF("C_EnvProjectedTexture::UpdateLight");
@@ -382,10 +388,25 @@ void C_EnvProjectedTexture::UpdateLight( void )
 		state.m_flProjectionSize = m_flProjectionSize;
 		state.m_flProjectionRotation = m_flRotation;
 
+#ifdef UBERLIGHT
+		state.m_bUberlight = r_flashlight_uberlight_enable.GetBool(); //m_bUberlightEnabled;
+		m_UberlightState.m_fNearEdge = m_fNearEdge;
+		m_UberlightState.m_fFarEdge = m_fFarEdge;
+		m_UberlightState.m_fCutOn = m_fCutOn;
+		m_UberlightState.m_fCutOff = m_fCutOff;
+		m_UberlightState.m_fShearx = m_fShearx;
+		m_UberlightState.m_fSheary = m_fSheary;
+		m_UberlightState.m_fWidth = m_fWidth;
+		m_UberlightState.m_fWedge = m_fWedge;
+		m_UberlightState.m_fHeight = m_fHeight;
+		m_UberlightState.m_fHedge = m_fHedge;
+		m_UberlightState.m_fRoundness = m_fRoundness;
+#endif
+
 		// Make it able to use this somehow
 		// Right now it just breaks
-		//state.m_bUberlight = m_bUberlight;
-		state.m_bUberlight = false;
+		//state.m_bUberlight = m_bEnabled;
+		//state.m_bUberlight = r_flashlight_uberlight_enable.GetBool();
 		state.m_bVolumetric = true;
 
 		state.m_nShadowQuality = m_nShadowQuality; // Allow entity to affect shadow quality
@@ -427,7 +448,12 @@ void C_EnvProjectedTexture::UpdateLight( void )
 			}
 			else
 			{
+/*#ifdef UBERLIGHT
+				g_pClientShadowMgr->UpdateUberlightState( m_FlashlightState, m_UberlightState );
+				g_pClientShadowMgr->UpdateFlashlightState( m_LightHandle, m_FlashlightState );
+#else*/
 				g_pClientShadowMgr->UpdateFlashlightState( m_LightHandle, state );
+//#endif
 			}
 			m_bForceUpdate = false;
 		}

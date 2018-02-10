@@ -517,19 +517,23 @@ CMultiplayRules::CMultiplayRules()
 	//=========================================================
 	float CMultiplayRules::FlPlayerFallDamage( CBasePlayer *pPlayer )
 	{
+#ifndef HL2COOP
 		int iFallDamage = (int)falldamage.GetFloat();
 
 		switch ( iFallDamage )
 		{
 		case 1://progressive
 			pPlayer->m_Local.m_flFallVelocity -= PLAYER_MAX_SAFE_FALL_SPEED;
+#endif
 			return pPlayer->m_Local.m_flFallVelocity * DAMAGE_FOR_FALL_SPEED;
+#ifndef HL2COOP	
 			break;
 		default:
 		case 0:// fixed
 			return 10;
 			break;
 		}
+#endif
 	} 
 
 	//=========================================================
