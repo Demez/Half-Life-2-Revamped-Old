@@ -1123,6 +1123,7 @@ void CAI_NetworkManager::ThreadedInit( void )
 			// kick off a threaded map build. first, temporarily reset the global ai network
 			// pointer as a hack so all ais think it doesn't exist yet
 			m_ThreadedBuild.pBuildingNetwork = GetNetwork();
+// DEMEZ LOOK AT THIS
 #pragma message("Warning: find some way to prevent AI from using network before it's ready, but allowing the TestHull to still instantiate.")
 			// g_pBigAINet = m_pNetwork = NULL;
 			// // fire off a thread to build the map

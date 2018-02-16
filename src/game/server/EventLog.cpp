@@ -205,41 +205,23 @@ bool CEventLog::PrintPlayerEvent( IGameEvent *event )
 		}
 		if ( pPlayer == pAttacker && pPlayer )  
 		{  
+		
+			UTIL_LogPrintf( "\"%s<%i><%s><%s>\" committed suicide with \"%s\"\n",
+				pPlayer->GetPlayerName(),
+				userid,
+				pPlayer->GetNetworkIDString(),
+				team ? team->GetName() : "",
 #ifdef HL2MP
-			UTIL_LogPrintf("\"%s<%i><%s><%s>\" committed suicide with \"%s\"\n",
-				pPlayer->GetPlayerName(),
-				userid,
-				pPlayer->GetNetworkIDString(),
-				team ? team->GetName() : "",
 				weapon
-				);
 #else
-			UTIL_LogPrintf("\"%s<%i><%s><%s>\" committed suicide with \"%s\"\n",
-				pPlayer->GetPlayerName(),
-				userid,
-				pPlayer->GetNetworkIDString(),
-				team ? team->GetName() : "",
 				pAttacker->GetClassname()
-				);
 #endif
+				);
 		}
 		else if ( pAttacker )
 		{
 			CTeam *attackerTeam = pAttacker->GetTeam();
 
-#ifdef HL2MP
-			UTIL_LogPrintf("\"%s<%i><%s><%s>\" killed \"%s<%i><%s><%s>\" with \"%s\"\n",
-							pAttacker->GetPlayerName(),
-							attackerid,
-							pAttacker->GetNetworkIDString(),
-							attackerTeam ? attackerTeam->GetName() : "",
-							pPlayer->GetPlayerName(),
-							userid,
-							pPlayer->GetNetworkIDString(),
-							team ? team->GetName() : "",
-							weapon
-							);
-#else
 			UTIL_LogPrintf( "\"%s<%i><%s><%s>\" killed \"%s<%i><%s><%s>\"\n",  
 							pAttacker->GetPlayerName(),
 							attackerid,
@@ -248,9 +230,12 @@ bool CEventLog::PrintPlayerEvent( IGameEvent *event )
 							pPlayer->GetPlayerName(),
 							userid,
 							pPlayer->GetNetworkIDString(),
+#ifdef HL2MP
+				weapon
+#else
 							team ? team->GetName() : ""
-							);			
 #endif
+							);			
 		}
 		else
 		{  

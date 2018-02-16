@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include "cbase.h"
+#include "object_motion_blur_effect.h"
 
 class C_PropScalable : public C_BaseAnimating
 {
@@ -35,6 +36,8 @@ public:
 	float m_flCurrentScale[3];
 	bool  m_bRunningScale[3];
 	float m_flTargetScale[3];
+
+	CMotionBlurObject m_MotionBlurObject;
 
 private:
 
@@ -98,7 +101,10 @@ BEGIN_DATADESC( C_PropScalable )
 	DEFINE_AUTO_ARRAY( m_bRunningScale, FIELD_BOOLEAN ),
 END_DATADESC()
 
-C_PropScalable::C_PropScalable( void )
+extern ConVar mat_object_motion_blur_model_scale;
+
+C_PropScalable::C_PropScalable( void ):
+	m_MotionBlurObject( this, mat_object_motion_blur_model_scale.GetFloat() )
 {
 	m_flTargetScale[0] = 1.0f;
 	m_flTargetScale[1] = 1.0f;

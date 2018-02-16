@@ -39,10 +39,13 @@ END_DATADESC()
 
 #define CRANE_FOV	75
 
+extern ConVar mat_object_motion_blur_model_scale;
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-C_PropCrane::C_PropCrane( void )
+C_PropCrane::C_PropCrane( void ):
+	m_MotionBlurObject( this, mat_object_motion_blur_model_scale.GetFloat() )
 {
 	memset( &m_ViewSmoothingData, 0, sizeof( m_ViewSmoothingData ) );
 	m_ViewSmoothingData.pVehicle = this;

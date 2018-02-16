@@ -345,7 +345,6 @@ struct UberlightState_t
 {
 	UberlightState_t()
 	{
-		//m_bEnabled		= false; // added in
 		m_fNearEdge 	= 2.0f;
 		m_fFarEdge  	= 100.0f;
 		m_fCutOn    	= 10.0f;
@@ -358,7 +357,6 @@ struct UberlightState_t
 		m_fHedge		= 0.05f;
 		m_fRoundness	= 0.2f; //0.8f;
 	}
-	//bool m_bEnabled; // added in
 	float m_fNearEdge;
 	float m_fFarEdge;
 	float m_fCutOn;

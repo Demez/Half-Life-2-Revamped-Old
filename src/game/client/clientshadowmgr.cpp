@@ -115,7 +115,7 @@ static ConVar r_flashlightmodels( "r_flashlightmodels", "1" );
 static ConVar r_shadowrendertotexture( "r_shadowrendertotexture", "1" );
 static ConVar r_shadow_lightpos_lerptime( "r_shadow_lightpos_lerptime", "0.5" );
 static ConVar r_shadowfromworldlights_debug( "r_shadowfromworldlights_debug", "0", FCVAR_CHEAT );
-static ConVar r_shadowfromanyworldlight( "r_shadowfromanyworldlight", "0", FCVAR_CHEAT );
+static ConVar r_shadowfromanyworldlight( "r_shadowfromanyworldlight", "1", FCVAR_CHEAT );
 static ConVar r_shadow_shortenfactor( "r_shadow_shortenfactor", "2" , 0, "Makes shadows cast from local lights shorter" );
 
 static void HalfUpdateRateCallback( IConVar *var, const char *pOldValue, float flOldValue );
@@ -291,9 +291,6 @@ private:
 	unsigned int m_CurrentFrame;
 };
 
-/*#ifdef UBERLIGHT
-IShaderExtension* g_pShaderExtension;
-#endif*/
 //-----------------------------------------------------------------------------
 // Allocate/deallocate the texture page
 //-----------------------------------------------------------------------------
@@ -832,9 +829,6 @@ public:
 	// Create flashlight (projected texture light source)
 	virtual ClientShadowHandle_t CreateFlashlight( const FlashlightState_t &lightState );
 	virtual void UpdateFlashlightState( ClientShadowHandle_t shadowHandle, const FlashlightState_t &lightState );
-/*#ifdef UBERLIGHT
-	virtual void UpdateUberlightState( FlashlightState_t& flashlightState, const UberlightState_t& uberlightState );
-#endif*/
 	virtual void DestroyFlashlight( ClientShadowHandle_t shadowHandle );
 
 	// Create simple projected texture.  it is not a light or a shadow, but this system does most of the work already for it
@@ -1813,7 +1807,7 @@ void CClientShadowMgr::InitDeferredShadows()
 
 	if ( r_shadow_deferred_downsample.GetBool() )
 	{
-#if defined( _X360 )
+#if defined( _X360 ) || defined( DEFERRED_PC )
 		m_downSampledNormals.InitRenderTargetTexture( DEFERRED_SHADOW_BUFFER_WIDTH, DEFERRED_SHADOW_BUFFER_HEIGHT, RT_SIZE_OFFSCREEN, IMAGE_FORMAT_ARGB8888, MATERIAL_RT_DEPTH_SEPARATE, false, "_rt_DownsampledNormals" );
 		m_downSampledNormals.InitRenderTargetSurface( DEFERRED_SHADOW_BUFFER_WIDTH, DEFERRED_SHADOW_BUFFER_HEIGHT, IMAGE_FORMAT_ARGB8888, true );
 		m_downSampledDepth.InitRenderTargetTexture( DEFERRED_SHADOW_BUFFER_WIDTH, DEFERRED_SHADOW_BUFFER_HEIGHT, RT_SIZE_OFFSCREEN, IMAGE_FORMAT_D24FS8, MATERIAL_RT_DEPTH_NONE, false, "_rt_DownsampledDepth" );
@@ -6355,7 +6349,7 @@ void CClientShadowMgr::DrawDeferredShadows( const CViewSetup &view, int leafCoun
 	state.m_PassOp = SHADER_STENCILOP_KEEP;
 	state.m_FailOp = SHADER_STENCILOP_KEEP;
 	state.m_ZFailOp = SHADER_STENCILOP_KEEP;
-#if defined( _X360 )
+#if defined( _X360 ) || defined( DEFERRED_PC )
 	state.m_bHiStencilEnable = true;
 	state.m_bHiStencilWriteEnable = false;
 	state.m_HiStencilCompareFunc = SHADER_HI_STENCILFUNC_EQUAL;

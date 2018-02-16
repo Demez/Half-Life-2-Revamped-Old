@@ -35,10 +35,13 @@ IMPLEMENT_CLIENTCLASS_DT( C_PropCombineBall, DT_PropCombineBall, CPropCombineBal
 	RecvPropBool( RECVINFO( m_bLaunched ) ),
 END_RECV_TABLE()
 
+extern ConVar mat_object_motion_blur_model_scale;
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-C_PropCombineBall::C_PropCombineBall( void )
+C_PropCombineBall::C_PropCombineBall( void ):
+	m_MotionBlurObject( this, mat_object_motion_blur_model_scale.GetFloat() )
 {
 	m_pFlickerMaterial = NULL;
 	m_pBodyMaterial = NULL;

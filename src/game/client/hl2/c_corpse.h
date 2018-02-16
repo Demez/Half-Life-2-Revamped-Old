@@ -10,6 +10,8 @@
 #pragma once
 #endif
 
+#include "object_motion_blur_effect.h"
+
 class C_Corpse : public C_BaseAnimating
 {
 public:
@@ -19,6 +21,8 @@ public:
 						C_Corpse( void );
 
 	virtual int			DrawModel( int flags );
+
+	CMotionBlurObject m_MotionBlurObject;
 
 public:
 	// The player whom we are copying our data from

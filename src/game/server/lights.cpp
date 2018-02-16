@@ -9,10 +9,6 @@
 #include "lights.h"
 #include "world.h"
 
-#ifdef DEFERRED_LIGHTGEN
-#include "deferred/deferred_shared_common.h"
-#endif
-
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -237,37 +233,14 @@ LINK_ENTITY_TO_CLASS( light_spot, CLight );
 LINK_ENTITY_TO_CLASS( light_glspot, CLight );
 LINK_ENTITY_TO_CLASS( light_directional, CLight );
 
-#ifdef DEFERRED_LIGHTGEN
-#define EnvLightBase CServerOnlyPointEntity
-#else
-//#define EnvLightBase CBaseEntity
-#endif
-
-#ifdef DEFERRED_LIGHTGEN
-class CEnvLight : public EnvLightBase
-#else
 class CEnvLight : public CLight
-#endif
 {
 public:
 
-#ifdef DEFERRED_LIGHTGEN
-	DECLARE_CLASS( CEnvLight, EnvLightBase );
-#else
 	DECLARE_CLASS( CEnvLight, CLight );
-#endif
 
 	bool	KeyValue( const char *szKeyName, const char *szValue ); 
-#ifdef DEFERRED_LIGHTGEN
-	void	Activate(void);
-
-private:
-	float m_vecLight[4];
-	float m_vecAmbientLight[4];
-	float m_fLightPitch;
-#else
 	void	Spawn( void );
-#endif
 };
 
 LINK_ENTITY_TO_CLASS( light_environment, CEnvLight );

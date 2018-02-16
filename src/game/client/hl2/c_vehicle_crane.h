@@ -6,6 +6,7 @@
 
 #include "IClientVehicle.h"
 #include "vehicle_viewblend_shared.h"
+#include "object_motion_blur_effect.h"
 
 #ifndef C_VEHICLE_CRANE_H
 #define C_VEHICLE_CRANE_H
@@ -30,6 +31,8 @@ public:
 	void PostDataUpdate( DataUpdateType_t updateType );
 
 	bool IsMagnetOn( void ) { return m_bMagnetOn; }
+
+	CMotionBlurObject m_MotionBlurObject;
 
 public:
 

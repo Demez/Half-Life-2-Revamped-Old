@@ -16,23 +16,10 @@
 #include "texture_group_names.h"
 #include "tier0/icommandline.h"
 
-//#include "view_scene.h"
-//#include "viewrender.h"
-
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-#ifdef UBERLIGHT
-static ConVar r_flashlight_uberlight_enable("r_flashlight_uberlight_enable", "0");
-#endif
-
-#ifdef VOLUMETRICS
-static ConVar volumetrics_fade_range("volumetrics_fade_range", "128.0", FCVAR_CHEAT);
-ConVar volumetrics_enabled( "volumetrics_enabled", "1", FCVAR_ARCHIVE );able
-#endif
-
 float C_EnvProjectedTexture::m_flVisibleBBoxMinHeight = -FLT_MAX;
-
 
 IMPLEMENT_CLIENTCLASS_DT( C_EnvProjectedTexture, DT_EnvProjectedTexture, CEnvProjectedTexture )
 	RecvPropEHandle( RECVINFO( m_hTargetEntity )	),
@@ -56,22 +43,32 @@ IMPLEMENT_CLIENTCLASS_DT( C_EnvProjectedTexture, DT_EnvProjectedTexture, CEnvPro
 	RecvPropFloat(	 RECVINFO( m_flProjectionSize )	),
 	RecvPropFloat(	 RECVINFO( m_flRotation )	),
 
-#ifdef UBERLIGHT
-	//RecvPropBool( RECVINFO_NAME( m_UberlightState.m_bEnabled, m_bUberlight ) ),
-	RecvPropBool( RECVINFO_NAME( m_FlashlightState.m_bUberlight, m_bUberlight ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fNearEdge, m_fNearEdge ) ), 
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fFarEdge, m_fFarEdge ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fCutOn, m_fCutOn ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fCutOff, m_fCutOff ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fShearx, m_fShearx ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fSheary, m_fSheary ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fWidth, m_fWidth ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fWedge, m_fWedge ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fHeight, m_fHeight ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fHedge, m_fHedge ) ),
-	RecvPropFloat( RECVINFO_NAME( m_UberlightState.m_fRoundness, m_fRoundness ) ),
-#endif
+	RecvPropBool( RECVINFO( m_bUberlight ) ),
+	RecvPropFloat( RECVINFO_NAME( uberlight.m_fNearEdge, m_fNearEdge ) ), 
+	RecvPropFloat( RECVINFO_NAME( uberlight.m_fFarEdge, m_fFarEdge ) ),
+	RecvPropFloat( RECVINFO_NAME( uberlight.m_fCutOn, m_fCutOn ) ),
+	RecvPropFloat( RECVINFO_NAME( uberlight.m_fCutOff, m_fCutOff ) ),
+	RecvPropFloat( RECVINFO_NAME( uberlight.m_fShearx, m_fShearx ) ),
+	RecvPropFloat( RECVINFO_NAME( uberlight.m_fSheary, m_fSheary ) ),
+	RecvPropFloat( RECVINFO_NAME( uberlight.m_fWidth, m_fWidth ) ),
+	RecvPropFloat( RECVINFO_NAME( uberlight.m_fWedge, m_fWedge ) ),
+	RecvPropFloat( RECVINFO_NAME( uberlight.m_fHeight, m_fHeight ) ),
+	RecvPropFloat( RECVINFO_NAME( uberlight.m_fHedge, m_fHedge ) ),
+	RecvPropFloat( RECVINFO_NAME( uberlight.m_fRoundness, m_fRoundness ) ),
+
+	RecvPropBool( RECVINFO( m_bVolumetric ) ),
+	RecvPropFloat( RECVINFO( m_flNoiseStrength ) ),
+	RecvPropInt( RECVINFO( m_nNumPlanes ) ),
+	RecvPropFloat( RECVINFO( m_flPlaneOffset ) ),
+	RecvPropFloat( RECVINFO( m_flVolumetricIntensity ) ),
+
+	RecvPropFloat( RECVINFO( m_flAttenConst ) ),
+	RecvPropFloat( RECVINFO( m_flAttenLinear ) ),
+	RecvPropFloat( RECVINFO( m_flAttenQuadratic ) ),
+	RecvPropFloat( RECVINFO( m_flAttenFarZ ) ),
 END_RECV_TABLE()
+
+LINK_ENTITY_TO_CLASS( env_projectedtexture, C_EnvProjectedTexture );
 
 C_EnvProjectedTexture *C_EnvProjectedTexture::Create( )
 {
@@ -169,13 +166,7 @@ void C_EnvProjectedTexture::OnDataChanged( DataUpdateType_t updateType )
 {
 	if ( updateType == DATA_UPDATE_CREATED )
 	{
-		// TODO: allow this to work as a normal projected texture or an uberlight
-		m_SpotlightTexture.Init( 
-/*#ifdef UBERLIGHT
-		m_FlashlightState.m_bUberlight ? "white",	
-#endif*/
-		m_SpotlightTextureName, TEXTURE_GROUP_OTHER, true );
-
+		m_SpotlightTexture.Init( m_FlashlightState.m_bUberlight ? "white" : m_SpotlightTextureName, TEXTURE_GROUP_OTHER, true );
 	}
 
 	m_bForceUpdate = true;
@@ -183,7 +174,6 @@ void C_EnvProjectedTexture::OnDataChanged( DataUpdateType_t updateType )
 	BaseClass::OnDataChanged( updateType );
 }
 
-static ConVar asw_perf_wtf("asw_perf_wtf", "0", 0, "Disable updating of projected shadow textures from UpdateLight" ); //FCVAR_DEVELOPMENTONLY
 void C_EnvProjectedTexture::UpdateLight( void )
 {
 	VPROF("C_EnvProjectedTexture::UpdateLight");
@@ -222,7 +212,7 @@ void C_EnvProjectedTexture::UpdateLight( void )
 		return;
 	}
 
-	if ( m_LightHandle == CLIENTSHADOW_INVALID_HANDLE || m_hTargetEntity != NULL || m_bForceUpdate )
+	if ( m_LightHandle == CLIENTSHADOW_INVALID_HANDLE || m_hTargetEntity != NULL || m_bForceUpdate || ( m_bVolumetric && m_flNoiseStrength > 0.f ) )
 	{
 		Vector vForward, vRight, vUp, vPos = GetAbsOrigin();
 		FlashlightState_t state;
@@ -314,7 +304,7 @@ void C_EnvProjectedTexture::UpdateLight( void )
 				VectorAligned( m_flFarZ,  halfWidthFar,  halfWidthFar), VectorAligned( m_flFarZ, -halfWidthFar,  halfWidthFar) 
 			};
 
-			matrix3x4_t matOrientation( vForward, -vRight, vUp, vPos );
+			const matrix3x4_t matOrientation( vForward, -vRight, vUp, vPos );
 
 			enum
 			{
@@ -370,15 +360,15 @@ void C_EnvProjectedTexture::UpdateLight( void )
 
 		float flAlpha = m_flCurrentLinearFloatLightAlpha * ( 1.0f / 255.0f );
 
-		state.m_fQuadraticAtten = 0.0;
-		state.m_fLinearAtten = 100;
-		state.m_fConstantAtten = 0.0f;
-		state.m_FarZAtten = m_flFarZ;
+		state.m_fQuadraticAtten = m_flAttenQuadratic; //0.0;
+		state.m_fLinearAtten = m_flAttenLinear; //100;
+		state.m_fConstantAtten = m_flAttenConst; //0.0f;
+		state.m_FarZAtten = m_flFarZ; //m_flAttenFarZ; eventually find out what this does
 		state.m_fBrightnessScale = m_flBrightnessScale;
 		state.m_Color[0] = m_CurrentLinearFloatLightColor.x * ( 1.0f / 255.0f ) * flAlpha;
 		state.m_Color[1] = m_CurrentLinearFloatLightColor.y * ( 1.0f / 255.0f ) * flAlpha;
 		state.m_Color[2] = m_CurrentLinearFloatLightColor.z * ( 1.0f / 255.0f ) * flAlpha;
-		state.m_Color[3] = 0.0f; // fixme: need to make ambient work m_flAmbient;
+		state.m_Color[3] = m_flAmbient;
 		state.m_flShadowSlopeScaleDepthBias = g_pMaterialSystemHardwareConfig->GetShadowSlopeScaleDepthBias();
 		state.m_flShadowDepthBias = g_pMaterialSystemHardwareConfig->GetShadowDepthBias();
 		state.m_bEnableShadows = m_bEnableShadows;
@@ -388,26 +378,21 @@ void C_EnvProjectedTexture::UpdateLight( void )
 		state.m_flProjectionSize = m_flProjectionSize;
 		state.m_flProjectionRotation = m_flRotation;
 
-#ifdef UBERLIGHT
-		state.m_bUberlight = r_flashlight_uberlight_enable.GetBool(); //m_bUberlightEnabled;
-		m_UberlightState.m_fNearEdge = m_fNearEdge;
-		m_UberlightState.m_fFarEdge = m_fFarEdge;
-		m_UberlightState.m_fCutOn = m_fCutOn;
-		m_UberlightState.m_fCutOff = m_fCutOff;
-		m_UberlightState.m_fShearx = m_fShearx;
-		m_UberlightState.m_fSheary = m_fSheary;
-		m_UberlightState.m_fWidth = m_fWidth;
-		m_UberlightState.m_fWedge = m_fWedge;
-		m_UberlightState.m_fHeight = m_fHeight;
-		m_UberlightState.m_fHedge = m_fHedge;
-		m_UberlightState.m_fRoundness = m_fRoundness;
-#endif
+		if ( m_bUberlight )
+		{
+			state.m_bUberlight = true;
+			state.m_uberlightState = uberlight;
+		}
 
-		// Make it able to use this somehow
-		// Right now it just breaks
-		//state.m_bUberlight = m_bEnabled;
-		//state.m_bUberlight = r_flashlight_uberlight_enable.GetBool();
-		state.m_bVolumetric = true;
+		if ( m_bVolumetric )
+		{
+			state.m_bVolumetric = true;
+			/*state.m_flNoiseStrength = m_flNoiseStrength;
+			state.m_nNumPlanes = m_nNumPlanes;
+			state.m_flPlaneOffset = m_flPlaneOffset;
+			state.m_flVolumetricIntensity = m_flVolumetricIntensity;
+			state.m_flFlashlightTime = gpGlobals->curtime;*/
+		}
 
 		state.m_nShadowQuality = m_nShadowQuality; // Allow entity to affect shadow quality
 
@@ -448,12 +433,7 @@ void C_EnvProjectedTexture::UpdateLight( void )
 			}
 			else
 			{
-/*#ifdef UBERLIGHT
-				g_pClientShadowMgr->UpdateUberlightState( m_FlashlightState, m_UberlightState );
-				g_pClientShadowMgr->UpdateFlashlightState( m_LightHandle, m_FlashlightState );
-#else*/
 				g_pClientShadowMgr->UpdateFlashlightState( m_LightHandle, state );
-//#endif
 			}
 			m_bForceUpdate = false;
 		}
@@ -474,11 +454,7 @@ void C_EnvProjectedTexture::UpdateLight( void )
 	}
 
 	g_pClientShadowMgr->SetFlashlightLightWorld( m_LightHandle, m_bLightWorld );
-
-	if ( !asw_perf_wtf.GetBool() && !m_bForceUpdate )
-	{
-		g_pClientShadowMgr->UpdateProjectedTexture( m_LightHandle, true );
-	}
+	g_pClientShadowMgr->UpdateProjectedTexture( m_LightHandle, true );
 }
 
 bool C_EnvProjectedTexture::Simulate( void )

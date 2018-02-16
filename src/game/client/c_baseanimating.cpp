@@ -59,10 +59,6 @@
 
 #include "clientalphaproperty.h"
 
-#ifdef DEFERRED
-#include "deferred/deferred_shared_common.h"
-#endif
-
 #ifdef DEMOPOLISH_ENABLED
 #include "demo_polish/demo_polish.h"
 #endif
@@ -3401,7 +3397,7 @@ void C_BaseAnimating::DoInternalDrawModel( ClientModelRenderInfo_t *pInfo, DrawM
 //----------------------------------------------------------------------------
 bool C_BaseAnimating::ComputeStencilState( ShaderStencilState_t *pStencilState )
 {
-#if defined( _X360 )
+#if defined( _X360 ) || defined( DEFERRED_PC )
 	if ( !r_shadow_deferred.GetBool() )
 	{
 		// Early out if we don't care about deferred shadow masks
@@ -3556,34 +3552,6 @@ void C_BaseAnimating::ProcessMuzzleFlashEvent()
 		//FIXME: We should really use a named attachment for this
 		if ( m_Attachments.Count() > 0 )
 		{
-#ifdef DEFERRED
-			// light doesnt fade out so it kills fps.
-			/*Vector vAttachment;
-			QAngle dummyAngles;
-			GetAttachment(1, vAttachment, dummyAngles);
-
-			def_light_temp_t *l = new def_light_temp_t(0.1f);
-
-			l->ang = vec3_angle;
-			l->pos = vAttachment;
-
-			l->col_diffuse = Vector(0.964705882f, 0.82745098f, 0.403921569f);
-			//l->col_ambient = Vector(20, 20, 20); //GetColor_Ambient();
-
-			l->flRadius = random->RandomFloat(64, 128);
-			l->flFalloffPower = 1.0f;
-
-			l->iVisible_Dist = l->flRadius * 2;
-			l->iVisible_Range = l->flRadius * 2;
-			l->iShadow_Dist = l->flRadius;
-			l->iShadow_Range = l->flRadius;
-
-			l->iFlags >>= DEFLIGHTGLOBAL_FLAGS_MAX_SHARED_BITS;
-			l->iFlags <<= DEFLIGHTGLOBAL_FLAGS_MAX_SHARED_BITS;
-			l->iFlags |= DEFLIGHT_SHADOW_ENABLED;
-
-			GetLightingManager()->AddTempLight(l);*/
-#else
 			// kills fps even for whatever reason
 			/*Vector vAttachment, vAng;
 			QAngle angles;
@@ -3617,7 +3585,6 @@ void C_BaseAnimating::ProcessMuzzleFlashEvent()
 			el->color.g = 238;
 			el->color.b = 128;
 			el->color.exponent = 5;
-#endif
 		}
 	}
 }

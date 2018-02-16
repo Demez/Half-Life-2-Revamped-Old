@@ -47,10 +47,6 @@
 
 #include "debugoverlay_shared.h"
 
-#ifdef DEFERRED
-#include "deferred/flashlighteffect_deferred.h"
-#endif
-
 #ifdef DEMOPOLISH_ENABLED
 #include "demo_polish/demo_polish.h"
 #endif

@@ -7,6 +7,8 @@
 #ifndef CPROPCOMBINEBALL_H_
 #define CPROPCOMBINEBALL_H_
 
+#include "object_motion_blur_effect.h"
+
 #ifdef _WIN32
 #pragma once
 #endif
@@ -23,6 +25,8 @@ public:
 
 	virtual void	OnDataChanged( DataUpdateType_t updateType );
 	virtual int		DrawModel( int flags, const RenderableInstance_t &instance );
+
+	CMotionBlurObject m_MotionBlurObject;
 
 protected:
 

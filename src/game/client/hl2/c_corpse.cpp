@@ -11,13 +11,14 @@
 #include "tier0/memdbgon.h"
 
 IMPLEMENT_CLIENTCLASS_DT(C_Corpse, DT_Corpse, CCorpse)
-	RecvPropInt(RECVINFO(m_nReferencePlayer))
+RecvPropInt(RECVINFO(m_nReferencePlayer))
 END_RECV_TABLE()
 
 
+extern ConVar mat_object_motion_blur_model_scale;
 
-
-C_Corpse::C_Corpse()
+C_Corpse::C_Corpse():
+	m_MotionBlurObject( this, mat_object_motion_blur_model_scale.GetFloat() )
 {
 	m_nReferencePlayer = 0;
 }

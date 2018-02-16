@@ -35,7 +35,7 @@
 static ConVar mat_fullbright( "mat_fullbright","0", FCVAR_CHEAT );
 
 // NOTE: This is externed in BaseVSShader.h so it needs to be here
-ConVar r_flashlightbrightness( "r_flashlightbrightness", "0.25", FCVAR_CHEAT );
+ConVar r_flashlightbrightness( "r_flashlightbrightness", "1.0", FCVAR_CHEAT );
 
 // These functions are to be called from the shaders.
 

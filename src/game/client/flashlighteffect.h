@@ -18,12 +18,8 @@ class CFlashlightEffect
 public:
 
 	CFlashlightEffect(int nEntIndex = 0, const char *pszTextureName = NULL, float flFov = 0.0f, float flFarZ = 0.0f, float flLinearAtten = 0.0f );
-#ifdef DEFERRED
-	// @Deferred - Biohazard
-	virtual ~CFlashlightEffect();
-#else
+
 	~CFlashlightEffect();
-#endif
 
 	void UpdateLight( int nEntIdx, const Vector &vecPos, const Vector &vecDir, const Vector &vecRight, const Vector &vecUp, float flFov, 
 						float flFarZ, float flLinearAtten, bool castsShadows, const char* pTextureName );
@@ -49,21 +45,11 @@ public:
 	}
 
 protected:
-
-#ifdef DEFERRED
-	// @Deferred - Biohazard
-	virtual void UpdateLightProjection(FlashlightState_t &state);
-#endif
-
 	bool UpdateDefaultFlashlightState(	FlashlightState_t& state, const Vector &vecPos, const Vector &vecDir, const Vector &vecRight,
 										const Vector &vecUp, bool castsShadows, bool bTracePlayers = true );
 	bool ComputeLightPosAndOrientation( const Vector &vecPos, const Vector &vecDir, const Vector &vecRight, const Vector &vecUp,
 										Vector& vecFinalPos, Quaternion& quatOrientation, bool bTracePlayers );
-#ifdef DEFERRED
-	virtual void LightOff();
-#else
 	void LightOff();
-#endif
 
 	void UpdateFlashlightTexture( const char* pTextureName );
 	void UpdateLightTopDown(const Vector &vecPos, const Vector &vecDir, const Vector &vecRight, const Vector &vecUp);
@@ -122,10 +108,6 @@ public:
 								m_flFarZ( 0.0f ), m_flLinearAtten( 0.0f ), m_nMuzzleFlashFrameCountdown( 0 ), m_flMuzzleFlashBrightness( 1.0f ),
 								m_bFlashlightOn( false ), m_nFXComputeFrame( -1 ), m_bFlashlightOverride( false ) {}
 
-#ifdef DEFERRED
-	// @Deferred - Biohazard
-	void TurnOnFlashlight( int nEntIndex = 0, const char *pszTextureName = NULL, float flFov = 0.0f, float flFarZ = 0.0f, float flLinearAtten = 0.0f );
-#else
 	void TurnOnFlashlight( int nEntIndex = 0, const char *pszTextureName = NULL, float flFov = 0.0f, float flFarZ = 0.0f, float flLinearAtten = 0.0f )
 	{
 		m_pFlashlightTextureName = pszTextureName;
@@ -160,7 +142,6 @@ public:
 
 		m_pFlashlightEffect->TurnOn();
 	}
-#endif
 
 	void TurnOffFlashlight( bool bForce = false )
 	{

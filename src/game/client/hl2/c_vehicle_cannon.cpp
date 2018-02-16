@@ -11,6 +11,7 @@
 #include "c_vehicle_crane.h"
 #include "view.h"
 #include "vehicle_viewblend_shared.h"
+#include "object_motion_blur_effect.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -33,6 +34,8 @@ public:
 	C_PropCannon();
 	
 	void PreDataUpdate( DataUpdateType_t updateType );
+
+	CMotionBlurObject m_MotionBlurObject;
 
 public:
 
@@ -99,10 +102,13 @@ END_DATADESC()
 #define PITCH_CURVE_LINEAR		45	// pitch greater than this is copied out
 									// spline in between
 
+extern ConVar mat_object_motion_blur_model_scale;
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-C_PropCannon::C_PropCannon( void )
+C_PropCannon::C_PropCannon(void):
+	m_MotionBlurObject( this, mat_object_motion_blur_model_scale.GetFloat() )
 {
 	memset( &m_ViewSmoothingData, 0, sizeof( m_ViewSmoothingData ) );
 	m_ViewSmoothingData.pVehicle = this;

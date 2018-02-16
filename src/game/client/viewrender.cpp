@@ -50,10 +50,6 @@
 #include "modelrendersystem.h"
 #include "vgui/ISurface.h"
 
-#ifdef DEFERRED
-#include "deferred/cdeferred_manager_client.h"
-#endif
-
 #define PARTICLE_USAGE_DEMO									// uncomment to get particle bar thing
 
 #ifdef SHADEREDITOR
@@ -410,14 +406,6 @@ private:
 };
 
 CWorldListCache g_WorldListCache;
-
-#ifdef DEFERRED
-// @Deferred - Biohazard
-void FlushWorldLists()
-{
-	g_WorldListCache.Flush();
-}
-#endif
 
 //-----------------------------------------------------------------------------
 // Standard 3d skybox view
@@ -968,16 +956,12 @@ void CSimpleRenderExecutor::AddView( CRendering3dView *pView )
 	m_pMainView->SetActiveRenderer( pPrevRenderer );
 }
 
-// @Deferred - Biohazard
-// this is allocated differently now
-#ifndef DEFERRED
 #if !defined( INFESTED_DLL )
 static CViewRender g_ViewRender;
 IViewRender *GetViewRenderInstance()
 {
 	return &g_ViewRender;
 }
-#endif
 #endif
 
 //-----------------------------------------------------------------------------
@@ -3655,27 +3639,14 @@ void CRendering3dView::BuildRenderableRenderLists( int viewID )
 {
 	MDLCACHE_CRITICAL_SECTION();
 
-#ifdef DEFERRED
-	// @Deferred - Biohazard
-	// skip stuff
-	const bool bUpdateLightmaps = viewID != VIEW_SHADOW_DEPTH_TEXTURE &&
-		!GetDeferredManager()->IsDeferredRenderingEnabled();
-
-	if ( bUpdateLightmaps )
-#else
 	if (viewID != VIEW_SHADOW_DEPTH_TEXTURE)
-#endif
 	{
 		render->BeginUpdateLightmaps();
 	}
 
 	SetupRenderablesList( viewID );
 
-#ifdef DEFERRED
-	if ( bUpdateLightmaps )
-#else
 	if ( viewID != VIEW_SHADOW_DEPTH_TEXTURE )
-#endif
 	{
 		// update lightmap on brush models if necessary
 		for ( int i = 0; i < RENDER_GROUP_COUNT; ++i )

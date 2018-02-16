@@ -9,10 +9,6 @@
 #include "utlrbtree.h"
 #include "hl2_shareddefs.h"
 
-#ifdef HL2MP
-#include "hl2mp_gamerules.h"
-#endif
-
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -1161,7 +1157,7 @@ bool CHL2GameMovement::CanAccelerate()
 unsigned int CHL2GameMovement::PlayerSolidMask( bool brushOnly )
 {
 	int mask = 0;
-#ifdef HL2MP
+/*#ifdef HL2MP
 	if ( HL2MPRules()->IsTeamplay() )
 	{
 		switch ( player->GetTeamNumber() )
@@ -1175,6 +1171,6 @@ unsigned int CHL2GameMovement::PlayerSolidMask( bool brushOnly )
 			break;
 		}
 	}
-#endif
+#endif*/
 	return ( mask | BaseClass::PlayerSolidMask( brushOnly ) );
 }

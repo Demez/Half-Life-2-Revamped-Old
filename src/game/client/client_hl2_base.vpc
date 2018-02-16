@@ -7,23 +7,13 @@
 $Macro SRCDIR		"..\.."
 
 $Include "$SRCDIR\game\client\client_base.vpc"
-//$Include "$SRCDIR\game\client\client_projtex_editor_base.vpc"
-
-//$Configuration
-//{
-//	$Compiler
-//	{
-//		$AdditionalIncludeDirectories	".\hl2;.\hl2\elements;$SRCDIR\game\shared\hl2;$SRCDIR\game\client\hl2\gameui;$SRCDIR\game\client\hl2\vgui;$SRCDIR\game\client\gameui;$BASE"
-//		$PreprocessorDefinitions		"$BASE;SWARM_DLL;HL2_CLIENT_DLL;GAMEUI_EMBEDDED;GAMEUI_EXPORTS"
-//	}
-//}
 
 $Configuration
 {
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE;.\hl2;.\hl2\elements;$SRCDIR\game\shared\hl2;.\hl2\vgui;$SRCDIR\game\client\hl2\gameui;..\statemachine;"
-		$PreprocessorDefinitions		"$BASE;HL2_CLIENT_DLL;GAMEUI_EMBEDDED;GAMEUI_EXPORTS;HL2_EPISODIC;REVAMPED_CLIENT;UBERLIGHT"
+		$PreprocessorDefinitions		"$BASE;HL2_CLIENT_DLL;GAMEUI_EMBEDDED;GAMEUI_EXPORTS;HL2_EPISODIC;REVAMPED_CLIENT"
 	}
 }
 

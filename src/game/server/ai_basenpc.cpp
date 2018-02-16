@@ -95,7 +95,7 @@
 #endif
 
 #ifdef HL2_EPISODIC
-#include "npc_alyx_episodic.h" //uncomment
+#include "npc_alyx_episodic.h"
 #endif
 
 #include "env_debughistory.h"

@@ -16,7 +16,10 @@
 #include "isaverestore.h"
 #include "gamerules.h"
 #ifdef _WIN32
+// DEMEZ LOOK AT THIS
 //#include "vscript_server_nut.h"
+// from ES
+//#include "spawn_helper_nut.h"
 #endif
 
 extern ScriptClassDesc_t * GetScriptDesc( CBaseEntity * );

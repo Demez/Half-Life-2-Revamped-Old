@@ -75,24 +75,20 @@ private:
 	int			m_nSpotlightTextureFrame;
 	int			m_nShadowQuality;
 
-#ifdef UBERLIGHT
 	FlashlightState_t	m_FlashlightState;
-	UberlightState_t	m_UberlightState;
+	bool		m_bUberlight;
+	UberlightState_t uberlight;
 
-	//bool m_bUberlightEnabled;
-	float m_fNearEdge;
-	float m_fFarEdge;
-	float m_fCutOn;
-	float m_fCutOff;
-	float m_fShearx;
-	float m_fSheary;
-	float m_fWidth;
-	float m_fWedge;
-	float m_fHeight;
-	float m_fHedge;
-	float m_fRoundness;
-	//Vector m_vecRenderBoundsMin, m_vecRenderBoundsMax;
-#endif
+	bool m_bVolumetric;
+	float m_flNoiseStrength;
+	int m_nNumPlanes;
+	float m_flPlaneOffset;
+	float m_flVolumetricIntensity;
+
+	float m_flAttenConst;
+	float m_flAttenLinear;
+	float m_flAttenQuadratic;
+	float m_flAttenFarZ;
 
 	// simple projection
 	IMaterial	*m_pMaterial;

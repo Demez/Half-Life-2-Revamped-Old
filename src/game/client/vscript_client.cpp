@@ -14,6 +14,7 @@
 #include "isaverestore.h"
 #include "gamerules.h"
 #ifdef _WIN32
+// DEMEZ LOOK AT THIS
 //#include "vscript_client_nut.h"
 #endif
 
@@ -115,6 +116,7 @@ bool VScriptClientInit()
 
 				if ( scriptLanguage == SL_SQUIRREL )
 				{
+					// DEMEZ ALSO LOOK AT THIS
 					//g_pScriptVM->Run( g_Script_vscript_client );
 				}
 

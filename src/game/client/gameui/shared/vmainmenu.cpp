@@ -313,7 +313,6 @@ void MainMenu::OnCommand( const char *command )
 
 			GenericConfirmation::Data_t data;
 
-
 			data.pWindowTitle = "#L4D360UI_MainMenu_Quit_Confirm"; //valve surely use strange namings...[str]
 
 			// [ Magic here. [str]

@@ -105,12 +105,6 @@
 #include "tier2/tier2_logging.h"
 #include "fmtstr.h"
 
-#ifdef DEFERRED
-// @Deferred - Biohazard
-// for cookie string table
-#include "deferred/deferred_shared_common.h"
-#endif
-
 #ifdef _WIN32
 #include "IGameUIFuncs.h"
 #endif
@@ -1472,25 +1466,13 @@ void CServerGameDLL::CreateNetworkStringTables( void )
 	g_pStringTableInfoPanel = networkstringtable->CreateStringTable( "InfoPanel", MAX_INFOPANEL_STRINGS );
 	g_pStringTableClientSideChoreoScenes = networkstringtable->CreateStringTable( "Scenes", MAX_CHOREO_SCENES_STRINGS, 0, 0, NSF_DICTIONARY_ENABLED );
 
-#ifdef DEFERRED
-	// @Deferred - Biohazard
-	g_pStringTable_LightCookies = networkstringtable->CreateStringTable(COOKIE_STRINGTBL_NAME, MAX_COOKIE_TEXTURES, 0, 0, NSF_DICTIONARY_ENABLED);
-#endif
-
 	Assert( g_pStringTableParticleEffectNames &&
 			g_pStringTableEffectDispatch &&
 			g_pStringTableVguiScreen &&
 			g_pStringTableMaterials &&
 			g_pStringTableInfoPanel &&
-			g_pStringTableClientSideChoreoScenes
-// doesnt work on debug
-//#ifdef DEFERRED
-//			g_pStringTableExtraParticleFiles && 
-//			 @Deferred - Biohazard
-//			g_pStringTable_LightCookies );
-//#else
-			&& g_pStringTableExtraParticleFiles);
-//#endif
+			g_pStringTableClientSideChoreoScenes &&
+			g_pStringTableExtraParticleFiles);
 			
 
 	// Need this so we have the error material always handy

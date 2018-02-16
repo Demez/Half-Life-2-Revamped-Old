@@ -5,19 +5,19 @@
 { 
 
 // -- Panel Titles
-"HL2PORTUI_Titles_SaveGame"				"Save Game Progress"
-"HL2PORTUI_Titles_LoadGame"				"Load Game"
-"HL2PORTUI_Titles_Gameplay"				"Gameplay Settings"
+"REVAMPEDUI_Titles_SaveGame"				"Save Game Progress"
+"REVAMPEDUI_Titles_LoadGame"				"Load Game"
+"REVAMPEDUI_Titles_Gameplay"				"Gameplay Settings"
 
 // SP Menu Items
 "REVAMPEDUI_MainMenu_Singleplayer"					"START GAME"
 "REVAMPEDUI_MainMenu_Singleplayer_Tip"				"Play Half-Life 2: Revamped Singleplayer"
-"HL2PORTUI_Singleplayer_StartNewGame" 				"Start New Game"
-"HL2PORTUI_Singleplayer_LoadGame" 					"Load Game"
-"HL2PORTUI_Singleplayer_SaveGame" 					"Save Game"
-"HL2PORTUI_Singleplayer_DeveloperCommentaries" 		"Developer Commentaries"
-"HL2PORTUI_Options_Gameplay"						"Gameplay"
-"HL2PORTUI_Options_GameDifficulty"					"Game Difficulty"
+"REVAMPEDUI_Singleplayer_StartNewGame" 				"Start New Game"
+"REVAMPEDUI_Singleplayer_LoadGame" 					"Load Game"
+"REVAMPEDUI_Singleplayer_SaveGame" 					"Save Game"
+"REVAMPEDUI_Singleplayer_DeveloperCommentaries" 		"Developer Commentaries"
+"REVAMPEDUI_Options_Gameplay"						"Gameplay"
+"REVAMPEDUI_Options_GameDifficulty"					"Game Difficulty"
 
 // COOP Menu Items
 "REVAMPEDUI_MainMenu_Coop"							"CO-OP GAME"
@@ -32,20 +32,20 @@
 // SS Menu Items
 "REVAMPEDUI_MainMenu_Splitscreen"					"SPLITSCREEN"
 "REVAMPEDUI_MainMenu_Splitscreen_Tip"				"Play Half-Life 2: Revamped Splitscreen"
-"HL2PORTUI_Splitscreen_StartNewGame" 				"Start New Game"
-"HL2PORTUI_Splitscreen_LoadGame" 					"Load Game"
-"HL2PORTUI_Splitscreen_SaveGame" 					"Save Game"
-"HL2PORTUI_Splitscreen_DeveloperCommentaries" 		"Developer Commentaries"
-"HL2PORTUI_Splitscreen_Gameplay"					"Gameplay"
+"REVAMPEDUI_Splitscreen_StartNewGame" 				"Start New Game"
+"REVAMPEDUI_Splitscreen_LoadGame" 					"Load Game"
+"REVAMPEDUI_Splitscreen_SaveGame" 					"Save Game"
+"REVAMPEDUI_Splitscreen_DeveloperCommentaries" 		"Developer Commentaries"
+"REVAMPEDUI_Splitscreen_Gameplay"					"Gameplay"
 
 // -- Gameplay Settings
-"HL2PORTUI_Skills_Easy"					"Easy"
-"HL2PORTUI_Skills_Medium"				"Medium"
-"HL2PORTUI_Skills_Hard"					"Hard"
+"REVAMPEDUI_Skills_Easy"					"Easy"
+"REVAMPEDUI_Skills_Medium"				"Medium"
+"REVAMPEDUI_Skills_Hard"					"Hard"
 
 // -- Buttons
-"HL2PORTUI_Button_Save_Caps"				"SAVE"
-"HL2PORTUI_Button_Load_Caps"				"LOAD"
+"REVAMPEDUI_Button_Save_Caps"				"SAVE"
+"REVAMPEDUI_Button_Load_Caps"				"LOAD"
 // ===
 
 "aswhl2port_Chapter1_Title"		"POINT INSERTION"

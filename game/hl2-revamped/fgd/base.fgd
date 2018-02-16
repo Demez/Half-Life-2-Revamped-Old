@@ -6533,36 +6533,67 @@
 	spawnflags(flags) =
 	[
 		1  : "Enabled"				: 1
-		2  : "Always Update (moving light)"	: 0
-		4  : "Uberlight Enabled"				: 4
-		//8  : "Volumetrics Enabled"				: 8
-		
+		2  : "Always Update (moving light)"	: 0	
 	]
 
-	target(target_destination)	: "target" : : "target"	
+	target(target_destination)	: "Entity to point at" : : "The name of an entity in the map that the shadowmap will point at. This will override the shadowmap's angles."	
+	lightcolor(color255)		: "Light Color" : "255 255 255 200" : "Light Color RGB-Intensity"
+	ambient(float)				: "ambient" : 0 : ""
+	brightnessscale(float)		: "Brightness Scale" : "1.0" : "Scale the light color by this brightness"
 	lightfov(float)				: "FOV" : "90.0" : "FOV"
 	nearz(float)				: "NearZ" : "4.0" : "Near Z for projected texture"
 	farz(float)					: "FarZ" : "750.0" : "Far Z for projected texture"	
-	
-	enableshadows(boolean) : "Enable Shadows" : 0 : "Enables/disables shadows from this projected texture."
-	shadowquality(Choices) : "Shadow Quality" : 1 : "Quality of shadows." =
+	//atten_f(float) 				: "FarZ Attenuation" : 0 : ""
+	atten_c(float)				: "Constant" : 0 : ""
+	atten_l(float)				: "Linear" : 100 : ""
+	atten_q(float)				: "Quadratic" : 0 : ""
+	enableshadows(boolean) 		: "Enable Shadows" : 0 : "Enables/disables shadows from this projected texture."
+	shadowquality(Choices) 		: "Shadow Quality" : 1 : "Quality of shadows." =
 	[
 		0 : "Low"
 		1 : "High"
 	]
 	lightonlytarget(boolean) : "Light Only Target" : 0 : "Limit flashlight effect to only effect target entity."
 	lightworld(boolean) : "Light World" : 1 : "Control whether flashlight effects static world geometry."
-	
-	brightnessscale(float)		: "Brightness Scale" : "1.0" : "Scale the light color by this brightness"	
-
-	lightcolor(color255)		: "Light Color" : "255 255 255 200" : "Light Color RGB-Intensity"
 	colortransitiontime(float)	: "Color Transition Time" : "0.5" : "Amount of time it takes for a color change to occur."
 	cameraspace(integer)		: "Camera Space" : 0 : "Angles are interpreted as being relative to camera."
-
 	texturename(material) : "Texture Name" : "effects/flashlight001"
-	
 	mingpulevel(integer) : "Min GPU level" : 0 : "If set and nonzero, this entity will be drawn only if the GPU level is equal or higher to this value. GPU level is Shader Detail setting of Graphics Settings, ranges from 1 which is Low to 4 which is Very High. "
-
+	
+	volumetric(boolean) : "Volumetrics" : 0 : "Turn Volumetrics on or off"
+	//noise_strength(float) : "Volumetrics Noise Strength" : 0.8 : ""
+	//num_planes(integer) : "Volumetrics Num Planes" : 64 : ""
+	//plane_offset(float) : "Volumetrics Plane Offset" : 0 : ""
+	//volumetric_intensity(float) : "Volumetrics Intensity" : 1 : ""
+	
+	uberlight(boolean) : "Uberlight" : 1 : ""
+	uberlight_near(float) : "Uberlight Near Edge" : 2 : "How much distance away to fade in"
+	uberlight_far(float) : "Uberlight Far Edge" : 100 : "How much distance away to fade out"
+	uberlight_cuton(float) : "Uberlight Cut On" : 10 : "Same as Near-Z"
+	uberlight_cutoff(float) : "Uberlight Cut Off" : 650 : "Same as Far-Z"
+	uberlight_shearx(float) : "Uberlight Shear X" : 0 : "How much to skew the light by"
+	uberlight_sheary(float) : "Uberlight Shear Y" : 0 : "How much to skew the light by"
+	uberlight_width(float) : "Uberlight Width" : "0.3" : ""
+	uberlight_wedge(float) : "Uberlight Wedge" : "1" : "1 means its equal to fov set"
+	uberlight_height(float) : "Uberlight Height" : "0.3" : ""
+	uberlight_hedge(float) : "Uberlight Hedge" : "1" : "1 means its equal to fov set"
+	uberlight_roundness(float) : "Uberlight Roundness" : "0.8" : "1 for circle, 0 for box"
+	
+	//texturename (character) 		: "texture name" : 0 : ""
+	//textureframe(integer) 		: "texture frame" : 0 : ""
+	//simpleprojection(boolean)		: "simpleprojection" : 0 : ""
+	//projection_size(float) : "Size of Projection" : 500 : ""
+	//projection_rotation(float) : "Rotation of Projection" : 0 : ""
+	
+	//volumetricslod(Choices) : "Volumetrics LOD" : 1 : "Enable LOD for Volumetrics" =
+	//[
+	//	0 : "No"
+	//	1 : "Yes"
+	//]
+	//volumetricsmultiplier(float) : "Volumetrics Multiplier" : 2 : "Multiplier for strength of Volumetrics"
+	//volumetricsquality(float) : "Volumetrics Quality" : 20 : "Quality of volumetrics"
+	//volumetricsqualitybias(float) : "Volumetrics Quality Bias" : 1 : "Volumetrics Quality Bias"
+	
 	// Inputs
 	input TurnOn(void)		: "Turn on the texture"
 	input TurnOff(void)		: "Turn off the texture"
@@ -6573,32 +6604,9 @@
 	input EnableShadows(bool)		: "Set the if shadows are enabled"
 	input LightColor(color255)		: "Change the light color/brightness"
 	input BrightnessScale(float)	: "Set BrightnessScale"
-	
 	//input EnableVolumetrics(void)		: "Enable Volumetrics"
-	input EnableUberLight(void)		: "Enable Uberlight"
+	input EnableUberLight(void)			: "Enable Uberlight"
 	input DisableUberLight(void)		: "Disable Uberlight"
-	
-	//volumetricslod(Choices) : "Volumetrics LOD" : 1 : "Enable LOD for Volumetrics" =
-	//[
-	//	0 : "No"
-	//	1 : "Yes"
-	//]
-	
-	//volumetricsmultiplier(float) : "Volumetrics Multiplier" : 2 : "Multiplier for strength of Volumetrics"
-	//volumetricsquality(float) : "Volumetrics Quality" : 20 : "Quality of volumetrics"
-	//volumetricsqualitybias(float) : "Volumetrics Quality Bias" : 1 : "Volumetrics Quality Bias"
-	
-	uberlight_near(float) : "Uberlight Near Edge" : 2 : ""
-	uberlight_far(float) : "Uberlight Far Edge" : 100 : ""
-	uberlight_cuton(float) : "Uberlight Cut On" : 10 : ""
-	uberlight_cutoff(float) : "Uberlight Cut Off" : 650 : ""
-	uberlight_shearx(float) : "Uberlight Shear X" : 0 : ""
-	uberlight_sheary(float) : "Uberlight Shear Y" : 0 : ""
-	uberlight_width(float) : "Uberlight Width" : "0.3" : ""
-	uberlight_wedge(float) : "Uberlight Wedge" : "0.05" : ""
-	uberlight_height(float) : "Uberlight Height" : "0.3" : ""
-	uberlight_hedge(float) : "Uberlight Hedge" : "0.05" : ""
-	uberlight_roundness(float) : "Uberlight Roundness" : "0.8" : ""
 ]
 
 

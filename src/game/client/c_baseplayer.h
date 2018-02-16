@@ -233,7 +233,9 @@ public:
 
 	// Global/static methods
 	virtual void				ThirdPersonSwitch( bool bThirdperson );
+#ifdef HL2MP
 	static bool					LocalPlayerInFirstPersonView();
+#endif
 	bool						ShouldDrawLocalPlayer();
 	static C_BasePlayer			*GetLocalPlayer( int nSlot = -1 );
 	static void					SetRemoteSplitScreenPlayerViewsAreLocalPlayer( bool bSet ); //if true, calls to GetLocalPlayer() will return a remote splitscreen player when applicable.

@@ -123,10 +123,6 @@ public:
 	virtual void GetFrustumExtents( ClientShadowHandle_t handle, Vector &vecMin, Vector &vecMax ) = 0;
 
 	virtual void ShutdownRenderTargets( void ) =0;
-
-/*#ifdef UBERLIGHT
-	virtual void UpdateUberlightState( FlashlightState_t& handle, const UberlightState_t& uberlightState ) = 0;
-#endif*/
 };
 
 

@@ -6,9 +6,6 @@
 
 #define ENV_PROJECTEDTEXTURE_STARTON			(1<<0)
 #define ENV_PROJECTEDTEXTURE_ALWAYSUPDATE		(1<<1)
-#ifdef UBERLIGHT
-#define ENV_PROJECTEDTEXTURE_UBERLIGHT				( 1 << 2 )
-#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -41,10 +38,8 @@ public:
 	void InputSetLightColor( inputdata_t &inputdata );
 	void InputSetSpotlightTexture( inputdata_t &inputdata );
 	void InputSetAmbient( inputdata_t &inputdata );
-#ifdef UBERLIGHT
-	void InputEnableUberLight(inputdata_t &inputdata);
-	void InputDisableUberLight(inputdata_t &inputdata);
-#endif
+	void InputEnableUberLight( inputdata_t &inputdata );
+	void InputDisableUberLight( inputdata_t &inputdata );
 
 	void InitialThink( void );
 
@@ -72,7 +67,6 @@ private:
 	CNetworkVar( float, m_flProjectionSize );
 	CNetworkVar( float, m_flRotation );
 
-#ifdef UBERLIGHT
 	CNetworkVar( bool, m_bUberlight );
 	CNetworkVar( float, m_fNearEdge );
 	CNetworkVar( float, m_fFarEdge );
@@ -85,7 +79,17 @@ private:
 	CNetworkVar( float, m_fHeight );
 	CNetworkVar( float, m_fHedge );
 	CNetworkVar( float, m_fRoundness );
-#endif
+
+	CNetworkVar( float, m_flAttenConst );
+	CNetworkVar( float, m_flAttenLinear );
+	CNetworkVar( float, m_flAttenQuadratic );
+	CNetworkVar( float, m_flAttenFarZ );
+
+	CNetworkVar( bool, m_bVolumetric );
+	CNetworkVar( float, m_flNoiseStrength );
+	CNetworkVar( int, m_nNumPlanes );
+	CNetworkVar( float, m_flPlaneOffset );
+	CNetworkVar( float, m_flVolumetricIntensity );
 };
 
 
