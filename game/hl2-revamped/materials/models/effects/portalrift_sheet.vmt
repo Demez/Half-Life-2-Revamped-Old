@@ -6,7 +6,8 @@
 	}
 
 	"$model" 1
-	"$basetexture" "_rt_Camera"
+	"$basetexture" "skybox/sky_ep01_04up"
+//	"$basetexture" "skybox/sky_day01_09up"
 	"$refractamount" "0.26"
 	"$bluramount" "1"
 	"$scale" "[1 1]"

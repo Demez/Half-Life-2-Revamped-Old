@@ -8,23 +8,17 @@
 	// NOTE: Even though env_cubemap is here, it will turned off for DX6
 	// because $multipass 1 isn't defined
 	"$envmap" "env_cubemap"
-	"$envmaptint" "[ .56 .56 .75 ]"
+	"ldr?$envmaptint" "[ .56 .56 .75 ]"
 	"$envmapcontrast" 1
 	"$envmapsaturation" 1
+	"hdr?$envmaptint" "[.09 .1 .12]"
 
-	"LightmappedGeneric_hdr_DX9"
-	{
-		"$bumpmap" "metal/metalwall072b_normal"
-		"$normalmapalphaenvmapmask" 1
-		"$envmaptint" "[ .09 .1 .12]"
-	}
 	"LightmappedGeneric_DX9"
 	{
 		"$bumpmap" "metal/metalwall072b_normal"
 //		"$parallaxmap" "Metal/metalwall072b_height"
 //		"$parallaxmapscale" ".05"
 		"$normalmapalphaenvmapmask" 1
-		"$envmaptint" "[ .09 .1 .12]"
 	}
 
 	"LightmappedGeneric_DX8"

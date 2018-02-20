@@ -24,10 +24,6 @@ Scheme
 		"Black"				"0 0 0 255"
 
 		"Blank"				"0 0 0 0"
-		
-		"ScrollBarGrey"		"51 51 51 192"
-		"ScrollBarHilight"	"110 110 110 192"
-		"ScrollBarDark"		"38 38 38 192"
 	}
 
 	///////////////////// BASE SETTINGS ////////////////////////
@@ -134,24 +130,17 @@ Scheme
 		RichText.SelectedTextColor		"Black"
 		RichText.SelectedBgColor		"Orange"
 
-		ScrollBar.Wide					12
-		ScrollBarNobBorder.Outer 			"ScrollBarDark"
-		ScrollBarNobBorder.Inner 			"ScrollBarGrey"
-		ScrollBarNobBorderHover.Inner 			"ScrollBarGrey"
-		ScrollBarNobBorderDragging.Inner 		"ScrollBarHilight"
+		ScrollBar.Wide					17
 
-		ScrollBarButton.FgColor				"ScrollBarHilight"
-		ScrollBarButton.BgColor				"ScrollBarGrey"
-		ScrollBarButton.ArmedFgColor		"ScrollBarHilight"
-		ScrollBarButton.ArmedBgColor		"ScrollBarGrey"
-		ScrollBarButton.DepressedFgColor	"ScrollBarHilight"
-		ScrollBarButton.DepressedBgColor	"ScrollBarGrey"
+		ScrollBarButton.FgColor				"White"
+		ScrollBarButton.BgColor				"Blank"
+		ScrollBarButton.ArmedFgColor		"White"
+		ScrollBarButton.ArmedBgColor		"Blank"
+		ScrollBarButton.DepressedFgColor	"White"
+		ScrollBarButton.DepressedBgColor	"Blank"
 
-		ScrollBarSlider.Inset				1			// Number of pixels to inset scroll bar nob
-		ScrollBarSlider.FgColor				"ScrollBarGrey"		// nob color
-		ScrollBarSlider.BgColor				"Blank"		// slider background color
-		ScrollBarSlider.NobFocusColor			"ScrollBarHilight"		// nob mouseover color
-		ScrollBarSlider.NobDragColor			"ScrollBarHilight"		// nob active drag color
+		ScrollBarSlider.FgColor				"Blank"			// nob color
+		ScrollBarSlider.BgColor				"255 255 255 64"	// slider background color
 
 		SectionedListPanel.HeaderTextColor	"White"
 		SectionedListPanel.HeaderBgColor	"Blank"
@@ -229,43 +218,45 @@ Scheme
 		{
 			"1"
 			{
-				"name"		"Verdana"
+				"name"		"Neo Sans"
 				"tall"		"12"
-				"weight"	"0"
+				"weight"	"100"
 				"range"		"0x0000 0x017F"
 				"yres"	"480 599"
+				"antialias"	"1"
 			}
 			"2"
 			{
-				"name"		"Verdana"
+				"name"		"Neo Sans"
 				"tall"		"13"
-				"weight"	"0"
+				"weight"	"100"
 				"range"		"0x0000 0x017F"
 				"yres"	"600 767"
+				"antialias"	"1"
 			}
 			"3"
 			{
-				"name"		"Verdana"
+				"name"		"Neo Sans"
 				"tall"		"14"
-				"weight"	"0"
+				"weight"	"100"
 				"range"		"0x0000 0x017F"
 				"yres"	"768 1023"
 				"antialias"	"1"
 			}
 			"4"
 			{
-				"name"		"Verdana"
+				"name"		"Neo Sans"
 				"tall"		"16"
-				"weight"	"0"
+				"weight"	"100"
 				"range"		"0x0000 0x017F"
 				"yres"	"1024 1199"
 				"antialias"	"1"
 			}
 			"5"
 			{
-				"name"		"Verdana"
+				"name"		"Neo Sans"
 				"tall"		"20"
-				"weight"	"0"
+				"weight"	"100"
 				"range"		"0x0000 0x017F"
 				"yres"	"1200 6000"
 				"antialias"	"1"
@@ -322,47 +313,50 @@ Scheme
 		{
 			"1"
 			{
-				"name"		"Verdana"
+				"name"		"Neo Sans"
 				"tall"		"12"
-				"weight"	"700"
-				"yres"		"480 599"
-				"dropshadow"	"1"
+				"weight"	"100"
+				"range"		"0x0000 0x017F"
+				"yres"	"480 599"
+				"antialias"	"1"
 			}
 			"2"
 			{
-				"name"		"Verdana"
-				"tall"		"14"
-				"weight"	"700"
-				"yres"		"600 767"
-				"dropshadow"	"1"
+				"name"		"Neo Sans"
+				"tall"		"13"
+				"weight"	"100"
+				"range"		"0x0000 0x017F"
+				"yres"	"600 767"
+				"antialias"	"1"
 			}
 			"3"
 			{
-				"name"		"Verdana"
-				"tall"		"15"
-				"weight"	"700"
-				"yres"		"768 1023"
-				"dropshadow"	"1"
+				"name"		"Neo Sans"
+				"tall"		"16"
+				"weight"	"100"
+				"range"		"0x0000 0x017F"
+				"yres"	"768 1023"
+				"antialias"	"1"
 			}
 			"4"
 			{
-				"name"		"Verdana"
-				"tall"		"17"
-				"weight"	"700"
-				"yres"		"1024 1199"
-				"dropshadow"	"1"
+				"name"		"Neo Sans"
+				"tall"		"21"
+				"weight"	"100"
+				"range"		"0x0000 0x017F"
+				"yres"	"1024 1199"
+				"antialias"	"1"
 			}
 			"5"
 			{
-				"name"		"Verdana"
-				"tall"		"22"
-				"weight"	"700"
-				"yres"		"1200 10000"
-				"dropshadow"	"1"
+				"name"		"Neo Sans"
+				"tall"		"25"
+				"weight"	"100"
+				"range"		"0x0000 0x017F"
+				"yres"	"1200 6000"
+				"antialias"	"1"
 			}
 		}
-
-
 	}
 
 	//
@@ -485,7 +479,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "ScrollBarHilight"
+					"color" "Border.Bright"
 					"offset" "0 1"
 				}
 			}
@@ -494,7 +488,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "ScrollBarDark"
+					"color" "Border.Dark"
 					"offset" "1 0"
 				}
 			}
@@ -503,7 +497,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "ScrollBarHilight"
+					"color" "Border.Bright"
 					"offset" "0 0"
 				}
 			}
@@ -512,7 +506,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "ScrollBarDark"
+					"color" "Border.Dark"
 					"offset" "0 0"
 				}
 			}
@@ -525,7 +519,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "ScrollBarHilight"
+					"color" "Border.Dark"
 					"offset" "0 1"
 				}
 			}
@@ -534,7 +528,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "ScrollBarDark"
+					"color" "Border.Bright"
 					"offset" "1 0"
 				}
 			}
@@ -543,7 +537,7 @@ Scheme
 			{
 				"1"
 				{
-					"color" "ScrollBarHilight"
+					"color" "Border.Dark"
 					"offset" "0 0"
 				}
 			}
@@ -552,55 +546,12 @@ Scheme
 			{
 				"1"
 				{
-					"color" "ScrollBarDark"
+					"color" "Border.Bright"
 					"offset" "0 0"
 				}
 			}
 		}
-		
-		ScrollBarSliderBorder
-		{
-			"inset" "2 2 0 0"
-			Left
-			{
-				"1"
-				{
-					"color" "ScrollBarHilight"
-					"offset" "0 1"
-				}
-			}
 
-			Right
-			{
-				"1"
-				{
-					"color" "ScrollBarDark"
-					"offset" "1 0"
-				}
-			}
-
-			Top
-			{
-				"1"
-				{
-					"color" "ScrollBarHilight"
-					"offset" "0 0"
-				}
-			}
-
-			Bottom
-			{
-				"1"
-				{
-					"color" "ScrollBarDark"
-					"offset" "0 0"
-				}
-			}
-		}
-		
-		ScrollBarSliderBorderHover ScrollBarSliderBorder
-		ScrollBarSliderBorderDragging ScrollBarSliderBorder
-		
 		TabBorder
 		{
 			"inset" "0 0 1 1"
@@ -810,6 +761,6 @@ Scheme
 	// specifies all the custom (non-system) font files that need to be loaded to service the above described fonts
 	CustomFontFiles
 	{
-		"1"		"resource/HALFLIFE2.vfont"
+		"1"		"resource/NeoSans.vfont"
 	}
 }

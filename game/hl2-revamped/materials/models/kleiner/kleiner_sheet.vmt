@@ -1,10 +1,11 @@
 "VertexLitGeneric"
 {
-	"$baseTexture" "models/kleiner/kleiner_sheet"
-	"$bumpmap" "models/kleiner/kleiner_sheet_normal"
-	
-	"$phong" "1"
-	"$phongexponent" "6"
-	"$phongboost" "0.3"
-	"$phongfresnelranges" "[0 0.2 0.5]"
+	"$baseTexture" "Models/Kleiner/kleiner_sheet"
+	//"$bumpmap" "models/Kleiner/kleiner_sheet_normal"
+	"$halflambert" 1
+	//"$phong" "1"
+	//"$phongboost" "3"
+	//"$phongexponenttexture" "models/Kleiner/kleiner_sheet_phong"
+	//"$phongalbedotint" "1"										
+	//"$phongfresnelranges"	"[.1 .5  1]"
 }

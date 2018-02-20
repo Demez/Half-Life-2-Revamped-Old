@@ -1,7 +1,7 @@
 "Rift_dx6"
 {
 	"$model" 1
-	"$basetexture" "_rt_Camera"
+	"$basetexture" "skybox/sky_ep01_04up"
 	"$translucent" 1
 	"$texture2" "models/effects/dx7portalrift"
 

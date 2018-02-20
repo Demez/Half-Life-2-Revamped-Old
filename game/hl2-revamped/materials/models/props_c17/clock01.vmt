@@ -1,6 +1,4 @@
 "VertexLitGeneric"
 {
-	// Original shader: VertexLitTexture
-	"$basetexture" "Models/props_c17/clock01"
-	"$surfaceprop" "wood"
+	"$basetexture"	"models/props_C17/clock01"
 }

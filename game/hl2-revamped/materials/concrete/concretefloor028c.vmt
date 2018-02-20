@@ -3,11 +3,6 @@
 {
 	"$basetexture" "concrete\concretefloor028c"
 	"$surfaceprop" "concrete"
-	
-        "$detail" "detail\noise_detail_01"
-	"$detailscale" "7.345"
-	"$detailblendfactor" .6
-	"$detailblendmode" 0
 	"%keywords" "c17downtown"
 	"$envmap" "env_cubemap"
 	"$bumpmap" "concrete\concretefloor028c_normal"
@@ -19,5 +14,13 @@
 	"LightmappedGeneric_DX8"
 	{
 		"$envmaptint" "[ .35 .35 .35 ]"
+	}
+	"lightmappedgeneric_HDR_dx9"
+	{
+		"$envmaptint" "[.12 .12 .12]"
+	}
+	"lightmappedgeneric_dx9"
+	{
+		"$envmaptint" "[.12 .12 .12]"
 	}
 }

@@ -4,7 +4,6 @@
 	"$basetexture2" "nature/gravelfloor004a"
 	"$detail" "overlays/macro01a"
 	"$detailscale" .1
-	"%detailtype" "coastline_redgrass02"
 	"%tooltexture" "nature/blendgrassgravel001a_tooltexture"
 	"%keywords" "wasteland"
 	"$surfaceprop" "dirt"

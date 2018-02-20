@@ -6,11 +6,6 @@
 	"%keywords" "c17downtown,wasteland"
 	"$envmaptint" "[ .5 .5 .5 ]"
 
-	"$detail" "detail\noise_detail_01"
-	"$detailscale" "7.345"
-	"$detailblendfactor" .8
-	"$detailblendmode" 0
-
 	"LightmappedGeneric_DX9"
  	{
 		"$envmap" "env_cubemap"
@@ -18,6 +13,15 @@
 		"$envmapcontrast" 1
 		"$envmaptint" "[ .6 .6 .6 ]"
 		"$bumpmap" "stone/stonefloor006c_normal"
+		"$normalmapalphaenvmapmask" 1
+	}
+	"lightmappedgeneric_HDR_dx9"
+	{
+		"$envmaptint" "[.15 .15 .15]"
+		"$envmap" "env_cubemap"
+		"$bumpmap" "stone/stonefloor006b_normal"
+		"$envmapsaturation" 1
+		"$envmapcontrast" 1
 		"$normalmapalphaenvmapmask" 1
 	}
 }

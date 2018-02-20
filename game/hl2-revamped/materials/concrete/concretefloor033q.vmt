@@ -3,11 +3,6 @@
 {
 	"$basetexture" "concrete\concretefloor033q"
 	"$surfaceprop" "concrete"
-	
-        "$detail" "detail\noise_detail_01"
-	"$detailscale" "7.345"
-	"$detailblendfactor" .6
-	"$detailblendmode" 0
 	"%keywords" "c17downtown"
 	"$envmap" "env_cubemap"
 	"$bumpmap" "concrete\concretefloor033q_normal"
@@ -15,4 +10,9 @@
 	"$envmapsaturation" 1
 	"$envmapcontrast" 1
 	"$envmaptint" "[ .56 .56 .56 ]"
+  	 "Lightmappedgeneric_HDR_dx9"
+	{
+	 "$envmaptint" "[.28 .28 .28]"
+	} 
+
 }

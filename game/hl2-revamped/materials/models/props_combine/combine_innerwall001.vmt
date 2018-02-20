@@ -7,4 +7,11 @@
 	"$envmap" "env_cubemap"
 	"$envmaptint" "[ .25 .25 .25]"
 	"$basealphaenvmapmask" 1
+
+	"360?$color2" "[ .4 .4 .4 ]"
+
+        "$detail" "detail\metal_detail_01"
+	"$detailscale" "30.345"
+	"$detailblendfactor" .6
+	"$detailblendmode" 0
 }

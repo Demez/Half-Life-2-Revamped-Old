@@ -2,13 +2,10 @@
 
 #include "talker/response_criteria.txt"
 
-criterion "AlyxGetToTrain" "concept" "ConceptGetToTrain" required
-
-
-
+criterion "AlyxGetToTrain" "Concept" "ConceptGetToTrain" required
 
 criterion "IsWaitForPlayerTakeGravGun1" "concept" "GravGun1Nag" "required"
-criterion "IsWaitForPlayerJumpLedge1" "concept" "Ledge1Nag" "required"
+criterion "IsWaitForPlayerFollowLedge1" "concept" "Ledge1Nag" "required"
 criterion "IsWaitForPlayerInVan" "concept" "InVanNag" "required"
 criterion "IsWaitForPlayerPostVan" "concept" "PostVanNag" "required"
 
@@ -35,8 +32,6 @@ criterion "IsWaitForPlayerToAtWire" "concept" "FollowWireNag" "required"
 criterion "IsWaitForPlayerFindPowerbox" "concept" "FindPowerbox" "required"
 criterion "IsWaitForPlayerEvacNextGroup" "concept" "ConceptEvacNextGroup" "required"
 
-criterion "PlayerNear" "distancetoplayer" "<500" required
-
 //============================================================================================================
 // Ep1_citadel_00
 
@@ -55,6 +50,22 @@ rule NagTakeGravGun1
 	response		TakeGravGun1Nag
 }
 
+
+//============================================================================================================
+// Nag Ledge 1
+//============================================================================================================
+response "FollowLedge1Nag"
+{
+	scene "scenes/episode_1/al_citadel_LedgeNag1_01.vcd" defaultdelay
+	scene "scenes/episode_1/al_citadel_LedgeNag1_02.vcd" defaultdelay
+	scene "scenes/episode_1/al_citadel_LedgeNag1_03.vcd" defaultdelay
+} 
+
+rule NagFollowLedge1
+{
+	criteria		IsWaitForPlayerFollowLedge1
+	response		FollowLedge1Nag
+}
 
 //============================================================================================================
 // Nag To Get in Van
@@ -224,10 +235,7 @@ rule NagExit
 response "NagBringRollermine"
 {
 	scene "scenes/episode_1/razortrain_alyx_BringRollermine_Nag01.vcd"
-	scene "scenes/episode_1/citadel/al_grabroll02.vcd"  // grab one of those roller mines and bring it over to me.
-	scene "scenes/episode_1/citadel/al_roll_grab01.vcd"  // grab one of those roller mines gordon
-    	scene "scenes/episode_1/citadel/al_roll_bring.vcd"  //  bring me a roller mine gordon
-
+	scene "scenes/episode_1/razortrain_alyx_BringRollermine_Nag02.vcd"
 }
 
 rule NagBringRollermine
@@ -331,8 +339,9 @@ rule Rule_HelpMeNag
 //============================================================================================================
 response "Response_LookAtMeImASniperNag"
 {
-	scene "scenes/episode_1/al_c17_01_snipe_nag01.vcd displayfirst
-	scene "scenes/episode_1/al_c17_01_snipe_nag02.vcd
+	SEQUENTIAL
+	scene "scenes/episode_1/al_c17_01_snipe_nag01.vcd" 
+	scene "scenes/episode_1/al_c17_01_snipe_nag02.vcd"
 }
 
 rule Rule_LookAtMeImASniperNag
@@ -350,7 +359,7 @@ rule Rule_LookAtMeImASniperNag
 //============================================================================================================
 response "Response_GetInGarrisonNag"
 {
-	scene "scenes/episode_1/al_c17_03_GetInGarrison_nag_01.vcd"
+  scene "scenes/episode_1/al_c17_03_GetInGarrison_nag_01.vcd"
   scene "scenes/episode_1/al_c17_03_GetInGarrison_nag_02.vcd"
   scene "scenes/episode_1/al_c17_03_GetInGarrison_nag_03.vcd"
   scene "scenes/episode_1/al_c17_03_GetInGarrison_nag_04.vcd"
@@ -437,7 +446,7 @@ response "Response_FollowWireNag"
 	scene "scenes/episode_1/c17/al_elev_power_nag01.vcd"
 	scene "scenes/episode_1/c17/al_elev_power_nag02.vcd"
 	scene "scenes/episode_1/c17/al_elev_power_nag03.vcd"
-//	scene "scenes/episode_1/c17/al_elev_hearsomething.vcd"
+	scene "scenes/episode_1/c17/al_elev_hearsomething.vcd"
 }
 
 rule Rule_FollowWireNag
@@ -451,37 +460,21 @@ rule Rule_FollowWireNag
 // Alyx Evac Next group - spoken when the player needs to get another group of citizens.
 //============================================================================================================
 
-criterion "PlayerEvacedCitizens" "Evac05CitizenThanks" "1" "required" weight 0
-criterion "FailedPlayerEvacedCitizens" "Evac05CitizenThanks" "!=1" "required" weight 0
-
 response "Response_AlyxEvacNextGroup"
 {
-	sequential
 	scene "scenes/episode_1/al_c17_05_evac_nextgroup01.vcd"
 	scene "scenes/episode_1/al_c17_05_evac_nextgroup02.vcd"
+	scene "scenes/episode_1/al_c17_05_evac_nextgroup03.vcd"
 	scene "scenes/episode_1/al_c17_05_evac_nextgroup04.vcd"
-
+	scene "scenes/episode_1/al_c17_05_evac_nextgroup05.vcd"
 
 }
 rule Rule_AlyxEvacNextGroup
 {
-	criteria IsWaitForPlayerEvacNextGroup PlayerNear  PlayerEvacedCitizens 
+	criteria IsWaitForPlayerEvacNextGroup PlayerNear
 	response Response_AlyxEvacNextGroup
 }
 
-
-response "Response_AlyxEvacNextGroupFailed"
-{
-	sequential
-	scene "scenes/episode_1/c17/al_evac_takestand.vcd"
-	scene "scenes/episode_1/al_c17_05_evac_nextgroup03.vcd"
-	scene "scenes/episode_1/al_c17_05_evac_nextgroup05.vcd"
-}
-rule Rule_AlyxEvacNextGroupFailed
-{
-	criteria IsWaitForPlayerEvacNextGroup PlayerNear  FailedPlayerEvacedCitizens 
-	response Response_AlyxEvacNextGroupFailed
-}
 
 
 //============================================================================================================
@@ -504,3 +497,5 @@ rule GetToTrain
 	criteria AlyxGetToTrain PlayerNear
 	response GetToTrain
 }
+
+

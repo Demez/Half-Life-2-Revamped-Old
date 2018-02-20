@@ -8,7 +8,7 @@
 	// NOTE: Even though env_cubemap is here, it will turned off for DX6
 	// because $multipass 1 isn't defined
 	"$envmap" "env_cubemap"
-	"$envmaptint" "[ .56 .56 .75 ]"
+	"ldr?envmaptint" "[ .56 .56 .75 ]"
 	"$envmapcontrast" 1
 	"$envmapsaturation" 1
 
@@ -16,7 +16,6 @@
 	{
 		"$bumpmap" "metal/metalwall078a_normal"
 		"$normalmapalphaenvmapmask" 1
-		"$envmaptint" "[ .09 .1 .12]"
 	}
 
 	"LightmappedGeneric_DX8"
@@ -32,11 +31,5 @@
 		"$basealphaenvmapmask" 1
 	}
 
-	"LightmappedGeneric_hdr_dx9"
-	{
-		// put HDR override stuff here
-		"$envmaptint" "[ .09 .1 .12]"
-		"$bumpmap" "metal/metalwall078a_normal"
-		"$normalmapalphaenvmapmask" 1
-	}
+	"hdr?$envmaptint" "[.09 .1 .12]"
 }

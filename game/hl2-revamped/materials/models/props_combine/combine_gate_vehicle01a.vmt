@@ -15,4 +15,17 @@
 	}
 
 
+ 	"vertexlitgeneric_HDR_dx9"
+ 	{
+  		"$envmaptint" "[.25 .35 .4]"
+ 	}
+
+ 	"vertexlitgeneric_dx9"
+ 	{
+  		"$envmaptint" "[.25 .35 .4]"
+ 	}
+
 }
+
+
+

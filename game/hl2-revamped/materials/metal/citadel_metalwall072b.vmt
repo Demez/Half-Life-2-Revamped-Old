@@ -4,16 +4,10 @@
 	"$surfaceprop" "metal"
 	"%keywords" "combine"
 	"$envmap" "env_cubemap"
-	"$envmaptint" "[ .56 .56 .75 ]"
+	"ldr?$envmaptint" "[ .56 .56 .75 ]"
 	"$envmapcontrast" 1
 	"$envmapsaturation" 1
-
-	"LightmappedGeneric_HDR_DX9"
-	{
-		"$bumpmap" "metal/metalwall072b_normal"
-		"$envmaptint" "[ .09 .1 .12]"
-		"$normalmapalphaenvmapmask" 1
-	}
+	"hdr?$envmaptint" "[.09 .1 .12]"
 
 	"LightmappedGeneric_DX9"
 	{
@@ -21,7 +15,6 @@
 		"$parallaxmap" "Metal/metalwall072b_height"
 		"$parallaxmapscale" ".05"
 		"$normalmapalphaenvmapmask" 1
-		"$envmaptint" "[ .09 .1 .12]"
 	}
 
 	"LightmappedGeneric_DX8"

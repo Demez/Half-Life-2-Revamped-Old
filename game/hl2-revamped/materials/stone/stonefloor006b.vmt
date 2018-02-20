@@ -10,13 +10,13 @@
 	"$envmapcontrast" 1
 	"$envmaptint" "[ .6 .6 .6 ]"
 	"$normalmapalphaenvmapmask" 1
-	"$detail" "detail\noise_detail_01"
-	"$detailscale" "7.345"
-	"$detailblendfactor" .8
-	"$detailblendmode" 0
 
 	"LightmappedGeneric_DX8"
 	{
 		"$envmaptint" "[ .5 .5 .5 ]"
+	}
+	"lightmappedgeneric_HDR_dx9"
+	{
+		"$envmaptint" "[.15 .15 .15]"
 	}
 }
