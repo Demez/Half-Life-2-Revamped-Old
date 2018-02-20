@@ -96,3 +96,5 @@ src/game/server/Release_hl2-revamped/*
 *.filters
 *.vpc_crc
 /game/hl2-revamped/save
+/game/hl2-revamped/save
+video.txt

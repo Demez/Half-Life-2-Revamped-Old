@@ -23,7 +23,7 @@
 		"font"		"DefaultExtraLarge"
 		"textAlignment"		"west"
 		"ControlName"		"Label"
-		"labelText"		"#HL2PORTUI_Titles_Gameplay"
+		"labelText"		"#REVAMPEDUI_Titles_Gameplay"
 		"fgcolor_override"		"224 224 224 255"
 	}
 	
@@ -76,8 +76,8 @@
 			"enabled"					"1"
 			"tabPosition"				"1"
 			"AllCaps"					"1"
-			"labelText"					"#HL2PORTUI_Options_GameDifficulty"
-			"tooltiptext"				"#HL2PORTUI_Options_GameDifficulty_tip"
+			"labelText"					"#REVAMPEDUI_Options_GameDifficulty"
+			"tooltiptext"				"#REVAMPEDUI_Options_GameDifficulty_tip"
 			"style"						"DropDownButton"
 			"command"					"FlmGameDifficulty"
 			"ActivationType"			"1"

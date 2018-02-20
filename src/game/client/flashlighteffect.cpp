@@ -44,10 +44,10 @@ static ConVar r_flashlightvisualizetrace( "r_flashlightvisualizetrace", "0", FCV
 static ConVar r_flashlightambient( "r_flashlightambient", "0.0", FCVAR_CHEAT );
 static ConVar r_flashlightshadowatten( "r_flashlightshadowatten", "0.35", FCVAR_CHEAT );
 static ConVar r_flashlightladderdist( "r_flashlightladderdist", "40.0", FCVAR_CHEAT );
-static ConVar r_flashlight_topdown( "r_flashlight_topdown", "0" );
+static ConVar r_flashlight_topdown( "r_flashlight_topdown", "1" ); // this doesnt drop fps as much
 
 static ConVar r_flashlightnearoffsetscale( "r_flashlightnearoffsetscale", "1.0", FCVAR_CHEAT );
-static ConVar r_flashlighttracedistcutoff( "r_flashlighttracedistcutoff", "128" );
+static ConVar r_flashlighttracedistcutoff( "r_flashlighttracedistcutoff", "0" );
 static ConVar r_flashlightbacktraceoffset( "r_flashlightbacktraceoffset", "0.4", FCVAR_CHEAT );
 
 // New ConVars
@@ -104,7 +104,7 @@ CFlashlightEffect::CFlashlightEffect(int nEntIndex, const char *pszTextureName, 
 	m_flFov = flFov;
 	m_flFarZ = flFarZ;
 	m_flLinearAtten = flLinearAtten;
-	m_bCastsShadows = true;
+	m_bCastsShadows = r_flashlightenableshadows.GetBool(); //true;
 
 	m_bIsOn = false;
 

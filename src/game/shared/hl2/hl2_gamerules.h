@@ -67,7 +67,7 @@ public:
 	CHalfLife2();
 	virtual ~CHalfLife2();
 
-
+	virtual void LevelInitPostEntity() {}
 
 	virtual void			PlayerSpawn( CBasePlayer *pPlayer );
 

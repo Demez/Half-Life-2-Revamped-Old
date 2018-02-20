@@ -2,7 +2,7 @@ versioninfo
 {
 	"editorversion" "400"
 	"editorbuild" "5032"
-	"mapversion" "394"
+	"mapversion" "397"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -20,7 +20,7 @@ viewsettings
 world
 {
 	"id" "1"
-	"mapversion" "394"
+	"mapversion" "397"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -1244,6 +1244,7 @@ entity
 	"shadowquality" "1"
 	"spawnflags" "7"
 	"targetname" "projtex_test"
+	"texturename" "effects/flashlight001"
 	"uberlight" "1"
 	"uberlight_cutoff" "650"
 	"uberlight_cuton" "10"
@@ -1255,7 +1256,6 @@ entity
 	"uberlight_wedge" "0.05"
 	"uberlight_width" "1"
 	"volumetric" "0"
-	"texturename" "effects/flashlight001"
 	"origin" "0 0 106"
 	editor
 	{
@@ -1319,10 +1319,10 @@ entity
 	"uberlight_hedge" "0.05"
 	"uberlight_height" "0.3"
 	"uberlight_near" "0"
-	"uberlight_roundness" "1.0"
+	"uberlight_roundness" "0.2"
 	"uberlight_wedge" "0.05"
 	"uberlight_width" "0.3"
-	"volumetric" "0"
+	"volumetric" "1"
 	"volumetricslod" "1"
 	"volumetricsmultiplier" "2"
 	"volumetricsquality" "20"

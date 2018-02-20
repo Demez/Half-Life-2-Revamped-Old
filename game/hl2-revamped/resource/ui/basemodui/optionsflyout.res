@@ -30,8 +30,8 @@
 		"tabPosition"			"0"
 		"navUp"					"BtnCloud"
 		"navDown"				"BtnBrightness"
-		"tooltiptext"			"#HL2PORTUI_Options_Gameplay_tip"
-		"labelText"				"#HL2PORTUI_Options_Gameplay"
+		"tooltiptext"			"#REVAMPEDUI_Options_Gameplay_tip"
+		"labelText"				"#REVAMPEDUI_Options_Gameplay"
 		"style"					"FlyoutMenuButton"
 		"command"				"Gameplay"
 	}
