@@ -16,7 +16,7 @@
 // We should make use of this. Enable it once we have at least one background image
 //#define UI_USING_TRANSITIONBG							// using background image in transition between levels
 #else
-//#define UI_USING_TRANSITIONBG							// using background image in transition between levels
+#define UI_USING_TRANSITIONBG							// using background image in transition between levels
 #endif
 #define UI_USING_DEVCOMMENTARIES						// implement!!!
 #define UI_USING_GAMEPLAYCONFIGDIALOG					// "gameplay" menu
@@ -53,10 +53,10 @@ static const char *g_ppszRandomMenuMovies[] =
 #elif HL2_CLIENT_DLL // TODO: Replace this video
 	"media/bg_01.bik"
 #else
-	"media/bg_03.bik",
-	"media/bg_02.bik",
-	"media/bg_04.bik",
 	"media/bg_01.bik",
+	"media/bg_02.bik",
+	"media/bg_03.bik",
+	"media/bg_04.bik",
 #endif
 };
 
@@ -64,7 +64,7 @@ static const char *g_ppszRandomMenuMovies[] =
 static const char g_ppszRandomLoadingBackgrounds[][64] = 
 {
 #ifdef HL2_CLIENT_DLL
-	"../console/background01",
+	"console/background01",
 	//"console/background02",
 	//"console/background03",
 	//"console/background04"

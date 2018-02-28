@@ -5,8 +5,8 @@
 	"type"		"singleplayer_only"
 	"icon"		"icon"					// Icon in Steam
 
-	"developer"	"Strider[RUS] with help of AndreaZzZ, Aluminum Ken, Levan, Hopeless CatE and many others..."
-	"developer_url"	"https://github.com/stanriders/hl2-asw-port"
+	"developer"	"Demez, For HL2-Port: Strider[RUS] with help of AndreaZzZ, Aluminum Ken, Levan, Hopeless CatE and many others..."
+	"developer_url"	""
 
 	//GameData	"halflife2.fgd"
 	SupportsDX8     0
@@ -18,8 +18,8 @@
 		{
 			"Game"	"|gameinfo_path|."
 			
-			"Game"	"C:\Program Files (x86)\Steam\steamapps\common\Half-Life 2/ep2"			// This is temporary workaround for ep2 maps mounting
-			"Game"	"C:\Program Files (x86)\Steam\steamapps\common\Half-Life 2/episodic"	// This is temporary workaround for ep1 maps mounting
+			"Game"	"..\Half-Life 2/ep2"			// This is temporary workaround for ep2 maps mounting
+			"Game"	"..\Half-Life 2/episodic"	// This is temporary workaround for ep1 maps mounting
 			
 			// if i use reactive drop for the few engine fixes
 			"Game"	"reactivedrop"						// Reactive Drop Folder

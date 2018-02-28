@@ -31,7 +31,7 @@ void r_flashlightoldCallback_f( IConVar *pConVar, const char *pOldString, float 
 // Flashlight ConVars
 //---------------------------------------------------------
 static ConVar r_flashlightlockposition( "r_flashlightlockposition", "0", FCVAR_CHEAT );
-static ConVar r_flashlightfov( "r_flashlightfov", "53.0", FCVAR_CHEAT );
+static ConVar r_flashlightfov( "r_flashlightfov", "55.0", FCVAR_CHEAT );
 ConVar r_flashlightoffsetx( "r_flashlightoffsetx", "5.0", FCVAR_CHEAT );
 ConVar r_flashlightoffsety( "r_flashlightoffsety", "-5.0", FCVAR_CHEAT );
 ConVar r_flashlightoffsetz( "r_flashlightoffsetz", "0.0", FCVAR_CHEAT );
@@ -44,18 +44,16 @@ static ConVar r_flashlightvisualizetrace( "r_flashlightvisualizetrace", "0", FCV
 static ConVar r_flashlightambient( "r_flashlightambient", "0.0", FCVAR_CHEAT );
 static ConVar r_flashlightshadowatten( "r_flashlightshadowatten", "0.35", FCVAR_CHEAT );
 static ConVar r_flashlightladderdist( "r_flashlightladderdist", "40.0", FCVAR_CHEAT );
-static ConVar r_flashlight_topdown( "r_flashlight_topdown", "1" ); // this doesnt drop fps as much
+static ConVar r_flashlight_topdown( "r_flashlight_topdown", "0" ); // this doesnt drop fps as much, also doesnt break water with (some parameter i cant remember)
 
 static ConVar r_flashlightnearoffsetscale( "r_flashlightnearoffsetscale", "1.0", FCVAR_CHEAT );
 static ConVar r_flashlighttracedistcutoff( "r_flashlighttracedistcutoff", "0" );
 static ConVar r_flashlightbacktraceoffset( "r_flashlightbacktraceoffset", "0.4", FCVAR_CHEAT );
 
 // New ConVars
-static ConVar r_flashlightold("r_flashlightold", "0");
-static ConVar r_flashlightmuzzleflashenabled("r_flashlightmuzzleflashenabled", "0");
-static ConVar r_flashlighthorizontalfov("r_flashlighthorizontalfov", "45");
-static ConVar r_flashlightverticalfov("r_flashlightverticalfov", "30");
-static ConVar r_flashlightenableshadows("r_flashlightenableshadows", "1");
+static ConVar r_flashlightold("r_flashlightold", "0"); // finish this
+static ConVar r_flashlightmuzzleflash("r_flashlightmuzzleflash", "0"); // just makes entire screen white when you turn on flashlight, doesnt do anything on weapon
+static ConVar r_flashlightenableshadows("r_flashlightenableshadows", "1"); // finish this
 
 void r_flashlightoldCallback_f( IConVar *pConVar, const char *pOldString, float flOldValue )
 {
@@ -98,7 +96,7 @@ CFlashlightEffect::CFlashlightEffect(int nEntIndex, const char *pszTextureName, 
 
 	m_flCurrentPullBackDist = 1.0f;
 
-	m_bMuzzleFlashEnabled = r_flashlightmuzzleflashenabled.GetBool(); //false
+	m_bMuzzleFlashEnabled = r_flashlightmuzzleflash.GetBool(); //false
 	m_flMuzzleFlashBrightness = 1.0f;
 
 	m_flFov = flFov;
@@ -135,7 +133,7 @@ void CFlashlightEffect::TurnOn()
 //-----------------------------------------------------------------------------
 void CFlashlightEffect::SetMuzzleFlashEnabled( bool bEnabled, float flBrightness )
 {
-	m_bMuzzleFlashEnabled = r_flashlightmuzzleflashenabled.GetBool();
+	m_bMuzzleFlashEnabled = r_flashlightmuzzleflash.GetBool();
 	//m_bMuzzleFlashEnabled = bEnabled;
 	m_flMuzzleFlashBrightness = flBrightness;
 }
@@ -790,8 +788,8 @@ void CHeadlightEffect::UpdateLight( const Vector &vecPos, const Vector &vecDir, 
 		
 	state.m_vecLightOrigin = vecPos;
 
-	state.m_fHorizontalFOVDegrees = r_flashlighthorizontalfov.GetFloat(); //45.0f;
-	state.m_fVerticalFOVDegrees = r_flashlightverticalfov.GetFloat(); //30.0f;
+	state.m_fHorizontalFOVDegrees = 45.0f;
+	state.m_fVerticalFOVDegrees = 30.0f;
 	state.m_fQuadraticAtten = r_flashlightquadratic.GetFloat();
 	state.m_fLinearAtten = r_flashlightlinear.GetFloat();
 	state.m_fConstantAtten = r_flashlightconstant.GetFloat();
