@@ -150,7 +150,7 @@ bool CNPC_PlayerCompanion::CreateBehaviors()
 {
 #ifdef HL2_EPISODIC
 	AddBehavior( &m_FearBehavior );
-//	AddBehavior( &m_PassengerBehavior );
+	AddBehavior( &m_PassengerBehavior );
 #endif // HL2_EPISODIC	
 
 	AddBehavior( &m_ActBusyBehavior );
